@@ -109,6 +109,7 @@ include $project_root_path . '/private/includes/header.php';
         border-radius: var(--rounded-md);
         font-size: var(--font-size-base);
         transition: border-color 0.2s ease;
+        box-sizing: border-box; /* Ensure input fits within its container */
     }
     .form-control:focus {
         outline: none;

@@ -77,10 +77,9 @@ class Database {
      * @return PDO|null The active PDO connection or null if not connected.
      */
     public function getConnection() {
-        // You might want to add logic here to automatically connect if not already connected
-        // if ($this->conn === null) {
-        //     $this->connect();
-        // }
+        if ($this->conn === null) {
+            $this->connect();
+        }
         return $this->conn;
     }
 }

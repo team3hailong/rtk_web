@@ -29,7 +29,7 @@ class RtkAccount {
     }
 
     /**
-     * Fetches simplified account details (ID, username, location, mountpoint) for a given user ID.
+     * Fetches simplified account details (ID, username, location, mountpoint name) for a given user ID.
      *
      * @param int $userId The ID of the user.
      * @return array An array of simplified account details.
@@ -39,7 +39,7 @@ class RtkAccount {
         $logPrefix = "[" . date('Y-m-d H:i:s') . "][RtkAccount GetAccounts Simplified] "; // Updated prefix
         error_log($logPrefix . "Attempting to fetch simplified accounts for user ID: " . $userId . "\n", 3, $this->log_file); // Log start
 
-        // Simplified SQL query joining only necessary tables for location/mountpoint info
+        // Simplified SQL query joining necessary tables. Links user -> registration -> survey_account.
         $sql = "SELECT
                     sa.id AS survey_account_id,
                     sa.username_acc,
@@ -48,16 +48,15 @@ class RtkAccount {
                     r.start_time, -- Keep for context
                     r.end_time,   -- Keep for context
                     l.province,
-                    mp.mountpoint AS mountpoint_name,
-                    mp.ip AS mountpoint_ip, -- Added IP
-                    mp.port AS mountpoint_port -- Added Port
+                    mp.mountpoint AS mountpoint_name
+                    -- Removed mp.ip, mp.port for simplification
                 FROM
                     registration r
                 JOIN
                     survey_account sa ON r.id = sa.registration_id
                 JOIN
                     location l ON r.location_id = l.id
-                LEFT JOIN -- Use LEFT JOIN in case a location has no mount_point (unlikely but safe)
+                LEFT JOIN -- Use LEFT JOIN in case a location has no mount_point
                     mount_point mp ON l.id = mp.location_id
                 WHERE
                     r.user_id = :user_id
@@ -75,11 +74,6 @@ class RtkAccount {
             error_log($logPrefix . "Database query successful. Found " . count($results) . " rows for user ID: " . $userId . "\n", 3, $this->log_file);
 
             // Process results - simplified
-            // Note: This structure assumes one mountpoint per location for simplicity in this demo.
-            // If a location can have multiple mountpoints, the query/logic might need adjustment
-            // or you might get duplicate survey_account entries if not grouped correctly.
-            // The current query might list the same survey_account multiple times if its location has multiple mountpoints.
-            // Let's process it directly for now.
             foreach ($results as $row) {
                  // Determine actual status based on dates and registration status
                  $status = $row['registration_status']; // 'pending', 'active', 'rejected'
@@ -98,9 +92,8 @@ class RtkAccount {
                     'start_date' => $row['start_time'],
                     'end_date' => $row['end_time'],
                     'province' => $row['province'],
-                    'mountpoint_name' => $row['mountpoint_name'],
-                    'mountpoint_ip' => $row['mountpoint_ip'],
-                    'mountpoint_port' => $row['mountpoint_port'],
+                    'mountpoint_name' => $row['mountpoint_name']
+                    // Removed mountpoint_ip and mountpoint_port assignments
                 ];
             }
 

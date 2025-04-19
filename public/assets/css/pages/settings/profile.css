@@ -1,0 +1,158 @@
+/* General Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px; /* Add some padding for smaller screens */
+}
+
+.profile-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-700, #2e7d32); /* Use CSS variable or fallback */
+    font-size: var(--font-size-xl, 1.8rem);
+    font-weight: var(--font-semibold, 600);
+}
+
+/* Form Section Styles */
+.form-section {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid var(--gray-200, #e0e0e0);
+    border-radius: var(--rounded-lg, 8px);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+}
+
+.form-section h3 {
+    font-size: var(--font-size-lg, 1.25rem);
+    font-weight: var(--font-semibold, 600);
+    color: var(--gray-800, #333);
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-200, #eee);
+}
+
+/* Form Group Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: var(--font-medium, 500);
+    color: var(--gray-700, #555);
+    font-size: var(--font-size-sm, 0.9rem);
+}
+
+/* Form Control Styles */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--gray-300, #ccc);
+    border-radius: var(--rounded-md, 5px);
+    box-sizing: border-box;
+    font-size: var(--font-size-base, 1rem);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-500, #4caf50);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); /* Adjust color if needed */
+}
+
+.form-control.readonly {
+    background-color: var(--gray-100, #f1f1f1);
+    cursor: not-allowed;
+    color: var(--gray-500, #777);
+}
+
+/* Checkbox Group Styles */
+.checkbox-group label {
+    display: inline-flex;
+    align-items: center;
+    font-weight: var(--font-medium, 500);
+    color: var(--gray-700, #555);
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: var(--primary-500, #4caf50);
+    width: auto; /* Override default width if needed */
+    height: 1em; /* Align better with text */
+    width: 1em;
+}
+
+/* Company Details Group Styles */
+.company-details-group {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--gray-200, #ccc);
+}
+
+/* Form Actions (Button container) */
+.form-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+/* Button Styles (Assuming a base .btn class exists) */
+.btn.btn-primary {
+    background-color: var(--primary-500, #4caf50);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--rounded-md, 5px);
+    cursor: pointer;
+    font-size: var(--font-size-base, 1rem);
+    font-weight: var(--font-semibold, 600);
+    transition: background-color 0.2s ease;
+}
+
+.btn.btn-primary:hover {
+    background-color: var(--primary-600, #388e3c);
+}
+
+/* Message Styles */
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: var(--rounded-md, 5px);
+    border: 1px solid transparent;
+    font-size: var(--font-size-sm, 0.9rem);
+}
+
+.success-message {
+    background-color: var(--success-100, #e8f5e9);
+    border-color: var(--success-300, #a5d6a7);
+    color: var(--success-700, #2e7d32);
+}
+
+.error-message {
+    background-color: var(--danger-100, #ffebee);
+    border-color: var(--danger-300, #ef9a9a);
+    color: var(--danger-700, #c62828);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    .form-section {
+        padding: 20px;
+    }
+    .profile-title {
+        font-size: 1.5rem;
+    }
+    .form-actions {
+        text-align: center;
+    }
+    .btn.btn-primary {
+        width: 100%;
+    }
+}

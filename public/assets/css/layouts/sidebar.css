@@ -1,0 +1,459 @@
+/* Stylesheet dành riêng cho Sidebar Layout và các thành phần bên trong */
+
+/* Import biến và base styles nếu cần (Đảm bảo style.css được load trước) */
+/* @import '../base.css'; */ /* Bỏ comment nếu bạn không load style.css riêng */
+/* @import '../components/variables.css'; */ /* Assuming variables are here */
+
+/* ============================================= */
+/* == Base Layout & Variables (Sidebar Specific) == */
+/* ============================================= */
+/* Các biến chính được định nghĩa trong style.css hoặc base.css `:root` */
+/* Có thể ghi đè hoặc thêm biến chỉ dành cho sidebar ở đây nếu muốn */
+:root {
+    --sidebar-width-min: 220px; /* Minimum width */
+    --sidebar-width-max: 300px; /* Maximum width */
+    --sidebar-bg: white;
+    --sidebar-border-color: var(--gray-200, #e5e7eb);
+    --sidebar-text-color: var(--gray-700, #374151);
+    --sidebar-text-secondary-color: var(--gray-500, #6b7280);
+    --sidebar-icon-size: 1.1em; /* Relative icon size */
+    --sidebar-font-base: var(--font-size-sm, 0.875rem);
+    --sidebar-font-logo: var(--font-size-base, 1rem); /* Adjusted logo size */
+    --sidebar-font-user-name: var(--font-size-sm, 0.875rem);
+    --sidebar-font-user-role: var(--font-size-xs, 0.75rem);
+    --sidebar-font-nav-title: var(--font-size-xs, 0.75rem);
+    --sidebar-nav-item-padding-x: 1rem; /* Horizontal padding for nav items */
+    --sidebar-nav-item-padding-y: 0.65rem; /* Vertical padding for nav items */
+
+    /* Colors from prompt (assuming these vars exist) */
+    --primary-50: #ecfdf5;
+    --primary-500: #10b981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --badge-red-text: #dc2626; /* Example red */
+    --badge-red-bg: #fee2e2; /* Example light red */
+    --badge-red-darker: #b91c1c; /* Example darker red */
+
+    /* Font weights (assuming these vars exist) */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* Border radius (assuming these vars exist) */
+    --rounded-md: 0.375rem;
+    --rounded-lg: 0.5rem;
+    --rounded-full: 9999px;
+
+    /* Font sizes (assuming these vars exist) */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+}
+
+
+/* ============================================= */
+/* == Main Layout Wrapper (Desktop - Grid)    == */
+/* ============================================= */
+.dashboard-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr; /* Cột 1: Auto width for sidebar, Cột 2: Phần còn lại */
+    min-height: 100vh;
+    transition: grid-template-columns 0.3s ease-in-out; /* Smooth transition for potential future collapse feature */
+}
+
+/* ============================================= */
+/* == Hamburger Button (Mobile Only)        == */
+/* ============================================= */
+.hamburger-btn {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1060; /* Trên overlay */
+    display: none; /* Chỉ hiện trên mobile qua media query */
+    padding: 0.5rem 0.75rem;
+    background: var(--sidebar-bg, white);
+    border: 1px solid var(--sidebar-border-color, var(--gray-200));
+    border-radius: var(--rounded-md);
+    cursor: pointer;
+    color: var(--sidebar-text-color, var(--gray-700));
+    font-size: var(--font-size-lg); /* Kích thước icon hamburger */
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.hamburger-btn:hover {
+    background-color: var(--gray-50);
+}
+
+/* ============================================= */
+/* == Sidebar Container                       == */
+/* ============================================= */
+.sidebar {
+    /* --- Kích thước --- */
+    width: fit-content; /* Adjust width based on content */
+    min-width: var(--sidebar-width-min); /* Add minimum width constraint */
+    max-width: var(--sidebar-width-max); /* Add maximum width constraint */
+
+    /* --- Định vị & Layout (Desktop - Sticky Grid Item) --- */
+    /* Position is handled by the grid layout */
+    height: 100vh; /* Luôn chiếm full chiều cao */
+    position: sticky; /* Make it sticky within its grid cell */
+    top: 0;
+
+    /* --- Giao diện --- */
+    background: var(--sidebar-bg, white);
+    border-right: 1px solid var(--sidebar-border-color, var(--gray-200));
+    color: var(--sidebar-text-color, var(--gray-700)); /* Màu chữ mặc định trong sidebar */
+    font-size: var(--sidebar-font-base, var(--font-size-sm)); /* Font size cơ bản cho sidebar */
+
+    /* --- Flex Layout cho Nội dung Bên trong --- */
+    display: flex;
+    flex-direction: column;
+    z-index: 100; /* Below mobile overlay/sidebar */
+
+    /* --- Hiệu ứng chuyển động (Mobile Transform) --- */
+    transition: transform 0.3s ease-in-out;
+    /* transition: width 0.2s ease; */ /* Nếu muốn hiệu ứng khi width thay đổi */
+    overflow-x: hidden; /* Prevent content overflow if max-width is reached */
+}
+
+/* ============================================= */
+/* == Sidebar Header (Logo & Close Button)    == */
+/* ============================================= */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem; /* Khoảng đệm */
+    border-bottom: 1px solid var(--sidebar-border-color, var(--gray-200));
+    flex-shrink: 0; /* Ngăn không bị co lại */
+    height: 60px; /* Fixed height for header */
+    box-sizing: border-box;
+}
+
+/* --- Logo --- */
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem; /* Khoảng cách logo icon và text */
+    text-decoration: none;
+    color: var(--primary-600); /* Màu logo */
+    overflow: hidden; /* Hide text if it overflows */
+}
+
+.logo-icon {
+    font-size: 1.5rem; /* Kích thước icon logo */
+    line-height: 1; /* Đảm bảo icon không làm lệch dòng */
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: var(--sidebar-font-logo, var(--font-size-base)); /* Kích thước chữ logo */
+    font-weight: var(--font-semibold);
+    line-height: 1.2; /* Điều chỉnh nếu cần */
+    white-space: nowrap; /* Ngăn xuống dòng nếu tên dài */
+    color: var(--gray-900); /* Darker text for logo */
+}
+.logo-text b {
+    font-weight: var(--font-bold); /* Make bold part bolder */
+}
+
+
+/* --- Nút Đóng Sidebar (Mobile) --- */
+.close-button {
+    display: none; /* Chỉ hiện trên mobile qua media query */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: -0.5rem; /* Offset padding */
+    color: var(--sidebar-text-secondary-color, var(--gray-500));
+    font-size: var(--font-size-xl); /* Kích thước icon đóng */
+    line-height: 1;
+}
+.close-button:hover {
+    color: var(--sidebar-text-color, var(--gray-700));
+}
+
+/* ============================================= */
+/* == User Info Section                       == */
+/* ============================================= */
+.user-info-container {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--sidebar-border-color, var(--gray-200));
+    flex-shrink: 0; /* Ngăn không bị co lại */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Khoảng cách avatar và text */
+}
+
+/* --- Avatar --- */
+.user-icon-wrapper { /* Tên class từ PHP */
+    width: 2.5rem;  /* 40px */
+    height: 2.5rem; /* 40px */
+    background: var(--primary-500);
+    color: white;
+    border-radius: var(--rounded-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: var(--font-size-base); /* Kích thước icon user bên trong */
+}
+
+/* --- User Details (Tên & Role) --- */
+.user-text { /* Tên class từ PHP */
+    flex: 1; /* Chiếm không gian còn lại */
+    min-width: 0; /* Quan trọng: Cho phép text overflow hoạt động đúng trong flex item */
+}
+
+.user-name {
+    display: block; /* Từng dòng riêng */
+    font-size: var(--sidebar-font-user-name, var(--font-size-sm));
+    font-weight: var(--font-semibold);
+    color: var(--sidebar-text-color, var(--gray-700));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    display: block; /* Từng dòng riêng */
+    font-size: var(--sidebar-font-user-role, var(--font-size-xs));
+    color: var(--sidebar-text-secondary-color, var(--gray-500));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================= */
+/* == Sidebar Navigation Area                 == */
+/* ============================================= */
+.sidebar-nav {
+    flex: 1; /* Chiếm hết không gian dọc còn lại */
+    overflow-y: auto; /* Scroll dọc nếu cần */
+    overflow-x: hidden; /* Không scroll ngang */
+    padding: 1rem var(--sidebar-nav-item-padding-x, 1rem); /* Padding trên dưới và hai bên */
+
+    /* --- Tùy chỉnh thanh cuộn (Tùy chọn) --- */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--gray-300) transparent; /* Firefox: màu thumb và track */
+}
+/* Webkit (Chrome, Safari, Edge) */
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px; /* Chiều rộng thanh cuộn */
+}
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent; /* Nền track */
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: var(--gray-300); /* Màu thanh cuộn */
+    border-radius: 10px;
+    border: 2px solid transparent; /* Tạo khoảng cách nhỏ với cạnh */
+    background-clip: content-box;
+}
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background-color: var(--gray-400); /* Màu khi hover */
+}
+
+/* --- Reset List Styles --- */
+.sidebar-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* --- Navigation Section Title --- */
+.nav-section-title-li { /* Thẻ li chứa title */
+    margin-top: 1.5rem; /* Khoảng cách giữa các section */
+    margin-bottom: 0.5rem; /* Khoảng cách trước item đầu tiên của section */
+    padding: 0 0.25rem; /* Align title slightly left of items */
+}
+.nav-section-title-li:first-child {
+    margin-top: 0; /* Section đầu tiên không cần margin top */
+}
+
+.nav-section-title { /* Thẻ p chứa text title */
+    font-size: var(--sidebar-font-nav-title, var(--font-size-xs));
+    font-weight: var(--font-semibold); /* Đậm hơn chút */
+    color: var(--sidebar-text-secondary-color, var(--gray-500));
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* Thêm khoảng cách chữ */
+}
+
+/* --- Navigation Item (Link) --- */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem; /* Khoảng cách icon và text */
+    padding: var(--sidebar-nav-item-padding-y, 0.65rem) var(--sidebar-nav-item-padding-x, 1rem);
+    color: var(--sidebar-text-color, var(--gray-700));
+    text-decoration: none;
+    border-radius: var(--rounded-md);
+    margin-bottom: 0.125rem; /* Khoảng cách nhỏ giữa các item */
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    white-space: nowrap; /* Ngăn nội dung xuống dòng */
+    overflow: hidden; /* Ẩn phần tràn ra */
+    /* Font size được thừa hưởng từ .sidebar (var(--sidebar-font-base)) */
+}
+
+/* --- Icon trong Nav Item --- */
+.nav-item i.icon {
+    flex-shrink: 0; /* Ngăn icon bị co lại */
+    font-size: var(--sidebar-icon-size, 1.1em); /* Kích thước icon tương đối */
+    line-height: 1; /* Đảm bảo căn chỉnh */
+    width: 1.2em; /* Chiều rộng dựa trên font-size của chính nó, slightly wider */
+    text-align: center; /* Căn giữa icon nếu font không đều */
+    color: var(--sidebar-text-secondary-color, var(--gray-500)); /* Màu icon mặc định */
+    transition: color 0.15s ease-in-out;
+}
+
+/* --- Text trong Nav Item --- */
+.nav-item span {
+    flex-grow: 1; /* Cho text chiếm phần còn lại */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Font size và color thừa hưởng từ .nav-item */
+    font-weight: var(--font-medium); /* Hơi đậm hơn normal */
+}
+
+/* --- Hover State cho Nav Item --- */
+.nav-item:hover {
+    background-color: var(--gray-100);
+    color: var(--gray-900); /* Đổi màu text khi hover */
+}
+.nav-item:hover i.icon {
+    color: var(--gray-700); /* Đổi màu icon khi hover */
+}
+
+/* --- Active State cho Nav Item --- */
+.nav-item.active {
+    background-color: var(--primary-50); /* Nền màu primary nhạt */
+    color: var(--primary-700); /* Màu chữ primary đậm */
+    font-weight: var(--font-semibold); /* Đậm hơn khi active */
+}
+/* Optional: Add left border for active state */
+/*
+.nav-item.active {
+    border-left: 3px solid var(--primary-500);
+    padding-left: calc(var(--sidebar-nav-item-padding-x, 1rem) - 3px); // Adjust padding
+    background-color: var(--primary-50);
+    color: var(--primary-700);
+    font-weight: var(--font-semibold);
+}
+*/
+
+.nav-item.active i.icon {
+    color: var(--primary-600); /* Màu icon primary đậm hơn */
+}
+
+/* --- Style riêng cho Logout Link --- */
+.logout-link {
+    color: var(--badge-red-text); /* Màu chữ đỏ */
+}
+.logout-link i.icon {
+    color: var(--badge-red-text); /* Màu icon đỏ */
+}
+
+.logout-link:hover {
+    background-color: var(--badge-red-bg); /* Nền đỏ nhạt khi hover */
+    color: var(--badge-red-darker); /* Màu đỏ đậm hơn khi hover */
+}
+.logout-link:hover i.icon {
+    color: var(--badge-red-darker); /* Màu icon đỏ đậm hơn khi hover */
+}
+
+/* ============================================= */
+/* == Sidebar Overlay (Mobile Only)           == */
+/* ============================================= */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0; /* top, right, bottom, left = 0 */
+    background: rgba(0, 0, 0, 0.5); /* Nền đen mờ */
+    display: none; /* Mặc định ẩn */
+    z-index: 1040; /* Dưới sidebar (1050), trên content */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+.sidebar-overlay.open {
+    display: block; /* Hiện khi sidebar mở */
+    opacity: 1;
+}
+
+/* ============================================= */
+/* == Content Wrapper                         == */
+/* ============================================= */
+.content-wrapper {
+    /* Grid handles position, no margin-left needed */
+    min-height: 100vh; /* Ensure full height */
+    padding: 1.5rem 2rem; /* Padding for main content */
+    background-color: var(--gray-50); /* Light gray background for content area */
+    box-sizing: border-box;
+}
+
+/* ============================================= */
+/* == Mobile Styles (< 768px, ví dụ md breakpoint) == */
+/* ============================================= */
+@media (max-width: 768px) {
+    /* --- Layout: Change Grid, Sidebar is off-canvas --- */
+    .dashboard-wrapper {
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    /* --- Hiện Hamburger Button --- */
+    .hamburger-btn {
+        display: block;
+    }
+
+    /* --- Sidebar: Fixed, Transform, Shadow --- */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%; /* Full height */
+        transform: translateX(-100%); /* Hide completely off-screen */
+        z-index: 1050; /* Highest, above overlay */
+        border-right: none; /* Remove border */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Add shadow */
+        /* Ensure width is appropriate for mobile */
+        width: clamp(var(--sidebar-width-min, 220px), 80vw, var(--sidebar-width-max, 300px));
+        min-width: unset; /* Reset min-width for clamp */
+        /* Reset sticky positioning if it was applied */
+        position: fixed;
+        top: 0;
+    }
+
+    /* --- Sidebar when open --- */
+    .sidebar.open {
+        transform: translateX(0); /* Slide in */
+    }
+
+    /* --- Show close button inside Header --- */
+    .close-button {
+        display: block;
+    }
+
+    /* --- Content Wrapper: Adjust Padding --- */
+    .content-wrapper {
+        padding-top: 5.5rem; /* Increased top padding slightly */
+        padding-left: 1rem; /* Adjust mobile padding */
+        padding-right: 1rem;
+        /* Margin-left is not needed as sidebar is fixed */
+    }
+
+    /* Overlay is handled by the .open class defined earlier */
+}

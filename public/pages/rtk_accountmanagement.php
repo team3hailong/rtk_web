@@ -103,7 +103,7 @@ function format_date_display($date_str) {
                 <div class="empty-state">
                     <h3>Chưa có tài khoản nào</h3>
                     <p>Bạn chưa đăng ký hoặc mua tài khoản nào. Hãy bắt đầu ngay!</p>
-                    <a href="<?php echo $base_url; ?>/pages/purchase/package.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+                    <a href="<?php echo $base_url; ?>/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
                 </div>
             <?php else: ?>
                 <?php foreach ($accounts as $account): ?>

@@ -142,6 +142,7 @@ include $project_root_path . '/private/includes/header.php';
         transition: background-color 0.2s ease;
         cursor: pointer;
         margin-top: auto; /* Đảm bảo nút luôn ở dưới cùng */
+        box-sizing: border-box; /* Prevent overflow due to padding */
     }
 
     .btn-select-package:hover {

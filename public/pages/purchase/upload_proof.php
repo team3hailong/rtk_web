@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('payment_proof_image');
     const uploadProgress = document.getElementById('upload-progress');
     const uploadStatusJs = document.getElementById('upload-status-js'); // Corrected ID
+    const transactionUrl = '<?php echo $base_url; ?>/public/pages/transaction.php'; // Define transaction URL
 
     if (uploadForm) {
         uploadForm.addEventListener('submit', function(event) {
@@ -205,30 +206,47 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(({ ok, status, jsonData }) => {
                 console.log('Parsed JSON data:', jsonData);
                 if (ok && jsonData.success) {
-                    alert('Đã tải lên minh chứng thành công. Chúng tôi sẽ sớm xác nhận giao dịch của bạn.');
-                    uploadStatusJs.textContent = 'Tải lên thành công!';
+                    uploadStatusJs.textContent = 'Tải lên thành công! Đang chuyển hướng...';
+                    uploadStatusJs.classList.remove('status-error'); // Ensure error class is removed
                     uploadStatusJs.classList.add('status-success');
                     fileInput.value = ''; // Clear file input on success
-                    // Optionally redirect after success
-                    // window.location.href = '<?php echo $base_url; ?>/public/pages/transaction.php?upload=success';
+
+                    // Wait 1 second then redirect
+                    setTimeout(() => {
+                        window.location.href = transactionUrl + '?upload=success'; // Add query param for potential feedback
+                    }, 1000); // 1000 milliseconds = 1 second
+
                 } else {
                     const errorMessage = jsonData.error || `Lỗi không xác định từ server (HTTP ${status})`;
                     alert(`Lỗi tải lên: ${errorMessage}`);
                     uploadStatusJs.textContent = `Lỗi: ${errorMessage}`;
+                    uploadStatusJs.classList.remove('status-success'); // Ensure success class is removed
                     uploadStatusJs.classList.add('status-error');
                     console.error('Upload failed:', errorMessage, 'Data:', jsonData);
+                    // Re-enable button immediately on failure
+                    uploadButton.disabled = false;
+                    uploadButton.innerText = 'Gửi minh chứng';
+                    uploadProgress.style.display = 'none';
                 }
             })
             .catch(error => {
                 console.error('Fetch error:', error);
                 alert('Đã xảy ra lỗi khi gửi minh chứng. Vui lòng thử lại. Chi tiết: ' + error.message);
                 uploadStatusJs.textContent = 'Lỗi mạng hoặc phản hồi không hợp lệ. Kiểm tra console.';
+                uploadStatusJs.classList.remove('status-success');
                 uploadStatusJs.classList.add('status-error');
-            })
-            .finally(() => {
+                 // Re-enable button on catch
                 uploadButton.disabled = false;
                 uploadButton.innerText = 'Gửi minh chứng';
                 uploadProgress.style.display = 'none';
+            })
+            .finally(() => {
+                // Only re-enable button etc. here if NOT successful, as success handles its own state before redirect
+                if (!uploadStatusJs.classList.contains('status-success')) {
+                     uploadButton.disabled = false;
+                     uploadButton.innerText = 'Gửi minh chứng';
+                     uploadProgress.style.display = 'none';
+                }
             });
         });
     }

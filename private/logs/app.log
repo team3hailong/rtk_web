@@ -25,3 +25,99 @@
 [2025-04-19 11:35:04][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
 [2025-04-19 11:35:04][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
 [2025-04-19 11:35:04][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
+[2025-04-19 11:39:41][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 11:39:41][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
+[2025-04-19 11:39:41][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 11:44:44][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 11:44:44][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
+[2025-04-19 11:44:44][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 11:44:49][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 11:44:49][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
+[2025-04-19 11:44:49][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 11:45:06][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 11:45:06][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
+[2025-04-19 11:45:06][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
+[2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:07:33][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:07:33][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:07:33][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:07:50][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:07:50][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:07:50][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:07:53][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:07:53][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:07:53][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:08:12][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:08:12][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:08:12][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:08:18][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:08:18][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:08:18][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:08:20][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:08:20][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:08:20][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:08:22][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:08:22][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:08:22][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:08:42][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:08:42][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:08:42][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:13:16][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:13:16][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:13:16][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:14:20][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:14:20][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:14:20][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:19:31][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:19:31][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:19:31][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:20:00][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:20:00][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:20:00][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:33:34][RtkAccount GetAccounts ByRegID Simplified] Attempting to fetch simplified accounts for registration ID: 10
+[2025-04-19 14:33:34][RtkAccount GetAccounts ByRegID Simplified] Database query successful. Found 0 rows for registration ID: 10
+[2025-04-19 14:33:34][RtkAccount GetAccounts ByRegID Simplified] Successfully processed data. Returning 0 simplified account(s) for registration ID: 10
+[2025-04-19 14:34:56][RtkAccount GetAccounts ByRegID Simplified] Attempting to fetch simplified accounts for registration ID: 10
+[2025-04-19 14:34:56][RtkAccount GetAccounts ByRegID Simplified] Database query successful. Found 1 rows for registration ID: 10
+[2025-04-19 14:34:56][RtkAccount GetAccounts ByRegID Simplified] Successfully processed data. Returning 1 simplified account(s) for registration ID: 10
+[2025-04-19 14:49:02][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:49:02][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 14:49:02][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10
+[2025-04-19 14:49:28][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:49:28][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:49:28][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:52:10][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:52:10][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:52:10][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:52:27][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:52:27][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:52:27][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:54:13][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:54:13][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:54:13][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:56:48][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:56:48][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:56:48][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:57:14][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:57:14][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:57:14][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:59:13][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:59:13][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:59:13][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 14:59:14][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 14:59:14][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 14:59:14][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 15:06:09][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 15:06:09][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 15:06:09][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 15:06:10][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 15:06:10][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 15:06:10][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10
+[2025-04-19 15:08:04][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 15:08:04][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 10
+[2025-04-19 15:08:04][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 10

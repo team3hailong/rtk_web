@@ -21,8 +21,8 @@ require_once $project_root_path . '/classes/Database.php';
 // --- Constants ---
 // Define upload directory relative to the public folder
 define('UPLOAD_DIR_RELATIVE', '/uploads/payment_proofs/');
-// Define absolute path for file operations
-define('UPLOAD_DIR_ABSOLUTE', $project_root_path . '/public' . UPLOAD_DIR_RELATIVE);
+// Define absolute path for file operations - Corrected path
+define('UPLOAD_DIR_ABSOLUTE', dirname($project_root_path) . '/public' . UPLOAD_DIR_RELATIVE);
 // Allowed file types and max size (e.g., 5MB)
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
 define('MAX_FILE_SIZE', 5 * 1024 * 1024);
@@ -57,6 +57,7 @@ $user_id = $_SESSION['user_id'];
 $uploaded_file = $_FILES['payment_proof_image'];
 
 // --- File Upload Logic ---
+$destination_path = null; // Initialize destination path
 try {
     // Validate Uploaded File
     if ($uploaded_file['error'] !== UPLOAD_ERR_OK) {
@@ -87,7 +88,7 @@ try {
         time(),
         $file_extension
     );
-    $destination_path = UPLOAD_DIR_ABSOLUTE . $unique_filename;
+    $destination_path = UPLOAD_DIR_ABSOLUTE . $unique_filename; // Assign destination path
 
     // Move Uploaded File
     if (!move_uploaded_file($uploaded_file['tmp_name'], $destination_path)) {
@@ -97,6 +98,7 @@ try {
     // Database Interaction
     $db = new Database();
     $conn = $db->getConnection();
+    $conn->beginTransaction(); // Start transaction
 
     // Check if the registration belongs to the current user
     $sql_check = "SELECT user_id, status FROM registration WHERE id = :registration_id";
@@ -136,18 +138,41 @@ try {
         $stmt_insert->execute();
     }
 
+    // --- NEW: Update transaction_history ---
+    $sql_update_transaction = "UPDATE transaction_history
+                               SET updated_at = NOW()
+                               WHERE registration_id = :registration_id
+                               AND status = 'pending'"; // Only update pending transactions
+    $stmt_update_trans = $conn->prepare($sql_update_transaction);
+    $stmt_update_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+    $stmt_update_trans->execute();
+    // --- END NEW ---
+
+    $conn->commit(); // Commit transaction
+
     // Success Response
     $response['success'] = true;
     unset($response['error']);
     $response['message'] = 'Proof uploaded successfully.';
+
 } catch (PDOException $e) {
+    if ($conn && $conn->inTransaction()) {
+        $conn->rollBack(); // Roll back transaction on DB error
+    }
     error_log("Database error uploading payment proof: " . $e->getMessage());
     $response['error'] = 'Database error occurred.';
+    // Clean up uploaded file if DB operation failed
+    if ($destination_path && file_exists($destination_path)) {
+        unlink($destination_path);
+    }
 } catch (Exception $e) {
+    if ($conn && $conn->inTransaction()) {
+        $conn->rollBack(); // Roll back transaction on general error if needed
+    }
     error_log("General error uploading payment proof: " . $e->getMessage());
     $response['error'] = $e->getMessage();
     // Clean up uploaded file if operation failed
-    if (file_exists($destination_path)) {
+    if ($destination_path && file_exists($destination_path)) {
         unlink($destination_path);
     }
 }

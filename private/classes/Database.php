@@ -39,6 +39,7 @@ class Database {
      */
     public function connect() {
         $this->conn = null;
+        $logPrefix = "[Database Connect] "; // Add a prefix for easier log searching
 
         try {
             // Data Source Name (DSN)
@@ -53,9 +54,13 @@ class Database {
 
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
 
+            // Log success
+            error_log($logPrefix . "Connection to database '" . $this->db_name . "' successful.");
+
         } catch(PDOException $e) {
             // Log the error instead of echoing it in production
-            error_log('Connection Error: ' . $e->getMessage());
+            // Log failure
+            error_log($logPrefix . 'Connection Error: ' . $e->getMessage()); // Use the prefix
             // Optionally, you could throw the exception again or return null/false
             // throw $e; // Re-throw if you want calling code to handle it
             return null; // Indicate connection failure
@@ -78,7 +83,16 @@ class Database {
      */
     public function getConnection() {
         if ($this->conn === null) {
+            // Log attempt to connect if not already connected
+            error_log("[Database GetConnection] No active connection found. Attempting to connect...");
             $this->connect();
+        } else {
+             // Log if connection already exists (optional, can be verbose)
+             // error_log("[Database GetConnection] Returning existing connection.");
+        }
+        // Log if connection failed after attempt
+        if ($this->conn === null) {
+             error_log("[Database GetConnection] Failed to establish connection.");
         }
         return $this->conn;
     }

@@ -1,0 +1,315 @@
+:root {
+    /* Thêm các biến màu nếu chưa có trong style.css */
+    --blue-500: #2196F3;
+    --blue-600: #1976D2;
+    --green-500: #4CAF50;
+    --green-600: #388E3C;
+    --green-bg-light: #e8f5e9;
+    --green-text-dark: #2e7d32;
+    --red-bg-light: #ffebee;
+    --red-text-dark: #c62828;
+    --orange-bg-light: #fff3e0;
+    --orange-text-dark: #ef6c00;
+    /* Assuming these exist in a global CSS, otherwise define them */
+    /* --gray-100: #f3f4f6; */
+    /* --gray-200: #e5e7eb; */
+    /* --gray-300: #d1d5db; */
+    /* --gray-500: #6b7280; */
+    /* --gray-600: #4b5563; */
+    /* --gray-700: #374151; */
+    /* --gray-800: #1f2937; */
+    /* --rounded: 0.25rem; */
+    /* --rounded-md: 0.375rem; */
+    /* --rounded-lg: 0.5rem; */
+    /* --rounded-full: 9999px; */
+    /* --font-size-xs: 0.75rem; */
+    /* --font-size-sm: 0.875rem; */
+    /* --font-size-2xl: 1.5rem; */
+    /* --font-medium: 500; */
+    /* --font-semibold: 600; */
+    /* --primary-500: #your_primary_color; */
+    /* --primary-600: #your_primary_darker_color; */
+}
+
+/* --- Content Wrapper (Cần có trong CSS chung) --- */
+/* .content-wrapper { padding: 1.5rem; } */
+
+/* --- Header Thông tin phụ (Tùy chọn) --- */
+.account-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb); /* Added fallback */
+    flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+    gap: 1rem;
+}
+.account-page-header h2 {
+     margin: 0; /* Reset margin của h2 */
+     font-size: 1.75rem; /* --font-size-2xl */
+     font-weight: var(--font-semibold, 600); /* Added fallback */
+}
+
+/* --- Filter & Search Section --- */
+.filter-search-section {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Xuống dòng trên mobile */
+}
+
+.filter-tabs button {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--gray-300, #d1d5db); /* Added fallback */
+    border-radius: var(--rounded-md, 0.375rem); /* Added fallback */
+    background-color: white;
+    color: var(--gray-700, #374151); /* Added fallback */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    font-size: var(--font-size-sm, 0.875rem); /* Added fallback */
+    margin-right: 0.5rem; /* Khoảng cách giữa các tab */
+}
+ .filter-tabs button:last-child { margin-right: 0;}
+
+.filter-tabs button.active {
+    background-color: var(--blue-500); /* Màu xanh dương làm màu active */
+    color: white;
+    border-color: var(--blue-500);
+}
+ .filter-tabs button:hover:not(.active) {
+     background-color: var(--gray-100, #f3f4f6); /* Added fallback */
+ }
+
+.search-input {
+    padding: 0.55rem 1rem; /* Hơi cao hơn nút 1 chút */
+    border: 1px solid var(--gray-300, #d1d5db); /* Added fallback */
+    border-radius: var(--rounded-md, 0.375rem); /* Added fallback */
+    font-size: var(--font-size-sm, 0.875rem); /* Added fallback */
+    min-width: 250px; /* Chiều rộng tối thiểu */
+    flex-grow: 1; /* Cho phép ô search co giãn */
+}
+ .search-input:focus {
+    outline: none;
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+/* --- Grid Danh Sách Tài Khoản --- */
+.accounts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Khoảng cách giữa các card */
+}
+
+/* --- Card Tài Khoản --- */
+.account-card {
+    background-color: white;
+    border-radius: var(--rounded-lg, 0.5rem); /* Added fallback */
+    border: 1px solid var(--gray-200, #e5e7eb); /* Added fallback */
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: grid;
+    /* Responsive grid: 1 cột trên mobile, nhiều cột hơn khi đủ rộng */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem 1.5rem; /* Khoảng cách dọc và ngang */
+    align-items: start; /* Căn các mục lên trên */
+}
+/* Thêm border top màu mè theo status */
+ .account-card.status-active { border-top: 3px solid var(--green-500); }
+ .account-card.status-expired { border-top: 3px solid var(--red-text-dark); }
+ .account-card.status-pending { border-top: 3px solid var(--orange-text-dark); }
+
+
+/* --- Các khu vực trong Card --- */
+.card-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem; /* Khoảng cách nhỏ giữa các dòng trong section */
+}
+.card-section strong { /* Tiêu đề nhỏ của section */
+    font-weight: var(--font-semibold, 600); /* Added fallback */
+    color: var(--gray-800, #1f2937); /* Added fallback */
+    font-size: 0.95rem; /* Hơi lớn hơn text thường */
+    margin-bottom: 0.25rem;
+    display: block;
+}
+.card-section p, .card-section span, .card-section ul {
+    font-size: var(--font-size-sm, 0.875rem); /* Added fallback */
+    color: var(--gray-600, #4b5563); /* Added fallback */
+    margin: 0;
+    line-height: 1.5;
+}
+.card-section .password-field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.card-section .password-field span { font-family: monospace; letter-spacing: 1px;}
+.card-section .password-field button {
+    background: none; border: none; padding: 0; cursor: pointer; color: var(--blue-500); font-size: 0.8rem;
+}
+
+/* Danh sách trạm */
+.station-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 60px; /* Giới hạn chiều cao ban đầu */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.station-list.expanded {
+    max-height: 500px; /* Chiều cao đủ lớn khi mở rộng */
+}
+.station-list li {
+    background-color: var(--gray-100, #f3f4f6); /* Added fallback */
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--rounded, 0.25rem); /* Added fallback */
+    margin-bottom: 0.3rem;
+    display: inline-block; /* Hiển thị các trạm trên cùng dòng nếu đủ chỗ */
+    margin-right: 0.3rem;
+}
+.toggle-stations {
+    font-size: var(--font-size-xs, 0.75rem); /* Added fallback */
+    color: var(--blue-500);
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 0.3rem;
+    display: inline-block;
+}
+
+/* Trạng thái */
+.badge-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--rounded-full, 9999px); /* Added fallback */
+    font-size: var(--font-size-xs, 0.75rem); /* Added fallback */
+    font-weight: var(--font-semibold, 600); /* Added fallback */
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+.status-active { background-color: var(--green-bg-light); color: var(--green-text-dark); }
+.status-expired { background-color: var(--red-bg-light); color: var(--red-text-dark); }
+.status-pending { background-color: var(--orange-bg-light); color: var(--orange-text-dark); }
+
+/* Khu vực Hành động */
+.card-actions {
+    grid-column: -1 / -2; /* Đặt ở cột cuối cùng */
+    justify-self: end; /* Căn phải */
+    align-self: start; /* Căn trên */
+    display: flex;
+    flex-direction: column; /* Xếp nút dọc */
+    gap: 0.5rem;
+    align-items: flex-end; /* Căn các nút sang phải */
+}
+
+/* Styling for the action buttons container */
+.card-actions {
+    display: flex; /* Use flexbox for layout */
+    gap: 0.75rem; /* Space between buttons */
+    margin-top: 1rem; /* Space above the buttons */
+    padding-top: 1rem; /* Add padding if needed, maybe border-top */
+    border-top: 1px solid var(--border-color-light, #eee); /* Optional separator line */
+    justify-content: flex-end; /* Align buttons to the right */
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+}
+
+/* Styling for the action buttons */
+.btn-action {
+    display: inline-block; /* Allow padding and margins */
+    padding: 0.5rem 1rem; /* Vertical and horizontal padding */
+    border: 1px solid var(--primary-color-dark, #0056b3); /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: var(--primary-color, #007bff); /* Background color */
+    color: var(--white-text, #fff); /* Text color */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 0.875rem; /* Font size */
+    font-weight: 500; /* Font weight */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; /* Smooth transition */
+    line-height: 1.5; /* Ensure consistent line height */
+}
+
+/* Hover effect for action buttons */
+.btn-action:hover {
+    background-color: var(--primary-color-dark, #0056b3); /* Darker background on hover */
+    border-color: var(--primary-color-darker, #004085); /* Even darker border on hover */
+    color: var(--white-text, #fff); /* Keep text color */
+}
+
+/* Optional: Specific styles if needed, e.g., for a secondary button */
+/*
+.btn-action.secondary {
+    background-color: var(--secondary-color, #6c757d);
+    border-color: var(--secondary-color-dark, #5a6268);
+}
+
+.btn-action.secondary:hover {
+    background-color: var(--secondary-color-dark, #5a6268);
+    border-color: var(--secondary-color-darker, #4e555b);
+}
+*/
+
+.btn-action {
+    padding: 0.4rem 1rem;
+    border: none;
+    border-radius: var(--rounded-md, 0.375rem); /* Added fallback */
+    cursor: pointer;
+    font-size: var(--font-size-sm, 0.875rem); /* Added fallback */
+    font-weight: var(--font-medium, 500); /* Added fallback */
+    transition: background-color 0.2s ease;
+    text-decoration: none; /* Cho thẻ <a> */
+    display: inline-block;
+    text-align: center;
+    min-width: 100px; /* Chiều rộng tối thiểu cho nút */
+}
+.btn-view { background-color: var(--blue-500); color: white; }
+.btn-view:hover { background-color: var(--blue-600); }
+.btn-renew { background-color: var(--green-500); color: white; }
+.btn-renew:hover { background-color: var(--green-600); }
+
+/* Trạng thái trống */
+.empty-state { text-align: center; padding: 3rem; color: var(--gray-500, #6b7280); background-color: white; border-radius: var(--rounded-lg, 0.5rem); } /* Added fallback */
+.empty-state h3 { color: var(--gray-700, #374151); margin-bottom: 0.5rem; } /* Added fallback */
+.empty-state p { margin-bottom: 1.5rem; }
+.buy-now-btn { /* Style lại nút mua */
+    display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary-500, #2196F3); color: white; text-decoration: none; border-radius: var(--rounded-md, 0.375rem); transition: background 0.3s ease; font-weight: var(--font-semibold, 600); /* Added fallbacks */
+}
+.buy-now-btn:hover { background: var(--primary-600, #1976D2); } /* Added fallback */
+
+/* Responsive cho Card */
+@media (max-width: 992px) { /* Điều chỉnh breakpoint nếu cần */
+    .account-card {
+         /* Có thể giữ nhiều cột hoặc chuyển về 1 cột tùy ý */
+         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+     .card-actions {
+        grid-column: auto; /* Reset vị trí cột */
+        justify-self: start; /* Căn trái trên màn hình nhỏ hơn */
+        align-self: end; /* Căn cuối section */
+        flex-direction: row; /* Xếp nút ngang */
+        margin-top: 1rem; /* Thêm khoảng cách trên */
+        width: 100%; /* Chiếm hết chiều rộng */
+        justify-content: flex-start; /* Căn nút sang trái */
+     }
+}
+ @media (max-width: 576px) {
+     .account-card {
+        grid-template-columns: 1fr; /* Chỉ 1 cột trên mobile */
+        padding: 1rem;
+    }
+    .card-actions {
+        flex-direction: column; /* Lại xếp dọc trên mobile nhỏ */
+        align-items: stretch; /* Nút chiếm hết chiều rộng */
+    }
+    .btn-action { width: 100%; } /* Nút full width */
+    .filter-search-section { flex-direction: column; align-items: stretch;}
+    .filter-tabs { display: flex; flex-wrap: wrap; justify-content: center;}
+    .filter-tabs button { flex-grow: 1; text-align: center; margin-bottom: 0.5rem;}
+    .search-input { min-width: unset; width: 100%; }
+    .account-page-header h2 {font-size: 1.5rem;}
+
+ }

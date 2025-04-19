@@ -135,12 +135,17 @@ try {
     // Commit Transaction
     $conn->commit();
 
-    // --- Store registration ID in session for payment page ---
+    // --- Store registration ID and total price in session for payment page ---
     $_SESSION['pending_registration_id'] = $registration_id;
-    $_SESSION['pending_total_amount'] = $final_total_price; // Store amount for payment page
+    // Correct the session variable name to match payment.php
+    $_SESSION['pending_total_price'] = $final_total_price;
+
+    // Ensure session data is written before redirecting (optional but good practice)
+    session_write_close();
 
     // --- Redirect to Payment Instructions Page ---
-    header('Location: ' . $base_url . '/public/pages/purchase/payment.php?reg_id=' . $registration_id);
+    // Remove reg_id from URL as it's now in session
+    header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
     exit;
 
 } catch (PDOException $e) {

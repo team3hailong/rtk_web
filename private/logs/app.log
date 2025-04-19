@@ -40,3 +40,6 @@
 [2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
 [2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 10
 [2025-04-19 11:45:35][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 10
+[2025-04-19 13:57:37][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 10

@@ -10,7 +10,7 @@ $private_includes_path = __DIR__ . '/../../private/includes/';
 // Authentication check
 if (!isset($_SESSION['user_id'])) {
     // Redirect to login page relative to the base URL
-    header('Location: /pages/auth/login.php'); // Corrected path from root
+    header('Location: /public/pages/auth/login.php'); // Corrected path from root
     exit;
 }
 
@@ -21,8 +21,9 @@ include $private_includes_path . 'header.php';
 $user_id = $_SESSION['user_id'];
 $active_registrations = 0;
 $pending_transactions = 0;
-$approved_collaborators = 0;
+$approved_collaborators = 0; // Assuming this is a system-wide stat or needs adjustment for user-specific view
 $recent_activities = [];
+$user_display_name = $_SESSION['username'] ?? 'Người dùng'; // Get username from session
 
 // Ensure $pdo is available (from header.php or other include)
 if (isset($pdo)) {
@@ -37,7 +38,7 @@ if (isset($pdo)) {
         $stmt->execute(['user_id' => $user_id]);
         $pending_transactions = $stmt->fetchColumn();
 
-        // Approved Collaborators (System-wide)
+        // Approved Collaborators (System-wide) - Consider if this should be user-specific
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM collaborator WHERE status = 'approved'");
         $stmt->execute();
         $approved_collaborators = $stmt->fetchColumn();
@@ -67,7 +68,17 @@ if (isset($pdo)) {
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-6">Dashboard</h2>
+        <!-- Header Section within Content -->
+        <div class="content-header">
+             <h2 class="text-2xl font-semibold">Dashboard</h2>
+             <div class="user-info">
+                 <span>Chào mừng, <span class="highlight"><?php echo htmlspecialchars($user_display_name); ?></span>!</span>
+                 <!-- Link to Profile Settings -->
+                 <a href="<?php echo $base_path; ?>public/pages/setting/profile.php" style="margin-left: 15px; color: var(--primary-600); text-decoration: none;">Hồ sơ</a>
+                 <!-- Logout Link -->
+                 <a href="<?php echo $base_path; ?>logout.php" style="margin-left: 15px; color: var(--gray-600); text-decoration: none;">Đăng xuất</a>
+             </div>
+        </div>
 
         <!-- Stats Grid -->
         <div class="stats-grid">
@@ -88,7 +99,7 @@ if (isset($pdo)) {
             <!-- Approved Collaborators Card -->
             <div class="stat-card">
                 <i class="icon fas fa-users-cog info"></i> <!-- Changed icon and title -->
-                <h3>Cộng tác viên</h3>
+                <h3>Cộng tác viên</h3> <!-- Assuming this is a relevant stat for the user -->
                 <p class="value" id="referral-count"><?php echo htmlspecialchars($approved_collaborators); ?></p>
             </div>
         </div>
@@ -105,9 +116,19 @@ if (isset($pdo)) {
                                 // Build a descriptive message
                                 $description = 'Thực hiện: ' . htmlspecialchars(ucfirst($activity['action'])); // e.g., Login, Update
                                 if (!empty($activity['entity_type'])) {
-                                    $description .= ' ' . htmlspecialchars($activity['entity_type']); // e.g., user, profile
+                                    // Translate common entity types if needed
+                                    $entity_type_display = $activity['entity_type'];
+                                    if ($entity_type_display === 'user' && $activity['action'] === 'login') {
+                                        $entity_type_display = 'đăng nhập';
+                                    } elseif ($entity_type_display === 'user' && $activity['action'] === 'logout') {
+                                         $entity_type_display = 'đăng xuất';
+                                    } elseif ($entity_type_display === 'profile') {
+                                         $entity_type_display = 'hồ sơ';
+                                    }
+                                    $description .= ' ' . htmlspecialchars($entity_type_display);
                                 }
-                                if (!empty($activity['entity_id']) && $activity['entity_type'] !== 'user') { 
+                                // Avoid showing user ID for login/logout actions
+                                if (!empty($activity['entity_id']) && !($activity['entity_type'] === 'user' && ($activity['action'] === 'login' || $activity['action'] === 'logout'))) {
                                     $description .= ' #' . htmlspecialchars($activity['entity_id']);
                                 }
                                 echo $description;

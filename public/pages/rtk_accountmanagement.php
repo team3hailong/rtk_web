@@ -122,8 +122,8 @@ function format_date_display($date_str) {
                     <div class="account-card <?php echo $status_class; ?>" data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo htmlspecialchars(strtolower($account['id'] . ' ' . $account['username'] . ' ' . $station_names_string)); ?>">
                         <!-- Section 1: Thông tin cơ bản -->
                         <div class="card-section">
-                            <strong>Tài khoản #<?php echo htmlspecialchars($account['id'] ?? 'N/A'); ?></strong>
-                            <p title="Tên đăng nhập">TK: <?php echo htmlspecialchars($account['username'] ?? 'N/A'); ?></p>
+                            <strong>Tài khoản <?php echo htmlspecialchars(str_replace('RTK_', '#', $account['id'] ?? 'N/A')); ?></strong>
+                            <p title="Tên đăng nhập">TK: <?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></p>
                             <div class="password-field">
                                 <!-- Password display remains masked -->
                                 <!-- Store the actual password in data-password but display asterisks -->

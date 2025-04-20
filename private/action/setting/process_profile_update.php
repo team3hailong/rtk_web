@@ -104,22 +104,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     try {
         $db = new Database();
         $pdo = $db->getConnection();
-        
+
         if (!$pdo) {
             throw new Exception("Database connection failed.");
         }
 
-        // ...existing update code...
+        // Prepare the update statement
+        $sql = "UPDATE user SET
+                    username = :username,
+                    phone = :phone,
+                    is_company = :is_company,
+                    company_name = :company_name,
+                    tax_code = :tax_code,
+                    updated_at = NOW()
+                WHERE id = :user_id AND deleted_at IS NULL";
+
+        $stmt = $pdo->prepare($sql);
+
+        // Bind parameters
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
+        $stmt->bindParam(':is_company', $is_company, PDO::PARAM_INT);
+        $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR); // PDO handles null correctly
+        $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);         // PDO handles null correctly
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+        // Execute the update
+        $stmt->execute();
 
         // After successful update, fetch fresh user data
         $result = fetchUserData($user_id);
         if (isset($result['data'])) {
-            $_SESSION['user_data'] = $result['data'];
+            $_SESSION['user_data'] = $result['data']; // Update session data
             $_SESSION['profile_message'] = "Hồ sơ đã được cập nhật thành công.";
+        } else {
+            // Handle case where fetching updated data fails, though unlikely after successful update
+             $_SESSION['profile_error'] = $result['error'] ?? 'Không thể tải lại dữ liệu người dùng sau khi cập nhật.';
+        }
+
+    } catch (PDOException $e) {
+        error_log("Profile update PDO error: " . $e->getMessage());
+        // Check for duplicate phone number error (MySQL error code 1062)
+        if ($e->getCode() == '23000' && strpos($e->getMessage(), 'Duplicate entry') !== false && strpos($e->getMessage(), 'phone') !== false) {
+             $_SESSION['profile_error'] = "Số điện thoại này đã được sử dụng bởi tài khoản khác.";
+        } else {
+             $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ (DB).";
         }
     } catch (Exception $e) {
-        error_log("Profile update error: " . $e->getMessage());
+        error_log("Profile update general error: " . $e->getMessage());
         $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ.";
+    } finally {
+        if (isset($db)) {
+            $db->close();
+        }
     }
 }
 

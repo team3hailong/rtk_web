@@ -74,9 +74,9 @@ if (isset($pdo)) {
              <div class="user-info">
                  <span>Chào mừng, <span class="highlight"><?php echo htmlspecialchars($user_display_name); ?></span>!</span>
                  <!-- Link to Profile Settings -->
-                 <a href="<?php echo $base_path; ?>public/pages/setting/profile.php" style="margin-left: 15px; color: var(--primary-600); text-decoration: none;">Hồ sơ</a>
+                 <a href="<?php echo $base_path; ?>/pages/setting/profile.php" style="margin-left: 15px; color: var(--primary-600); text-decoration: none;">Hồ sơ</a>
                  <!-- Logout Link -->
-                 <a href="<?php echo $base_path; ?>logout.php" style="margin-left: 15px; color: var(--gray-600); text-decoration: none;">Đăng xuất</a>
+                 <a href="<?php echo $base_path; ?>/pages/auth/logout.php" style="margin-left: 15px; color: var(--gray-600); text-decoration: none;">Đăng xuất</a>
              </div>
         </div>
 

@@ -60,13 +60,29 @@ try {
         throw new Exception("Invalid package selected.");
     }
 
+    // --- Check if it's the trial package ---
+    // Assuming the trial package has a specific ID or a unique identifier like 'trial_7d' in its varchar_id
+    // Let's refine this based on how 'trial_7d' is identified. If it's the varchar_id passed from details:
+    $selected_package_varchar_id_from_post = filter_input(INPUT_POST, 'package_varchar_id'); // Need to pass this from details.php form
+    $is_trial_package = ($selected_package_varchar_id_from_post === 'trial_7d');
+
     // --- Server-side Price Calculation ---
     $base_price = (float)$package['price'];
+    // Ensure quantity is 1 for trial package, regardless of input (security measure)
+    if ($is_trial_package) {
+        $quantity = 1;
+        $base_price = 0; // Ensure price is 0 for trial
+    }
     $calculated_total_price = $base_price * $quantity;
     // Optional: Add VAT calculation here if needed
     $vat_percent = 0; // Example: Get from config or package details
     $vat_amount = $calculated_total_price * ($vat_percent / 100);
     $final_total_price = $calculated_total_price + $vat_amount;
+
+    // Ensure final price is 0 if it's a trial package
+    if ($is_trial_package) {
+        $final_total_price = 0;
+    }
 
     // --- Calculate Start and End Dates (Example: using package duration text) ---
     $start_time = new DateTime();
@@ -111,7 +127,7 @@ try {
     $stmt_reg->bindParam(':base_price', $base_price); // PDO detects type
     $stmt_reg->bindParam(':vat_percent', $vat_percent);
     $stmt_reg->bindParam(':vat_amount', $vat_amount);
-    $stmt_reg->bindParam(':total_price', $final_total_price);
+    $stmt_reg->bindParam(':total_price', $final_total_price); // Use the potentially adjusted final price
     $stmt_reg->execute();
 
     $registration_id = $conn->lastInsertId();
@@ -125,7 +141,7 @@ try {
     $stmt_trans = $conn->prepare($sql_trans);
     $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_trans->bindParam(':amount', $final_total_price); // Use the final calculated price
+    $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
     $stmt_trans->execute();
 
     if ($stmt_trans->rowCount() == 0) {
@@ -135,16 +151,15 @@ try {
     // Commit Transaction
     $conn->commit();
 
-    // --- Store registration ID and total price in session for payment page ---
+    // --- Store registration ID, total price, and trial status in session for payment page ---
     $_SESSION['pending_registration_id'] = $registration_id;
-    // Correct the session variable name to match payment.php
     $_SESSION['pending_total_price'] = $final_total_price;
+    $_SESSION['pending_is_trial'] = $is_trial_package; // Store trial status
 
     // Ensure session data is written before redirecting (optional but good practice)
     session_write_close();
 
     // --- Redirect to Payment Instructions Page ---
-    // Remove reg_id from URL as it's now in session
     header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
     exit;
 

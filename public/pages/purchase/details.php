@@ -55,6 +55,9 @@ if (!$selected_package) {
     exit;
 }
 
+// --- Check if it's the specific trial package from URL ---
+$is_trial_7d_package = ($selected_package_varchar_id === 'trial_7d');
+
 // --- Check if it's a "Contact Us" package ---
 $is_contact_package = ($selected_package['button_text'] === 'Liên hệ mua');
 if ($is_contact_package) {
@@ -77,6 +80,7 @@ $user_username = $_SESSION['username'] ?? 'Người dùng';
 
 // --- Include Header ---
 include $project_root_path . '/private/includes/header.php';
+
 ?>
 
 <!-- CSS cho Trang Chi Tiết Mua Hàng (Keep existing styles) -->
@@ -124,6 +128,11 @@ include $project_root_path . '/private/includes/header.php';
     input[type=number]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
+    }
+
+    input[readonly] {
+        background-color: var(--gray-100);
+        cursor: not-allowed;
     }
 
     .selected-package-info {
@@ -197,17 +206,25 @@ include $project_root_path . '/private/includes/header.php';
             </div>
 
             <!-- Input ẩn để gửi thông tin gói -->
-            <!-- Submit package.id (INT Primary Key) for foreign key relation -->
             <input type="hidden" name="package_id" value="<?php echo htmlspecialchars($selected_package['id']); ?>">
             <input type="hidden" name="package_name" value="<?php echo htmlspecialchars($selected_package['name']); ?>">
+            <input type="hidden" name="package_varchar_id" value="<?php echo htmlspecialchars($selected_package_varchar_id); ?>"> <!-- Add this line -->
             <input type="hidden" name="base_price" id="base_price" value="<?php echo $base_price; ?>"> <!-- Giá gốc để JS tính toán -->
-            <input type="hidden" name="total_price" id="total_price_hidden" value="<?php echo $base_price; ?>"> <!-- Giá tổng, sẽ được JS cập nhật -->
+            <!-- Giá tổng, sẽ được JS cập nhật hoặc giữ nguyên nếu là trial -->
+            <input type="hidden" name="total_price" id="total_price_hidden" value="<?php echo $base_price; ?>">
 
+            <?php if (!$is_trial_7d_package): // Only show quantity input if NOT the trial_7d package ?>
             <!-- Số lượng tài khoản -->
             <div class="form-group">
                 <label for="quantity">Số lượng tài khoản:</label>
-                <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" required>
+                <input type="number" id="quantity" name="quantity" class="form-control"
+                       min="1" required
+                       placeholder="Nhập số lượng (tối thiểu 1)"
+                       >
             </div>
+            <?php else: // If it IS the trial_7d package, add hidden input with quantity 1 ?>
+            <input type="hidden" name="quantity" value="1">
+            <?php endif; ?>
 
             <!-- Chọn Tỉnh/Thành phố -->
             <div class="form-group">
@@ -222,10 +239,12 @@ include $project_root_path . '/private/includes/header.php';
                 </select>
             </div>
 
+            <?php if (!$is_trial_7d_package): // Only show total price display if NOT the trial_7d package ?>
              <!-- Hiển thị tổng tiền (cập nhật bằng JS) -->
             <div class="total-price-display">
                 Tổng cộng: <span id="total-price-view"><?php echo number_format($base_price, 0, ',', '.'); ?>đ</span>
             </div>
+            <?php endif; ?>
 
             <!-- Nút chuyển đến thanh toán -->
             <div class="form-group" style="margin-top: 2rem; margin-bottom: 0;">
@@ -239,37 +258,51 @@ include $project_root_path . '/private/includes/header.php';
 <!-- JavaScript để cập nhật giá tiền (Keep existing script) -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const quantityInput = document.getElementById('quantity');
+    const quantityInput = document.getElementById('quantity'); // Might be null if trial
     const basePrice = parseFloat(document.getElementById('base_price').value);
-    const totalPriceView = document.getElementById('total-price-view');
+    const totalPriceView = document.getElementById('total-price-view'); // Might be null if trial
     const totalPriceHidden = document.getElementById('total_price_hidden');
+    const isTrial = <?php echo json_encode($is_trial_7d_package); ?>; // Use the correct variable
 
     function updateTotalPrice() {
-        let quantity = parseInt(quantityInput.value);
-        // Đảm bảo số lượng hợp lệ (ít nhất là 1)
-        if (isNaN(quantity) || quantity < 1) {
-            quantity = 1;
-            quantityInput.value = 1; // Sửa lại input nếu không hợp lệ
+        let quantity = 1; // Default to 1
+
+        // Only calculate if quantity input exists (i.e., not trial)
+        if (quantityInput) {
+            quantity = parseInt(quantityInput.value);
+            // Ensure quantity is valid (at least 1) for non-trial
+            if (isNaN(quantity) || quantity < 1) {
+                // For calculation, use 1 if invalid or empty
+                quantity = 1;
+            }
         }
 
         const total = basePrice * quantity;
 
-        // Cập nhật giá hiển thị (dùng toLocaleString để format tiền tệ VNĐ)
-        totalPriceView.textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        // Update display only if it exists (i.e., not trial)
+        if (totalPriceView && quantityInput) {
+            if (isNaN(parseInt(quantityInput.value))) {
+                 totalPriceView.textContent = '--'; // Show placeholder if input is empty/invalid
+            } else {
+                totalPriceView.textContent = total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+        }
 
-        // Cập nhật giá trị input ẩn để gửi đi (giá trị số thuần túy)
+        // Always update the hidden total price field
         totalPriceHidden.value = total;
     }
 
-    // Gọi hàm lần đầu khi tải trang
+    // Gọi hàm lần đầu khi tải trang để xử lý giá trị ban đầu
     updateTotalPrice();
 
-    // Thêm sự kiện lắng nghe khi giá trị số lượng thay đổi
-    quantityInput.addEventListener('input', updateTotalPrice);
+    // Thêm sự kiện lắng nghe chỉ khi ô nhập tồn tại
+    if (quantityInput) {
+        quantityInput.addEventListener('input', updateTotalPrice);
+    }
 
     // Ngăn chặn submit nếu chưa chọn tỉnh thành
     const form = document.getElementById('details-form');
-    const locationSelect = document.getElementById('location_id'); // Changed ID
+    const locationSelect = document.getElementById('location_id');
     form.addEventListener('submit', function(event) {
         if (!locationSelect.value) {
             alert('Vui lòng chọn Tỉnh/Thành phố sử dụng.');
@@ -277,7 +310,19 @@ document.addEventListener('DOMContentLoaded', function() {
             locationSelect.focus();
             return; // Dừng thực thi thêm
         }
-        // Cập nhật giá lần cuối trước khi submit phòng trường hợp JS lỗi hoặc người dùng sửa đổi nhanh
+
+        // Validate quantity before submit only if input exists (not trial)
+        if (quantityInput) {
+            const currentQuantity = parseInt(quantityInput.value);
+            if (isNaN(currentQuantity) || currentQuantity < 1) {
+                alert('Vui lòng nhập số lượng tài khoản hợp lệ (tối thiểu là 1).');
+                event.preventDefault();
+                quantityInput.focus();
+                return;
+            }
+        }
+
+        // Cập nhật giá lần cuối trước khi submit
         updateTotalPrice();
     });
 });

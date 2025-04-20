@@ -54,4 +54,14 @@ function calculateEndTime(string $startTime, string $durationText): ?string {
 
 // Add other utility functions here if needed...
 
+function generateRandomPassword(int $length = 12): string {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;,.<>/?';
+    $password = '';
+    $characterCount = strlen($characters);
+    for ($i = 0; $length > $i; $i++) {
+        $password .= $characters[random_int(0, $characterCount - 1)];
+    }
+    return $password;
+}
+
 ?>

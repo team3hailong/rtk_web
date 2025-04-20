@@ -19,22 +19,46 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // --- User Info (Example) ---
+$user_id = $_SESSION['user_id']; // Get user ID
 $user_username = $_SESSION['username'] ?? 'Người dùng';
+
+// ===============================================
+// == KIỂM TRA USER ĐÃ CÓ ĐĂNG KÝ CHƯA ==
+// ===============================================
+$db = new Database();
+$conn = $db->connect();
+$user_has_registration = false;
+try {
+    // Chuẩn bị câu lệnh SQL để kiểm tra xem user_id có tồn tại trong bảng registration không
+    $stmt_check = $conn->prepare("SELECT 1 FROM registration WHERE user_id = :user_id LIMIT 1");
+    $stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_check->execute();
+    // Nếu tìm thấy bản ghi, đặt biến $user_has_registration thành true
+    if ($stmt_check->fetch()) {
+        $user_has_registration = true;
+    }
+} catch (PDOException $e) {
+    // Ghi lại lỗi nếu có vấn đề khi truy vấn cơ sở dữ liệu
+    error_log("Error checking user registration in packages.php: " . $e->getMessage());
+    // Có thể xử lý lỗi ở đây, ví dụ: hiển thị thông báo lỗi hoặc giả định người dùng chưa đăng ký
+}
+// Giữ kết nối mở để lấy danh sách các gói
 
 // ===============================================
 // == LẤY DỮ LIỆU CÁC GÓI TỪ DATABASE ==
 // ===============================================
-$db = new Database();
-$conn = $db->connect();
+// $db và $conn đã được khởi tạo
 $all_packages = [];
 try {
+    // Lấy tất cả các gói đang hoạt động, sắp xếp theo thứ tự hiển thị
     $stmt = $conn->prepare("SELECT package_id, name, price, duration_text, features_json, is_recommended, button_text, savings_text FROM package WHERE is_active = 1 ORDER BY display_order ASC");
     $stmt->execute();
     $all_packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    error_log("Error fetching packages: " . $e->getMessage());
+    // Ghi lại lỗi nếu có vấn đề khi lấy danh sách gói
+    error_log("Error fetching packages in packages.php: " . $e->getMessage());
 }
-$db->close();
+$db->close(); // Đóng kết nối sau khi đã lấy hết dữ liệu cần thiết
 
 // --- Include Header ---
 include $project_root_path . '/private/includes/header.php';
@@ -220,6 +244,14 @@ include $project_root_path . '/private/includes/header.php';
             <?php else: ?>
                 <?php foreach ($all_packages as $package): ?>
                     <?php
+                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
+                        // Kiểm tra nếu gói hiện tại là gói dùng thử ('trial_7d')
+                        // và người dùng đã có đăng ký ($user_has_registration là true)
+                        if ($package['package_id'] === 'trial_7d' && $user_has_registration) {
+                            continue; // Bỏ qua vòng lặp hiện tại, không hiển thị gói này
+                        }
+                        // --- KẾT THÚC LOGIC ẨN ---
+
                         // Decode features JSON
                         $features = json_decode($package['features_json'], true); // true for associative array
                         if ($features === null) {

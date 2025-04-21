@@ -173,7 +173,7 @@ try {
         $account_id,
         $registration_id,
         $username,
-        password_hash($password, PASSWORD_DEFAULT),
+        $password, // Store plain password without hashing
         $data['num_account'],
         1, // enabled
         1  // customerBizType

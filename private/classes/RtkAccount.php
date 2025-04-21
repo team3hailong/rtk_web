@@ -10,16 +10,42 @@ class RtkAccount {
 
     public function getAccountsByUserId($userId) {
         try {
-            $sql = "SELECT sa.*, r.start_time as start_date, r.end_time as end_date, 
-                          r.status as reg_status, p.name as package_name, 
-                          DATEDIFF(r.end_time, r.start_time) as duration_days,
-                          sa.username_acc as username
-                   FROM survey_account sa
-                   JOIN registration r ON sa.registration_id = r.id
-                   JOIN package p ON r.package_id = p.id
-                   JOIN user u ON r.user_id = u.id
-                   WHERE r.user_id = :user_id AND sa.deleted_at IS NULL
-                   ORDER BY sa.created_at DESC";
+            $sql = "SELECT 
+                    sa.id,
+                    sa.username_acc,
+                    sa.password_acc,
+                    sa.enabled,
+                    CASE 
+                        WHEN sa.enabled = 1 THEN 'Đang hoạt động'
+                        ELSE 'Đã khóa'
+                    END as enabled_status,
+                    r.start_time,
+                    r.end_time,
+                    r.status as reg_status,
+                    p.name as package_name,
+                    p.duration_text,
+                    DATEDIFF(r.end_time, r.start_time) as duration_days,
+                    l.province,
+                    GROUP_CONCAT(
+                        JSON_OBJECT(
+                            'mountpoint', mp.mountpoint,
+                            'ip', mp.ip,
+                            'port', mp.port
+                        ) SEPARATOR '|'
+                    ) as mountpoints_json,
+                    pay.confirmed_at
+                FROM survey_account sa
+                JOIN registration r ON sa.registration_id = r.id
+                JOIN package p ON r.package_id = p.id
+                JOIN location l ON r.location_id = l.id
+                LEFT JOIN mount_point mp ON l.id = mp.location_id
+                LEFT JOIN payment pay ON r.id = pay.registration_id
+                WHERE r.user_id = :user_id 
+                AND sa.deleted_at IS NULL
+                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
+                         r.start_time, r.end_time, r.status, p.name, 
+                         p.duration_text, l.province, pay.confirmed_at, r.location_id
+                ORDER BY sa.created_at DESC";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -27,17 +53,40 @@ class RtkAccount {
             
             $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Process each account
             foreach ($accounts as &$account) {
-                // Set account status based on dates and registration status
+                // Parse mountpoints from JSON string
+                $account['mountpoints'] = [];
+                if (!empty($account['mountpoints_json'])) {
+                    $mountpoints_array = explode('|', $account['mountpoints_json']);
+                    foreach ($mountpoints_array as $mp_json) {
+                        if ($mp_json !== 'null' && $mp_json !== null) {
+                            $mp_data = json_decode($mp_json, true);
+                            if ($mp_data && !empty($mp_data['mountpoint'])) {
+                                $account['mountpoints'][] = $mp_data;
+                            }
+                        }
+                    }
+                }
+                unset($account['mountpoints_json']); // Remove the raw JSON string
+
+                // Adjust start_time based on package type
+                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                    $account['effective_start_time'] = $account['start_time'];
+                } else {
+                    $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
+                }
+                
+                // Calculate end_time based on effective_start_time
+                if ($account['confirmed_at']) {
+                    $start = new DateTime($account['effective_start_time']);
+                    $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
+                    $account['effective_end_time'] = $start->format('Y-m-d H:i:s');
+                } else {
+                    $account['effective_end_time'] = $account['end_time'];
+                }
+
+                // Set account status
                 $account['status'] = $this->calculateAccountStatus($account);
-                
-                // Format dates for display
-                $account['start_date'] = $account['start_date'];
-                $account['end_date'] = $account['end_date'];
-                
-                // Add placeholder for stations (can be enhanced later)
-                $account['stations'] = $this->getStationsForAccount($account['id']);
             }
             
             return $accounts;
@@ -50,7 +99,7 @@ class RtkAccount {
 
     private function calculateAccountStatus($account) {
         $now = new DateTime();
-        $endDate = new DateTime($account['end_date']);
+        $endDate = new DateTime($account['effective_end_time']);
         
         if ($account['reg_status'] === 'pending') {
             return 'pending';
@@ -58,6 +107,10 @@ class RtkAccount {
         
         if ($now > $endDate) {
             return 'expired';
+        }
+        
+        if ($account['enabled'] == 0) {
+            return 'locked';
         }
         
         return 'active';
@@ -105,7 +158,7 @@ class RtkAccount {
                    WHERE id = :account_id";
 
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':password', password_hash($newPassword, PASSWORD_DEFAULT));
+            $stmt->bindParam(':password', $newPassword); // Store plain password without hashing
             $stmt->bindParam(':account_id', $accountId);
             
             return $stmt->execute();

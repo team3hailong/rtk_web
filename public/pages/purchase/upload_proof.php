@@ -17,6 +17,7 @@ $base_url = rtrim($protocol . $domain . $base_project_dir, '/');
 // --- Include Required Files ---
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/utils/functions.php';
+require_once $project_root_path . '/private/classes/Database.php'; // Add this line
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -38,6 +39,29 @@ if (!$registration_id) {
     // If no registration ID is found, redirect to packages or dashboard
     header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=missing_order_id');
     exit;
+}
+
+// --- Fetch Existing Payment Proof ---
+$existing_proof_image = null;
+$existing_proof_url = null;
+try {
+    $db = new Database();
+    $conn = $db->getConnection();
+    $sql_get_proof = "SELECT payment_image FROM payment WHERE registration_id = :registration_id LIMIT 1";
+    $stmt_get_proof = $conn->prepare($sql_get_proof);
+    $stmt_get_proof->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+    $stmt_get_proof->execute();
+    $existing_proof_image = $stmt_get_proof->fetchColumn();
+
+    if ($existing_proof_image) {
+        // Construct the URL relative to the web root
+        $upload_dir_relative = '/uploads/payment_proofs/'; // Make sure this matches the definition in the action script
+        $existing_proof_url = $base_url . '/public' . $upload_dir_relative . htmlspecialchars($existing_proof_image);
+    }
+} catch (Exception $e) {
+    // Log error or handle gracefully
+    error_log("Error fetching existing payment proof: " . $e->getMessage());
+    // Optionally display an error message to the user
 }
 
 // --- User Info ---
@@ -111,6 +135,30 @@ include $project_root_path . '/private/includes/header.php';
      .status-success { color: var(--success-600); }
      .status-error { color: var(--danger-600); }
 
+     /* === Style for existing proof image === */
+     .existing-proof-section {
+         margin-bottom: 1.5rem;
+         padding: 1rem;
+         background-color: var(--gray-100);
+         border: 1px solid var(--gray-200);
+         border-radius: var(--rounded-md);
+         text-align: center;
+     }
+     .existing-proof-section h4 {
+         font-size: var(--font-size-base);
+         font-weight: var(--font-semibold);
+         color: var(--gray-600);
+         margin-bottom: 0.75rem;
+     }
+     .existing-proof-section img {
+         max-width: 100%;
+         max-height: 300px; /* Limit height */
+         border-radius: var(--rounded-sm);
+         border: 1px solid var(--gray-300);
+         margin-top: 0.5rem;
+     }
+     /* === End Style === */
+
      .back-link {
          display: inline-block;
          margin-bottom: 1.5rem;
@@ -134,10 +182,18 @@ include $project_root_path . '/private/includes/header.php';
         <h2 class="text-2xl font-semibold mb-4">Tải lên minh chứng thanh toán</h2>
         <p class="text-sm text-gray-600 mb-6">Đơn hàng: <strong>REG<?php echo htmlspecialchars($registration_id); ?></strong></p>
 
+        <!-- === Hiển thị minh chứng đã tải lên (nếu có) === -->
+        <?php if ($existing_proof_url): ?>
+        <div class="existing-proof-section">
+            <h4>Minh chứng đã tải lên:</h4>
+            <img src="<?php echo $existing_proof_url; ?>" alt="Minh chứng thanh toán hiện tại">
+        </div>
+        <?php endif; ?>
+        <!-- === Kết thúc hiển thị === -->
 
         <!-- === Phần Tải Lên Minh Chứng === -->
         <div class="upload-section">
-            <h3>Tải lên ảnh chụp màn hình giao dịch</h3>
+            <h3><?php echo $existing_proof_image ? 'Thay thế minh chứng thanh toán' : 'Tải lên ảnh chụp màn hình giao dịch'; ?></h3>
             <p>Vui lòng tải lên ảnh chụp màn hình hoặc biên lai giao dịch thành công để chúng tôi xác nhận nhanh hơn.</p>
             <form action="<?php echo $base_url; ?>/private/action/purchase/upload_payment_proof.php" method="post" enctype="multipart/form-data" id="upload-form">
                 <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
@@ -146,7 +202,7 @@ include $project_root_path . '/private/includes/header.php';
 
                 <input type="file" name="payment_proof_image" id="payment_proof_image" accept="image/png, image/jpeg, image/gif" required>
 
-                <button type="submit" class="btn btn-upload" id="upload-button">Gửi minh chứng</button>
+                <button type="submit" class="btn btn-upload" id="upload-button"><?php echo $existing_proof_image ? 'Gửi minh chứng mới' : 'Gửi minh chứng'; ?></button>
                 <div id="upload-progress" style="margin-top: 0.5rem; font-size: var(--font-size-sm); display: none;">Đang tải lên...</div>
                 <div id="upload-status-js" class="mt-3" style="font-size: var(--font-size-sm); font-weight: var(--font-medium);"></div>
             </form>

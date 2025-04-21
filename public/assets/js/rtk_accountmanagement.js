@@ -9,6 +9,135 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>Không có tài khoản nào khớp với tiêu chí lọc hoặc tìm kiếm của bạn.</p>
         </div>`;
 
+    // Create modal HTML
+    const modalHtml = `
+        <div id="accountDetailsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Chi tiết tài khoản</h2>
+                <div class="account-details">
+                    <p><strong>ID:</strong> <span id="modal-id"></span></p>
+                    <p><strong>Tên đăng nhập:</strong> <span id="modal-username"></span></p>
+                    <p><strong>Mật khẩu:</strong> <span id="modal-password"></span></p>
+                    <p><strong>Trạng thái:</strong> <span id="modal-status"></span></p>
+                    <p><strong>Thời gian bắt đầu:</strong> <span id="modal-start"></span></p>
+                    <p><strong>Thời gian kết thúc:</strong> <span id="modal-end"></span></p>
+                    <p><strong>Tỉnh/TP:</strong> <span id="modal-province"></span></p>
+                    <p><strong>IP:</strong> <span id="modal-ip"></span></p>
+                    <p><strong>Port:</strong> <span id="modal-port"></span></p>
+                    <p><strong>Mount points:</strong> <span id="modal-mountpoints"></span></p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Add modal styles
+    const modalStyles = `
+        <style>
+            .modal {
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .modal.show {
+                opacity: 1;
+                display: flex;
+            }
+            .modal-content {
+                background-color: #fefefe;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 90%;
+                max-width: 500px;
+                border-radius: 8px;
+                position: relative;
+                margin: 0 auto;
+                transform: translateY(-20px);
+                transition: transform 0.3s ease;
+            }
+            .modal.show .modal-content {
+                transform: translateY(0);
+            }
+            .close {
+                color: #aaa;
+                position: absolute;
+                right: 15px;
+                top: 10px;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .close:hover {
+                color: black;
+            }
+            .account-details {
+                margin-top: 20px;
+            }
+            .account-details p {
+                margin: 10px 0;
+                padding: 5px 0;
+                border-bottom: 1px solid #eee;
+            }
+            .account-details strong {
+                display: inline-block;
+                width: 140px;
+            }
+            .mountpoints-section {
+                margin-top: 15px;
+            }
+            .mountpoints-list {
+                margin-left: 140px;
+                padding: 5px 0;
+            }
+            .mountpoint-item {
+                margin: 8px 0;
+                padding: 8px;
+                background: #f5f5f5;
+                border-radius: 4px;
+            }
+            .mountpoint-item p {
+                margin: 4px 0;
+                padding: 0;
+                border: none;
+            }
+        </style>
+    `;
+    document.head.insertAdjacentHTML('beforeend', modalStyles);
+
+    // Modal functionality
+    const modal = document.getElementById('accountDetailsModal');
+    const closeBtn = modal.querySelector('.close');
+
+    // Close modal when clicking X
+    closeBtn.onclick = function() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 300);
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+    }
+
     // --- Hàm Lọc và Tìm kiếm ---
     function filterAndSearchAccounts() {
         // Ensure elements exist before proceeding
@@ -117,21 +246,45 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
-    // --- Event Listener cho Nút Xem Chi Tiết (Placeholder) ---
+    // --- Event Listener cho Nút Xem Chi Tiết ---
     document.querySelectorAll('.btn-view').forEach(button => {
         button.addEventListener('click', function() {
-            const accountId = this.getAttribute('data-account-id');
-            // Thay thế bằng logic thực tế (ví dụ: mở modal, chuyển trang)
-            alert('Xem chi tiết tài khoản #' + accountId);
-            // Check if baseUrl is defined before using it
-            if (typeof baseUrl !== 'undefined') {
-                 // window.location.href = `${baseUrl}/pages/account_details.php?id=${accountId}`;
-            } else {
-                console.error("Base URL is not defined for redirection.");
-                // Fallback or error handling
-                // window.location.href = `/pages/account_details.php?id=${accountId}`; // Example fallback
+            const data = this.dataset;
+            document.getElementById('modal-id').textContent = data.accountId;
+            document.getElementById('modal-username').textContent = data.username;
+            document.getElementById('modal-password').textContent = data.password;
+            document.getElementById('modal-status').textContent = data.status;
+            document.getElementById('modal-start').textContent = data.start;
+            document.getElementById('modal-end').textContent = data.end;
+            document.getElementById('modal-province').textContent = data.province;
+            
+            try {
+                const mountpoints = JSON.parse(data.mountpoints);
+                if (mountpoints && mountpoints.length > 0) {
+                    // Lấy IP và Port từ mount point đầu tiên
+                    document.getElementById('modal-ip').textContent = mountpoints[0].ip || 'N/A';
+                    document.getElementById('modal-port').textContent = mountpoints[0].port || 'N/A';
+                    
+                    // Format mount points as comma-separated list
+                    const mountpointsList = mountpoints
+                        .map(mp => mp.mountpoint)
+                        .join(', ');
+                    document.getElementById('modal-mountpoints').textContent = mountpointsList;
+                } else {
+                    document.getElementById('modal-ip').textContent = 'N/A';
+                    document.getElementById('modal-port').textContent = 'N/A';
+                    document.getElementById('modal-mountpoints').textContent = 'Không có mountpoint';
+                }
+            } catch (e) {
+                document.getElementById('modal-ip').textContent = 'N/A';
+                document.getElementById('modal-port').textContent = 'N/A';
+                document.getElementById('modal-mountpoints').textContent = 'Lỗi hiển thị mountpoint';
             }
+
+            modal.style.display = "flex";
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         });
     });
 

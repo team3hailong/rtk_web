@@ -14,7 +14,7 @@ $project_root_path = dirname(dirname(__DIR__)); // Lùi 2 cấp từ /pages -> p
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
     // Chuyển hướng về login (giả sử login ở gốc)
-    header('Location: ' . $base_url . '/login.php');
+    header('Location: ' . $base_url . '/pages/auth/login.php');
     exit;
 }
 

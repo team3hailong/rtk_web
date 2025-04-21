@@ -40,6 +40,7 @@ if (!isset($_SESSION['pending_registration_id']) || !isset($_SESSION['pending_to
 $user_id = $_SESSION['user_id'];
 $registration_id = $_SESSION['pending_registration_id'];
 $session_total_price = $_SESSION['pending_total_price']; // Get total price from session
+$is_trial = $_SESSION['pending_is_trial'] ?? false; // Check if it's a trial from session
 
 // --- Fetch Payment Details using Helper ---
 $payment_details_result = getPaymentPageDetails($registration_id, $user_id, $session_total_price);
@@ -62,11 +63,25 @@ $quantity = $payment_data['quantity'];
 $province = $payment_data['province'];
 $verified_total_price = $payment_data['verified_total_price'];
 
-// --- Tạo nội dung chuyển khoản ---
+// --- Tạo nội dung chuyển khoản (chỉ cần nếu không phải trial) ---
 $order_description = "REG{$registration_id} MUA GOI"; // Keep it short
 
-// --- Generate VietQR Payload using the helper function ---
-$final_qr_payload = generate_vietqr_payload($verified_total_price, $order_description);
+// --- Generate VietQR Payload (chỉ cần nếu không phải trial) ---
+$final_qr_payload = null;
+$vietqr_image_url = null;
+if (!$is_trial) {
+    $final_qr_payload = generate_vietqr_payload($verified_total_price, $order_description);
+    // --- Generate img.vietqr.io URL ---
+    $vietqr_image_url = sprintf(
+        "https://img.vietqr.io/image/%s-%s-%s.png?amount=%d&addInfo=%s&accountName=%s",
+        VIETQR_BANK_ID, // Bank BIN/ID
+        VIETQR_ACCOUNT_NO, // Account Number
+        defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2', // Template (e.g., compact2)
+        $verified_total_price, // Amount
+        urlencode($order_description), // URL Encoded Description
+        urlencode(VIETQR_ACCOUNT_NAME) // URL Encoded Account Name
+    );
+}
 
 // --- User Info ---
 $user_username = $_SESSION['username'] ?? 'Người dùng';
@@ -265,20 +280,22 @@ include $project_root_path . '/private/includes/header.php';
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-6">Thanh toán đơn hàng</h2>
+        <h2 class="text-2xl font-semibold mb-6">
+            <?php echo $is_trial ? 'Xác nhận kích hoạt dùng thử' : 'Thanh toán đơn hàng'; ?>
+        </h2>
 
         <div class="payment-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
 
-            <!-- Cột Tóm tắt đơn hàng -->
+            <!-- Cột Tóm tắt đơn hàng (Luôn hiển thị) -->
             <section class="payment-summary">
-                <h3>Thông tin đơn hàng</h3>
+                <h3>Thông tin đăng ký</h3>
                  <div class="summary-item" style="font-size: var(--font-size-sm);">
-                    <span>Mã đơn hàng:</span>
+                    <span>Mã đăng ký:</span>
                     <strong><?php echo htmlspecialchars($registration_id); ?></strong>
                  </div>
                 <div class="summary-item">
                     <span>Gói dịch vụ:</span>
-                    <strong><?php echo htmlspecialchars($package_name); ?></strong>
+                    <strong><?php echo htmlspecialchars($package_name); ?> <?php echo $is_trial ? '(Dùng thử)' : ''; ?></strong>
                 </div>
                 <div class="summary-item">
                     <span>Số lượng:</span>
@@ -294,24 +311,30 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
             </section>
 
-            <!-- Cột Mã QR và Hướng dẫn -->
+            <?php if ($is_trial): ?>
+            <!-- Cột Xác nhận Dùng thử -->
+            <section class="payment-qr-section" style="text-align: center;">
+                <h3>Kích hoạt gói dùng thử</h3>
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>
+                <form action="<?php echo $base_url; ?>/private/action/purchase/process_trial_activation.php" method="POST">
+                    <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
+                    <!-- Optional: Add CSRF token here if implemented -->
+                    <button type="submit" class="btn btn-success" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base); background-color: var(--success-500); border-color: var(--success-500);">
+                        Xác nhận kích hoạt
+                    </button>
+                </form>
+                 <p class="payment-instructions" style="margin-top: 1rem;">
+                     Sau khi xác nhận, bạn có thể bắt đầu sử dụng dịch vụ.
+                 </p>
+            </section>
+
+            <?php else: ?>
+            <!-- Cột Mã QR và Hướng dẫn (Chỉ hiển thị nếu không phải trial) -->
             <section class="payment-qr-section">
                 <h3>Quét mã để thanh toán</h3>
                 <p style="font-size: var(--font-size-sm); color: var(--gray-600); margin-bottom: 1rem;">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR.</p>
                 <!-- Div để hiển thị QR Code -->
                 <div id="qrcode">
-                     <?php
-                        // --- Generate img.vietqr.io URL ---
-                        $vietqr_image_url = sprintf(
-                            "https://img.vietqr.io/image/%s-%s-%s.png?amount=%d&addInfo=%s&accountName=%s",
-                            VIETQR_BANK_ID, // Bank BIN/ID
-                            VIETQR_ACCOUNT_NO, // Account Number
-                            defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2', // Template (e.g., compact2)
-                            $verified_total_price, // Amount
-                            urlencode($order_description), // URL Encoded Description
-                            urlencode(VIETQR_ACCOUNT_NAME) // URL Encoded Account Name
-                        );
-                     ?>
                      <img src="<?php echo htmlspecialchars($vietqr_image_url); ?>" alt="VietQR Code" style="display: block; width: 100%; height: auto; object-fit: contain;">
                 </div>
 
@@ -344,6 +367,7 @@ include $project_root_path . '/private/includes/header.php';
                  <!-- === Kết thúc Nút xác nhận === -->
 
             </section>
+            <?php endif; ?>
 
         </div>
 
@@ -352,37 +376,40 @@ include $project_root_path . '/private/includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Chức năng Copy ---
-    const copyButtons = document.querySelectorAll('.bank-details code[data-copy-target]');
-    copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const targetSelector = this.getAttribute('data-copy-target');
-            const targetElement = document.querySelector(targetSelector);
-            if (targetElement) {
-                let textToCopy = targetElement.innerText.trim();
-                if (targetSelector === '#payment-amount') {
-                    textToCopy = textToCopy.replace(/đ|\.|,/g, '');
-                }
+    // --- Chức năng Copy (Chỉ cần nếu không phải trial) ---
+    const isTrial = <?php echo json_encode($is_trial); ?>;
+    if (!isTrial) {
+        const copyButtons = document.querySelectorAll('.bank-details code[data-copy-target]');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetSelector = this.getAttribute('data-copy-target');
+                const targetElement = document.querySelector(targetSelector);
+                if (targetElement) {
+                    let textToCopy = targetElement.innerText.trim();
+                    if (targetSelector === '#payment-amount') {
+                        textToCopy = textToCopy.replace(/đ|\.|,/g, '');
+                    }
 
-                 navigator.clipboard.writeText(textToCopy)
-                    .then(() => {
-                        const originalText = this.innerText;
-                        this.innerText = 'Đã chép!';
-                        this.style.backgroundColor = 'var(--success-100, #D1FAE5)';
-                        this.style.borderColor = 'var(--success-300, #6EE7B7)';
-                        setTimeout(() => {
-                            this.innerText = originalText;
-                             this.style.backgroundColor = '';
-                             this.style.borderColor = '';
-                        }, 1500);
-                    })
-                    .catch(err => {
-                        console.error('Lỗi sao chép: ', err);
-                        prompt('Không thể tự động sao chép. Vui lòng sao chép thủ công:', textToCopy);
-                    });
-            }
+                     navigator.clipboard.writeText(textToCopy)
+                        .then(() => {
+                            const originalText = this.innerText;
+                            this.innerText = 'Đã chép!';
+                            this.style.backgroundColor = 'var(--success-100, #D1FAE5)';
+                            this.style.borderColor = 'var(--success-300, #6EE7B7)';
+                            setTimeout(() => {
+                                this.innerText = originalText;
+                                 this.style.backgroundColor = '';
+                                 this.style.borderColor = '';
+                            }, 1500);
+                        })
+                        .catch(err => {
+                            console.error('Lỗi sao chép: ', err);
+                            prompt('Không thể tự động sao chép. Vui lòng sao chép thủ công:', textToCopy);
+                        });
+                }
+            });
         });
-    });
+    }
 });
 </script>
 

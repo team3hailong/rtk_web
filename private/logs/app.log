@@ -142,90 +142,16 @@
 [2025-04-19 15:55:45][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 7
 [2025-04-19 15:55:45][RtkAccount GetAccounts Simplified] Database query successful. Found 1 rows for user ID: 7
 [2025-04-19 15:55:45][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 1 simplified account(s) for user ID: 7
-[2025-04-20 01:37:34][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 7
-[2025-04-20 01:37:34][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 7
-[2025-04-20 01:37:34][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 7
-[2025-04-20 01:38:01][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 7
-[2025-04-20 01:38:01][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 7
-[2025-04-20 01:38:01][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 7
-[2025-04-20 01:38:09][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 7
-[2025-04-20 01:38:09][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 7
-[2025-04-20 01:38:09][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 7
-[2025-04-20 01:43:28][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 7
-[2025-04-20 01:43:28][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 7
-[2025-04-20 01:43:28][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 7
-[2025-04-20 14:24:34][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
-[2025-04-20 14:24:34][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
-[2025-04-20 14:24:34][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
-[2025-04-20 14:24:37][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
-[2025-04-20 14:24:37][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
-[2025-04-20 14:24:37][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
-[2025-04-20 14:24:44][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
-[2025-04-20 14:24:44][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
-[2025-04-20 14:24:44][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
-[2025-04-20 14:24:48][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
-[2025-04-20 14:24:48][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
-[2025-04-20 14:24:48][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
-[2025-04-20 14:27:58][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
-[2025-04-20 14:27:58][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
-[2025-04-20 14:27:58][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
-[2025-04-20 14:34:54][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 8
-[2025-04-20 14:34:54][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 8
-[2025-04-20 14:34:54][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 8
-[2025-04-20 14:35:08][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 8
-[2025-04-20 14:35:08][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 8
-[2025-04-20 14:35:08][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 8
-[2025-04-20 14:35:16][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 8
-[2025-04-20 14:35:16][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 8
-[2025-04-20 14:35:16][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 8
-[2025-04-20 14:36:42][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 8
-[2025-04-20 14:36:42][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 8
-[2025-04-20 14:36:42][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 8
-[2025-04-20 14:38:17][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 14:38:17][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 14:38:17][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 14:38:18][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 14:38:18][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 14:38:18][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 14:39:22][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 14:39:22][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 14:39:22][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 14:42:42][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 9
-[2025-04-20 14:42:42][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 9
-[2025-04-20 14:42:42][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 9
-[2025-04-20 14:50:00][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 9
-[2025-04-20 14:50:00][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 9
-[2025-04-20 14:50:00][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 9
-[2025-04-20 14:56:48][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 14:56:48][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 14:56:48][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 14:59:53][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 14:59:53][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 14:59:53][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:03:44][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:03:44][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:03:44][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:10:41][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:10:41][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:10:41][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:16:08][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:16:08][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:16:08][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:20:02][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:20:02][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:20:02][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:42:22][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:42:22][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:42:22][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:58:59][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:58:59][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:58:59][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:59:01][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:59:01][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:59:01][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:59:04][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:59:04][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:59:04][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
-[2025-04-20 15:59:06][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 3
-[2025-04-20 15:59:06][RtkAccount GetAccounts Simplified] Database query successful. Found 0 rows for user ID: 3
-[2025-04-20 15:59:06][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 0 simplified account(s) for user ID: 3
+
+[2025-04-21 11:05:18][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
+[2025-04-21 11:05:18][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
+[2025-04-21 11:05:18][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
+[2025-04-21 14:00:20][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
+[2025-04-21 14:00:20][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
+[2025-04-21 14:00:20][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
+[2025-04-21 14:25:57][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
+[2025-04-21 14:25:57][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
+[2025-04-21 14:25:57][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6
+[2025-04-21 14:33:46][RtkAccount GetAccounts Simplified] Attempting to fetch simplified accounts for user ID: 6
+[2025-04-21 14:33:46][RtkAccount GetAccounts Simplified] Database query successful. Found 2 rows for user ID: 6
+[2025-04-21 14:33:46][RtkAccount GetAccounts Simplified] Successfully processed data. Returning 2 simplified account(s) for user ID: 6

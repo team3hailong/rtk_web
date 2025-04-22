@@ -1,0 +1,27 @@
+# Deny access to all files in private directory
+Deny from all
+
+# Prevent directory listing
+Options -Indexes
+
+# Disable PHP engine in this directory for extra security
+php_flag engine off
+
+# Prevent viewing of .htaccess file
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(php|config\.php|ini|log|sh|sql|inc|bak)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Extra security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

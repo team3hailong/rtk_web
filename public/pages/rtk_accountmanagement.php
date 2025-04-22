@@ -14,7 +14,7 @@ $project_root_path = dirname(dirname(__DIR__)); // Lùi 2 cấp từ /pages -> p
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
     // Chuyển hướng về login (giả sử login ở gốc)
-    header('Location: ' . $base_url . '/login.php');
+    header('Location: ' . $base_url . '/pages/auth/login.php');
     exit;
 }
 
@@ -108,90 +108,72 @@ function format_date_display($date_str) {
             <?php else: ?>
                 <?php foreach ($accounts as $account): ?>
                     <?php
-                        $status_class = 'status-' . $account['status']; // Ví dụ: status-active
-                        $days_diff = calculate_days_diff($account['end_date']);
-                        $account_id_display = $account['id']; // Hoặc 'Premium Account #'.$account['id']
-                        $max_stations_visible = 3; // Số lượng trạm hiển thị ban đầu
-                        // Safely handle stations: check if exists and is an array
-                        $stations = isset($account['stations']) && is_array($account['stations']) ? $account['stations'] : [];
-                        $total_stations = count($stations);
-                        $needs_toggle = $total_stations > $max_stations_visible;
-                        // Safely create search terms string
-                        $station_names_string = implode(' ', $stations);
+                        $status_class = 'status-' . $account['status'];
+                        $days_diff = calculate_days_diff($account['effective_end_time']);
+                        $account_id_display = $account['id'];
+                        
+                        // Tạo chuỗi search terms an toàn
+                        $search_terms = [];
+                        $search_terms[] = $account['id'] ?? '';
+                        $search_terms[] = $account['username_acc'] ?? '';
+                        $search_terms[] = $account['province'] ?? '';
+                        if (!empty($account['mountpoints'])) {
+                            foreach ($account['mountpoints'] as $mp) {
+                                $search_terms[] = $mp['mountpoint'] ?? '';
+                            }
+                        }
+                        $search_terms = array_filter($search_terms); // Loại bỏ các giá trị rỗng
+                        $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
                     ?>
-                    <div class="account-card <?php echo $status_class; ?>" data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo htmlspecialchars(strtolower($account['id'] . ' ' . $account['username'] . ' ' . $station_names_string)); ?>">
+                    <div class="account-card <?php echo $status_class; ?>" data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
                         <!-- Section 1: Thông tin cơ bản -->
                         <div class="card-section">
-                            <strong>Tài khoản #<?php echo htmlspecialchars($account['id'] ?? 'N/A'); ?></strong>
-                            <p title="Tên đăng nhập">TK: <?php echo htmlspecialchars($account['username'] ?? 'N/A'); ?></p>
-                            <div class="password-field">
-                                <!-- Password display remains masked -->
-                                <!-- Store the actual password in data-password but display asterisks -->
-                                <!-- Use ?? '' to provide an empty string if password is null/missing -->
-                                MK: <span data-password="<?php echo htmlspecialchars($account['password'] ?? ''); ?>">**********</span>
-                                <button type="button" class="toggle-password" aria-label="Hiện/Ẩn mật khẩu">Hiện</button>
-                            </div>
-                             <!-- Use ?? 'N/A' for package_name and duration_days -->
-                             <p>Gói: <?php echo htmlspecialchars($account['package_name'] ?? 'N/A'); ?> (<?php echo htmlspecialchars($account['duration_days'] ?? 'N/A'); ?> ngày)</p>
+                            <strong>Tài khoản <?php echo htmlspecialchars(str_replace('RTK_', '#', $account['id'] ?? 'N/A')); ?></strong>
+                            <p>Tên đăng nhập: <?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></p>
+                            <p>Mật khẩu: <?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></p>
                         </div>
 
-                        <!-- Section 2: Trạng thái & Ngày -->
+                        <!-- Section 2: Trạng thái & Thời hạn -->
                         <div class="card-section">
-                             <strong>Trạng thái & Thời hạn</strong>
                             <p>
                                 <span class="badge-status <?php echo $status_class; ?>">
-                                    <?php
-                                        switch ($account['status']) {
-                                            case 'active': echo 'Đang hoạt động'; break;
-                                            case 'expired': echo 'Đã hết hạn'; break;
-                                            case 'pending': echo 'Đang xử lý'; break;
-                                            default: echo ucfirst($account['status']); break;
-                                        }
-                                    ?>
+                                    <?php echo htmlspecialchars($account['enabled_status']); ?>
                                 </span>
                             </p>
-                             <p>Bắt đầu: <?php echo format_date_display($account['start_date']); ?></p>
-                             <p>Kết thúc: <?php echo format_date_display($account['end_date']); ?></p>
-                            <?php if ($account['status'] === 'active' && $days_diff['remaining'] !== null): ?>
-                                <p>Còn lại: <?php echo $days_diff['remaining']; ?> ngày</p>
-                            <?php elseif ($account['status'] === 'expired' && $days_diff['expired'] !== null): ?>
-                                <p style="color: var(--red-text-dark);">Quá hạn: <?php echo $days_diff['expired']; ?> ngày</p>
-                             <?php elseif ($account['status'] === 'pending' && isset($account['pending_info']) && $account['pending_info']): ?>
-                                <p style="color: var(--orange-text-dark);"><?php echo htmlspecialchars($account['pending_info']); ?></p>
-                            <?php endif; ?>
+                            <p>Bắt đầu: <?php echo date('d/m/Y H:i', strtotime($account['effective_start_time'])); ?></p>
+                            <p>Kết thúc: <?php echo date('d/m/Y H:i', strtotime($account['effective_end_time'])); ?></p>
                         </div>
 
-                        <!-- Section 3: Danh sách trạm -->
+                        <!-- Section 3: Thông tin Trạm -->
                         <div class="card-section">
-                            <strong>Danh sách Trạm (<?php echo $total_stations; ?>)</strong>
-                            <ul class="station-list" id="stations-<?php echo $account['id']; ?>">
-                                <?php // Use the safe $stations variable ?>
-                                <?php foreach (array_slice($stations, 0, $max_stations_visible) as $station): ?>
-                                    <li><?php echo htmlspecialchars($station); ?></li>
-                                <?php endforeach; ?>
-                                <?php // Add hidden stations for expansion ?>
-                                <?php if ($needs_toggle): ?>
-                                    <?php // Use the safe $stations variable ?>
-                                    <?php foreach (array_slice($stations, $max_stations_visible) as $station): ?>
-                                        <li style="display: none;"><?php echo htmlspecialchars($station); ?></li>
-                                     <?php endforeach; ?>
-                                <?php endif; ?>
-                            </ul>
-                             <?php if ($needs_toggle): ?>
-                                <span class="toggle-stations" data-target="#stations-<?php echo $account['id']; ?>">Hiện thêm</span>
+                            <p>Tỉnh/TP: <?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></p>
+                            <?php if (!empty($account['mountpoints'])): ?>
+                                <p>Mountpoints:</p>
+                                <ul class="mountpoint-list">
+                                    <?php foreach ($account['mountpoints'] as $mp): ?>
+                                        <li><?php echo htmlspecialchars($mp['mountpoint']); ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p>Mountpoints: Chưa có dữ liệu</p>
                             <?php endif; ?>
                         </div>
 
-                         <!-- Section 4: Hành động -->
-                         <div class="card-actions">
-                              <!-- Changed button to a link for structural consistency, added btn-view class -->
-                              <a href="#" class="btn-view" data-account-id="<?php echo $account['id']; ?>" role="button">Xem chi tiết</a>
-                              <?php if ($account['status'] !== 'pending'): // Chỉ hiện nút gia hạn nếu không phải đang chờ ?>
-                                <!-- Ensured class attribute is identical, added btn-renew class -->
-                                <a href="<?php echo $base_url; ?>/pages/purchase/renew.php?account_id=<?php echo $account['id']; ?>" class="btn-renew">Gia hạn</a>
-                             <?php endif; ?>
-                         </div>
-
+                        <!-- Section 4: Hành động -->
+                        <div class="card-actions">
+                            <button type="button" class="btn-view" 
+                                data-account-id="<?php echo $account['id']; ?>" 
+                                data-username="<?php echo htmlspecialchars($account['username_acc']); ?>"
+                                data-password="<?php echo htmlspecialchars($account['password_acc']); ?>"
+                                data-start="<?php echo htmlspecialchars($account['effective_start_time']); ?>"
+                                data-end="<?php echo htmlspecialchars($account['effective_end_time']); ?>"
+                                data-status="<?php echo htmlspecialchars($account['enabled_status']); ?>"
+                                data-province="<?php echo htmlspecialchars($account['province']); ?>"
+                                data-mountpoints='<?php echo htmlspecialchars(json_encode($account['mountpoints'])); ?>'
+                            >
+                                Xem chi tiết
+                            </button>
+                        </div>
                     </div><!-- /.account-card -->
                 <?php endforeach; ?>
             <?php endif; ?>

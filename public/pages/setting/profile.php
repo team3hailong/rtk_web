@@ -1,3 +1,4 @@
+
 <?php
 // filepath: c:\laragon\www\rtk_web\public\pages\setting\profile.php
 session_start();
@@ -143,3 +144,4 @@ if (isset($db)) {
     $db->close();
 }
 ?>
+

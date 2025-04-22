@@ -206,26 +206,64 @@ function get_transaction_status_display($status) {
         vertical-align: middle;
     }
 
+    /* --- Responsive Adjustments --- */
     @media (max-width: 992px) {
-        .transactions-table th:nth-child(3), .transactions-table td:nth-child(3),
-        .transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { }
+        /* Hide less critical columns on medium screens if needed */
+        /* Example: Hide 'Method' column */
+        /* .transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { display: none; } */
         .transactions-table th, .transactions-table td { padding: 0.8rem 0.6rem; }
-        .action-button { padding: 0.4rem 0.6rem; }
+        .action-button { padding: 0.4rem 0.6rem; width: 90px; /* Slightly smaller buttons */ }
     }
+
      @media (max-width: 768px) {
          .content-header { flex-direction: column; align-items: flex-start; gap: 0.5rem;}
          .filter-section { flex-direction: column; align-items: stretch; }
          .search-box { width: 100%; margin-left: 0; }
-         .upload-proof-form { grid-template-columns: 1fr; }
-         .transactions-table th:nth-child(2), .transactions-table td:nth-child(2) { display: none; }
+         /* Hide Time and Method columns */
+         .transactions-table th:nth-child(2), .transactions-table td:nth-child(2),
+         .transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { display: none; }
+         .transactions-table th, .transactions-table td { padding: 0.7rem 0.5rem; /* Reduced padding */ font-size: var(--font-size-xs, 0.75rem); /* Smaller font */ }
          .transactions-table td.actions {
-             align-items: flex-start;
-             width: auto;
+             /* Stack buttons vertically */
+             display: flex;
+             flex-direction: column;
+             align-items: stretch; /* Make buttons full width of the cell */
+             gap: 0.4rem; /* Space between buttons */
+             width: 100px; /* Adjust width as needed */
          }
          .action-button {
+             width: 100%; /* Make buttons full width */
              margin-right: 0;
-             margin-bottom: 0;
+             margin-bottom: 0; /* Gap is handled by flex */
+             padding: 0.5rem 0.5rem; /* Adjust padding */
+             font-size: var(--font-size-xs, 0.75rem);
          }
+         .status-badge { padding: 0.25rem 0.6rem; font-size: 0.7rem; min-width: 70px; }
+         .modal-content {
+             max-width: 95%;
+             padding: 1.5rem;
+         }
+         .modal-header h4 { font-size: var(--font-size-base); }
+         .modal-body p { font-size: var(--font-size-xs); }
+         .modal-body strong { min-width: 100px; }
+     }
+
+     @media (max-width: 576px) {
+         .transactions-wrapper { padding: 0 0.5rem 1rem 0.5rem; }
+         .content-header { padding: 0.6rem 1rem; }
+         h2 { font-size: 1.25rem; /* --font-size-xl */ margin-bottom: 1rem; }
+         .filter-section { gap: 0.5rem; }
+         .filter-button { padding: 0.3rem 0.7rem; font-size: var(--font-size-xs, 0.75rem); }
+         .search-box { padding: 0.4rem 0.6rem; font-size: var(--font-size-xs, 0.75rem); }
+         /* Hide Transaction Type column as well */
+         .transactions-table th:nth-child(3), .transactions-table td:nth-child(3) { display: none; }
+         .transactions-table th, .transactions-table td { padding: 0.6rem 0.4rem; }
+         .transactions-table td.amount { font-size: var(--font-size-sm); }
+         .transactions-table td.actions { width: 90px; } /* Further adjust action column width */
+         .action-button { padding: 0.4rem; }
+         .status-badge { padding: 0.2rem 0.5rem; font-size: 0.65rem; min-width: 60px; }
+         .empty-state { padding: 2rem 1rem; }
+         .empty-state i { font-size: 2rem; }
      }
 </style>
 

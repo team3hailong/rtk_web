@@ -1,116 +1,206 @@
 <?php
-
-// Ensure Database class is available if not autoloaded
-// require_once __DIR__ . '/Database.php'; // Uncomment if needed
-
 class RtkAccount {
     private $db;
     private $conn;
-    private $log_file; // Add property for log file path
 
-    public function __construct(Database $db) {
-        // Define the log file path relative to this file's directory
-        $this->log_file = dirname(__DIR__) . '/logs/app.log'; // Path: private/logs/app.log
-
-        // Ensure the logs directory exists (basic check - Database class might also do this)
-        $logDir = dirname($this->log_file);
-        if (!is_dir($logDir)) {
-             @mkdir($logDir, 0775, true);
-        }
-
+    public function __construct($db) {
         $this->db = $db;
-        $this->conn = $this->db->getConnection(); // getConnection already logs connection attempts/failures
-        if ($this->conn === null) {
-            // Log the specific failure point if constructor fails due to no connection
-            $message = "[" . date('Y-m-d H:i:s') . "][RtkAccount Construct] Failed to get database connection.\n";
-            error_log($message, 3, $this->log_file);
-            throw new Exception("Failed to establish database connection in RtkAccount.");
-        }
+        $this->conn = $db->getConnection();
     }
 
-    /**
-     * Fetches simplified account details (ID, username, location, mountpoint name) for a given user ID.
-     *
-     * @param int $userId The ID of the user.
-     * @return array An array of simplified account details.
-     */
-    public function getAccountsByUserId(int $userId): array {
-        $accountsData = [];
-        $logPrefix = "[" . date('Y-m-d H:i:s') . "][RtkAccount GetAccounts Simplified] "; // Updated prefix
-        error_log($logPrefix . "Attempting to fetch simplified accounts for user ID: " . $userId . "\n", 3, $this->log_file); // Log start
-
-        // Simplified SQL query joining necessary tables. Links user -> registration -> survey_account.
-        $sql = "SELECT
-                    sa.id AS survey_account_id,
-                    sa.username_acc,
-                    r.id AS registration_id,
-                    r.status AS registration_status, -- Keep status for basic info
-                    r.start_time, -- Keep for context
-                    r.end_time,   -- Keep for context
-                    l.province,
-                    mp.mountpoint AS mountpoint_name
-                    -- Removed mp.ip, mp.port for simplification
-                FROM
-                    registration r
-                JOIN
-                    survey_account sa ON r.id = sa.registration_id
-                JOIN
-                    location l ON r.location_id = l.id
-                LEFT JOIN -- Use LEFT JOIN in case a location has no mount_point
-                    mount_point mp ON l.id = mp.location_id
-                WHERE
-                    r.user_id = :user_id
-                    AND r.deleted_at IS NULL -- Exclude soft-deleted registrations
-                    AND sa.deleted_at IS NULL -- Exclude soft-deleted survey accounts
-                ORDER BY
-                    r.created_at DESC, sa.id"; // Simplified ORDER BY
-
+    public function getAccountsByUserId($userId) {
         try {
+            $sql = "SELECT 
+                    sa.id,
+                    sa.username_acc,
+                    sa.password_acc,
+                    sa.enabled,
+                    CASE 
+                        WHEN sa.enabled = 1 THEN 'Đang hoạt động'
+                        ELSE 'Đã khóa'
+                    END as enabled_status,
+                    r.start_time,
+                    r.end_time,
+                    r.status as reg_status,
+                    p.name as package_name,
+                    p.duration_text,
+                    DATEDIFF(r.end_time, r.start_time) as duration_days,
+                    l.province,
+                    GROUP_CONCAT(
+                        JSON_OBJECT(
+                            'mountpoint', mp.mountpoint,
+                            'ip', mp.ip,
+                            'port', mp.port
+                        ) SEPARATOR '|'
+                    ) as mountpoints_json,
+                    pay.confirmed_at
+                FROM survey_account sa
+                JOIN registration r ON sa.registration_id = r.id
+                JOIN package p ON r.package_id = p.id
+                JOIN location l ON r.location_id = l.id
+                LEFT JOIN mount_point mp ON l.id = mp.location_id
+                LEFT JOIN payment pay ON r.id = pay.registration_id
+                WHERE r.user_id = :user_id 
+                AND sa.deleted_at IS NULL
+                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
+                         r.start_time, r.end_time, r.status, p.name, 
+                         p.duration_text, l.province, pay.confirmed_at, r.location_id
+                ORDER BY sa.created_at DESC";
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
+            
+            $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($accounts as &$account) {
+                // Parse mountpoints from JSON string
+                $account['mountpoints'] = [];
+                if (!empty($account['mountpoints_json'])) {
+                    $mountpoints_array = explode('|', $account['mountpoints_json']);
+                    foreach ($mountpoints_array as $mp_json) {
+                        if ($mp_json !== 'null' && $mp_json !== null) {
+                            $mp_data = json_decode($mp_json, true);
+                            if ($mp_data && !empty($mp_data['mountpoint'])) {
+                                $account['mountpoints'][] = $mp_data;
+                            }
+                        }
+                    }
+                }
+                unset($account['mountpoints_json']); // Remove the raw JSON string
 
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            error_log($logPrefix . "Database query successful. Found " . count($results) . " rows for user ID: " . $userId . "\n", 3, $this->log_file);
+                // Adjust start_time based on package type
+                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                    $account['effective_start_time'] = $account['start_time'];
+                } else {
+                    $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
+                }
+                
+                // Calculate end_time based on effective_start_time
+                if ($account['confirmed_at']) {
+                    $start = new DateTime($account['effective_start_time']);
+                    $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
+                    $account['effective_end_time'] = $start->format('Y-m-d H:i:s');
+                } else {
+                    $account['effective_end_time'] = $account['end_time'];
+                }
 
-            // Process results - simplified
-            foreach ($results as $row) {
-                 // Determine actual status based on dates and registration status
-                 $status = $row['registration_status']; // 'pending', 'active', 'rejected'
-                 $endDate = $row['end_time'] ? new DateTime($row['end_time']) : null;
-                 $now = new DateTime();
-
-                 if ($status === 'active' && $endDate && $endDate < $now) {
-                     $status = 'expired'; // Override status if end_time is past
-                 }
-
-                $accountsData[] = [
-                    'id' => $row['survey_account_id'],
-                    'registration_id' => $row['registration_id'],
-                    'username' => $row['username_acc'],
-                    'status' => $status, // Keep basic status
-                    'start_date' => $row['start_time'],
-                    'end_date' => $row['end_time'],
-                    'province' => $row['province'],
-                    'mountpoint_name' => $row['mountpoint_name']
-                    // Removed mountpoint_ip and mountpoint_port assignments
-                ];
+                // Set account status
+                $account['status'] = $this->calculateAccountStatus($account);
             }
-
-            error_log($logPrefix . "Successfully processed data. Returning " . count($accountsData) . " simplified account(s) for user ID: " . $userId . "\n", 3, $this->log_file);
+            
+            return $accounts;
 
         } catch (PDOException $e) {
-            error_log($logPrefix . "Database Error fetching accounts for user ID " . $userId . ": " . $e->getMessage() . "\n", 3, $this->log_file);
+            error_log("Error fetching RTK accounts: " . $e->getMessage());
             return [];
-        } catch (Exception $e) {
-             error_log($logPrefix . "Date/Processing error for user ID " . $userId . ": " . $e->getMessage() . "\n", 3, $this->log_file);
-             return [];
         }
-
-        return $accountsData;
     }
 
-    // Potential future methods related to RTK accounts could go here
-    // e.g., getAccountDetails($accountId), updateAccountPassword($accountId, $newPassword), etc.
-}
+    private function calculateAccountStatus($account) {
+        $now = new DateTime();
+        $endDate = new DateTime($account['effective_end_time']);
+        
+        if ($account['reg_status'] === 'pending') {
+            return 'pending';
+        }
+        
+        if ($now > $endDate) {
+            return 'expired';
+        }
+        
+        if ($account['enabled'] == 0) {
+            return 'locked';
+        }
+        
+        return 'active';
+    }
 
+    private function getStationsForAccount($accountId) {
+        // Placeholder - you can implement actual station fetching logic here
+        // For now, return empty array
+        return [];
+    }
+
+    public function getAccountById($accountId) {
+        try {
+            $sql = "SELECT sa.*, r.start_time as start_date, r.end_time as end_date,
+                          r.status as reg_status, p.name as package_name,
+                          DATEDIFF(r.end_time, r.start_time) as duration_days
+                   FROM survey_account sa
+                   JOIN registration r ON sa.registration_id = r.id
+                   JOIN package p ON r.package_id = p.id
+                   WHERE sa.id = :account_id AND sa.deleted_at IS NULL";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':account_id', $accountId, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            $account = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($account) {
+                $account['status'] = $this->calculateAccountStatus($account);
+                $account['stations'] = $this->getStationsForAccount($account['id']);
+            }
+            
+            return $account;
+
+        } catch (PDOException $e) {
+            error_log("Error fetching RTK account details: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function updatePassword($accountId, $newPassword) {
+        try {
+            $sql = "UPDATE survey_account 
+                   SET password_acc = :password, updated_at = NOW() 
+                   WHERE id = :account_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':password', $newPassword); // Store plain password without hashing
+            $stmt->bindParam(':account_id', $accountId);
+            
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log("Error updating RTK account password: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function disableAccount($accountId) {
+        try {
+            $sql = "UPDATE survey_account 
+                   SET enabled = 0, updated_at = NOW() 
+                   WHERE id = :account_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':account_id', $accountId);
+            
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log("Error disabling RTK account: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function enableAccount($accountId) {
+        try {
+            $sql = "UPDATE survey_account 
+                   SET enabled = 1, updated_at = NOW() 
+                   WHERE id = :account_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':account_id', $accountId);
+            
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log("Error enabling RTK account: " . $e->getMessage());
+            return false;
+        }
+    }
+}
+?>

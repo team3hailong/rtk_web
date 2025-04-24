@@ -1,14 +1,6 @@
 -- File: Nguyen_24042025_surveying_account.sql
--- Changes compared to Nguyen_23042025_surveying_account.sql:
--- 1. Updated database name reference from `surveying_account` to `sa_database`.
--- 2. Added new tables: `payment_methods`, `registration`, `station`, `survey_account`, `transaction_history`, `user`, `user_settings`, `withdrawal`.
--- 3. Updated table structures:
---    - `location`: Added `province_code` and `status` columns.
---    - `user`: Added `status` column.
---    - Defined PRIMARY KEYs, FOREIGN KEYs, UNIQUE KEYs, and AUTO_INCREMENT settings for all tables.
--- 4. Included INSERT statements for `user` and `station` tables.
--- 5. Updated INSERT statements for `location` and `mount_point`.
--- 6. Removed INSERT statements for `activity_logs`, `admin`, `payment` (present in the 23rd file).
+-- Sửa thêm cột mã định danh tỉnh, thêm cột status vào 1 bảng
+-- Thêm dữ liệu vào database
 -- phpMyAdmin SQL Dump
 -- version 5.2.2
 -- https://www.phpmyadmin.net/

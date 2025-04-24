@@ -1,165 +1,165 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../private/config/database.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+// --- Project Root Path ---
+$project_root_path = dirname(dirname(dirname(__DIR__))); // Adjust path as needed
+
+// --- Base URL ---
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
+$domain = $_SERVER['HTTP_HOST'];
+$script_dir = dirname($_SERVER['PHP_SELF']);
+$base_project_dir = '';
+if (strpos($script_dir, '/private/') !== false) {
+    $base_project_dir = substr($script_dir, 0, strpos($script_dir, '/private/'));
 }
+$base_url = rtrim($protocol . $domain . $base_project_dir, '/');
+$profile_page_url = $base_url . '/public/pages/setting/profile.php';
 
-try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Get form data
-        $username = $_POST['username'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $is_company = isset($_POST['is_company']) ? 1 : 0;
-        $company_name = $_POST['company_name'] ?? null;
-        $tax_code = $_POST['tax_code'] ?? null;
-        $old_password = $_POST['old_password'] ?? null;
-        $new_password = $_POST['new_password'] ?? null;
-        $confirm_password = $_POST['confirm_password'] ?? null;
+// --- Include Required Files ---
+require_once $project_root_path . '/private/config/config.php';
+require_once $project_root_path . '/private/classes/Database.php';
 
-        // Validate required fields
-        if (empty($username) || empty($email)) {
-            throw new Exception("Vui lòng nhập tên người dùng và email");
-        }
-
-        // Validate email format
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Email không hợp lệ");
-        }
-
-        // Validate phone number format if provided
-        if (!empty($phone) && !preg_match("/^[0-9]{10,15}$/", $phone)) {
-            throw new Exception("Số điện thoại phải có 10-15 chữ số");
-        }
-
-        // If company account, require company name and tax code
-        if ($is_company) {
-            if (empty($company_name) || empty($tax_code)) {
-                throw new Exception("Vui lòng nhập đầy đủ TÊN CÔNG TY và MÃ SỐ THUẾ");
-            }
-        }
-
-        // Check if email is already taken by another user
-        $stmt = $conn->prepare("SELECT id FROM user WHERE email = ? AND id != ?");
-        $stmt->bind_param("si", $email, $_SESSION['user_id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->fetch_assoc()) {
-            throw new Exception("Email đã được sử dụng bởi tài khoản khác");
-        }
-        $stmt->close();
-
-        // Check if phone is already taken by another user
-        if (!empty($phone)) {
-            $stmt = $conn->prepare("SELECT id FROM user WHERE phone = ? AND id != ?");
-            $stmt->bind_param("si", $phone, $_SESSION['user_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->fetch_assoc()) {
-                throw new Exception("Số điện thoại đã được sử dụng bởi tài khoản khác");
-            }
-            $stmt->close();
-        }
-
-        // Password change validation
-        if (!empty($old_password) || !empty($new_password) || !empty($confirm_password)) {
-            // Fetch current password
-            $stmt = $conn->prepare("SELECT password FROM user WHERE id = ?");
-            $stmt->bind_param("i", $_SESSION['user_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($row = $result->fetch_assoc()) {
-                $current_password = $row['password'];
-
-                // Verify old password
-                if (empty($old_password)) {
-                    throw new Exception("Vui lòng nhập mật khẩu cũ");
-                } elseif (!password_verify($old_password, $current_password)) {
-                    throw new Exception("Mật khẩu cũ không đúng");
-                }
-
-                // Validate new password
-                if (empty($new_password)) {
-                    throw new Exception("Vui lòng nhập mật khẩu mới");
-                } elseif (strlen($new_password) < 6) {
-                    throw new Exception("Mật khẩu mới phải có ít nhất 6 ký tự");
-                }
-
-                // Validate confirm password
-                if (empty($confirm_password)) {
-                    throw new Exception("Vui lòng xác nhận mật khẩu mới");
-                } elseif ($new_password !== $confirm_password) {
-                    throw new Exception("Mật khẩu xác nhận không khớp");
-                }
-            } else {
-                throw new Exception("Không tìm thấy người dùng");
-            }
-            $stmt->close();
-        }
-
-        // Update user information
-        $stmt = $conn->prepare("UPDATE user SET 
-            username = ?, 
-            email = ?, 
-            phone = ?, 
-            is_company = ?, 
-            company_name = ?, 
-            tax_code = ?, 
-            updated_at = NOW()" . 
-            (!empty($new_password) ? ", password = ?" : "") . 
-            " WHERE id = ?");
-
-        if (!empty($new_password)) {
-            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-            $stmt->bind_param("sssissi", 
-                $username, 
-                $email, 
-                $phone, 
-                $is_company, 
-                $company_name, 
-                $tax_code, 
-                $hashed_password, 
-                $_SESSION['user_id']
-            );
-        } else {
-            $stmt->bind_param("sssissi", 
-                $username, 
-                $email, 
-                $phone, 
-                $is_company, 
-                $company_name, 
-                $tax_code, 
-                $_SESSION['user_id']
-            );
-        }
-
-        if ($stmt->execute()) {
-            $stmt->close();
-
-            // Log activity
-            $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id) 
-                                    VALUES (?, 'update', 'user', ?)");
-            $stmt->bind_param("ii", $_SESSION['user_id'], $_SESSION['user_id']);
-            $stmt->execute();
-            $stmt->close();
-
-            header("Location: ../../../public/pages/setting/profile.php?success=1");
-            exit();
-        } else {
-            $stmt->close();
-            throw new Exception("Cập nhật thông tin thất bại");
-        }
-    } else {
-        header("Location: ../../../public/pages/setting/profile.php");
-        exit();
+// --- Database Connection & User Data Fetch ---
+function fetchUserData($user_id) {
+    $db = new Database();
+    $pdo = $db->getConnection();
+    
+    if (!$pdo) {
+        return ['error' => 'Lỗi kết nối cơ sở dữ liệu.'];
     }
-} catch (Exception $e) {
-    $_SESSION['error_message'] = $e->getMessage();
-    header("Location: ../../../public/pages/setting/profile.php");
-    exit();
+
+    try {
+        $stmt = $pdo->prepare("SELECT username, email, phone, is_company, company_name, tax_code 
+                              FROM user 
+                              WHERE id = ? AND deleted_at IS NULL");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
+            return ['error' => 'Không tìm thấy thông tin người dùng.'];
+        }
+        
+        return ['data' => $user];
+    } catch (PDOException $e) {
+        error_log("Error fetching user data: " . $e->getMessage());
+        return ['error' => 'Lỗi khi truy vấn thông tin người dùng.'];
+    } finally {
+        $db->close();
+    }
 }
+
+// Fetch user data if not processing form
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $result = fetchUserData($_SESSION['user_id']);
+    if (isset($result['data'])) {
+        $_SESSION['user_data'] = $result['data'];
+    }
+    if (isset($result['error'])) {
+        $_SESSION['profile_error'] = $result['error'];
+    }
+    header('Location: ' . $profile_page_url);
+    exit;
+}
+
+// --- Security Checks ---
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['profile_error'] = 'User not authenticated.';
+    header('Location: ' . $base_url . '/public/pages/auth/login.php'); // Redirect to login
+    exit;
+}
+
+// --- Get Data from POST ---
+$user_id = $_SESSION['user_id'];
+$username = trim($_POST['username'] ?? '');
+$phone = trim($_POST['phone'] ?? '');
+$is_company = isset($_POST['is_company']) ? 1 : 0;
+$company_name = $is_company ? trim($_POST['company_name'] ?? '') : null;
+$tax_code = $is_company ? trim($_POST['tax_code'] ?? '') : null;
+
+// If company name is empty but is_company is checked, use username
+if ($is_company && empty($company_name)) {
+    $company_name = $username;
+}
+
+// --- Basic Validation ---
+$errors = [];
+if (empty($username)) {
+    $errors[] = "Tên người dùng không được để trống.";
+}
+if ($is_company && empty($tax_code)) {
+    $errors[] = "Mã số thuế không được để trống nếu đăng ký là công ty.";
+}
+if (!empty($phone) && !preg_match('/^[0-9]{10,11}$/', $phone)) {
+    $errors[] = "Số điện thoại không hợp lệ (phải có 10-11 chữ số).";
+}
+
+if (!empty($errors)) {
+    $_SESSION['profile_error'] = implode('<br>', $errors);
+    header('Location: ' . $profile_page_url);
+    exit;
+}
+
+// Process form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    try {
+        $db = new Database();
+        $pdo = $db->getConnection();
+
+        if (!$pdo) {
+            throw new Exception("Database connection failed.");
+        }
+
+        // Prepare the update statement
+        $sql = "UPDATE user SET
+                    username = :username,
+                    phone = :phone,
+                    is_company = :is_company,
+                    company_name = :company_name,
+                    tax_code = :tax_code,
+                    updated_at = NOW()
+                WHERE id = :user_id AND deleted_at IS NULL";
+
+        $stmt = $pdo->prepare($sql);
+
+        // Bind parameters
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
+        $stmt->bindParam(':is_company', $is_company, PDO::PARAM_INT);
+        $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR); // PDO handles null correctly
+        $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);         // PDO handles null correctly
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+        // Execute the update
+        $stmt->execute();
+
+        // After successful update, fetch fresh user data
+        $result = fetchUserData($user_id);
+        if (isset($result['data'])) {
+            $_SESSION['user_data'] = $result['data']; // Update session data
+            $_SESSION['profile_message'] = "Hồ sơ đã được cập nhật thành công.";
+        } else {
+            // Handle case where fetching updated data fails, though unlikely after successful update
+             $_SESSION['profile_error'] = $result['error'] ?? 'Không thể tải lại dữ liệu người dùng sau khi cập nhật.';
+        }
+
+    } catch (PDOException $e) {
+        error_log("Profile update PDO error: " . $e->getMessage());
+        // Check for duplicate phone number error (MySQL error code 1062)
+        if ($e->getCode() == '23000' && strpos($e->getMessage(), 'Duplicate entry') !== false && strpos($e->getMessage(), 'phone') !== false) {
+             $_SESSION['profile_error'] = "Số điện thoại này đã được sử dụng bởi tài khoản khác.";
+        } else {
+             $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ (DB).";
+        }
+    } catch (Exception $e) {
+        error_log("Profile update general error: " . $e->getMessage());
+        $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ.";
+    } finally {
+        if (isset($db)) {
+            $db->close();
+        }
+    }
+}
+
+header('Location: ' . $profile_page_url);
+exit;
 ?>

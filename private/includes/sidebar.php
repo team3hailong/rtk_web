@@ -19,7 +19,6 @@ $nav_items = [
     // Cài đặt section
     ['type' => 'section', 'label' => 'Cài đặt'],
     ['label' => 'Thông tin cá nhân', 'icon' => 'fa-user-circle', 'url' => '/pages/setting/profile.php', 'active_check' => 'profile.php'],
-    ['label' => 'Thông tin thanh toán', 'icon' => 'fa-credit-card', 'url' => '/pages/setting/payment.php', 'active_check' => 'payment.php'],
     ['label' => 'Thông tin xuất hóa đơn', 'icon' => 'fa-file-alt', 'url' => '/pages/setting/invoice.php', 'active_check' => 'invoice.php'],
 
     // Logout
@@ -35,7 +34,7 @@ echo '<link rel="stylesheet" href="' . $base_path . '/assets/css/layouts/sidebar
 
 function is_current_page($page_name) {
     // More robust check considering potential subdirectories
-    $current_script_path = $_SERVER['SCRIPT_NAME'];
+    $current_script_path = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
     // Check if the page name exists at the end of the script path
     return str_ends_with($current_script_path, '/' . $page_name);
 }

@@ -59,7 +59,6 @@ function get_transaction_status_display($status) {
 <style>
     /* --- Kế thừa các style trước --- */
      .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 0.8rem 1.5rem; background: var(--gray-50); border-radius: var(--rounded-md); border: 1px solid var(--gray-200); }
-     .user-info span { color: var(--gray-600); font-size: var(--font-size-sm); }
      .user-info .highlight { color: var(--primary-600); font-weight: var(--font-semibold); }
     .transactions-wrapper { padding: 0rem 1rem 1rem 1rem; }
     .upload-proof-section { background: white; border: 1px solid var(--primary-200); border-radius: var(--rounded-lg); padding: 1.5rem; margin-bottom: 2rem; }

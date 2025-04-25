@@ -20,7 +20,8 @@ class Map {
                             JOIN mount_point m ON m.location_id = l.id
                             JOIN station s ON s.mountpoint_id = m.id
                             WHERE r.user_id = :user_id
-                            AND r.status = 'active'";
+                            AND r.status = 'active'
+                            AND r.end_time >= NOW()";
         $accessible_stmt = $pdo->prepare($accessible_query);
         $accessible_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $accessible_stmt->execute();

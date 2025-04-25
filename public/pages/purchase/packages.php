@@ -244,12 +244,10 @@ include $project_root_path . '/private/includes/header.php';
             <?php else: ?>
                 <?php foreach ($all_packages as $package): ?>
                     <?php
-                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
-                        // Kiểm tra nếu gói hiện tại là gói dùng thử ('trial_7d')
-                        // và người dùng đã có đăng ký ($user_has_registration là true)
-                        if ($package['package_id'] === 'trial_7d' && $user_has_registration) {
-                            continue; // Bỏ qua vòng lặp hiện tại, không hiển thị gói này
-                        }
+                        // --- BỎ LOGIC ẨN GÓI DÙNG THỬ TẠM THỜI ---
+                        // if ($package['package_id'] === 'trial_7d' && $user_has_registration) {
+                        //     continue;
+                        // }
                         // --- KẾT THÚC LOGIC ẨN ---
 
                         // Decode features JSON

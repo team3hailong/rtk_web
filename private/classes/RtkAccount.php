@@ -75,16 +75,21 @@ class RtkAccount {
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
-                
-                // Calculate end_time based on effective_start_time
+                // --- Set timezone to Asia/Ho_Chi_Minh (UTC+7) for display ---
+                $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
                 if ($account['confirmed_at']) {
                     $start = new DateTime($account['effective_start_time']);
+                    $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
                     $account['effective_end_time'] = $start->format('Y-m-d H:i:s');
                 } else {
-                    $account['effective_end_time'] = $account['end_time'];
+                    $end = new DateTime($account['end_time']);
+                    $end->setTimezone($tz);
+                    $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
                 }
-
+                $start_disp = new DateTime($account['effective_start_time']);
+                $start_disp->setTimezone($tz);
+                $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
                 // Set account status
                 $account['status'] = $this->calculateAccountStatus($account);
             }

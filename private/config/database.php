@@ -3,7 +3,7 @@
 define('DB_SERVER', '127.0.0.1');
 define('DB_USERNAME', 'root'); // Thay bằng username của bạn
 define('DB_PASSWORD', ''); // Thay bằng password của bạn
-define('DB_NAME', 'surveying_account');
+define('DB_NAME', 'sa_database'); // Thay bằng tên database của bạn
 
 // Tạo kết nối
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);

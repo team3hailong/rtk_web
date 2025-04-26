@@ -20,6 +20,8 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
     <link rel="stylesheet" href="../../assets/css/pages/auth/login.css"> <!-- Đường dẫn tới file CSS -->
+    <!-- Thêm biểu tượng eye từ Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="login-container">
@@ -36,13 +38,22 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
-                <input type="password" id="password" name="password" required>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required>
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+            </div>
+            <div class="form-options">
+                <a href="forgot_password.php" class="forgot-password">Quên mật khẩu?</a>
             </div>
             <button type="submit" class="btn-login">Đăng Nhập</button>
         </form>
         <div class="register-link">
             Chưa có tài khoản? <a href="register.php">Đăng ký ngay</a>
         </div>
-        </div>
+    </div>
+
+    <!-- Thêm file JS riêng -->
+    <script src="../../assets/js/pages/auth/login.js"></script>
 </body>
 </html>

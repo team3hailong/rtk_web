@@ -1,0 +1,17 @@
+{
+    "name": "os/rtk_web",
+    "autoload": {
+        "psr-4": {
+            "Os\\RtkWeb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Toan",
+            "email": "0362942177toan@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.10"
+    }
+}

@@ -1,184 +1,235 @@
+/* ======================================== */
+/* == CORE VARIABLES & RESETS            == */
+/* ======================================== */
+:root {
+    --primary-color: #4caf50;
+    --primary-hover: #388e3c;
+    --text-dark: #343a40;
+    --text-medium: #495057;
+    --text-light: #6c757d;
+    --border-color: #e0e0e0;
+    --border-radius: 8px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
 
 /* ======================================== */
-/* == CORE LAYOUT (DO NOT CHANGE HEAVILY) == */
+/* == MAIN LAYOUT STRUCTURE              == */
 /* ======================================== */
 .main-container {
     display: flex;
     min-height: 100vh;
-    /* Keep existing sidebar interaction CSS if any */
+    background-color: #f8f9fa;
 }
 
-/* Assuming sidebar styles are in sidebar.php or its included CSS */
-/* No changes needed here for the sidebar itself */
-
-/* ======================================== */
-/* == CONTENT AREA STYLES (Refined)     == */
-/* ======================================== */
 .content-wrapper {
-    flex: 1; /* Takes remaining space */
-    padding: 2rem; /* Increased padding */
-    background-color: #f8f9fa; /* Lighter gray background */
-    overflow-y: auto; /* Add scroll if content overflows */
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    transition: var(--transition);
 }
 
-/* Content Header */
+/* ======================================== */
+/* == CONTENT HEADER                     == */
+/* ======================================== */
 .content-header {
-    margin-bottom: 2rem; /* Increased spacing */
+    margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #dee2e6; /* Lighter border */
+    border-bottom: 1px solid var(--border-color);
 }
 
 .content-header h1 {
-    color: #343a40; /* Darker gray */
-    font-size: 1.75rem; /* Slightly larger */
+    color: var(--text-dark);
+    font-size: 1.75rem;
     font-weight: 600;
-    margin: 0; /* Remove default margin */
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Invoice Form Container */
+/* ======================================== */
+/* == FORM STYLES                        == */
+/* ======================================== */
 .invoice-form {
-    background: #ffffff; /* Pure white background */
-    padding: 25px; /* Consistent padding */
-    margin-bottom: 25px;
-    border: 1px solid var(--gray-200, #e0e0e0);
-    border-radius: var(--rounded-lg, 8px);
-    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+    background: #ffffff;
+    padding: 2rem;
+    margin: 0 auto 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
     max-width: 700px;
-    margin: 0 auto; /* Center the form */
+    transition: var(--transition);
 }
 
-/* Form Group Styling */
 .form-group {
-    margin-bottom: 1.5rem; /* Consistent spacing */
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem; /* Spacing between label and input */
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #495057; /* Slightly muted text color */
-    font-size: 0.9rem; /* Slightly smaller label */
+    color: var(--text-medium);
+    font-size: 0.95rem;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"] {
+.form-group input {
     width: 100%;
-    padding: 12px 15px; /* Comfortable padding */
-    border: 1px solid #ced4da; /* Standard border color */
-    border-radius: 6px; /* Slightly rounded corners */
-    font-size: 1rem; /* Standard font size */
-    color: #495057;
+    padding: 0.875rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--text-medium);
     background-color: #fff;
-    background-clip: padding-box;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    box-sizing: border-box; /* Include padding and border in element's total width/height */
+    transition: var(--transition);
 }
 
 .form-group input:focus {
-    border-color: #4caf50; /* Blue focus border */
+    border-color: var(--primary-color);
     outline: 0;
-    box-shadow: 0 0 0 0.25rem #4caf50(13, 110, 253, 0.25); /* Blue focus glow */
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
 }
 
-/* Checkbox Styles */
+/* ======================================== */
+/* == CHECKBOX STYLES                    == */
+/* ======================================== */
 .checkbox-container {
-    margin: 1.5rem 0;
-    display: flex; /* Align checkbox and label easily */
+    display: flex;
     align-items: center;
+    margin: 1.5rem 0;
+    cursor: pointer;
 }
 
 .checkbox-container label {
-    display: inline-flex; /* Use flex for label content */
+    display: flex;
     align-items: center;
+    color: var(--text-medium);
+    font-weight: normal;
+    font-size: 1rem;
     cursor: pointer;
-    color: #495057;
-    margin-bottom: 0; /* Reset margin */
-    font-weight: normal; /* Regular weight for checkbox label */
-    font-size: 1rem; /* Match input font size */
 }
 
 .checkbox-container input[type="checkbox"] {
-    margin-right: 0.75rem; /* Space between checkbox and text */
-    width: 1.1em; /* Slightly larger checkbox */
+    margin-right: 0.75rem;
+    width: 1.1em;
     height: 1.1em;
+    accent-color: var(--primary-color);
     cursor: pointer;
-    vertical-align: middle; /* Align better with text */
-    /* Basic custom styling (optional, can be more complex) */
-    accent-color: #4caf50; /* Modern way to color checkbox */
 }
 
-/* Company Fields Section */
+/* ======================================== */
+/* == COMPANY FIELDS SECTION             == */
+/* ======================================== */
 #company-fields {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e9ecef; /* Lighter separator line */
-    /* display: none; // Managed by JS */
+    border-top: 1px solid #e9ecef;
+    animation: fadeIn 0.3s ease-out;
 }
 
-/* Button Styles */
+/* ======================================== */
+/* == BUTTON STYLES                      == */
+/* ======================================== */
 .btn {
-    background-color: #4caf50; /* Bootstrap primary blue */
+    display: inline-block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 6px; /* Match input radius */
-    cursor: pointer;
-    font-size: 1rem; /* Standard size */
+    border-radius: var(--border-radius);
+    font-size: 1.05rem;
     font-weight: 600;
     text-align: center;
-    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    width: 100%;
-    margin-top: 1rem; /* Space above button */
-    display: inline-block; /* Ensure it behaves like a block but respects padding */
-    line-height: 1.5; /* Standard line height */
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn:hover {
-    background-color:#388e3c; /* Darker blue on hover */
-    box-shadow: 0 2px 5px #4caf50(0, 0, 0, 0.1); /* Subtle hover shadow */
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 142, 60, 0.25);
 }
 
-.btn:focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #4caf50; /* Focus glow consistent with inputs */
+.btn:active {
+    transform: translateY(0);
 }
 
-/* Alert Messages */
+/* ======================================== */
+/* == ALERT MESSAGES                     == */
+/* ======================================== */
 .alert {
-    padding: 1rem 1rem; /* Bootstrap standard padding */
-    margin-bottom: 1.5rem; /* Consistent spacing */
-    border: 1px solid transparent;
-    border-radius: 6px; /* Match other elements */
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
     font-size: 0.95rem;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .alert-success {
     color: #0f5132;
     background-color: #d1e7dd;
-    border-color: #badbcc;
+    border: 1px solid #badbcc;
 }
 
 .alert-danger {
     color: #842029;
     background-color: #f8d7da;
-    border-color: #f5c2c7;
+    border: 1px solid #f5c2c7;
 }
 
-/* Responsive Adjustments */
+/* ======================================== */
+/* == ANIMATIONS                         == */
+/* ======================================== */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ======================================== */
+/* == RESPONSIVE ADJUSTMENTS             == */
+/* ======================================== */
 @media (max-width: 768px) {
     .content-wrapper {
-        padding: 1rem; /* Reduce padding on smaller screens */
+        padding: 1.5rem;
     }
-
+    
     .invoice-form {
-        padding: 1.5rem; /* Reduce form padding */
+        padding: 1.5rem;
     }
-
+    
     .content-header h1 {
-        font-size: 1.5rem; /* Slightly smaller heading */
+        font-size: 1.5rem;
     }
 }
 
-/* Ensure no accidental style leakage affects sidebar */
-/* Sidebar styles should be defined separately if needed */
+@media (max-width: 576px) {
+    .content-wrapper {
+        padding: 1rem;
+    }
+    
+    .invoice-form {
+        padding: 1.25rem;
+    }
+    
+    .form-group input {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.85rem;
+    }
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 26, 2025 at 01:59 AM
+-- Generation Time: Apr 26, 2025 at 11:27 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -44,17 +44,6 @@ CREATE TABLE `activity_logs` (
 -- Dumping data for table `activity_logs`
 --
 
-INSERT INTO `activity_logs` (`id`, `user_id`, `action`, `entity_type`, `entity_id`, `old_values`, `new_values`, `ip_address`, `user_agent`, `created_at`) VALUES
-(1, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-24 17:23:51'),
-(2, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-24 17:28:19'),
-(3, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-24 21:49:53'),
-(4, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-25 17:55:59'),
-(5, 2, 'login', 'user', '2', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-25 17:56:36'),
-(6, 87, 'login', 'user', '87', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-25 18:08:21'),
-(7, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-25 22:09:55'),
-(8, 2, 'login', 'user', '2', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-26 08:42:35'),
-(9, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-04-26 08:42:59');
-
 -- --------------------------------------------------------
 
 --
@@ -70,6 +59,10 @@ CREATE TABLE `admin` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `admin`
+--
 
 -- --------------------------------------------------------
 
@@ -100,6 +93,52 @@ CREATE TABLE `error_logs` (
   `stack_trace` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `user_id` int DEFAULT NULL,
   `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `guide`
+--
+
+CREATE TABLE `guide` (
+  `id` int NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author_id` int NOT NULL,
+  `topic` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('draft','published','archived') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `thumbnail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `view_count` int NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `published_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `guide`
+--
+
+INSERT INTO `guide` (`id`, `title`, `slug`, `content`, `author_id`, `topic`, `status`, `thumbnail`, `image`, `view_count`, `created_at`, `updated_at`, `published_at`) VALUES
+(4, 'Hướng dẫn sử dụng tài khoản RTK', 'huong-dan-su-dung-tai-khoan-rtk', '<p>Đây là nội dung hướng dẫn sử dụng tài khoản RTK...</p>', 1, 'Tài khoản', 'published', '/uploads/guide/thumb1.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16'),
+(5, 'Cách nạp tiền và gia hạn dịch vụ', 'cach-nap-tien-gia-han-dich-vu', '<p>Hướng dẫn chi tiết cách nạp tiền và gia hạn dịch vụ...</p>', 1, 'Thanh toán', 'published', '/uploads/guide/thumb2.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16'),
+(6, 'Khắc phục lỗi thường gặp khi sử dụng', 'khac-phuc-loi-thuong-gap', '<p>Một số lỗi thường gặp và cách xử lý...</p>', 1, 'Hỗ trợ', 'published', '/uploads/guide/thumb3.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoice`
+--
+
+CREATE TABLE `invoice` (
+  `id` int NOT NULL,
+  `transaction_history_id` int NOT NULL,
+  `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `invoice_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `injected_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -333,20 +372,6 @@ CREATE TABLE `registration` (
 -- Dumping data for table `registration`
 --
 
-INSERT INTO `registration` (`id`, `user_id`, `package_id`, `location_id`, `collaborator_id`, `num_account`, `start_time`, `end_time`, `base_price`, `vat_percent`, `vat_amount`, `total_price`, `status`, `created_at`, `updated_at`, `deleted_at`, `rejection_reason`) VALUES
-(5, 1, 7, 63, NULL, 1, '2025-04-25 15:10:06', '2025-05-02 15:10:06', 0.00, 0, 0.00, 0.00, 'pending', '2025-04-25 22:10:06', '2025-04-25 22:10:06', NULL, NULL),
-(6, 1, 7, 63, NULL, 1, '2025-04-25 15:11:26', '2025-05-02 15:11:26', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:11:26', '2025-04-25 22:11:27', NULL, NULL),
-(7, 1, 7, 63, NULL, 1, '2025-04-25 15:22:07', '2025-05-02 15:22:07', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:22:07', '2025-04-25 22:22:08', NULL, NULL),
-(8, 1, 7, 54, NULL, 1, '2025-04-25 15:23:20', '2025-05-02 15:23:20', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:23:20', '2025-04-25 22:23:21', NULL, NULL),
-(9, 1, 7, 63, NULL, 1, '2025-04-25 15:32:38', '2025-05-02 15:32:38', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:32:38', '2025-04-25 22:32:39', NULL, NULL),
-(10, 1, 7, 63, NULL, 1, '2025-04-25 15:36:09', '2025-05-02 15:36:09', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:36:09', '2025-04-25 22:36:10', NULL, NULL),
-(11, 1, 7, 63, NULL, 1, '2025-04-25 15:40:36', '2025-05-02 15:40:36', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:40:36', '2025-04-25 22:40:37', NULL, NULL),
-(12, 1, 7, 63, NULL, 1, '2025-04-25 15:41:48', '2025-05-02 15:41:48', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:41:48', '2025-04-25 22:41:50', NULL, NULL),
-(13, 1, 7, 63, NULL, 1, '2025-04-25 15:44:37', '2025-05-02 15:44:37', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:44:37', '2025-04-25 22:44:38', NULL, NULL),
-(14, 1, 7, 63, NULL, 1, '2025-04-25 15:45:18', '2025-05-02 15:45:18', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:45:18', '2025-04-25 22:45:19', NULL, NULL),
-(15, 1, 7, 63, NULL, 1, '2025-04-25 15:45:54', '2025-05-02 15:45:54', 0.00, 0, 0.00, 0.00, 'active', '2025-04-25 22:45:54', '2025-04-25 22:45:55', NULL, NULL),
-(16, 1, 7, 63, NULL, 1, '2025-04-26 01:56:09', '2025-05-03 01:56:09', 0.00, 0, 0.00, 0.00, 'pending', '2025-04-26 08:56:09', '2025-04-26 08:56:09', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -417,18 +442,6 @@ CREATE TABLE `survey_account` (
 -- Dumping data for table `survey_account`
 --
 
-INSERT INTO `survey_account` (`id`, `registration_id`, `username_acc`, `password_acc`, `concurrent_user`, `enabled`, `caster`, `user_type`, `regionIds`, `customerBizType`, `area`, `created_at`, `updated_at`, `deleted_at`) VALUES
-('RTK_10_1745595370', 10, 'TRIAL_YBI004', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:36:10', NULL, NULL),
-('RTK_11_1745595637', 11, 'TRIAL_YBI005', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:40:37', NULL, NULL),
-('RTK_12_1745595710', 12, 'TRIAL_YBI006', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:41:50', NULL, NULL),
-('RTK_13_1745595878', 13, 'TRIAL_YBI007', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:44:38', NULL, NULL),
-('RTK_14_1745595919', 14, 'TRIAL_YBI008', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:45:19', NULL, NULL),
-('RTK_15_1745595955', 15, 'TRIAL_YBI009', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:45:55', NULL, NULL),
-('RTK_6_1745593887', 6, 'TRIAL_YBI001', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:11:27', NULL, NULL),
-('RTK_7_1745594528', 7, 'TRIAL_YBI002', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:22:08', NULL, NULL),
-('RTK_8_1745594601', 8, 'TRIAL_TNN001', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:23:21', NULL, NULL),
-('RTK_9_1745595159', 9, 'TRIAL_YBI003', '0868458693', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-04-25 22:32:39', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -442,7 +455,7 @@ CREATE TABLE `transaction_history` (
   `transaction_type` enum('purchase','renewal','refund') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(15,2) NOT NULL,
   `status` enum('pending','completed','failed','refunded') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_method` enum('Chuyển khoản ngân hàng') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -450,22 +463,7 @@ CREATE TABLE `transaction_history` (
 --
 -- Dumping data for table `transaction_history`
 --
-
-INSERT INTO `transaction_history` (`id`, `registration_id`, `user_id`, `transaction_type`, `amount`, `status`, `payment_method`, `created_at`, `updated_at`) VALUES
-(5, 5, 1, 'purchase', 0.00, 'pending', NULL, '2025-04-25 22:10:06', '2025-04-25 22:10:06'),
-(6, 6, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:11:26', '2025-04-25 22:11:27'),
-(7, 7, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:22:07', '2025-04-25 22:22:08'),
-(8, 8, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:23:20', '2025-04-25 22:23:21'),
-(9, 9, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:32:38', '2025-04-25 22:32:39'),
-(10, 10, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:36:09', '2025-04-25 22:36:10'),
-(11, 11, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:40:36', '2025-04-25 22:40:37'),
-(12, 12, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:41:48', '2025-04-25 22:41:50'),
-(13, 13, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:44:37', '2025-04-25 22:44:38'),
-(14, 14, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:45:18', '2025-04-25 22:45:19'),
-(15, 15, 1, 'purchase', 0.00, 'completed', NULL, '2025-04-25 22:45:54', '2025-04-25 22:45:55'),
-(16, 16, 1, 'purchase', 0.00, 'pending', NULL, '2025-04-26 08:56:09', '2025-04-26 08:56:09');
-
--- --------------------------------------------------------
+-------------------------------------------------------
 
 --
 -- Table structure for table `user`
@@ -491,98 +489,6 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `email`, `password`, `phone`, `is_company`, `company_name`, `tax_code`, `tax_registered`, `created_at`, `updated_at`, `deleted_at`, `status`) VALUES
-(1, 'Công ty Sao đỏ', 'test@gmail.com', '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0868458693', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', '2025-04-24 17:23:39', NULL, 1),
-(2, 'Diệm - Mộc Châu', 'test2@gmail.com', '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0384862037', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', '2025-04-25 17:56:30', NULL, 1),
-(3, 'Luyện', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0973620683', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(4, 'A Hưng Râu', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0982892196', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(5, 'A Phú', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0867666929', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(6, 'Anh Thoi', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0949784474', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(7, 'Anh Long', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0355055740', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(8, 'Anh Phú', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0978549838', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(9, 'A Long - Phổ Yên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0986650808', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(10, 'Nguyễn Văn Dần', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0972611283', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(11, 'Trần Hồng Quân', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0973563973', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(12, 'Anh Hải - Người sp trạm YBI005, Lục Yên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0378639689', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(13, 'Ngô công Đoàn', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0868433888', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(14, 'A Đảm', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0838216612', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(15, 'A Ngô Như Hoàn - Văn Yên, YB, 2 sđt, 0382664629', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0382664629', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(16, 'A Đỗ Xuân Đức - Đồng Tâm,Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0859139931', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(17, 'A PHẠM VĂN VĨNH - Đồng Tâm,Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0968582808', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(18, 'Lê Quang Vinh - tp Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0932222183', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(19, 'A Hiếu - Nghĩa Lộ', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0865251185', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(20, 'nguyễn quang huy', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0971338390', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(21, 'Bùi Khắc Chung', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0976974149', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(22, 'Chú Việt Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0983094693', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(23, 'Trần Ngô Doãn - Văn Yên, tỉnh Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0383426694', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(24, 'Đặng Văn Huy - thành phố yên bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0822814999', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(25, 'a Sao - yên bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0868192431', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(26, 'Nguyễn Duy Tiến - Nghĩa Lộ, Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0915923333', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(27, 'HOÀNG  ĐỨC KHANG - Yên Ninh, Yên bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0979289056', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(28, 'Nguyễn minh Ngọc - yenbai', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0834759333', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(29, 'Phạm Trung Thông - tp Yên bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0332161883', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(30, 'Phùng Thái Hoàng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0944921285', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(31, 'A Thiện - ng của a Đảm YBI', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0919314836', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(32, 'ĐÀO MẠNH HÙNG', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0977795228', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(33, 'NGUYỄN VĂN TIẾN - Yenbai', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0972886393', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(34, 'Đặng Anh Tú', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0985870561', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(35, 'Trần Bắc Hải - hồng ha, thành phố yên bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0978319555', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(36, 'A Trương thế tùng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0944882080', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(37, 'Nguyễn Xuân Lập', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0984630874', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(38, 'Vũ Đức Dương - Văn Yên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0343636556', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(39, 'Anh Minh - Nghĩa Lộ, Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0986445666', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(40, 'Cường - tp Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0975642061', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(41, 'Nguyễn Quang Triểu', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0986394000', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(42, 'Nguyễn Đức Cựu', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0349813227', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(43, 'Nguyễn công luận', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0913251121', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(44, 'A Nguyễn Đình Thấu - Yên Bình, tỉnh Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0974473838', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(45, 'Mạnh Hà - tp Yên Bái', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0813549838', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(46, 'Bùi quốc hưng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0395299064', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(47, 'Lê Mạnh Hùng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0394986390', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(48, 'A Nguyễn Trọng Nguyên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0328663655', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(49, 'Lê Văn Hùng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0372493391', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(50, 'Hoàng Anh Lập', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0818115795', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(51, 'Sơn Ninh Quý', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0986333843', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(52, 'Bùi Văn Giáp', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0984004902', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(53, 'Đoàn Quang Hiệp', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0868638688', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(54, 'Đỗ Anh Dũng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0357503704', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(55, 'Trần Thế Anh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0988853917', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(56, 'Doàn Xuân Thiêm', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0982331325', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(57, 'Ban Quản Lý Dự Án Đầu Tư Xây Dựng Huyện Lục Yên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0977356458', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(58, 'Nguyễn Quyết Thắng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0975953853', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(59, 'Nguyễn Đức Linh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0975025185', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(60, 'Bùi Văn Tân', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0335027798', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(61, 'Nguyễn Văn Thanh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0961868046', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(62, 'Lò Văn Cường', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0976972668', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(63, 'Lò Văn Thảo', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0355179351', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(64, 'Triệu Văn Khanh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0836014333', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(65, 'Tòng Văn Thiệp', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0374905929', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(66, 'Cầm Văn Mạnh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0386021020', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(67, 'Đào Thanh Tuấn', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0915591555', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(68, 'Vũ Đức Thanh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0338295913', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(69, 'Lê đình Hùng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0962941622', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(70, 'Ngô Đức Thanh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0986234273', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(71, 'Đỗ tuấn tùng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0984519659', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(72, 'Lương Công Hoả', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0962009680', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(73, 'Mạc Văn Tuyến', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0985792082', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(74, 'Ngô Xuân Ánh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0365288792', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(75, 'lê trung hiếu', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0327437329', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(76, 'Nguyễn Văn Khôi', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0972247587', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(77, 'TRIỆU HỒNG LÂM', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0374686852', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(78, 'Anh Chiến - sp trạm YBI7, Văn Yên', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0977886300', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(79, 'Chu Đình Thư', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0913413586', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(80, 'Lê duy Linh', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0981171289', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(81, 'Anh A', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0992838273', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(82, 'Nguyễn Văn Duyệt', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0836017666', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(83, 'Công ty TNHH Sông Hồng', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0858683931', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(84, 'Đỗ Xuân Phúc', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0972285435', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(85, 'Cường PostCoast', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0949902720', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(86, 'Trần Văn Đạt', NULL, '$2y$10$lh8CnmfO4P8cwi8R54SAW.teyeBkNNf6vJKuUuJFpeYenqP1Yxfdq', '0982679832', 0, NULL, NULL, NULL, '2025-04-24 16:19:04', NULL, NULL, 1),
-(87, 'test3', 'test3@gmail.com', '$2y$10$ubMxDfBjEesNhyTp7EGqD.H71E/I.dqYzOHIrfDcp/CdRgtRiDeju', '0985190564', 0, NULL, NULL, NULL, '2025-04-25 18:08:15', NULL, NULL, 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `user_settings`
 --
 
@@ -599,9 +505,6 @@ CREATE TABLE `user_settings` (
 --
 -- Dumping data for table `user_settings`
 --
-
-INSERT INTO `user_settings` (`id`, `user_id`, `notification_email`, `notification_sms`, `theme_preference`, `created_at`, `updated_at`) VALUES
-(1, 87, 1, 0, 'light', '2025-04-25 18:08:15', NULL);
 
 -- --------------------------------------------------------
 
@@ -653,6 +556,21 @@ ALTER TABLE `error_logs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_error_type` (`error_type`),
   ADD KEY `idx_user_id` (`user_id`);
+
+--
+-- Indexes for table `guide`
+--
+ALTER TABLE `guide`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_slug` (`slug`),
+  ADD KEY `author_id` (`author_id`);
+
+--
+-- Indexes for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_history_id` (`transaction_history_id`);
 
 --
 -- Indexes for table `location`
@@ -752,13 +670,13 @@ ALTER TABLE `withdrawal`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `collaborator`
@@ -770,6 +688,18 @@ ALTER TABLE `collaborator`
 -- AUTO_INCREMENT for table `error_logs`
 --
 ALTER TABLE `error_logs`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `guide`
+--
+ALTER TABLE `guide`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `invoice`
+--
+ALTER TABLE `invoice`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -800,13 +730,13 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `registration`
 --
 ALTER TABLE `registration`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -847,6 +777,18 @@ ALTER TABLE `collaborator`
 --
 ALTER TABLE `error_logs`
   ADD CONSTRAINT `error_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `guide`
+--
+ALTER TABLE `guide`
+  ADD CONSTRAINT `guide_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `admin` (`id`);
+
+--
+-- Constraints for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`transaction_history_id`) REFERENCES `transaction_history` (`id`);
 
 --
 -- Constraints for table `mount_point`

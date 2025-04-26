@@ -30,21 +30,24 @@ class Transaction {
         }
 
         $sql = "SELECT
-                    id,
-                    registration_id,
-                    user_id,
-                    transaction_type,
-                    amount,
-                    status,
-                    payment_method,
-                    created_at,
-                    updated_at
+                    th.id,
+                    th.registration_id,
+                    th.user_id,
+                    th.transaction_type,
+                    th.amount,
+                    th.status,
+                    th.payment_method,
+                    th.created_at,
+                    th.updated_at,
+                    r.rejection_reason
                 FROM
-                    transaction_history
+                    transaction_history th
+                LEFT JOIN
+                    registration r ON th.registration_id = r.id
                 WHERE
-                    user_id = :user_id
+                    th.user_id = :user_id
                 ORDER BY
-                    created_at DESC"; // Order by most recent first
+                    th.created_at DESC"; // Order by most recent first
 
         try {
             $stmt = $pdo->prepare($sql); // Use PDO's prepare method
@@ -60,6 +63,28 @@ class Transaction {
             // Log other potential errors
             error_log("Error in getTransactionsByUserId: " . $e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * Helper: Get status display text and class for a transaction status
+     * @param string $status
+     * @return array
+     */
+    public static function getTransactionStatusDisplay($status) {
+        switch (strtolower($status)) {
+            case 'completed':
+                return ['text' => 'Hoàn thành', 'class' => 'status-completed'];
+            case 'pending':
+                return ['text' => 'Chờ xử lý', 'class' => 'status-pending'];
+            case 'failed':
+                return ['text' => 'Thất bại', 'class' => 'status-failed'];
+            case 'cancelled':
+                return ['text' => 'Đã hủy', 'class' => 'status-cancelled'];
+            case 'refunded':
+                return ['text' => 'Đã hoàn tiền', 'class' => 'status-refunded'];
+            default:
+                return ['text' => 'Không xác định', 'class' => 'status-unknown'];
         }
     }
 

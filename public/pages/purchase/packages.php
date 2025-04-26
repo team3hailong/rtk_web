@@ -14,7 +14,7 @@ require_once $project_root_path . '/private/classes/Database.php';
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/auth/login.php'); // Corrected path from root
+    header('Location: /pages/auth/login'); // Không có .php
     exit;
 }
 

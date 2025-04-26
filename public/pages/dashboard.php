@@ -9,8 +9,8 @@ $private_includes_path = __DIR__ . '/../../private/includes/';
 
 // Authentication check
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page relative to the base URL
-    header('Location: /public/pages/auth/login.php'); // Corrected path from root
+    // Redirect to login page không có /public và không có .php
+    header('Location: /pages/auth/login');
     exit;
 }
 

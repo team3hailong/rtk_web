@@ -61,6 +61,6 @@
         width: 100%; /* Nút full width */
         min-width: auto; /* Allow button to shrink below 100px if container is narrow */
     }
-    .filter-search-section { flex-direction: column; align-items: stretch;}
+    .filter-search-section {  align-items: stretch;}
     .filter-tabs { display: flex; flex-wrap: wrap; justify-content: center;}
  }

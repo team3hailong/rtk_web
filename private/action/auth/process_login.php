@@ -1,9 +1,8 @@
 <?php
-// filepath: e:\Application\laragon\www\surveying_account\private\action\auth\process_login.php
 session_start();
 require_once __DIR__ . '/../../config/database.php'; 
 
-// Hàm ghi log hoạt động (ví dụ đơn giản)
+// Hàm ghi log hoạt động
 function log_activity($conn, $user_id, $action, $entity_type, $entity_id) {
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
@@ -37,13 +36,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // --- Nếu không có lỗi validation cơ bản ---
     if ($login_error === null) {
         // Chuẩn bị câu lệnh để lấy thông tin user dựa trên email
-        $sql = "SELECT id, username, password FROM user WHERE email = ? AND deleted_at IS NULL"; // Chỉ lấy user chưa bị xóa
+        $sql = "SELECT id, username, password, email_verified FROM user WHERE email = ? AND deleted_at IS NULL";
         $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
-            // Xử lý lỗi nghiêm trọng (ví dụ: log lỗi, hiển thị trang lỗi chung)
-             error_log("Login prepare statement failed: " . $conn->error);
-             $login_error = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.";
+            error_log("Login prepare statement failed: " . $conn->error);
+            $login_error = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.";
         } else {
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -54,48 +52,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Xác thực mật khẩu
                 if (password_verify($password, $user['password'])) {
-                    // Đăng nhập thành công
-                    session_regenerate_id(true); // Bảo mật: tạo session ID mới
+                    // Kiểm tra xem email đã được xác thực chưa
+                    if (!$user['email_verified']) {
+                        $login_error = "Vui lòng xác thực email của bạn trước khi đăng nhập. Kiểm tra hộp thư đến của bạn.";
+                    } else {
+                        // Đăng nhập thành công
+                        session_regenerate_id(true);
 
-                    // Lưu thông tin cần thiết vào session
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['username'] = $user['username'];
-                    // Có thể lưu thêm thông tin khác nếu cần (ví dụ: role)
+                        $_SESSION['user_id'] = $user['id'];
+                        $_SESSION['username'] = $user['username'];
 
-                    // Ghi log hoạt động đăng nhập
-                    log_activity($conn, $user['id'], 'login', 'user', $user['id']);
+                        // Ghi log hoạt động đăng nhập
+                        log_activity($conn, $user['id'], 'login', 'user', $user['id']);
 
-                    // Đóng statement và kết nối
-                    $stmt->close();
-                    $conn->close();
+                        // Đóng statement và kết nối
+                        $stmt->close();
+                        $conn->close();
 
-                    // Chuyển hướng đến trang dashboard hoặc trang chính
-                    header("Location: ../../../public/pages/dashboard.php"); // Thay đổi đường dẫn nếu cần
-                    exit();
+                        header("Location: ../../../public/pages/dashboard.php");
+                        exit();
+                    }
                 } else {
-                    // Sai mật khẩu
                     $login_error = "Email hoặc mật khẩu không chính xác.";
                 }
             } else {
-                // Không tìm thấy user với email này
                 $login_error = "Email hoặc mật khẩu không chính xác.";
             }
             $stmt->close();
         }
     }
 
-    // --- Nếu có lỗi hoặc đăng nhập thất bại ---
     if ($login_error !== null) {
         $_SESSION['login_error'] = $login_error;
         $conn->close();
-        header("Location: ../../../public/pages/auth/login.php"); // Chuyển hướng về trang đăng nhập
+        header("Location: ../../../public/pages/auth/login.php");
         exit();
     }
 
     $conn->close();
-
 } else {
-    // Nếu không phải POST request, chuyển hướng về trang đăng nhập
     header("Location: ../../../public/pages/auth/login.php");
     exit();
 }

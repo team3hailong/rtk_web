@@ -1,7 +1,7 @@
 <?php
-// filepath: e:\Application\laragon\www\surveying_account\private\action\auth\process_register.php
 session_start();
-require_once __DIR__ . '/../../config/database.php'; 
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../utils/email_helper.php';
 
 $errors = [];
 $formData = [];
@@ -90,17 +90,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Mã hóa mật khẩu
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
+        // Tạo token xác thực email
+        $verification_token = bin2hex(random_bytes(32));
+
         // Bắt đầu transaction
         $conn->begin_transaction();
 
         try {
-            // Chuẩn bị câu lệnh INSERT cho bảng user
-            $sql_user = "INSERT INTO user (username, email, password, phone, is_company, company_name, tax_code, tax_registered, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+            // Chuẩn bị câu lệnh INSERT cho bảng user với thêm token xác thực
+            $sql_user = "INSERT INTO user (username, email, password, phone, is_company, company_name, tax_code, tax_registered, email_verify_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
             $stmt_user = $conn->prepare($sql_user);
-             if ($stmt_user === false) {
+            if ($stmt_user === false) {
                 throw new Exception("Lỗi chuẩn bị câu lệnh user: " . $conn->error);
             }
-            $stmt_user->bind_param("ssssisii", $username, $email, $hashed_password, $phone, $is_company, $company_name, $tax_code, $tax_registered);
+            $stmt_user->bind_param("ssssisiss", 
+                $username, 
+                $email, 
+                $hashed_password, 
+                $phone, 
+                $is_company, 
+                $company_name, 
+                $tax_code, 
+                $tax_registered,
+                $verification_token
+            );
 
             // Thực thi câu lệnh user
             if (!$stmt_user->execute()) {
@@ -125,13 +138,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             $stmt_settings->close();
 
+            // Gửi email xác nhận
+            $emailSent = sendVerificationEmail($email, $username, $verification_token);
+            
+            if (!$emailSent) {
+                // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
+                error_log("Failed to send verification email to: $email");
+            }
+
             // Commit transaction nếu mọi thứ thành công
             $conn->commit();
 
             // Xóa dữ liệu form khỏi session và đặt thông báo thành công
             unset($_SESSION['form_data']);
-            $_SESSION['success_message'] = "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.";
-            header("Location: ../../../public/pages/auth/register.php"); 
+            $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.";
+            
+            header("Location: ../../../public/pages/auth/register.php");
             exit();
 
         } catch (Exception $e) {

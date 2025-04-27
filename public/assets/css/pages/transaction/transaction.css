@@ -40,10 +40,19 @@
 .action-button:hover { opacity: 1; }
 .btn-details { background: var(--gray-200); color: var(--gray-700); }
 .btn-details:hover { background: var(--gray-300); }
-.btn-upload-proof { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; width: calc(100px - 2px); }
+.btn-upload-proof { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;  }
 .btn-upload-proof:hover { background: #fcd34d; color: #78350f; }
 .btn-reason { background: var(--badge-red-bg); color: var(--badge-red-text); }
 .btn-reason:hover { background: var(--badge-red-text); color: white; }
+.btn-invoice-success {
+    background-color: #2196f3;
+    color: #fff;
+    border: none;
+}
+.btn-invoice-success:hover {
+    background-color: #1769aa;
+    color: #fff;
+}
 .btn-invoice { background: var(--primary-500); color: white; }
 .btn-invoice:hover { background: var(--primary-600); }
 .empty-state { text-align: center; padding: 3rem 1rem; color: var(--gray-500); background: white; border-radius: var(--rounded-lg); border: 1px dashed var(--gray-300); margin-top: 1.5rem; }

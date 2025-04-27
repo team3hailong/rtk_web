@@ -7,7 +7,6 @@ const modalTxType = document.getElementById('modal-tx-type');
 const modalTxAmount = document.getElementById('modal-tx-amount');
 const modalTxMethod = document.getElementById('modal-tx-method');
 const modalTxStatusBadge = document.getElementById('modal-tx-status-badge');
-const modalTxStatusText = document.getElementById('modal-tx-status-text');
 const modalTitle = document.getElementById('modal-title');
 const rejectionReasonSection = document.getElementById('rejection-reason-section');
 const modalTxRejectionReason = document.getElementById('modal-tx-rejection-reason');
@@ -21,13 +20,15 @@ function showTransactionDetails(txData) {
     modalTxType.textContent = txData.type;
     modalTxAmount.textContent = txData.amount;
     modalTxMethod.textContent = txData.method;
-    modalTxStatusText.textContent = txData.status_text;
     modalTxStatusBadge.className = 'status-badge status-badge-modal ' + txData.status_class;
-    if (txData.rejection_reason) {
+    modalTxStatusBadge.textContent = txData.status_text; // Set text directly on the badge
+
+    // Only show rejection reason if the status is 'failed'
+    if (txData.status_class === 'status-failed' && txData.rejection_reason) {
         modalTxRejectionReason.textContent = txData.rejection_reason;
         rejectionReasonSection.style.display = 'block';
     } else {
-        rejectionReasonSection.style.display = 'none';
+        rejectionReasonSection.style.display = 'none'; // Hide for other statuses or if no reason
     }
     modalOverlay.classList.add('active');
 }

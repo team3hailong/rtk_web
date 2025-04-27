@@ -53,7 +53,15 @@ function calculateEndTime(string $startTime, string $durationText): ?string {
 }
 
 // Add other utility functions here if needed...
-
+/**
+ * Format a number as currency
+ * @param float $amount The amount to format
+ * @param string $currency The currency symbol (default: 'đ')
+ * @return string Formatted currency string
+ */
+function format_currency($amount, $currency = 'đ') {
+    return number_format($amount, 0, ',', '.') . ' ' . $currency;
+}
 function generateRandomPassword(int $length = 12): string {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;,.<>/?';
     $password = '';

@@ -24,8 +24,11 @@ require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Transaction.php';
 require_once $project_root_path . '/private/utils/functions.php';
 
-// --- Fetch Real Transactions ---
+// Khởi tạo kết nối DB cho các truy vấn trực tiếp
 $db = new Database();
+$conn = $db->getConnection();
+
+// --- Fetch Real Transactions ---
 $transactionHandler = new Transaction($db);
 $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch transactions for the user
 
@@ -41,7 +44,6 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                 <button class="filter-button" data-filter="completed">Hoàn thành</button>
                 <button class="filter-button" data-filter="pending">Chờ xử lý</button>
                 <button class="filter-button" data-filter="failed">Thất bại</button>
-                <button class="filter-button" data-filter="refunded">Đã hoàn tiền</button>
                 <input type="text" class="search-box" placeholder="Tìm theo ID, Loại GD...">
             </div>
             <div class="transactions-table-wrapper">
@@ -102,13 +104,28 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                                                 <i class="fas fa-upload"></i> Gửi MC
                                             </a>
                                         <?php endif; ?>
-                                        <?php $has_invoice = ($tx['status'] === 'completed' && !empty($tx['registration_id']));
-                                              $invoice_id = $has_invoice ? 'HD' . $tx['registration_id'] : null; ?>
-                                        <?php if ($has_invoice && $invoice_id): ?>
-                                            <a href="/path/to/download/invoice.php?reg_id=<?php echo htmlspecialchars($tx['registration_id']); ?>" class="action-button btn-invoice" title="Tải hóa đơn <?php echo htmlspecialchars($invoice_id); ?>" download>
-                                                <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
-                                            </a>
-                                        <?php endif; ?>
+                                        <?php
+$has_invoice = false;
+$invoice_id = null;
+$stmt_invoice = $conn->prepare('SELECT id FROM invoice WHERE transaction_history_id = ?');
+$stmt_invoice->execute([$tx['id']]);
+$invoice_row = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
+if ($invoice_row) {
+    $has_invoice = true;
+    $invoice_id = 'HD' . $invoice_row['id'];
+}
+?>
+<?php if ($tx['status'] === 'completed'): ?>
+    <?php if ($has_invoice && $invoice_id): ?>
+        <a href="<?php echo $base_url; ?>/pages/invoice/completed_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice-success" title="Xem hóa đơn <?php echo htmlspecialchars($invoice_id); ?>">
+            <i class="fas fa-check-circle"></i> Xem HĐ
+        </a>
+    <?php else: ?>
+        <a href="<?php echo $base_url; ?>/pages/invoice/request_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice" title="Yêu cầu xuất hóa đơn">
+            <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
+        </a>
+    <?php endif; ?>
+<?php endif; ?>
                                         <?php $failure_reason = null; ?>
                                         <?php if ($tx['status'] === 'failed' && $failure_reason): ?>
                                             <button

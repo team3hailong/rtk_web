@@ -13,8 +13,8 @@ $nav_items = [
 
     // Trợ giúp section
     ['type' => 'section', 'label' => 'Trợ giúp'],
-    ['label' => 'Hướng dẫn sử dụng', 'icon' => 'fa-book-open', 'url' => '/pages/support/guide.php', 'active_check' => 'guide.php'], // Assuming this file exists or will be created
-    ['label' => 'Hỗ trợ', 'icon' => 'fa-headset', 'url' => '/pages/support/contact.php', 'active_check' => 'contact.php'], // Assuming this file exists or will be created
+    ['label' => 'Hướng dẫn sử dụng', 'icon' => 'fa-book-open', 'url' => '/pages/support/guide.php', 'active_check' => 'guide.php'],
+    ['label' => 'Hỗ trợ', 'icon' => 'fa-headset', 'url' => '/pages/support/contact.php', 'active_check' => 'contact.php'],
 
     // Cài đặt section
     ['type' => 'section', 'label' => 'Cài đặt'],

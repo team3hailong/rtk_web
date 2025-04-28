@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 26, 2025 at 11:27 AM
+-- Generation Time: Apr 28, 2025 at 08:37 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -44,6 +44,7 @@ CREATE TABLE `activity_logs` (
 -- Dumping data for table `activity_logs`
 --
 
+
 -- --------------------------------------------------------
 
 --
@@ -63,6 +64,7 @@ CREATE TABLE `admin` (
 --
 -- Dumping data for table `admin`
 --
+
 
 -- --------------------------------------------------------
 
@@ -96,6 +98,11 @@ CREATE TABLE `error_logs` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `error_logs`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -122,10 +129,6 @@ CREATE TABLE `guide` (
 -- Dumping data for table `guide`
 --
 
-INSERT INTO `guide` (`id`, `title`, `slug`, `content`, `author_id`, `topic`, `status`, `thumbnail`, `image`, `view_count`, `created_at`, `updated_at`, `published_at`) VALUES
-(4, 'Hướng dẫn sử dụng tài khoản RTK', 'huong-dan-su-dung-tai-khoan-rtk', '<p>Đây là nội dung hướng dẫn sử dụng tài khoản RTK...</p>', 1, 'Tài khoản', 'published', '/uploads/guide/thumb1.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16'),
-(5, 'Cách nạp tiền và gia hạn dịch vụ', 'cach-nap-tien-gia-han-dich-vu', '<p>Hướng dẫn chi tiết cách nạp tiền và gia hạn dịch vụ...</p>', 1, 'Thanh toán', 'published', '/uploads/guide/thumb2.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16'),
-(6, 'Khắc phục lỗi thường gặp khi sử dụng', 'khac-phuc-loi-thuong-gap', '<p>Một số lỗi thường gặp và cách xử lý...</p>', 1, 'Hỗ trợ', 'published', '/uploads/guide/thumb3.png', NULL, 0, '2025-04-26 17:27:16', '2025-04-26 17:27:16', '2025-04-26 17:27:16');
 
 -- --------------------------------------------------------
 
@@ -138,11 +141,15 @@ CREATE TABLE `invoice` (
   `transaction_history_id` int NOT NULL,
   `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `invoice_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `injected_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `rejected_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+--
+-- Dumping data for table `invoice`
+--
+
+ --------------------------------------------------------
 
 --
 -- Table structure for table `location`
@@ -371,8 +378,7 @@ CREATE TABLE `registration` (
 --
 -- Dumping data for table `registration`
 --
-
--- --------------------------------------------------------
+----------------------------------------------
 
 --
 -- Table structure for table `station`
@@ -442,7 +448,7 @@ CREATE TABLE `survey_account` (
 -- Dumping data for table `survey_account`
 --
 
--- --------------------------------------------------------
+--------------------------------------------------
 
 --
 -- Table structure for table `transaction_history`
@@ -463,7 +469,6 @@ CREATE TABLE `transaction_history` (
 --
 -- Dumping data for table `transaction_history`
 --
--------------------------------------------------------
 
 --
 -- Table structure for table `user`
@@ -475,6 +480,7 @@ CREATE TABLE `user` (
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_collaborator` tinyint(1) NOT NULL DEFAULT '0',
   `is_company` tinyint(1) DEFAULT NULL,
   `company_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tax_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -482,13 +488,17 @@ CREATE TABLE `user` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Trạng thái người dùng (1: active, 0: inactive)'
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Trạng thái người dùng (1: active, 0: inactive)',
+  `email_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `email_verify_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
+
+--
 -- Table structure for table `user_settings`
 --
 
@@ -505,6 +515,7 @@ CREATE TABLE `user_settings` (
 --
 -- Dumping data for table `user_settings`
 --
+
 
 -- --------------------------------------------------------
 
@@ -670,7 +681,7 @@ ALTER TABLE `withdrawal`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -688,7 +699,7 @@ ALTER TABLE `collaborator`
 -- AUTO_INCREMENT for table `error_logs`
 --
 ALTER TABLE `error_logs`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `guide`
@@ -700,7 +711,7 @@ ALTER TABLE `guide`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `location`
@@ -730,25 +741,25 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `registration`
 --
 ALTER TABLE `registration`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `user_settings`
 --
 ALTER TABLE `user_settings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `withdrawal`

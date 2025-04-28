@@ -28,7 +28,8 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         $mail->isHTML(true);
         $mail->Subject = 'Xác nhận Email - RTK Web';
         
-        $verificationLink = SITE_URL . "/private/action/auth/verify-email.php?token=" . $verificationToken;
+        // Sửa lại link để trỏ đến file public
+        $verificationLink = SITE_URL . "/public/verify-email.php?token=" . $verificationToken;
         
         $mail->Body = <<<HTML
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

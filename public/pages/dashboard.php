@@ -71,13 +71,7 @@ if (isset($pdo)) {
         <!-- Header Section within Content -->
         <div class="content-header">
              <h2 class="text-2xl font-semibold">Dashboard</h2>
-             <div class="user-info">
-                 <span>Chào mừng, <span class="highlight"><?php echo htmlspecialchars($user_display_name); ?></span>!</span>
-                 <!-- Link to Profile Settings -->
-                 <a href="<?php echo $base_path; ?>/pages/setting/profile.php" style="margin-left: 15px; color: var(--primary-600); text-decoration: none;">Hồ sơ</a>
-                 <!-- Logout Link -->
-                 <a href="<?php echo $base_path; ?>/pages/auth/logout.php" style="margin-left: 15px; color: var(--gray-600); text-decoration: none;">Đăng xuất</a>
-             </div>
+             
         </div>
 
         <!-- Stats Grid -->

@@ -14,4 +14,4 @@ define('SMTP_FROM_EMAIL', 'dovannguyen2005bv@gmail.com'); // Cùng email với S
 define('SMTP_FROM_NAME', 'SMTP Mail');
 
 // Site Configuration
-define('SITE_URL', 'http://localhost:8080'); // thay đổi theo domain thực tế của bạn
+define('SITE_URL', 'http://localhost:3000'); // thay đổi theo domain thực tế của bạn

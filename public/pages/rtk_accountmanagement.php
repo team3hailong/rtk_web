@@ -1,35 +1,29 @@
 <?php
 session_start();
 
-// --- Base URL và Path (Cần điều chỉnh cho phù hợp) ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-// File này nằm trong /pages/ => cần lùi lại 1 cấp để đến gốc dự án
-$script_dir = dirname($_SERVER['PHP_SELF']); // Should be /pages
-$base_project_dir = dirname($script_dir); // Lùi 1 cấp
-// Ensure base_url doesn't have double slashes if base_project_dir is '/'
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(__DIR__)); // Lùi 2 cấp từ /pages -> project root
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    // Chuyển hướng về login (giả sử login ở gốc)
-    header('Location: ' . $base_url . '/pages/auth/login.php');
+    // Chuyển hướng về login
+    header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
 
 // --- Include Header ---
-// Giả sử header.php nằm trong thư mục private/includes ở gốc dự án
 include $project_root_path . '/private/includes/header.php';
 
 // --- Include Database and Repository ---
-require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/RtkAccount.php'; // Include the RtkAccount class
 
 // Add CSS Link (Ideally should be inside <head> in header.php)
-// Update the path to include the 'rtk' folder
-echo '<link rel="stylesheet" href="' . $base_url . '/assets/css/pages/rtk/rtk_accountmanagement.css">';
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css">';
 
 
 // ===============================================
@@ -104,7 +98,7 @@ function format_date_display($date_str) {
                 <div class="empty-state">
                     <h3>Chưa có tài khoản nào</h3>
                     <p>Bạn chưa đăng ký hoặc mua tài khoản nào. Hãy bắt đầu ngay!</p>
-                    <a href="<?php echo $base_url; ?>/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+                    <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
                 </div>
             <?php else: ?>
                 <?php foreach ($accounts as $account): ?>
@@ -188,7 +182,7 @@ function format_date_display($date_str) {
     const baseUrl = '<?php echo $base_url; ?>';
 </script>
 <!-- Add link to external JS file -->
-<script src="<?php echo $base_url; ?>/assets/js/rtk_accountmanagement.js"></script>
+<script src="<?php echo $base_url; ?>/public/assets/js/rtk_accountmanagement.js"></script>
 
 
 <?php

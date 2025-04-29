@@ -12,7 +12,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
 require_once $project_root_path . '/private/classes/Database.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tx_id = isset($_POST['tx_id']) ? intval($_POST['tx_id']) : 0;

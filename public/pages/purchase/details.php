@@ -1,42 +1,22 @@
 <?php
 session_start();
 
-// --- Base URL Configuration ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-// Find the project root relative to the document root
-// Example: /surveying_account/public/pages/purchase/details.php
-$script_path = $_SERVER['PHP_SELF'];
-// Remove the script filename
-$script_dir_from_root = dirname($script_path); // e.g., /surveying_account/public/pages/purchase
-// Go up levels until we are at the project root URL path
-// This assumes the structure is /project_name/public/... or similar
-// and the project name is the first segment after the domain.
-$parts = explode('/', trim($script_dir_from_root, '/'));
-$project_root_url_path = '';
-// Basic assumption: the first part of the path is the project directory accessible via URL
-if (!empty($parts) && $parts[0] !== 'public') { // Adjust if project is at domain root
-    $project_root_url_path = '/' . $parts[0]; // e.g., /surveying_account
-} elseif (strpos($script_dir_from_root, '/public/') === 0) {
-     // Handle cases where the project might be at the web root but uses /public
-     // This part might need adjustment based on the exact server setup if the project isn't in a subdirectory
-     $project_root_url_path = ''; // Project is likely at the domain root
-}
-// Construct the base URL
-$base_url = rtrim($protocol . $domain . $project_root_url_path, '/'); // Ensure no trailing slash initially
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
-// --- Project Root Path for Includes ---
-$project_root_path = dirname(dirname(dirname(__DIR__))); // Should point to test_web
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Include Required Files ---
-require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php'; // Assuming Package class exists
 require_once $project_root_path . '/private/classes/Location.php'; // Assuming Location class exists
+require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/auth/login.php'); // Corrected login path from root
+    header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
 
@@ -51,7 +31,7 @@ $package_obj->closeConnection(); // Close connection after fetching package
 // --- Validate Selected Package ---
 if (!$selected_package) {
     // If package not found, redirect back to packages page
-    header('Location: /pages/purchase/packages.php?error=invalid_package'); // Corrected path
+    header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=invalid_package');
     exit;
 }
 
@@ -62,7 +42,7 @@ $is_trial_7d_package = ($selected_package_varchar_id === 'trial_7d');
 $is_contact_package = ($selected_package['button_text'] === 'Liên hệ mua');
 if ($is_contact_package) {
     // Redirect or display contact information - For now, redirect back with a message
-    header('Location: /pages/purchase/packages.php?info=contact_required&package_name=' . urlencode($selected_package['name'])); // Corrected path
+    header('Location: ' . $base_url . '/public/pages/purchase/packages.php?info=contact_required&package_name=' . urlencode($selected_package['name']));
     exit;
     // Alternatively, you could display a contact message on this page itself
     // and disable the form.
@@ -120,13 +100,17 @@ include $project_root_path . '/private/includes/header.php';
         border-color: var(--primary-500);
         box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
     }
-    /* Style cho input[type=number] */
+    
+    /* Style cho input[type=number] - Đã sửa lỗi cú pháp */
     input[type=number] {
         -moz-appearance: textfield; /* Firefox */
+        appearance: textfield; /* Standard */
     }
+    
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button {
         -webkit-appearance: none;
+        appearance: none;
         margin: 0;
     }
 
@@ -204,6 +188,9 @@ include $project_root_path . '/private/includes/header.php';
                 Bạn đang chọn: <strong><?php echo htmlspecialchars($selected_package['name']); ?></strong>
                  (<?php echo htmlspecialchars($selected_package['duration_text']); ?>)
             </div>
+
+            <!-- CSRF Protection Token -->
+            <?php echo generate_csrf_input(); ?>
 
             <!-- Input ẩn để gửi thông tin gói -->
             <input type="hidden" name="package_id" value="<?php echo htmlspecialchars($selected_package['id']); ?>">

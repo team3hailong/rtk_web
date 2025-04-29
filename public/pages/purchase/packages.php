@@ -1,20 +1,21 @@
 <?php
 session_start();
 
-// --- Base URL Configuration ---
-// Assuming public is the web root, base URL path is /
-$base_path = '/'; // Use this for links
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
-// --- Project Root Path for Includes ---
-$project_root_path = dirname(dirname(dirname(__DIR__)));
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_path = PUBLIC_URL; // Use PUBLIC_URL constant for links
+$project_root_path = PROJECT_ROOT_PATH;
 
-// --- Include Database and Config ---
-require_once $project_root_path . '/private/config/config.php';
+// --- Include Database class ---
+
+require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
 require_once $project_root_path . '/private/classes/Database.php';
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/auth/login'); // Không có .php
+    header('Location: ' . $base_path . '/pages/auth/login');
     exit;
 }
 

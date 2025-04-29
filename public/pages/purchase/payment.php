@@ -1,30 +1,18 @@
 <?php
 session_start();
 
-// --- Project Root Path for Includes ---
-// Assumes this file is in /public/pages/purchase/
-$project_root_path = dirname(dirname(dirname(dirname(__FILE__)))); // Adjust if structure differs
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
-// --- Base URL Configuration ---
-// A more robust way might be needed depending on server setup
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-// Basic assumption: project is directly under web root or in a known subdir
-// If project is in 'test_web-main', adjust accordingly.
-// Example: If URL is http://localhost/test_web-main/public/...
-$script_dir = dirname($_SERVER['PHP_SELF']); // e.g., /test_web-main/public/pages/purchase
-// Find the base path relative to the domain
-$base_project_dir = '';
-if (strpos($script_dir, '/public/') !== false) {
-    $base_project_dir = substr($script_dir, 0, strpos($script_dir, '/public/'));
-}
-$base_url = rtrim($protocol . $domain . $base_project_dir, '/');
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Include Required Files ---
-require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/utils/functions.php'; // For CRC function if moved there
 require_once $project_root_path . '/private/utils/vietqr_helper.php'; // Include the new VietQR helper
 require_once $project_root_path . '/private/utils/payment_helper.php'; // Include the new payment helper
+require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
 
 // --- Authentication & Pending Order Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -318,7 +306,8 @@ include $project_root_path . '/private/includes/header.php';
                 <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>
                 <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
                     <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
-                    <!-- Optional: Add CSRF token here if implemented -->
+                    <!-- CSRF Protection Token -->
+                    <?php echo generate_csrf_input(); ?>
                     <button type="submit" class="btn btn-success" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base); background-color: var(--success-500); border-color: var(--success-500);">
                         Xác nhận kích hoạt
                     </button>

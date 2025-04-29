@@ -16,9 +16,16 @@ if (!isset($_SESSION['user_id'])) {
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/utils/csrf_helper.php';
 
+// Logging helper for invoice errors
+function log_invoice_error($userId, $txId, $message) {
+    $context = json_encode(['user_id' => $userId, 'tx_id' => $txId]);
+    error_log("[" . date('Y-m-d H:i:s') . "] [User: {$userId}] Invoice Request Error: {$message} | Context: {$context}");
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Kiểm tra CSRF token
-    if (!validate_csrf_token(filter_input(INPUT_POST, 'csrf_token', FILTER_SANITIZE_STRING))) {
+    if (!validate_csrf_token(filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW))) {
+        log_invoice_error($_SESSION['user_id'], filter_input(INPUT_POST, 'tx_id', FILTER_VALIDATE_INT), 'CSRF validation failed');
         $_SESSION['invoice_error'] = 'CSRF validation failed. Please try again.';
         header('Location: ' . $base_url . '/public/pages/transaction.php');
         exit;
@@ -26,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $tx_id = isset($_POST['tx_id']) ? intval($_POST['tx_id']) : 0;
     if ($tx_id <= 0) {
+        log_invoice_error($_SESSION['user_id'], $tx_id, 'Invalid transaction ID');
         http_response_code(400);
         exit('Thiếu hoặc sai tham số.');
     }
@@ -41,19 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt_check_ownership->execute();
 
     if ($stmt_check_ownership->fetchColumn() == 0) {
-        // Ghi log cố gắng truy cập trái phép
-        error_log("Security Warning: User {$_SESSION['user_id']} attempted to access transaction {$tx_id} that doesn't belong to them");
+        log_invoice_error($_SESSION['user_id'], $tx_id, 'Unauthorized access to transaction');
         header('Location: ' . $base_url . '/public/pages/transaction.php?error=unauthorized');
         exit;
     }
     
-    // Kiểm tra thông tin công ty và mã số thuế trước khi cho phép yêu cầu xuất hóa đơn
+    // Kiểm tra thông tin công ty và mã số thuế
     $stmt_user_info = $conn->prepare("SELECT company_name, tax_code FROM user WHERE id = :user_id");
     $stmt_user_info->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
     $stmt_user_info->execute();
     $user_info = $stmt_user_info->fetch(PDO::FETCH_ASSOC);
     
     if (empty($user_info['company_name']) || empty($user_info['tax_code'])) {
+        log_invoice_error($_SESSION['user_id'], $tx_id, 'Missing company_name or tax_code');
         $_SESSION['invoice_error'] = 'Vui lòng cập nhật đầy đủ thông tin công ty và mã số thuế trước khi yêu cầu xuất hóa đơn.';
         header('Location: ' . $base_url . '/public/pages/setting/invoice.php?error=missing_info');
         exit;

@@ -232,7 +232,12 @@ $stmt->close();
 
             <div class="alert alert-danger" id="client-error" style="display: none;"></div>
 
-            <form action="../../../private/action/setting/update_invoice.php" method="POST">
+            <form action="<?php echo $base_url ?? ''; ?>/public/handlers/action_handler.php?module=setting&action=process_invoice_update" method="POST">
+                <?php
+                // Thêm CSRF token
+                require_once $project_root_path . '/private/utils/csrf_helper.php';
+                echo generate_csrf_input();
+                ?>
                 <div class="form-group">
                     <label for="username">Tên người dùng:</label>
                     <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" required>

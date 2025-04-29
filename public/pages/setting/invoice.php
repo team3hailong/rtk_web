@@ -29,61 +29,10 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 // --- Include Header ---
 include $project_root_path . '/private/includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cài đặt hóa đơn</title>
-    <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/settings/invoice.css">
-    <style>
-.btn:focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #4caf50; /* Focus glow consistent with inputs */
-}
 
-/* Alert Messages */
-.alert {
-    padding: 1rem 1rem; /* Bootstrap standard padding */
-    margin-bottom: 1.5rem; /* Consistent spacing */
-    border: 1px solid transparent;
-    border-radius: 6px; /* Match other elements */
-    font-size: 0.95rem;
-}
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/invoice-settings.css">
 
-.alert-success {
-    color: #0f5132;
-    background-color: #d1e7dd;
-    border-color: #badbcc;
-}
-
-.alert-danger {
-    color: #842029;
-    background-color: #f8d7da;
-    border-color: #f5c2c7;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .content-wrapper {
-        padding: 1rem; /* Reduce padding on smaller screens */
-    }
-
-    .invoice-form {
-        padding: 1.5rem; /* Reduce form padding */
-    }
-
-    .content-header h1 {
-        font-size: 1.5rem; /* Slightly smaller heading */
-    }
-}
-
-/* Ensure no accidental style leakage affects sidebar */
-/* Sidebar styles should be defined separately if needed */
-    </style>
-</head>
-<body>
-<div class="main-container">
+<div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper">
         <div class="content-header">
@@ -91,15 +40,19 @@ include $project_root_path . '/private/includes/header.php';
         </div>
 
         <div class="invoice-form">
-            <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success">Cập nhật thông tin thành công!</div>
-            <?php elseif (isset($_GET['error'])): ?>
-                <div class="alert alert-danger">Có lỗi xảy ra khi cập nhật thông tin. Vui lòng thử lại.</div>
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success"><?php echo $_SESSION['success']; ?></div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger"><?php echo $_SESSION['error']; ?></div>
+                <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
             <div class="alert alert-danger" id="client-error" style="display: none;"></div>
 
-            <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_invoice_info" method="post" id="invoice-form">
+            <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_invoice_update" method="post" id="invoice-form">
                 <?php echo generate_csrf_input(); ?>
                 <div class="form-group">
                     <label for="company_name">Tên công ty</label>
@@ -147,5 +100,3 @@ document.getElementById('invoice-form').addEventListener('submit', function(e) {
 </script>
 
 <?php include $project_root_path . '/private/includes/footer.php'; ?>
-</body>
-</html>

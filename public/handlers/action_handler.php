@@ -70,11 +70,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_
         $user_id = $_SESSION['user_id'] ?? 0;
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         
-        error_log("[CSRF ERROR] $error_message | User: $user_id | IP: $ip_address");
+        error_log("[CSRF ERROR] $error_message | User: $user_id | IP: $ip_address | Token: " . substr($token, 0, 8));
         
-        // Trả về lỗi
-        http_response_code(403); // Forbidden
-        echo json_encode(['error' => 'CSRF validation failed. Please try again.']);
+        // Kiểm tra xem có session tokens không
+        $has_tokens = isset($_SESSION['csrf_tokens']) && is_array($_SESSION['csrf_tokens']);
+        $token_count = $has_tokens ? count($_SESSION['csrf_tokens']) : 0;
+        error_log("[CSRF DEBUG] User: $user_id has $token_count tokens in session");
+        
+        // Đối với form submission thông thường, set thông báo lỗi trong session và chuyển hướng
+        // thay vì trả về JSON response
+        $_SESSION['error'] = 'CSRF validation failed. Vui lòng thử lại.';
+        
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (!empty($referer)) {
+            // Nếu có HTTP_REFERER, quay về trang gửi request
+            header('Location: ' . $referer);
+        } else {
+            // Nếu không, quay về trang chủ hoặc dashboard
+            header('Location: ' . '/public/pages/dashboard.php');
+        }
         exit;
     }
 }

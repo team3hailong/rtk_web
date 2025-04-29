@@ -21,21 +21,15 @@ if ($slug) {
 include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
-<style>
-.guide-detail-container { max-width: 800px; margin: 32px auto 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(39,174,96,0.07); padding: 32px 28px; }
-.guide-title { font-size: 2rem; font-weight: 700; color: #111; margin-bottom: 10px; }
-.guide-meta { color: #888; font-size: 1.05em; margin-bottom: 18px; }
-.guide-thumbnail { width: 100%; max-width: 350px; height: auto; border-radius: 10px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(39,174,96,0.10); }
-.guide-content { color: #111; font-size: 1.13em; line-height: 1.7; }
-@media (max-width: 900px) { .guide-detail-container { padding: 18px 6vw; } }
-</style>
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/support/guide_detail.css" />
+
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
         <?php if (!$article): ?>
             <div class="guide-detail-container">
-                <div style="color: #c00; font-size:1.2em;">Không tìm thấy bài viết hoặc bài viết đã bị ẩn.</div>
-                <a href="guide.php" style="color: #27ae60; text-decoration: underline;">&larr; Quay lại danh sách bài viết</a>
+                <div class="guide-error">Không tìm thấy bài viết hoặc bài viết đã bị ẩn.</div>
+                <a href="guide.php" class="guide-back-link">&larr; Quay lại danh sách bài viết</a>
             </div>
         <?php else: ?>
             <div class="guide-detail-container">
@@ -50,7 +44,7 @@ include $project_root_path . '/private/includes/header.php';
                     <img class="guide-thumbnail" src="<?php echo htmlspecialchars($article['thumbnail']); ?>" alt="Thumbnail">
                 <?php endif; ?>
                 <div class="guide-content"><?php echo $article['content']; ?></div>
-                <div style="margin-top:32px;"><a href="guide.php" style="color: #27ae60; text-decoration: underline;">&larr; Quay lại danh sách bài viết</a></div>
+                <div class="guide-back-container"><a href="guide.php" class="guide-back-link">&larr; Quay lại danh sách bài viết</a></div>
             </div>
         <?php endif; ?>
     </main>

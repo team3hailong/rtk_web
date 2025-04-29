@@ -26,8 +26,8 @@
 .transactions-table th:nth-child(2), .transactions-table td:nth-child(2) { width: 150px; }
 .transactions-table th:nth-child(3), .transactions-table td:nth-child(3) { width: 120px; }
 .transactions-table th:nth-child(4), .transactions-table td:nth-child(4) { width: 150px; }
-.transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { width: 120px; }
-.transactions-table th:nth-child(6), .transactions-table td:nth-child(6) { width: 120px; }
+.transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { width: 120px; text-align: center; }
+.transactions-table th:nth-child(6), .transactions-table td:nth-child(6) { width: 120px; text-align: right; }
 .transactions-table td.actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; width: 120px; min-width: 120px; }
 .status-badge { padding: 0.3rem 0.8rem; border-radius: var(--rounded-full); font-size: 0.8rem; display: inline-block; font-weight: var(--font-medium); text-align: center; min-width: 80px; }
 .status-completed { background: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
@@ -68,6 +68,39 @@
 .modal-body p { margin-bottom: 0.75rem; font-size: var(--font-size-sm); color: var(--gray-700); line-height: 1.6; }
 .modal-body strong { font-weight: var(--font-semibold); color: var(--gray-900); min-width: 120px; display: inline-block; }
 .modal-body .status-badge-modal { margin-left: 5px; vertical-align: middle; }
+
+/* New styles moved from inline to external CSS */
+.transactions-content-wrapper {
+    padding-top: 1rem;
+}
+
+/* Empty state table cell styles */
+.transactions-table td .empty-state {
+    border: none;
+    margin: 0;
+    padding: 2rem 1rem;
+}
+
+/* Rejection reason section */
+#rejection-reason-section {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: var(--rounded-md);
+}
+
+#rejection-reason-section p:first-child {
+    margin-bottom: 0.5rem;
+    font-weight: var(--font-semibold);
+    color: #dc2626;
+}
+
+#modal-tx-rejection-reason {
+    margin-bottom: 0;
+    color: #b91c1c;
+}
+
 @media (max-width: 992px) { .transactions-table th, .transactions-table td { padding: 0.8rem 0.6rem; } .action-button { padding: 0.4rem 0.6rem; width: 90px; } }
 @media (max-width: 768px) { .filter-section {align-items: stretch; } .search-box { width: 100%; margin-left: 0; } .transactions-table th:nth-child(2), .transactions-table td:nth-child(2), .transactions-table th:nth-child(5), .transactions-table td:nth-child(5) { display: none; } .transactions-table th, .transactions-table td { padding: 0.7rem 0.5rem; font-size: var(--font-size-xs, 0.75rem); } .transactions-table td.actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.4rem; width: 100px; } .action-button { width: 100%; margin-right: 0; margin-bottom: 0; padding: 0.5rem 0.5rem; font-size: var(--font-size-xs, 0.75rem); } .status-badge { padding: 0.25rem 0.6rem; font-size: 0.7rem; min-width: 70px; } .modal-content { max-width: 95%; padding: 1.5rem; } .modal-header h4 { font-size: var(--font-size-base); } .modal-body p { font-size: var(--font-size-xs); } .modal-body strong { min-width: 100px; } }
 @media (max-width: 576px) { .transactions-wrapper { padding: 0 0.5rem 1rem 0.5rem; } h2 { font-size: 1.25rem; margin-bottom: 1rem; } .filter-section { gap: 0.5rem; } .filter-button { padding: 0.3rem 0.7rem; font-size: var(--font-size-xs, 0.75rem); } .search-box { padding: 0.4rem 0.6rem; font-size: var(--font-size-xs, 0.75rem); } .transactions-table th:nth-child(3), .transactions-table td:nth-child(3) { display: none; } .transactions-table th, .transactions-table td { padding: 0.6rem 0.4rem; } .transactions-table td.amount { font-size: var(--font-size-sm); } .transactions-table td.actions { width: 90px; } .action-button { padding: 0.4rem; } .status-badge { padding: 0.2rem 0.5rem; font-size: 0.65rem; min-width: 60px; } .empty-state { padding: 2rem 1rem; } .empty-state i { font-size: 2rem; } }

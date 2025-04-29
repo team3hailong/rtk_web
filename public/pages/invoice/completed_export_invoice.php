@@ -1,14 +1,15 @@
 <?php
 session_start();
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']);
-$base_project_dir = dirname(dirname($script_dir));
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(dirname(__DIR__)));
+
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . $base_url . '/pages/auth/login.php');
+    header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
 
@@ -52,9 +53,10 @@ if (!$invoice) {
 include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/request_export_invoice.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/completed_export_invoice.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
-    <div class="content-wrapper" style="padding-top: 1rem;">
+    <div class="content-wrapper invoice-content-wrapper">
         <div class="invoice-request-wrapper">
             <h2>Thông tin xuất hóa đơn</h2>
             <div class="invoice-section">
@@ -75,15 +77,15 @@ include $project_root_path . '/private/includes/header.php';
                     <tr><td>Email</td><td>:</td><td><?php echo htmlspecialchars($info['email'] ?? ''); ?></td></tr>
                 </table>
             </div>
-            <div class="invoice-section" style="margin-top: 24px;">
+            <div class="invoice-section invoice-section-spaced">
                 <h4>Trạng thái xuất hóa đơn</h4>
                 <?php if ($invoice['status'] === 'approved'): ?>
                     <div class="alert alert-success">
-                        <i class="fas fa-check-circle" style="color: #2196f3; margin-right: 8px;"></i>
+                        <i class="fas fa-check-circle success-icon"></i>
                         Yêu cầu xuất hóa đơn đã được chấp thuận.
                     </div>
                     <?php if (!empty($invoice['invoice_file'])): ?>
-                        <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="downloadInvoiceFile('<?php echo $base_url . '/public/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
+                        <button type="button" class="btn btn-primary download-btn" onclick="downloadInvoiceFile('<?php echo $base_url . '/public/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
                             <i class="fas fa-download"></i> Tải hóa đơn
                         </button>
                         <script>
@@ -99,17 +101,17 @@ include $project_root_path . '/private/includes/header.php';
                     <?php endif; ?>
                 <?php elseif ($invoice['status'] === 'rejected'): ?>
                     <div class="alert alert-danger">
-                        <i class="fas fa-times-circle" style="color: #e53935; margin-right: 8px;"></i>
+                        <i class="fas fa-times-circle error-icon"></i>
                         Yêu cầu xuất hóa đơn bị từ chối.<br>
                         <strong>Lý do:</strong> <?php echo nl2br(htmlspecialchars($invoice['rejected_reason'] ?? '')); ?>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
-                        <i class="fas fa-info-circle" style="color: #1976d2; margin-right: 8px;"></i>
+                        <i class="fas fa-info-circle info-icon"></i>
                         Yêu cầu xuất hóa đơn đang chờ xử lý.
                     </div>
                 <?php endif; ?>
-                <button type="button" class="btn btn-cancel" style="margin-top: 18px;" onclick="window.location.href='<?php echo $base_url; ?>/public/pages/transaction.php'">Quay lại giao dịch</button>
+                <button type="button" class="btn btn-cancel back-btn" onclick="window.location.href='<?php echo $base_url; ?>/public/pages/transaction.php'">Quay lại giao dịch</button>
             </div>
         </div>
     </div>

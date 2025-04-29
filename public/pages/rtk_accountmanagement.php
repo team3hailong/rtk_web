@@ -75,7 +75,7 @@ function format_date_display($date_str) {
     ?>
 
     <!-- Main Content -->
-    <main class="content-wrapper" style="padding: 1.5rem;"> <!-- Thêm padding trực tiếp nếu cần -->
+    <main class="content-wrapper">
 
         <div class="account-page-header">
              <h2>Quản Lý Tài Khoản</h2>
@@ -182,7 +182,7 @@ function format_date_display($date_str) {
     const baseUrl = '<?php echo $base_url; ?>';
 </script>
 <!-- Add link to external JS file -->
-<script src="<?php echo $base_url; ?>/public/assets/js/rtk_accountmanagement.js"></script>
+<script src="<?php echo $base_url; ?>/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>
 
 
 <?php

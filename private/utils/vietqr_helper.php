@@ -1,13 +1,19 @@
 <?php
 // filepath: e:\Application\laragon\www\test_web-Long2\private\utils\vietqr_helper.php
 
+// Tải env_loader nếu chưa được tải
+if (!function_exists('env')) {
+    require_once dirname(dirname(__FILE__)) . '/config/env_loader.php';
+}
+
 // --- VietQR Configuration ---
-// !!! THAY THẾ BẰNG THÔNG TIN THẬT CỦA BẠN hoặc load từ config !!!
-define('VIETQR_BANK_ID', '970418');      // Ví dụ: VietinBank BIN
-define('VIETQR_ACCOUNT_NO', '112233445566'); // Số tài khoản thật
-define('VIETQR_ACCOUNT_NAME', 'NGUYEN VAN A'); // Tên chủ tài khoản thật
-define('VIETQR_BANK_NAME', 'VietinBank'); // Tên ngân hàng để hiển thị
-define('VIETQR_IMAGE_TEMPLATE', 'compact2'); // Template for img.vietqr.io (e.g., compact, compact2, qr_only, print)
+// Sử dụng biến môi trường, với giá trị mặc định là các giá trị hiện tại
+define('VIETQR_BANK_ID', env('VIETQR_BANK_ID', '970418'));
+define('VIETQR_ACCOUNT_NO', env('VIETQR_ACCOUNT_NO', '112233445566'));
+define('VIETQR_ACCOUNT_NAME', env('VIETQR_ACCOUNT_NAME', 'NGUYEN VAN A'));
+define('VIETQR_BANK_NAME', env('VIETQR_BANK_NAME', 'VietinBank'));
+define('VIETQR_IMAGE_TEMPLATE', env('VIETQR_IMAGE_TEMPLATE', 'compact2'));
+
 // Template VietQR chuẩn
 define('VIETQR_TEMPLATE', '00020101021238570010A00000072701270006%s0115%s0208QRIBFTTA530370454%.0f5802VN62%d%s6304');
 

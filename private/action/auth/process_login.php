@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Kiểm tra xem session đã được start chưa trước khi gọi
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . '/../../config/database.php'; 
 
 // Hàm ghi log hoạt động
@@ -94,4 +97,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../../../public/pages/auth/login.php");
     exit();
 }
-?>

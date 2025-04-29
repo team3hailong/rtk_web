@@ -1,0 +1,20 @@
+# Các file hệ thống
+.DS_Store
+Thumbs.db
+
+# File cấu hình môi trường chứa thông tin nhạy cảm
+.env
+
+# Vendor packages
+/vendor/
+
+# File logs và dữ liệu tạm
+/private/logs/*.log
+/public/uploads/payment_proofs/*
+!/public/uploads/payment_proofs/.gitkeep
+
+# IDE & Editor folders
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace

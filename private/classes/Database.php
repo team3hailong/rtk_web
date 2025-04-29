@@ -8,10 +8,15 @@ class Database {
     private $conn;
 
     public function __construct() {
+        // Tải env_loader trước để đảm bảo hệ thống biến môi trường hoạt động
+        $env_loader_path = __DIR__ . '/../config/env_loader.php';
+        if (file_exists($env_loader_path)) {
+            require_once $env_loader_path;
+        }
+        
         // Check if the constants from config/database.php are defined
         if (!defined('DB_SERVER') || !defined('DB_NAME') || !defined('DB_USERNAME') || !defined('DB_PASSWORD')) {
             // Include config file if constants are not defined yet
-            // Adjust the path based on where Database.php is located relative to config.php
             $configPath = __DIR__ . '/../config/database.php'; // Ensure this path is correct
             if (file_exists($configPath)) {
                 require_once $configPath;
@@ -26,10 +31,21 @@ class Database {
              die("Error: Database configuration constants (DB_SERVER, DB_NAME, DB_USERNAME, DB_PASSWORD) are not defined even after including the config file.");
         }
 
-        $this->host = DB_SERVER; // Use DB_SERVER
-        $this->db_name = DB_NAME;
-        $this->username = DB_USERNAME; // Use DB_USERNAME
-        $this->password = DB_PASSWORD; // Use DB_PASSWORD
+        // Sử dụng hàm env() nếu có hoặc sử dụng giá trị constant trực tiếp
+        if (function_exists('env')) {
+            $this->host = env('DB_SERVER', DB_SERVER);
+            $this->db_name = env('DB_NAME', DB_NAME);
+            $this->username = env('DB_USERNAME', DB_USERNAME);
+            $this->password = env('DB_PASSWORD', DB_PASSWORD);
+        } else {
+            $this->host = DB_SERVER;
+            $this->db_name = DB_NAME;
+            $this->username = DB_USERNAME;
+            $this->password = DB_PASSWORD;
+        }
+        
+        // Log để debug
+        error_log("Database init: Using database '{$this->db_name}' on host '{$this->host}'");
     }
 
     /**

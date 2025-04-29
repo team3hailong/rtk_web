@@ -23,6 +23,7 @@ if (!isset($_SESSION['user_id'])) {
 include $project_root_path . '/private/includes/header.php';
 
 // --- Include Database and Repository ---
+require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/RtkAccount.php'; // Include the RtkAccount class
 

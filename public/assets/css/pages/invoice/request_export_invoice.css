@@ -93,3 +93,17 @@
         font-size: 0.98rem;
     }
 }
+
+/* Additional styles moved from inline CSS */
+.content-wrapper.invoice-content-wrapper {
+    padding-top: 1rem;
+}
+
+form.invoice-request-form {
+    margin-top: 18px; 
+    text-align: center;
+}
+
+.invoice-note {
+    margin-top: 20px;
+}

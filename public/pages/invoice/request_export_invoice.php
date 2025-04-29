@@ -117,9 +117,9 @@ include $project_root_path . '/private/includes/header.php';
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/request_export_invoice.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
-    <div class="content-wrapper" style="padding-top: 1rem;">
+    <div class="content-wrapper invoice-content-wrapper">
         <div class="invoice-request-wrapper">
-            <h2>Thông tin xuất hóa đơn</h2>
+            <h2>Xuất Hóa Đơn VAT</h2>
             
             <?php if ($missing_invoice_info): ?>
             <div class="alert alert-warning">
@@ -161,7 +161,7 @@ include $project_root_path . '/private/includes/header.php';
                     <tr><td>Email</td><td>:</td><td><?php echo htmlspecialchars($info['email'] ?? ''); ?></td></tr>
                 </table>
             </div>
-            <form method="post" action="" style="margin-top: 18px; text-align: center;">
+            <form method="post" action="" class="invoice-request-form">
                 <input type="hidden" name="tx_id" value="<?php echo $info['transaction_id']; ?>">
                 <!-- Thêm CSRF token -->
                 <?php echo generate_csrf_input(); ?>
@@ -170,12 +170,11 @@ include $project_root_path . '/private/includes/header.php';
                 </button>
                 <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-cancel">Hủy</a>
             </form>
-            
-            <?php if ($missing_invoice_info): ?>
-            <div class="invoice-note" style="margin-top: 20px;">
+            <div class="invoice-note">
+                <?php if ($missing_invoice_info): ?>
                 <p><strong>Lưu ý:</strong> Không thể yêu cầu xuất hóa đơn khi thông tin công ty hoặc mã số thuế còn trống. Vui lòng cập nhật thông tin trước khi tiếp tục.</p>
+                <?php endif; ?>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 </div>

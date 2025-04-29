@@ -25,15 +25,15 @@ include $project_root_path . '/private/includes/header.php';
     <main class="content-wrapper">
         <h2 class="text-2xl font-semibold mb-4">Bản đồ trạm base</h2>
         <p class="text-gray-600 mb-4">Trạng thái trạm sẽ được cập nhật liên tục mỗi 5 phút</p>
-        <div id="map-container" style="position: relative;">
-            <div id="map"><p style="text-align: center; padding-top: 50px; color: var(--gray-500);">Đang tải bản đồ...</p></div>
+        <div id="map-container">
+            <div id="map"><p>Đang tải bản đồ...</p></div>
             <div class="map-controls">
                 <button id="mapNormal" class="map-type-btn active">Bản đồ thường</button>
                 <button id="mapSatellite" class="map-type-btn">Bản đồ vệ tinh</button>
-                <button id="getCurrentLocation" class="map-type-btn" style="margin-top: 10px; background-color: #3498db; color: white;">Vị trí của tôi</button>
+                <button id="getCurrentLocation" class="map-type-btn">Vị trí của tôi</button>
             </div>
             <div class="map-legend">
-                <div class="legend-title" style="font-weight: bold; margin-bottom: 5px;">Chú thích:</div>
+                <div class="legend-title">Chú thích:</div>
                 <div class="legend-item">
                     <div class="legend-color green-station"></div>
                     <div>Trạm đang hoạt động</div>

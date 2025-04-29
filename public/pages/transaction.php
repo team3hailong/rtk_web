@@ -36,7 +36,7 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/transaction/transaction.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
-    <div class="content-wrapper" style="padding-top: 1rem;">
+    <div class="content-wrapper transactions-content-wrapper">
         <div class="transactions-wrapper">
             <h2 class="text-2xl font-semibold mb-5">Lịch Sử Giao Dịch</h2>
             <div class="filter-section">
@@ -54,8 +54,8 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                             <th>Thời gian</th>
                             <th>Số tiền</th>
                             <th>Phương thức</th>
-                            <th style="text-align: center;">Trạng thái</th>
-                            <th style="text-align: right;">Hành động</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,7 +139,7 @@ if ($invoice_row) {
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                             <tr> <td colspan="6"> <div class="empty-state" style="border: none; margin: 0; padding: 2rem 1rem;"> <i class="fas fa-receipt"></i> <p>Chưa có giao dịch nào.</p> </div> </td> </tr>
+                             <tr> <td colspan="6"> <div class="empty-state"> <i class="fas fa-receipt"></i> <p>Chưa có giao dịch nào.</p> </div> </td> </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -166,11 +166,11 @@ if ($invoice_row) {
                     <span id="modal-tx-status-text"></span>
                 </span>
             </p>
-            <div id="rejection-reason-section" style="display: none; margin-top: 10px; padding: 10px; background-color: #fee2e2; border: 1px solid #fecaca; border-radius: var(--rounded-md);">
-                <p style="margin-bottom: 0.5rem; font-weight: var(--font-semibold); color: #dc2626;">
+            <div id="rejection-reason-section" style="display: none;">
+                <p>
                     <i class="fas fa-exclamation-circle"></i> Lý do từ chối:
                 </p>
-                <p id="modal-tx-rejection-reason" style="margin-bottom: 0; color: #b91c1c;"></p>
+                <p id="modal-tx-rejection-reason"></p>
             </div>
         </div>
     </div>

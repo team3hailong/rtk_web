@@ -1,0 +1,58 @@
+/* CSS for Guide Detail Page */
+
+.guide-detail-container { 
+  max-width: 800px; 
+  margin: 32px auto 0 auto; 
+  background: #fff; 
+  border-radius: 12px; 
+  box-shadow: 0 2px 16px rgba(39,174,96,0.07); 
+  padding: 32px 28px; 
+}
+
+.guide-title { 
+  font-size: 2rem; 
+  font-weight: 700; 
+  color: #111; 
+  margin-bottom: 10px; 
+}
+
+.guide-meta { 
+  color: #888; 
+  font-size: 1.05em; 
+  margin-bottom: 18px; 
+}
+
+.guide-thumbnail { 
+  width: 100%; 
+  max-width: 350px; 
+  height: auto; 
+  border-radius: 10px; 
+  margin-bottom: 18px; 
+  box-shadow: 0 2px 8px rgba(39,174,96,0.10); 
+}
+
+.guide-content { 
+  color: #111; 
+  font-size: 1.13em; 
+  line-height: 1.7; 
+}
+
+.guide-error {
+  color: #c00;
+  font-size: 1.2em;
+}
+
+.guide-back-link {
+  color: #27ae60;
+  text-decoration: underline;
+}
+
+.guide-back-container {
+  margin-top: 32px;
+}
+
+@media (max-width: 900px) { 
+  .guide-detail-container { 
+    padding: 18px 6vw; 
+  } 
+}

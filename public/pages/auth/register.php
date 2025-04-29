@@ -10,6 +10,11 @@ $formData = $_SESSION['form_data'] ?? [];
 unset($_SESSION['errors']);
 unset($_SESSION['success_message']);
 unset($_SESSION['form_data']);
+
+// Get base URL for assets
+$project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
+require_once $project_root_path . '/private/config/config.php';
+$base_url = BASE_URL;
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -17,123 +22,7 @@ unset($_SESSION['form_data']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký Tài Khoản</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .register-container {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
-        }
-        .register-container h2 {
-            color: #2e7d32; /* Green color */
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="tel"],
-        .form-group input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .form-group input:focus {
-            border-color: #4caf50; /* Green color on focus */
-            outline: none;
-        }
-        .form-group.checkbox-group {
-            display: flex;
-            align-items: center;
-        }
-        .form-group.checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-            width: auto;
-            accent-color: #4caf50; /* Green checkbox */
-        }
-        .company-info {
-            border-left: 3px solid #4caf50;
-            padding-left: 15px;
-            margin-top: 15px;
-            display: none; /* Hide by default */
-        }
-        .btn-register {
-            background-color: #4caf50; /* Green background */
-            color: white;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-        .btn-register:hover {
-            background-color: #388e3c; /* Darker green on hover */
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-        }
-        .login-link a {
-            color: #2e7d32; /* Green link */
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            background-color: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ef9a9a;
-            font-size: 0.9rem;
-        }
-         .error-message ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .success-message {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #a5d6a7;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/auth/register.css">
 </head>
 <body>
     <div class="register-container">
@@ -158,7 +47,6 @@ unset($_SESSION['form_data']);
         <form action="/public/handlers/action_handler.php?module=auth&action=process_register" method="POST" id="registerForm">
             <?php
             // Thêm CSRF token vào form đăng ký
-            $project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
             require_once $project_root_path . '/private/utils/csrf_helper.php';
             echo generate_csrf_input();
             ?>
@@ -190,30 +78,6 @@ unset($_SESSION['form_data']);
         </div>
     </div>
 
-    <script>
-        // Gọi hàm khi trang tải để đảm bảo trạng thái đúng nếu có dữ liệu cũ
-        document.addEventListener('DOMContentLoaded', function() {
-            const successMessage = document.getElementById('successMessage');
-            if (successMessage) {
-                setTimeout(() => {
-                    window.location.href = 'login.php'; // Chuyển hướng đến trang đăng nhập
-                }, 1000); // 1000 milliseconds = 1 giây
-            }
-
-            // Client-side validation for password match
-            const form = document.getElementById('registerForm');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirm_password');
-
-            form.addEventListener('submit', function(event) {
-                if (password.value !== confirmPassword.value) {
-                    alert('Mật khẩu và xác nhận mật khẩu không khớp!');
-                    confirmPassword.focus();
-                    event.preventDefault(); // Ngăn form gửi đi
-                }
-                // Thêm các kiểm tra khác nếu cần
-            });
-        });
-    </script>
+    <script src="<?php echo $base_url; ?>/public/assets/js/pages/auth/register.js"></script>
 </body>
 </html>

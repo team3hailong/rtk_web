@@ -12,6 +12,10 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Get base URL for assets
+$project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
+require_once $project_root_path . '/private/config/config.php';
+$base_url = BASE_URL;
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -19,93 +23,7 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px; /* Hẹp hơn form đăng ký một chút */
-        }
-        .login-container h2 {
-            color: #2e7d32; /* Green color */
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        .form-group input[type="email"],
-        .form-group input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .form-group input:focus {
-            border-color: #4caf50; /* Green color on focus */
-            outline: none;
-        }
-        .btn-login {
-            background-color: #4caf50; /* Green background */
-            color: white;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
-        .btn-login:hover {
-            background-color: #388e3c; /* Darker green on hover */
-        }
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-        }
-        .register-link a {
-            color: #2e7d32; /* Green link */
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            background-color: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ef9a9a;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/auth/login.css">
 </head>
 <body>
     <div class="login-container">
@@ -119,7 +37,6 @@ if (isset($_SESSION['user_id'])) {
         <form action="/public/handlers/action_handler.php?module=auth&action=process_login" method="POST">
             <?php 
             // Thêm CSRF token vào form đăng nhập
-            $project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
             require_once $project_root_path . '/private/utils/csrf_helper.php';
             echo generate_csrf_input();
             ?>
@@ -136,6 +53,6 @@ if (isset($_SESSION['user_id'])) {
         <div class="register-link">
             Chưa có tài khoản? <a href="register.php">Đăng ký ngay</a>
         </div>
-        </div>
+    </div>
 </body>
 </html>

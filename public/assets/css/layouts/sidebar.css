@@ -3,7 +3,9 @@
 /* Import biến và base styles nếu cần (Đảm bảo style.css được load trước) */
 /* @import '../base.css'; */ /* Bỏ comment nếu bạn không load style.css riêng */
 /* @import '../components/variables.css'; */ /* Assuming variables are here */
-
+html{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 /* ============================================= */
 /* == Base Layout & Variables (Sidebar Specific) == */
 /* ============================================= */
@@ -124,7 +126,7 @@
     /* --- Hiệu ứng chuyển động (Mobile Transform) --- */
     transition: transform 0.3s ease-in-out;
     /* transition: width 0.2s ease; */ /* Nếu muốn hiệu ứng khi width thay đổi */
-    overflow-x: hidden; /* Prevent content overflow if max-width is reached */
+    overflow-x: visible; /* Allow content to overflow horizontally so text is not hidden */
 }
 
 /* ============================================= */
@@ -245,7 +247,7 @@
 .sidebar-nav {
     flex: 1; /* Chiếm hết không gian dọc còn lại */
     overflow-y: auto; /* Scroll dọc nếu cần */
-    overflow-x: hidden; /* Không scroll ngang */
+    overflow-x: visible; /* Remove horizontal hiding so text isn't cut off */
     padding: 1rem var(--sidebar-nav-item-padding-x, 1rem); /* Padding trên dưới và hai bên */
 
     /* --- Tùy chỉnh thanh cuộn (Tùy chọn) --- */
@@ -274,6 +276,12 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+}
+
+/* Ensure individual li elements don’t hide overflowed text */
+.sidebar-nav ul li {
+    overflow: visible;
+    min-width: 0;
 }
 
 /* --- Navigation Section Title --- */
@@ -305,8 +313,8 @@
     border-radius: var(--rounded-md);
     margin-bottom: 0.125rem; /* Khoảng cách nhỏ giữa các item */
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
-    white-space: nowrap; /* Ngăn nội dung xuống dòng */
-    overflow: hidden; /* Ẩn phần tràn ra */
+    white-space: normal; /* Cho phép xuống dòng nếu quá dài */
+    overflow: visible; /* Hiển thị toàn bộ nội dung */
     /* Font size được thừa hưởng từ .sidebar (var(--sidebar-font-base)) */
 }
 
@@ -323,10 +331,11 @@
 
 /* --- Text trong Nav Item --- */
 .nav-item span {
-    flex-grow: 1; /* Cho text chiếm phần còn lại */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    flex-grow: 1;
+    overflow: visible; /* Show full content */
+    text-overflow: unset; /* Remove ellipsis */
+    white-space: normal; /* Allow wrapping */
+    word-break: break-word; /* Break long words */
     /* Font size và color thừa hưởng từ .nav-item */
     font-weight: var(--font-medium); /* Hơi đậm hơn normal */
 }

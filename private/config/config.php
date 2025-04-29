@@ -21,3 +21,24 @@ define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
 
 // Site Configuration
 define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
+
+// Environment and error handling settings
+define('APP_ENV', env('APP_ENV', 'production'));
+define('APP_DEBUG', APP_ENV === 'development');
+ini_set('display_errors', APP_DEBUG ? '1' : '0');
+ini_set('log_errors', '1');
+ini_set('error_log', __DIR__ . '/../logs/error.log');
+
+if (!APP_DEBUG) {
+    // Convert PHP errors to log entries and show friendly error page
+    set_error_handler(function($severity, $message, $file, $line) {
+        error_log("PHP Error [{$severity}]: {$message} in {$file} on line {$line}");
+        header('Location: ' . SITE_URL . '/public/pages/error.php');
+        exit;
+    });
+    set_exception_handler(function($e) {
+        error_log("Uncaught Exception: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+        header('Location: ' . SITE_URL . '/public/pages/error.php');
+        exit;
+    });
+}

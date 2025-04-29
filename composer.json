@@ -2,5 +2,12 @@
     "require": {
         "phpmailer/phpmailer": "^6.10",
         "vlucas/phpdotenv": "^5.6"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    },
+    "scripts": {
+        "deploy": "composer install --no-dev --optimize-autoloader"
     }
 }

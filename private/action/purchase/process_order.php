@@ -151,7 +151,18 @@ try {
     // Commit Transaction
     $conn->commit();
 
-    // --- Store registration ID, total price, and trial status in session for payment page ---
+    // Log user purchase action
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, created_at) VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, NOW())";
+    $stmt_log = $conn->prepare($sql_log);
+    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':ip_address', $ip_address);
+    $stmt_log->bindParam(':user_agent', $user_agent);
+    $stmt_log->execute();
+
+    // Store registration ID, total price, and trial status in session for payment page
     $_SESSION['pending_registration_id'] = $registration_id;
     $_SESSION['pending_total_price'] = $final_total_price;
     $_SESSION['pending_is_trial'] = $is_trial_package; // Store trial status

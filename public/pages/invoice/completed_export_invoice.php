@@ -12,7 +12,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
 require_once $project_root_path . '/private/classes/Database.php';
+
 
 $tx_id = isset($_GET['tx_id']) ? intval($_GET['tx_id']) : 0;
 if ($tx_id <= 0) {
@@ -49,7 +51,7 @@ if (!$invoice) {
 
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/pages/invoice/request_export_invoice.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/request_export_invoice.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper" style="padding-top: 1rem;">
@@ -59,18 +61,18 @@ include $project_root_path . '/private/includes/header.php';
                 <h4>Thông tin giao dịch</h4>
                 <table class="info-table">
                     <tr><td>ID giao dịch</td><td>:</td><td>GD<?php echo str_pad($info['transaction_id'], 5, '0', STR_PAD_LEFT); ?></td></tr>
-                    <tr><td>Thời gian</td><td>:</td><td><?php echo htmlspecialchars($info['created_at']); ?></td></tr>
-                    <tr><td>Tên gói</td><td>:</td><td><?php echo htmlspecialchars($info['package_name']); ?></td></tr>
-                    <tr><td>Số lượng</td><td>:</td><td><?php echo htmlspecialchars($info['num_account']); ?></td></tr>
-                    <tr><td>Giá</td><td>:</td><td><?php echo number_format($info['total_price'], 0, ',', '.'); ?> đ</td></tr>
+                    <tr><td>Thời gian</td><td>:</td><td><?php echo htmlspecialchars($info['created_at'] ?? ''); ?></td></tr>
+                    <tr><td>Tên gói</td><td>:</td><td><?php echo htmlspecialchars($info['package_name'] ?? ''); ?></td></tr>
+                    <tr><td>Số lượng</td><td>:</td><td><?php echo htmlspecialchars($info['num_account'] ?? ''); ?></td></tr>
+                    <tr><td>Giá</td><td>:</td><td><?php echo number_format($info['total_price'] ?? 0, 0, ',', '.'); ?> đ</td></tr>
                 </table>
             </div>
             <div class="invoice-section">
                 <h4>Thông tin xuất hóa đơn</h4>
                 <table class="info-table">
-                    <tr><td>Tên công ty</td><td>:</td><td><?php echo htmlspecialchars($info['company_name']); ?></td></tr>
-                    <tr><td>Mã số thuế</td><td>:</td><td><?php echo htmlspecialchars($info['tax_code']); ?></td></tr>
-                    <tr><td>Email</td><td>:</td><td><?php echo htmlspecialchars($info['email']); ?></td></tr>
+                    <tr><td>Tên công ty</td><td>:</td><td><?php echo htmlspecialchars($info['company_name'] ?? ''); ?></td></tr>
+                    <tr><td>Mã số thuế</td><td>:</td><td><?php echo htmlspecialchars($info['tax_code'] ?? ''); ?></td></tr>
+                    <tr><td>Email</td><td>:</td><td><?php echo htmlspecialchars($info['email'] ?? ''); ?></td></tr>
                 </table>
             </div>
             <div class="invoice-section" style="margin-top: 24px;">
@@ -81,7 +83,7 @@ include $project_root_path . '/private/includes/header.php';
                         Yêu cầu xuất hóa đơn đã được chấp thuận.
                     </div>
                     <?php if (!empty($invoice['invoice_file'])): ?>
-                        <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="downloadInvoiceFile('<?php echo $base_url . '/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
+                        <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="downloadInvoiceFile('<?php echo $base_url . '/public/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
                             <i class="fas fa-download"></i> Tải hóa đơn
                         </button>
                         <script>
@@ -99,7 +101,7 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="alert alert-danger">
                         <i class="fas fa-times-circle" style="color: #e53935; margin-right: 8px;"></i>
                         Yêu cầu xuất hóa đơn bị từ chối.<br>
-                        <strong>Lý do:</strong> <?php echo nl2br(htmlspecialchars($invoice['rejected_reason'])); ?>
+                        <strong>Lý do:</strong> <?php echo nl2br(htmlspecialchars($invoice['rejected_reason'] ?? '')); ?>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -107,7 +109,7 @@ include $project_root_path . '/private/includes/header.php';
                         Yêu cầu xuất hóa đơn đang chờ xử lý.
                     </div>
                 <?php endif; ?>
-                <button type="button" class="btn btn-cancel" style="margin-top: 18px;" onclick="window.location.href='<?php echo $base_url; ?>/pages/transaction.php'">Quay lại giao dịch</button>
+                <button type="button" class="btn btn-cancel" style="margin-top: 18px;" onclick="window.location.href='<?php echo $base_url; ?>/public/pages/transaction.php'">Quay lại giao dịch</button>
             </div>
         </div>
     </div>

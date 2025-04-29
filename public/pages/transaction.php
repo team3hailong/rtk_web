@@ -1,16 +1,15 @@
 <?php
 session_start();
-// --- Base URL và Path (theo chuẩn map_display.php) ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']); // /pages
-$base_project_dir = dirname($script_dir); // lùi 1 cấp
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(__DIR__)); // lùi 2 cấp từ /pages -> project root
+// Require file cấu hình - đã bao gồm các tiện ích đường dẫn
+require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+
+// Sử dụng các hằng số được định nghĩa từ path_helpers
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . $base_url . '/pages/auth/login.php');
+    header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
 
@@ -18,8 +17,8 @@ if (!isset($_SESSION['user_id'])) {
 $user_username = $_SESSION['username'] ?? 'Người dùng';
 $user_id = $_SESSION['user_id'];
 
-// --- Include Header ---
-require_once $project_root_path . '/private/config/config.php';
+// --- Include Required Files ---
+// Không cần require config.php một lần nữa vì đã được require ở trên
 include $project_root_path . '/private/includes/header.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Transaction.php';
@@ -34,7 +33,7 @@ $transactionHandler = new Transaction($db);
 $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch transactions for the user
 
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/pages/transaction/transaction.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/transaction/transaction.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper" style="padding-top: 1rem;">
@@ -99,7 +98,7 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                                         </button>
                                         <?php $needs_proof = ($tx['status'] === 'pending' && !empty($tx['registration_id'])); ?>
                                         <?php if ($needs_proof): ?>
-                                            <a href="<?php echo $base_url; ?>/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($tx['registration_id']); ?>"
+                                            <a href="<?php echo $base_url; ?>/public/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($tx['registration_id']); ?>"
                                                class="action-button btn-upload-proof"
                                                title="Gửi minh chứng cho GD này (ĐK: <?php echo htmlspecialchars($tx['registration_id']); ?>)">
                                                 <i class="fas fa-upload"></i> Gửi MC
@@ -118,11 +117,11 @@ if ($invoice_row) {
 ?>
 <?php if ($tx['status'] === 'completed'): ?>
     <?php if ($has_invoice && $invoice_id): ?>
-        <a href="<?php echo $base_url; ?>/pages/invoice/completed_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice-success" title="Xem hóa đơn <?php echo htmlspecialchars($invoice_id); ?>">
+        <a href="<?php echo $base_url; ?>/public/pages/invoice/completed_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice-success" title="Xem hóa đơn <?php echo htmlspecialchars($invoice_id); ?>">
             <i class="fas fa-check-circle"></i> Xem HĐ
         </a>
     <?php else: ?>
-        <a href="<?php echo $base_url; ?>/pages/invoice/request_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice" title="Yêu cầu xuất hóa đơn">
+        <a href="<?php echo $base_url; ?>/public/pages/invoice/request_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice" title="Yêu cầu xuất hóa đơn">
             <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
         </a>
     <?php endif; ?>
@@ -176,7 +175,7 @@ if ($invoice_row) {
         </div>
     </div>
 </div>
-<script src="<?php echo $base_url; ?>/assets/js/pages/transaction.js"></script>
+<script src="<?php echo $base_url; ?>/public/assets/js/pages/transaction.js"></script>
 <?php
 include $project_root_path . '/private/includes/footer.php';
 ?>

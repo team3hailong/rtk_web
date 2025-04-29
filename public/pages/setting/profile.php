@@ -1,19 +1,12 @@
 <?php
-// filepath: c:\laragon\www\rtk_web\public\pages\setting\profile.php
 session_start();
 
-// --- Project Root Path for Includes ---
-$project_root_path = dirname(dirname(dirname(__DIR__)));
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
-// --- Base URL Calculation ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']);
-$base_project_dir = '';
-if (strpos($script_dir, '/public/') !== false) {
-    $base_project_dir = substr($script_dir, 0, strpos($script_dir, '/public/'));
-}
-$base_url = rtrim($protocol . $domain . $base_project_dir, '/');
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Check Authentication ---
 if (!isset($_SESSION['user_id'])) {
@@ -37,7 +30,6 @@ unset($_SESSION['profile_message'], $_SESSION['profile_error']);
 $_SESSION['base_url'] = $base_url;
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/settings/profile.css">';
 include $project_root_path . '/private/includes/header.php';
-
 ?>
 
 <div class="dashboard-wrapper">

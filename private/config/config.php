@@ -2,6 +2,9 @@
 // Tải env_loader trước tiên để có thể sử dụng hàm env()
 require_once __DIR__ . '/env_loader.php';
 
+// Load tiện ích xử lý đường dẫn
+require_once dirname(__DIR__) . '/utils/path_helpers/bootstrap.php';
+
 // RTK API credentials
 define('RTK_API_URL', env('RTK_API_URL', 'http://203.171.25.138:8090/openapi/broadcast/users'));
 define('RTK_API_ACCESS_KEY', env('RTK_API_ACCESS_KEY', 'Zb5F6iKUuAISy4qY'));

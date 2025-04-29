@@ -1,21 +1,25 @@
 <?php
 session_start();
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']);
-$base_project_dir = dirname($script_dir);
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(dirname(__DIR__)));
-require_once $project_root_path . '/private/config/database.php';
+
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
+
 require_once $project_root_path . '/private/classes/Database.php';
 $db = new Database();
 $pdo = $db->getConnection();
+
 // Xử lý filter
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $topic = isset($_GET['topic']) ? trim($_GET['topic']) : '';
+
 // Lấy danh sách chủ đề
 $topic_stmt = $pdo->query("SELECT DISTINCT topic FROM guide WHERE topic IS NOT NULL AND topic != ''");
 $topics = $topic_stmt->fetchAll(PDO::FETCH_COLUMN);
+
 // Xây dựng query lấy bài viết
 $sql = "SELECT * FROM guide WHERE status = 'published'";
 $params = [];
@@ -34,7 +38,7 @@ $stmt->execute($params);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/pages/map.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
 <style>
 :root {
   --main-green: #27ae60;

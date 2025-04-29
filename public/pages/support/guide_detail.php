@@ -1,12 +1,13 @@
 <?php
 session_start();
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']);
-$base_project_dir = dirname($script_dir);
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(dirname(__DIR__)));
-require_once $project_root_path . '/private/config/database.php';
+
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
+
 require_once $project_root_path . '/private/classes/Database.php';
 $db = new Database();
 $pdo = $db->getConnection();
@@ -19,7 +20,7 @@ if ($slug) {
 }
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/pages/map.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
 <style>
 .guide-detail-container { max-width: 800px; margin: 32px auto 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(39,174,96,0.07); padding: 32px 28px; }
 .guide-title { font-size: 2rem; font-weight: 700; color: #111; margin-bottom: 10px; }

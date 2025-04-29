@@ -19,6 +19,7 @@ $user_username = $_SESSION['username'] ?? 'Người dùng';
 $user_id = $_SESSION['user_id'];
 
 // --- Include Header ---
+require_once $project_root_path . '/private/config/config.php';
 include $project_root_path . '/private/includes/header.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Transaction.php';

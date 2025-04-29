@@ -1,14 +1,13 @@
 <?php
-// filepath: e:\Application\laragon\www\surveying_account\private\config\database.php
-define('DB_SERVER', '127.0.0.1');
-define('DB_USERNAME', 'root'); // Thay bằng username của bạn
-define('DB_PASSWORD', ''); // Thay bằng password của bạn
-define('DB_NAME', 'sa_database'); // Thay bằng tên database của bạn
+// Tải env_loader trước tiên để có thể sử dụng hàm env()
+require_once __DIR__ . '/env_loader.php';
 
-// define('DB_SERVER', 'localhost'); // Thường là 'localhost' trên máy chủ cục bộ
-// define('DB_USERNAME', 'qeqlwgvdhosting_Nguyen1509'); // Thay bằng username của bạn
-// define('DB_PASSWORD', 'Nguyen15092025@'); // Thay bằng password của bạn
-// define('DB_NAME', 'qeqlwgvdhosting_sa_database'); // Thay bằng tên database của bạn
+// Lấy thông tin kết nối từ biến môi trường, có giá trị mặc định là các giá trị hiện tại
+define('DB_SERVER', env('DB_SERVER', 'localhost'));
+define('DB_USERNAME', env('DB_USERNAME', 'root')); 
+define('DB_PASSWORD', env('DB_PASSWORD', '')); 
+define('DB_NAME', env('DB_NAME', 'test'));
+
 // Tạo kết nối
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 

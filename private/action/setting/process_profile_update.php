@@ -109,6 +109,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             throw new Exception("Database connection failed.");
         }
 
+        // Check if phone is already taken by another user
+        if (!empty($phone)) {
+            $stmt = $pdo->prepare("SELECT id FROM user WHERE phone = ? AND id != ?");
+            $stmt->execute([$phone, $user_id]);
+            if ($stmt->fetch()) {
+                throw new Exception("Số điện thoại này đã được sử dụng bởi tài khoản khác.");
+            }
+        }
+
         // Prepare the update statement
         $sql = "UPDATE user SET
                     username = :username,
@@ -125,12 +134,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
         $stmt->bindParam(':is_company', $is_company, PDO::PARAM_INT);
-        $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR); // PDO handles null correctly
-        $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);         // PDO handles null correctly
+        $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR);
+        $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         // Execute the update
         $stmt->execute();
+
+        // Log activity
+        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, created_at) 
+                   VALUES (:user_id, 'update', 'user', :entity_id, NOW())";
+        $stmt_log = $pdo->prepare($sql_log);
+        $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+        $stmt_log->execute();
 
         // After successful update, fetch fresh user data
         $result = fetchUserData($user_id);
@@ -152,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         }
     } catch (Exception $e) {
         error_log("Profile update general error: " . $e->getMessage());
-        $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ.";
+        $_SESSION['profile_error'] = $e->getMessage();
     } finally {
         if (isset($db)) {
             $db->close();

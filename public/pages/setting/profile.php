@@ -62,6 +62,11 @@ include $project_root_path . '/private/includes/header.php';
                 <h3>Thông tin Hồ sơ</h3>
                 <!-- Cập nhật form để sử dụng file trung gian -->
                 <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_profile_update" method="POST">
+                    <?php 
+                    // Thêm CSRF token vào form cập nhật hồ sơ
+                    require_once $project_root_path . '/private/utils/csrf_helper.php';
+                    echo generate_csrf_input(); 
+                    ?>
                     <div class="form-group">
                         <label for="username">Tên người dùng / Công ty:</label>
                         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" required class="form-control">
@@ -104,6 +109,10 @@ include $project_root_path . '/private/includes/header.php';
                 <h3>Đổi Mật khẩu</h3>
                 <!-- Cập nhật form để sử dụng file trung gian -->
                 <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_password_change" method="POST">
+                    <?php 
+                    // Thêm CSRF token vào form đổi mật khẩu
+                    echo generate_csrf_input();
+                    ?>
                     <div class="form-group">
                         <label for="current_password">Mật khẩu hiện tại:</label>
                         <input type="password" id="current_password" name="current_password" required class="form-control">

@@ -197,8 +197,8 @@ include $project_root_path . '/private/includes/header.php';
             <p>Vui lòng tải lên ảnh chụp màn hình hoặc biên lai giao dịch thành công để chúng tôi xác nhận nhanh hơn.</p>
             <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=upload_payment_proof" method="post" enctype="multipart/form-data" id="upload-form">
                 <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
-                <!-- CSRF Token (nếu bạn sử dụng) -->
-                <?php // require_once $project_root_path . '/private/utils/csrf_helper.php'; echo generate_csrf_input(); ?>
+                <!-- CSRF Token protection -->
+                <?php require_once $project_root_path . '/private/utils/csrf_helper.php'; echo generate_csrf_input(); ?>
 
                 <input type="file" name="payment_proof_image" id="payment_proof_image" accept="image/png, image/jpeg, image/gif" required>
 

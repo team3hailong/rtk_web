@@ -117,6 +117,12 @@ if (isset($_SESSION['user_id'])) {
 
         <!-- Cập nhật form action để sử dụng file trung gian thay vì trực tiếp truy cập file private -->
         <form action="/public/handlers/action_handler.php?module=auth&action=process_login" method="POST">
+            <?php 
+            // Thêm CSRF token vào form đăng nhập
+            $project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
+            require_once $project_root_path . '/private/utils/csrf_helper.php';
+            echo generate_csrf_input();
+            ?>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>

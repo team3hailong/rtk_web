@@ -154,7 +154,8 @@ unset($_SESSION['form_data']);
             </div>
         <?php endif; ?>
 
-        <form action="../../../../private/action/auth/process_register.php" method="POST" id="registerForm">
+        <!-- Cập nhật form action để sử dụng file trung gian thay vì trực tiếp truy cập file private -->
+        <form action="/public/handlers/action_handler.php?module=auth&action=process_register" method="POST" id="registerForm">
             <div class="form-group">
                 <label for="username">Tên người dùng / Tên công ty:</label>
                 <input type="text" id="username" name="username" value="<?= htmlspecialchars($formData['username'] ?? '') ?>" required>

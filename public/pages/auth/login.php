@@ -115,7 +115,8 @@ if (isset($_SESSION['user_id'])) {
             <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
         <?php endif; ?>
 
-        <form action="../../../../private/action/auth/process_login.php" method="POST">
+        <!-- Cập nhật form action để sử dụng file trung gian thay vì trực tiếp truy cập file private -->
+        <form action="/public/handlers/action_handler.php?module=auth&action=process_login" method="POST">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>

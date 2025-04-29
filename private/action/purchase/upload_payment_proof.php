@@ -1,8 +1,7 @@
 <?php
-session_start();
-
-// --- Project Root Path ---
-$project_root_path = dirname(dirname(dirname(__FILE__)));
+// Không cần session_start() vì session đã được khởi tạo trong action_handler.php
+// Đặt project_root_path trước khi sử dụng trong error_log
+$project_root_path = dirname(dirname(dirname(__DIR__))); // Lấy đường dẫn gốc
 
 // --- Base URL ---
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
@@ -15,15 +14,19 @@ if (strpos($script_dir, '/public/') !== false) {
 $base_url = rtrim($protocol . $domain . $base_project_dir, '/');
 
 // --- Include Required Files ---
-require_once $project_root_path . '/config/config.php';
-require_once $project_root_path . '/classes/Database.php';
+require_once $project_root_path . '/private/config/config.php';
+require_once $project_root_path . '/private/classes/Database.php';
 
 // --- Constants ---
 // Define upload directory relative to the public folder
 define('UPLOAD_DIR_RELATIVE', '/uploads/payment_proofs/');
-// Define absolute path for file operations - Corrected path
-define('UPLOAD_DIR_ABSOLUTE', dirname($project_root_path) . '/public' . UPLOAD_DIR_RELATIVE);
-// Allowed file types and max size (e.g., 5MB)
+// Define absolute path for file operations
+define('UPLOAD_DIR_ABSOLUTE', $project_root_path . '/public' . UPLOAD_DIR_RELATIVE);
+// Ghi log đường dẫn để debug (nếu cần)
+error_log("Project root path: " . $project_root_path);
+error_log("Upload directory: " . UPLOAD_DIR_ABSOLUTE);
+
+// Allowed file types and max size (5MB)
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
 define('MAX_FILE_SIZE', 5 * 1024 * 1024);
 
@@ -180,5 +183,3 @@ try {
 // Output the JSON Response
 echo json_encode($response);
 exit;
-
-?>

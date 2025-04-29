@@ -197,8 +197,8 @@ include $project_root_path . '/private/includes/header.php';
     <main class="content-wrapper">
         <h2 class="text-2xl font-semibold mb-4">Chi tiết mua hàng</h2>
 
-        <!-- Action của form trỏ đến process_order.php -->
-        <form action="/private/action/purchase/process_order.php" method="POST" class="purchase-details-form" id="details-form">
+        <!-- Thay đổi action để trỏ đến action_handler.php thay vì trực tiếp vào process_order.php -->
+        <form action="/public/handlers/action_handler.php?module=purchase&action=process_order" method="POST" class="purchase-details-form" id="details-form">
             <!-- Thông tin gói đã chọn -->
             <div class="selected-package-info">
                 Bạn đang chọn: <strong><?php echo htmlspecialchars($selected_package['name']); ?></strong>

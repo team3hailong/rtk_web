@@ -1,7 +1,6 @@
 <?php
-// Define the root path for includes
-define('PRIVATE_PATH', dirname(__FILE__, 4) . '/private');
-
-// Include the actual logout processing script
-require_once(PRIVATE_PATH . '/action/auth/process_logout.php');
+// Thay vì truy cập trực tiếp file xử lý trong thư mục private, 
+// chuyển hướng người dùng đến cầu nối trung gian
+header("Location: /public/handlers/action_handler.php?module=auth&action=process_logout");
+exit;
 ?>

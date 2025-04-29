@@ -5,6 +5,10 @@ define('DB_USERNAME', 'root'); // Thay bằng username của bạn
 define('DB_PASSWORD', ''); // Thay bằng password của bạn
 define('DB_NAME', 'sa_database'); // Thay bằng tên database của bạn
 
+// define('DB_SERVER', 'localhost'); // Thường là 'localhost' trên máy chủ cục bộ
+// define('DB_USERNAME', 'qeqlwgvdhosting_Nguyen1509'); // Thay bằng username của bạn
+// define('DB_PASSWORD', 'Nguyen15092025@'); // Thay bằng password của bạn
+// define('DB_NAME', 'qeqlwgvdhosting_sa_database'); // Thay bằng tên database của bạn
 // Tạo kết nối
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 

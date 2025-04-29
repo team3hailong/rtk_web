@@ -316,7 +316,7 @@ include $project_root_path . '/private/includes/header.php';
             <section class="payment-qr-section" style="text-align: center;">
                 <h3>Kích hoạt gói dùng thử</h3>
                 <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>
-                <form action="<?php echo $base_url; ?>/private/action/purchase/process_trial_activation.php" method="POST">
+                <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
                     <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
                     <!-- Optional: Add CSRF token here if implemented -->
                     <button type="submit" class="btn btn-success" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base); background-color: var(--success-500); border-color: var(--success-500);">

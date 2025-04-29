@@ -1,4 +1,3 @@
-
 <?php
 // filepath: c:\laragon\www\rtk_web\public\pages\setting\profile.php
 session_start();
@@ -24,8 +23,8 @@ if (!isset($_SESSION['user_id'])) {
 
 // --- Load User Data ---
 if (!isset($_SESSION['user_data'])) {
-    // Redirect to processing file to fetch user data
-    header('Location: ' . $base_url . '/private/action/setting/process_profile_update.php');
+    // Chuyển hướng đến file trung gian để lấy dữ liệu người dùng
+    header('Location: ' . $base_url . '/public/handlers/action_handler.php?module=setting&action=process_profile_update');
     exit;
 }
 
@@ -61,8 +60,8 @@ include $project_root_path . '/private/includes/header.php';
             <!-- Profile Information Form -->
             <div class="form-section">
                 <h3>Thông tin Hồ sơ</h3>
-                <!-- Update form action -->
-                <form action="<?php echo $base_url; ?>/private/action/setting/process_profile_update.php" method="POST">
+                <!-- Cập nhật form để sử dụng file trung gian -->
+                <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_profile_update" method="POST">
                     <div class="form-group">
                         <label for="username">Tên người dùng / Công ty:</label>
                         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" required class="form-control">
@@ -103,8 +102,8 @@ include $project_root_path . '/private/includes/header.php';
             <!-- Change Password Form -->
             <div class="form-section">
                 <h3>Đổi Mật khẩu</h3>
-                 <!-- Update form action -->
-                <form action="<?php echo $base_url; ?>/private/action/setting/process_password_change.php" method="POST">
+                <!-- Cập nhật form để sử dụng file trung gian -->
+                <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_password_change" method="POST">
                     <div class="form-group">
                         <label for="current_password">Mật khẩu hiện tại:</label>
                         <input type="password" id="current_password" name="current_password" required class="form-control">

@@ -41,3 +41,24 @@
 [2025-04-25 15:10:07] [::1] [User: 1] General error during trial activation | Context: {"registration_id":5,"error":"Không thể tạo tài khoản RTK: JSON parse error: Cannot deserialize value of type `java.lang.Long` from String \"YBI_TPYenBai\": not a valid Long value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.lang.Long` from String \"YBI_TPYenBai\": not a valid Long value\n at [Source: (PushbackInputStream); line: 1, column: 111] (through reference chain: cn.huace.cgbas.broadcast.dto.form.BroadcastUserForm[\"mountIds\"]->java.util.ArrayList[0])","trace":"#0 {main}"}
 [2025-04-25 15:11:27] [::1] [User: 1] Mount points for location (string) | Context: {"location_id":63,"mount_points":[44,45,46,47,48,49,60,64]}
 [2025-04-25 15:11:27] [::1] [User: 1] Trial activation successful | Context: {"registration_id":6,"account_id":"RTK_6_1745593887","username":"TRIAL_YBI001"}
+[29-Apr-2025 10:15:39 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:39 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:40 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:40 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:40 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:40 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:42 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:42 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:42 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:42 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[29-Apr-2025 10:15:42 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:42 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:42 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:42 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:42 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:43 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:43 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[29-Apr-2025 10:15:43 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[29-Apr-2025 10:15:43 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[29-Apr-2025 10:15:43 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[29-Apr-2025 10:15:43 UTC] [Database Connect] Connection to database 'sa_database' successful.

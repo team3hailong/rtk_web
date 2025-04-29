@@ -156,6 +156,12 @@ unset($_SESSION['form_data']);
 
         <!-- Cập nhật form action để sử dụng file trung gian thay vì trực tiếp truy cập file private -->
         <form action="/public/handlers/action_handler.php?module=auth&action=process_register" method="POST" id="registerForm">
+            <?php
+            // Thêm CSRF token vào form đăng ký
+            $project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
+            require_once $project_root_path . '/private/utils/csrf_helper.php';
+            echo generate_csrf_input();
+            ?>
             <div class="form-group">
                 <label for="username">Tên người dùng / Tên công ty:</label>
                 <input type="text" id="username" name="username" value="<?= htmlspecialchars($formData['username'] ?? '') ?>" required>

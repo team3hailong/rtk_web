@@ -53,10 +53,30 @@ if (!in_array("$module/$action", $public_actions) && !isset($_SESSION['user_id']
     exit;
 }
 
-// --- CSRF protection (optional but recommended) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // You can implement CSRF token validation here
-    // if (csrf_token is invalid) { ... error ... }
+// --- CSRF protection ---
+require_once $project_root_path . '/private/utils/csrf_helper.php';
+
+// Danh sách các action không cần kiểm tra CSRF (như API endpoints)
+$csrf_exempt_actions = [
+    'auth/verify-email'  // Verification qua email link không cần CSRF
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_exempt_actions)) {
+    $token = $_POST['csrf_token'] ?? '';
+    
+    if (!validate_csrf_token($token)) {
+        // Log lỗi CSRF
+        $error_message = "CSRF validation failed for $module/$action";
+        $user_id = $_SESSION['user_id'] ?? 0;
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        
+        error_log("[CSRF ERROR] $error_message | User: $user_id | IP: $ip_address");
+        
+        // Trả về lỗi
+        http_response_code(403); // Forbidden
+        echo json_encode(['error' => 'CSRF validation failed. Please try again.']);
+        exit;
+    }
 }
 
 // --- Include the target script ---

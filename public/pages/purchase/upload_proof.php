@@ -195,7 +195,12 @@ include $project_root_path . '/private/includes/header.php';
         <div class="upload-section">
             <h3><?php echo $existing_proof_image ? 'Thay thế minh chứng thanh toán' : 'Tải lên ảnh chụp màn hình giao dịch'; ?></h3>
             <p>Vui lòng tải lên ảnh chụp màn hình hoặc biên lai giao dịch thành công để chúng tôi xác nhận nhanh hơn.</p>
-            <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=upload_payment_proof" method="post" enctype="multipart/form-data" id="upload-form">
+            
+            <!-- Form thông thường (không dùng AJAX) sẽ được sử dụng nếu JavaScript bị tắt -->
+            <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=upload_payment_proof" 
+                  method="post" 
+                  enctype="multipart/form-data" 
+                  id="upload-form">
                 <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
                 <!-- CSRF Token protection -->
                 <?php require_once $project_root_path . '/private/utils/csrf_helper.php'; echo generate_csrf_input(); ?>
@@ -204,6 +209,14 @@ include $project_root_path . '/private/includes/header.php';
 
                 <button type="submit" class="btn btn-upload" id="upload-button"><?php echo $existing_proof_image ? 'Gửi minh chứng mới' : 'Gửi minh chứng'; ?></button>
                 <div id="upload-progress" style="margin-top: 0.5rem; font-size: var(--font-size-sm); display: none;">Đang tải lên...</div>
+                <!-- Container for progress bar -->
+                <div id="progress-bar-container" style="width: 100%; background-color: #f0f0f0; border-radius: 4px; margin: 10px 0; display: none;">
+                    <div id="progress-bar-inner" style="height: 10px; background-color: var(--primary-600); border-radius: 4px; width: 0%; transition: width 0.2s;"></div>
+                </div>
+                <!-- Container for upload details (speed, time) -->
+                <div id="upload-details" style="font-size: var(--font-size-xs); color: var(--gray-600); margin-top: 5px; display: none;">
+                    <span id="upload-speed"></span> | <span id="upload-time-remaining"></span>
+                </div>
                 <div id="upload-status-js" class="mt-3" style="font-size: var(--font-size-sm); font-weight: var(--font-medium);"></div>
             </form>
         </div>
@@ -214,97 +227,249 @@ include $project_root_path . '/private/includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Xử lý form tải lên bằng AJAX ---
+    // --- Các phần tử DOM ---
     const uploadForm = document.getElementById('upload-form');
     const uploadButton = document.getElementById('upload-button');
     const fileInput = document.getElementById('payment_proof_image');
-    const uploadProgress = document.getElementById('upload-progress');
-    const uploadStatusJs = document.getElementById('upload-status-js'); // Corrected ID
-    const transactionUrl = '<?php echo $base_url; ?>/public/pages/transaction.php'; // Define transaction URL
+    const uploadProgressText = document.getElementById('upload-progress'); // Renamed from uploadProgress
+    const progressBarContainer = document.getElementById('progress-bar-container');
+    const progressBarInner = document.getElementById('progress-bar-inner');
+    const uploadDetails = document.getElementById('upload-details');
+    const uploadSpeedSpan = document.getElementById('upload-speed');
+    const uploadTimeRemainingSpan = document.getElementById('upload-time-remaining');
+    const uploadStatusJs = document.getElementById('upload-status-js');
+    const transactionUrl = '<?php echo $base_url; ?>/public/pages/transaction.php';
 
+    // --- Biến theo dõi upload ---
+    let uploadStartTime = 0;
+
+    // --- Khởi tạo progress bar (đã di chuyển vào HTML) ---
+    // REMOVED JavaScript progress bar creation
+
+    // --- Sự kiện cho file input ---
+    fileInput.addEventListener('change', function() {
+        handleFileSelection(this);
+    });
+
+    // --- Xử lý form submit ---
     if (uploadForm) {
         uploadForm.addEventListener('submit', function(event) {
             event.preventDefault();
-
-            uploadStatusJs.textContent = '';
-            uploadStatusJs.className = 'mt-3'; // Reset classes
-
+            
             if (fileInput.files.length === 0) {
                 alert('Vui lòng chọn một tệp ảnh minh chứng.');
                 return;
             }
 
+            const fileSize = fileInput.files[0].size / 1024 / 1024; // Size in MB
+            if (fileSize > 15) {
+                alert('File quá lớn (giới hạn 15MB).');
+                return;
+            }
+
+            // Chuẩn bị UI
             uploadButton.disabled = true;
             uploadButton.innerText = 'Đang xử lý...';
-            uploadProgress.style.display = 'block';
+            uploadProgressText.style.display = 'block'; // Show text progress
+            progressBarContainer.style.display = 'block'; // Show progress bar
+            progressBarInner.style.width = '0%';
+            uploadDetails.style.display = 'none'; // Hide details initially
+            uploadStatusJs.textContent = 'Đang chuẩn bị tải lên...';
+            uploadStatusJs.className = 'mt-3'; // Reset class
 
-            const formData = new FormData(uploadForm);
-            const actionUrl = uploadForm.getAttribute('action');
-            console.log('Submitting to:', actionUrl);
+            // Reset and record start time
+            uploadStartTime = Date.now();
 
-            fetch(actionUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                console.log('Received response status:', response.status);
-                const contentType = response.headers.get("content-type");
-                console.log('Received response content-type:', contentType);
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    return response.json().then(data => ({ ok: response.ok, status: response.status, jsonData: data }));
-                } else {
-                    return response.text().then(text => {
-                        console.error('Server response was not JSON:', text);
-                        throw new Error(`Server returned non-JSON response (status: ${response.status}). See console for details.`);
-                    });
-                }
-            })
-            .then(({ ok, status, jsonData }) => {
-                console.log('Parsed JSON data:', jsonData);
-                if (ok && jsonData.success) {
-                    uploadStatusJs.textContent = 'Tải lên thành công! Đang chuyển hướng...';
-                    uploadStatusJs.classList.remove('status-error'); // Ensure error class is removed
-                    uploadStatusJs.classList.add('status-success');
-                    fileInput.value = ''; // Clear file input on success
-
-                    // Wait 1 second then redirect
-                    setTimeout(() => {
-                        window.location.href = transactionUrl + '?upload=success'; // Add query param for potential feedback
-                    }, 1000); // 1000 milliseconds = 1 second
-
-                } else {
-                    const errorMessage = jsonData.error || `Lỗi không xác định từ server (HTTP ${status})`;
-                    alert(`Lỗi tải lên: ${errorMessage}`);
-                    uploadStatusJs.textContent = `Lỗi: ${errorMessage}`;
-                    uploadStatusJs.classList.remove('status-success'); // Ensure success class is removed
-                    uploadStatusJs.classList.add('status-error');
-                    console.error('Upload failed:', errorMessage, 'Data:', jsonData);
-                    // Re-enable button immediately on failure
-                    uploadButton.disabled = false;
-                    uploadButton.innerText = 'Gửi minh chứng';
-                    uploadProgress.style.display = 'none';
-                }
-            })
-            .catch(error => {
-                console.error('Fetch error:', error);
-                alert('Đã xảy ra lỗi khi gửi minh chứng. Vui lòng thử lại. Chi tiết: ' + error.message);
-                uploadStatusJs.textContent = 'Lỗi mạng hoặc phản hồi không hợp lệ. Kiểm tra console.';
-                uploadStatusJs.classList.remove('status-success');
-                uploadStatusJs.classList.add('status-error');
-                 // Re-enable button on catch
-                uploadButton.disabled = false;
-                uploadButton.innerText = 'Gửi minh chứng';
-                uploadProgress.style.display = 'none';
-            })
-            .finally(() => {
-                // Only re-enable button etc. here if NOT successful, as success handles its own state before redirect
-                if (!uploadStatusJs.classList.contains('status-success')) {
-                     uploadButton.disabled = false;
-                     uploadButton.innerText = 'Gửi minh chứng';
-                     uploadProgress.style.display = 'none';
-                }
-            });
+            // Luôn sử dụng XHR cho tải lên
+            uploadViaXHR();
         });
+    }
+    
+    // --- Hàm xử lý chọn file ---
+    function handleFileSelection(inputElement) {
+        if (inputElement.files.length > 0) {
+            const file = inputElement.files[0];
+            const fileSize = file.size / 1024 / 1024;
+            const fileSizeMB = fileSize.toFixed(2);
+            
+            // Hiển thị thông tin file
+            uploadStatusJs.textContent = `File: ${file.name} (${fileSizeMB}MB)`;
+            uploadStatusJs.className = 'mt-3';
+            
+            // Kiểm tra kích thước
+            if (fileSize > 15) {
+                uploadStatusJs.textContent += ' - File quá lớn, giới hạn là 15MB';
+                uploadStatusJs.classList.add('status-error');
+                uploadButton.disabled = true;
+            } else {
+                uploadStatusJs.classList.remove('status-error');
+                uploadButton.disabled = false;
+            }
+        }
+    }
+    
+    // --- Phương pháp upload qua XHR ---
+    function uploadViaXHR() {
+        const formData = new FormData(uploadForm);
+        const actionUrl = uploadForm.getAttribute('action');
+        const xhr = new XMLHttpRequest();
+        
+        // Thiết lập timeout dài hơn cho file lớn (5 phút)
+        xhr.timeout = 300000;
+        
+        // Theo dõi tiến trình upload
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - uploadStartTime) / 1000; // seconds
+                updateProgressUI(percentComplete, e.loaded, e.total, elapsedTime);
+            }
+        });
+        
+        xhr.addEventListener('load', function() {
+            progressBarInner.style.width = '100%';
+            
+            if (xhr.status === 200) {
+                handleXhrSuccess(xhr);
+            } else {
+                // Xử lý các mã HTTP lỗi
+                handleHttpError(xhr.status);
+            }
+        });
+        
+        xhr.addEventListener('error', function() {
+            console.log("XHR error occurred");
+            handleError('Lỗi kết nối mạng. Vui lòng thử lại sau.');
+        });
+        
+        xhr.addEventListener('timeout', function() {
+            handleError('Quá thời gian chờ phản hồi từ server.');
+        });
+        
+        xhr.addEventListener('abort', function() {
+            handleError('Upload bị hủy.');
+        });
+        
+        // Mở kết nối và gửi dữ liệu
+        try {
+            xhr.open('POST', actionUrl, true);
+            xhr.send(formData);
+        } catch (e) {
+            console.error("Exception in XHR upload", e);
+            handleError('Lỗi không mong muốn khi gửi yêu cầu.');
+        }
+    }
+    
+    // --- Xử lý thành công của XHR ---
+    function handleXhrSuccess(xhr) {
+        try {
+            const responseText = xhr.responseText.trim();
+            
+            // Kiểm tra nếu phản hồi bắt đầu bằng <!DOCTYPE hoặc <html
+            if (responseText.startsWith('<!DOCTYPE') || responseText.startsWith('<html')) {
+                throw new Error('Server trả về HTML thay vì JSON.');
+            }
+            
+            try {
+                const jsonResponse = JSON.parse(responseText);
+                if (jsonResponse.success) {
+                    handleSuccess();
+                } else {
+                    throw new Error(jsonResponse.error || 'Lỗi không xác định từ server');
+                }
+            } catch (e) {
+                throw new Error('Dữ liệu nhận được không phải JSON hợp lệ');
+            }
+        } catch (error) {
+            handleError(error.message);
+        }
+    }
+    
+    // --- Xử lý thành công chung ---
+    function handleSuccess() {
+        uploadStatusJs.textContent = 'Tải lên thành công! Đang chuyển hướng...';
+        uploadStatusJs.classList.remove('status-error');
+        uploadStatusJs.classList.add('status-success');
+        uploadProgressText.style.display = 'none'; // Hide progress text
+        progressBarContainer.style.display = 'none'; // Hide progress bar
+        uploadDetails.style.display = 'none'; // Hide details
+
+        setTimeout(function() {
+            window.location.href = transactionUrl + '?upload=success';
+        }, 1000);
+    }
+    
+    // --- Cập nhật UI tiến trình ---
+    function updateProgressUI(percent, loadedBytes, totalBytes, elapsedTime) {
+        progressBarInner.style.width = percent + '%';
+        uploadProgressText.textContent = `Đang tải lên: ${Math.round(percent)}%`;
+
+        if (elapsedTime > 0) {
+            const bytesPerSecond = loadedBytes / elapsedTime;
+            const remainingBytes = totalBytes - loadedBytes;
+            const remainingSeconds = bytesPerSecond > 0 ? remainingBytes / bytesPerSecond : Infinity;
+
+            uploadSpeedSpan.textContent = formatSpeed(bytesPerSecond);
+            uploadTimeRemainingSpan.textContent = formatTime(remainingSeconds);
+            uploadDetails.style.display = 'block'; // Show details
+        } else {
+            uploadDetails.style.display = 'none'; // Hide if no time elapsed yet
+        }
+    }
+
+    // --- Helper function to format speed ---
+    function formatSpeed(bytesPerSecond) {
+        if (bytesPerSecond < 1024) {
+            return bytesPerSecond.toFixed(0) + ' B/s';
+        } else if (bytesPerSecond < 1024 * 1024) {
+            return (bytesPerSecond / 1024).toFixed(1) + ' KB/s';
+        } else {
+            return (bytesPerSecond / (1024 * 1024)).toFixed(1) + ' MB/s';
+        }
+    }
+
+    // --- Helper function to format time ---
+    function formatTime(seconds) {
+        if (seconds === Infinity || isNaN(seconds) || seconds < 0) {
+            return 'ước tính...';
+        }
+        if (seconds < 60) {
+            return Math.round(seconds) + ' giây còn lại';
+        } else if (seconds < 3600) {
+            return Math.round(seconds / 60) + ' phút còn lại';
+        } else {
+            return Math.round(seconds / 3600) + ' giờ còn lại';
+        }
+    }
+
+    // --- Xử lý lỗi HTTP ---
+    function handleHttpError(status) {
+        let errorMsg = 'Lỗi không xác định';
+        if (status === 413) {
+            errorMsg = 'File quá lớn so với giới hạn của server';
+        } else if (status === 403) {
+            errorMsg = 'Không có quyền upload file';
+        } else if (status === 404) {
+            errorMsg = 'Đường dẫn upload không chính xác';
+        } else if (status >= 500) {
+            errorMsg = 'Lỗi server (mã ' + status + ')';
+        }
+        
+        handleError(errorMsg);
+    }
+    
+    // --- Xử lý lỗi chung ---
+    function handleError(message) {
+        console.error('Upload error:', message);
+        uploadStatusJs.textContent = 'Lỗi: ' + message;
+        uploadStatusJs.classList.remove('status-success');
+        uploadStatusJs.classList.add('status-error');
+        uploadButton.disabled = false;
+        uploadButton.innerText = 'Gửi minh chứng';
+        uploadProgressText.textContent = 'Tải lên thất bại';
+        progressBarContainer.style.display = 'none'; // Hide progress bar on error
+        uploadDetails.style.display = 'none'; // Hide details on error
     }
 });
 </script>

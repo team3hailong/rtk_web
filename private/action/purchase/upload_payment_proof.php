@@ -1,4 +1,10 @@
 <?php
+// #uploadMC - Tăng giới hạn kích thước tải lên PHP (chỉ có hiệu lực nếu server cho phép)
+@ini_set('upload_max_filesize', '15M');
+@ini_set('post_max_size', '15M');
+@ini_set('memory_limit', '128M');
+@ini_set('max_execution_time', '300'); // 5 phút
+
 // Không cần session_start() vì session đã được khởi tạo trong action_handler.php
 // Đặt project_root_path trước khi sử dụng trong error_log
 $project_root_path = dirname(dirname(dirname(__DIR__))); // Lấy đường dẫn gốc
@@ -22,19 +28,25 @@ require_once $project_root_path . '/private/classes/Database.php';
 define('UPLOAD_DIR_RELATIVE', '/uploads/payment_proofs/');
 // Define absolute path for file operations
 define('UPLOAD_DIR_ABSOLUTE', $project_root_path . '/public' . UPLOAD_DIR_RELATIVE);
-// Ghi log đường dẫn để debug (nếu cần)
-error_log("Project root path: " . $project_root_path);
-error_log("Upload directory: " . UPLOAD_DIR_ABSOLUTE);
 
-// Allowed file types and max size (5MB)
+// #uploadMC - Tăng giới hạn kích thước tải lên thành 15MB (từ 5MB)
+// Ensure consistency: Only allow image MIME types and extensions
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
-define('MAX_FILE_SIZE', 5 * 1024 * 1024);
+define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif']);
+define('MAX_FILE_SIZE', 15 * 1024 * 1024);
 
 // --- IMPORTANT: Set Content-Type to JSON ---
 header('Content-Type: application/json');
 
 // --- Initialize Response Array ---
 $response = ['success' => false, 'error' => 'An unknown error occurred.'];
+
+// #uploadMC - Kiểm tra kích thước file và báo lỗi nếu vượt quá
+if (isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] > MAX_FILE_SIZE) {
+    $response['error'] = 'File quá lớn. Giới hạn tải lên là ' . (MAX_FILE_SIZE / 1024 / 1024) . 'MB.';
+    echo json_encode($response);
+    exit;
+}
 
 // --- Basic Security Checks ---
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -74,7 +86,8 @@ try {
     $file_mime_type = mime_content_type($uploaded_file['tmp_name']);
     $file_extension = strtolower(pathinfo($uploaded_file['name'], PATHINFO_EXTENSION));
 
-    if (!in_array($file_mime_type, ALLOWED_MIME_TYPES) || !in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
+    // Updated validation to use defined constants
+    if (!in_array($file_mime_type, ALLOWED_MIME_TYPES) || !in_array($file_extension, ALLOWED_EXTENSIONS)) {
         throw new Exception('Invalid file type. Only JPG, PNG, GIF are allowed.');
     }
 

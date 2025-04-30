@@ -1,72 +1,19 @@
-# Enable mod rewrite
-RewriteEngine On
+# Tăng giới hạn upload cho PHP
+php_value upload_max_filesize 15M
+php_value post_max_size 15M
+php_value memory_limit 256M
+php_value max_execution_time 300
+php_value max_input_time 300
 
-# PHP default index
-DirectoryIndex index.php
-
-# Protect sensitive files
-<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak|json|lock)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-# Protect uploaded files
-<FilesMatch "\.php$">
-    <Files *>
-        Order Allow,Deny
-        Deny from all
-    </Files>
-</FilesMatch>
-
-# Block directory listing
-Options -Indexes
-
-# Set default charset
-AddDefaultCharset UTF-8
-
-# Enable compression
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css text/javascript application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript
-</IfModule>
-
-# Cache static files
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/jpg "access plus 1 year"
-    ExpiresByType image/jpeg "access plus 1 year"
-    ExpiresByType image/gif "access plus 1 year"
-    ExpiresByType image/png "access plus 1 year"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-</IfModule>
-
-# Security headers
+# Enable keep-alive
 <IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Frame-Options "SAMEORIGIN"
-    Header set Referrer-Policy "same-origin"
+    Header set Connection keep-alive
 </IfModule>
 
-# Remove .php extension
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php [L]
+# Tăng buffer size cho upload lớn
+<IfModule mod_fcgid.c>
+  FcgidMaxRequestLen 15728640
+</IfModule>
 
-# Clean URLs for pages with sections
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)/([^/]+)/?$ pages/$1/$2.php [L,QSA]
-
-# Remove index.php from URLs
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index\.php
-RewriteRule ^(.*)index\.php$ /$1 [R=301,L]
-
-# Remove trailing slashes
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-# Redirect all other requests to index.php if file/dir not found
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d 
-RewriteRule . index.php [L]
+# Tắt tính năng output_buffering cho upload file lớn
+php_value output_buffering Off

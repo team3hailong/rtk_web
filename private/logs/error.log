@@ -292,3 +292,60 @@
 [29-Apr-2025 10:40:15 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
 [29-Apr-2025 10:40:15 UTC] [Database GetConnection] No active connection found. Attempting to connect...
 [29-Apr-2025 10:40:15 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:15 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:15 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:15 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:16 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:16 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:16 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:23 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:23 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:23 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:24 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:24 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:24 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:25 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:25 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:25 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:33 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:33 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:33 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:34 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:34 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:34 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:36 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:36 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:36 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:48 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:48 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:48 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 02:58:49 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 02:58:49 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 02:58:49 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 03:13:36 UTC] Uncaught Exception: Access denied for user 'qeqlwgvdhosting_Nguyen1509'@'localhost' (using password: YES)
+#0 C:\laragon\www\rtk_web\private\config\database.php(12): mysqli->__construct('localhost', 'qeqlwgvdhosting...', Object(SensitiveParameterValue), 'qeqlwgvdhosting...')
+#1 C:\laragon\www\rtk_web\private\classes\Database.php(22): require_once('C:\\laragon\\www\\...')
+#2 C:\laragon\www\rtk_web\public\pages\transaction.php(28): Database->__construct()
+#3 {main}
+[30-Apr-2025 03:13:39 UTC] Uncaught Exception: Access denied for user 'qeqlwgvdhosting_Nguyen1509'@'localhost' (using password: YES)
+#0 C:\laragon\www\rtk_web\private\config\database.php(12): mysqli->__construct('localhost', 'qeqlwgvdhosting...', Object(SensitiveParameterValue), 'qeqlwgvdhosting...')
+#1 C:\laragon\www\rtk_web\private\classes\Database.php(22): require_once('C:\\laragon\\www\\...')
+#2 C:\laragon\www\rtk_web\public\pages\transaction.php(28): Database->__construct()
+#3 {main}
+[30-Apr-2025 03:13:42 UTC] Uncaught Exception: Access denied for user 'qeqlwgvdhosting_Nguyen1509'@'localhost' (using password: YES)
+#0 C:\laragon\www\rtk_web\private\config\database.php(12): mysqli->__construct('localhost', 'qeqlwgvdhosting...', Object(SensitiveParameterValue), 'qeqlwgvdhosting...')
+#1 C:\laragon\www\rtk_web\private\classes\Database.php(22): require_once('C:\\laragon\\www\\...')
+#2 C:\laragon\www\rtk_web\public\pages\rtk_accountmanagement.php(32): Database->__construct()
+#3 {main}
+[30-Apr-2025 03:14:30 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 03:14:30 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 03:14:30 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 03:14:31 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 03:14:31 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 03:14:31 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 03:14:36 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 03:14:36 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 03:14:36 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[30-Apr-2025 03:14:37 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[30-Apr-2025 03:14:37 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[30-Apr-2025 03:14:37 UTC] [Database Connect] Connection to database 'sa_database' successful.

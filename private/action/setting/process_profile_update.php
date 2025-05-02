@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // --- Project Root Path ---
 $project_root_path = dirname(dirname(dirname(__DIR__))); // Adjust path as needed
 
@@ -168,8 +166,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
              $_SESSION['profile_error'] = "Có lỗi xảy ra khi cập nhật hồ sơ (DB).";
         }
     } catch (Exception $e) {
-        error_log("Profile update general error: " . $e->getMessage());
-        $_SESSION['profile_error'] = $e->getMessage();
+        // Log detailed error to server log
+        error_log("Profile update general error: " . $e->getMessage() . "\nStack Trace:\n" . $e->getTraceAsString());
+        // Show generic error to user
+        $_SESSION['profile_error'] = "Đã xảy ra lỗi không mong muốn khi cập nhật hồ sơ. Vui lòng thử lại.";
     } finally {
         if (isset($db)) {
             $db->close();

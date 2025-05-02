@@ -82,18 +82,19 @@ HTML;
     } catch (Exception $e) {
         // Log lỗi vào error_logs
         $sql = "INSERT INTO error_logs (error_type, error_message, stack_trace, ip_address) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if ($stmt) {
-            $error_type = 'email_verification';
-            $error_message = "Failed to send verification email to: {$userEmail}";
-            $stack_trace = $mail->ErrorInfo;
+        $stmt_error = $conn->prepare($sql);
+        if ($stmt_error) {
+            $error_type = 'email_sending_failed';
+            // Log a generic message to DB, keep detailed message in server logs
+            $error_message_db = "Failed to send email to " . $userEmail;
+            $stack_trace_db = "Error details logged in server error log."; // Avoid logging full trace to DB
             $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-            $stmt->bind_param("ssss", $error_type, $error_message, $stack_trace, $ip);
-            $stmt->execute();
-            $stmt->close();
+            $stmt_error->bind_param("ssss", $error_type, $error_message_db, $stack_trace_db, $ip);
+            $stmt_error->execute();
+            $stmt_error->close();
         }
-        
-        error_log("Email sending failed: " . $mail->ErrorInfo);
-        return false;
+        // Log detailed error to server log
+        error_log("Failed to send verification email to: $userEmail. Error: " . $mail->ErrorInfo . " | Exception: " . $e->getMessage());
+        return false; // Indicate failure
     }
 }

@@ -28,8 +28,7 @@ include $project_root_path . '/private/includes/header.php';
         <div id="map-container">
             <div id="map"><p>Đang tải bản đồ...</p></div>
             <div class="map-controls">
-                <button id="mapNormal" class="map-type-btn active">Bản đồ thường</button>
-                <button id="mapSatellite" class="map-type-btn">Bản đồ vệ tinh</button>
+                <button id="toggleMapType" class="map-type-btn active">Bản đồ vệ tinh</button>
                 <button id="getCurrentLocation" class="map-type-btn">Vị trí của tôi</button>
             </div>
             <div class="map-legend">
@@ -61,4 +60,3 @@ const baseUrl = '<?php echo $base_url; ?>';
 <?php
 if (isset($db)) $db->close();
 include $project_root_path . '/private/includes/footer.php';
-?>

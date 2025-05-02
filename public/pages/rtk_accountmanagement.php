@@ -189,4 +189,3 @@ function format_date_display($date_str) {
 // --- Include Footer ---
 // Giả sử footer.php nằm trong thư mục private/includes ở gốc
 include $project_root_path . '/private/includes/footer.php';
-?>

@@ -170,6 +170,25 @@ include $project_root_path . '/private/includes/header.php';
             margin-top: 1rem;
             padding: 1.5rem;
         }
+        .selected-package-info h3 {
+            font-size: var(--font-size-base, 1rem);
+        }
+        .total-price-display {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        .total-price-display span {
+            font-size: 1.3rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .selected-package-info {
+            padding: 1rem;
+        }
+        .btn-submit {
+            padding: 0.75rem;
+        }
     }
 </style>
 

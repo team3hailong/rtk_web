@@ -169,6 +169,53 @@ include $project_root_path . '/private/includes/header.php';
      .back-link:hover {
          text-decoration: underline;
      }
+
+    /* Responsive styles for mobile devices */
+    @media (max-width: 768px) {
+        .content-wrapper {
+            margin: 1rem;
+            padding: 1rem;
+        }
+        
+        .existing-proof-section img {
+            max-height: 200px;
+        }
+        
+        .upload-section {
+            padding: 1rem;
+        }
+        
+        .upload-section h3 {
+            font-size: 1rem;
+        }
+        
+        .btn-upload {
+            width: 100%;
+            padding: 0.75rem 0;
+            display: block;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .content-wrapper {
+            margin: 0.5rem;
+            padding: 0.75rem;
+            border-radius: var(--rounded-md);
+        }
+        
+        .upload-section {
+            padding: 0.5rem;
+        }
+        
+        .upload-section h3 {
+            font-size: 0.875rem;
+        }
+        
+        .btn-upload {
+            font-size: 0.875rem;
+        }
+    }
 </style>
 
 <div class="dashboard-wrapper">

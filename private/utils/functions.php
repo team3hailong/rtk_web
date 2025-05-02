@@ -46,9 +46,9 @@ function calculateEndTime(string $startTime, string $durationText): ?string {
         return null;
 
     } catch (Exception $e) {
-        // Log the original input for better debugging
-        error_log("Error calculating end time for duration (original: '" . $durationText . "'): " . $e->getMessage());
-        return null;
+        // Log the error
+        error_log("Error calculating end time: " . $e->getMessage() . " | StartTime: $startTime, DurationText: $durationText");
+        return null; // Return null on exception
     }
 }
 

@@ -56,4 +56,29 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => message.remove(), 500);
         }, 5000); // Hide after 5 seconds (5000 milliseconds)
     });
+    
+    // --- Responsive Adjustments for Mobile ---
+    function handleResponsiveLayout() {
+        const windowWidth = window.innerWidth;
+        const formGroups = document.querySelectorAll('.form-group');
+        
+        if (windowWidth <= 480) {
+            // Apply mobile-specific styles
+            formGroups.forEach(group => {
+                // Add additional classes or modify styles for very small screens
+                group.classList.add('mobile-view');
+            });
+        } else {
+            // Remove mobile-specific styles when on larger screens
+            formGroups.forEach(group => {
+                group.classList.remove('mobile-view');
+            });
+        }
+    }
+    
+    // Call once on page load
+    handleResponsiveLayout();
+    
+    // Add resize listener for responsive adjustments
+    window.addEventListener('resize', handleResponsiveLayout);
 });

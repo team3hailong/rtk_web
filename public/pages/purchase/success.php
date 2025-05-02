@@ -1,83 +1,28 @@
 <?php
 session_start();
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
-// --- Project Root Path for Includes ---
-$project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
-
-// --- Base URL Configuration ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']);
-$base_project_dir = '';
-if (strpos($script_dir, '/public/') !== false) {
-    $base_project_dir = substr($script_dir, 0, strpos($script_dir, '/public/'));
-}
-$base_url = rtrim($protocol . $domain . $base_project_dir, '/');
-
-// --- Include Required Files ---
-require_once $project_root_path . '/private/config/config.php';
-require_once $project_root_path . '/private/utils/functions.php';
-// Include database connection if needed to fetch order details
-// require_once $project_root_path . '/private/db/db_connection.php';
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$project_root_path = PROJECT_ROOT_PATH;
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . $base_url . '/public/pages/auth/login.php?error=not_logged_in');
+    // Chuyển hướng về login
+    header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
 
-// --- Get Registration ID ---
-$registration_id = $_GET['registration_id'] ?? null;
-
-if (!$registration_id) {
-    // Redirect if no registration ID is provided
-    header('Location: ' . $base_url . '/public/dashboard.php?error=missing_order_id'); // Or redirect to history
-    exit;
-}
-
-// --- Optional: Fetch Order Details ---
-// You might want to fetch details based on $registration_id to display more info
-// Example:
-/*
-$conn = connect_db();
-$stmt = $conn->prepare("SELECT package_name, quantity FROM registrations r JOIN packages p ON r.package_id = p.id WHERE r.id = ? AND r.user_id = ?");
-$stmt->bind_param("ii", $registration_id, $_SESSION['user_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$order_details = $result->fetch_assoc();
-$stmt->close();
-$conn->close();
-
-if (!$order_details) {
-    // Handle case where order doesn't belong to user or doesn't exist
-    header('Location: ' . $base_url . '/public/dashboard.php?error=invalid_order');
-    exit;
-}
-$package_name = $order_details['package_name'] ?? 'Gói dịch vụ';
-*/
-
-// --- User Info ---
-$user_username = $_SESSION['username'] ?? 'Người dùng';
-
-// --- Include Header ---
+// --- Include Required Files ---
+// Không cần require config.php một lần nữa vì đã được require ở trên
 include $project_root_path . '/private/includes/header.php';
+require_once $project_root_path . '/private/classes/Transaction.php';
+// Include more if needed...
 ?>
 
 <style>
-    .success-container {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: white;
-        border-radius: var(--rounded-lg);
-        border: 1px solid var(--gray-200);
-        text-align: center;
-        box-shadow: var(--shadow-md);
-    }
     .success-icon {
-        font-size: 3rem; /* Adjust size as needed */
-        color: var(--success-500);
-        margin-bottom: 1rem;
         /* Example using a simple checkmark character, replace with SVG or icon font if available */
         content: '✔'; /* Simple fallback */
         display: inline-block;
@@ -86,6 +31,15 @@ include $project_root_path . '/private/includes/header.php';
         line-height: 60px;
         border-radius: 50%;
         background-color: var(--success-100);
+    }
+    .success-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: var(--rounded-lg);
+        box-shadow: var(--shadow-md);
+        text-align: center;
     }
     .success-container h2 {
         font-size: var(--font-size-xl);
@@ -108,42 +62,211 @@ include $project_root_path . '/private/includes/header.php';
         border-radius: var(--rounded-md);
         text-decoration: none;
         font-weight: var(--font-medium);
-        transition: background-color 0.2s;
     }
-    .success-container .btn:hover {
-        background-color: var(--primary-700);
+    /* Animation for the checkmark */
+    @keyframes checkmark {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    .success-checkmark {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem auto;
+        border-radius: 50%;
+        background-color: var(--success-100, #d1fae5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: checkmark 0.5s ease-in-out;
+    }
+    .success-checkmark i {
+        font-size: 40px;
+        color: var(--success-600, #059669);
+    }
+    
+    /* Order details styling */
+    .order-details {
+        background-color: var(--gray-50);
+        border-radius: var(--rounded-md);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+    .order-details h3 {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-medium);
+        color: var(--gray-700);
+        margin-bottom: 1rem;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    .detail-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    .detail-label {
+        color: var(--gray-600);
+        font-weight: var(--font-medium);
+    }
+    .detail-value {
+        color: var(--gray-800);
+        font-weight: var(--font-semibold);
+    }
+    
+    /* Button group styling */
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    .btn-primary {
+        background-color: var(--primary-600);
+    }
+    .btn-secondary {
+        background-color: var(--gray-600);
+    }
+    .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-600);
+        color: var(--primary-600);
+    }
+    .btn-outline:hover {
+        background-color: var(--primary-50);
+    }
+    
+    /* Responsive adjustments for mobile */
+    @media (max-width: 768px) {
+        .success-container {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .success-checkmark {
+            width: 70px;
+            height: 70px;
+        }
+        
+        .success-checkmark i {
+            font-size: 35px;
+        }
+        
+        .success-container h2 {
+            font-size: var(--font-size-lg, 1.125rem);
+        }
+        
+        .success-container p {
+            font-size: var(--font-size-sm, 0.875rem);
+        }
+        
+        .button-group {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .success-container .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .success-container {
+            padding: 1rem;
+            margin: 0.5rem;
+        }
+        
+        .order-details {
+            padding: 1rem;
+        }
+        
+        .detail-row {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .success-checkmark {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+        
+        .success-checkmark i {
+            font-size: 30px;
+        }
     }
 </style>
 
 <div class="dashboard-wrapper">
-    <!-- Sidebar -->
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
 
-    <!-- Main Content -->
-    <main class="content-wrapper">
+    <div class="content-wrapper">
         <div class="success-container">
-            <div class="success-icon">
-                <!-- You can place an SVG or icon font here -->
-                &#10004; <!-- HTML checkmark entity -->
+            <div class="success-checkmark">
+                <i class="fas fa-check"></i>
             </div>
-            <h2>Thanh toán thành công!</h2>
+            <h2>Đăng ký thành công!</h2>
+            <p>Cảm ơn bạn đã hoàn thành đăng ký! Chúng tôi đã ghi nhận thông tin của bạn và sẽ xử lý trong thời gian sớm nhất.</p>
 
-            <!-- CUSTOMIZE: Modify this message as needed -->
-            <p>
-                Cảm ơn bạn đã mua hàng! Đơn hàng mã <strong><?php echo htmlspecialchars($registration_id); ?></strong> của bạn đã được ghi nhận.
-                <?php // if (isset($package_name)) { echo " Gói: " . htmlspecialchars($package_name) . "."; } ?>
-                Tài khoản của bạn sẽ sớm được kích hoạt. Bạn có thể kiểm tra trạng thái trong Lịch sử giao dịch.
-            </p>
-            <!-- END CUSTOMIZE -->
+            <?php 
+            // Nếu có thông tin đơn hàng từ session, hiển thị chi tiết
+            if (isset($_SESSION['purchase_success']) && isset($_SESSION['purchase_details'])) {
+                $purchase_details = $_SESSION['purchase_details'];
+                ?>
+                <div class="order-details">
+                    <h3>Thông tin đơn hàng</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Mã đăng ký:</span>
+                        <span class="detail-value"><?php echo isset($purchase_details['registration_id']) ? 'REG' . str_pad($purchase_details['registration_id'], 5, '0', STR_PAD_LEFT) : 'N/A'; ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Gói đăng ký:</span>
+                        <span class="detail-value"><?php echo isset($purchase_details['package_name']) ? htmlspecialchars($purchase_details['package_name']) : 'N/A'; ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Số tiền:</span>
+                        <span class="detail-value"><?php echo isset($purchase_details['price']) ? number_format($purchase_details['price']) . ' VND' : 'N/A'; ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Trạng thái:</span>
+                        <span class="detail-value"><?php echo isset($purchase_details['payment_status']) ? htmlspecialchars($purchase_details['payment_status']) : 'Đang xử lý'; ?></span>
+                    </div>
+                </div>
+                <?php
+                // Clear session data after displaying
+                //unset($_SESSION['purchase_success']);
+                //unset($_SESSION['purchase_details']);
+            }
+            ?>
 
-            <a href="<?php echo $base_url; ?>/public/pages/history/transaction_history.php" class="btn">Xem lịch sử giao dịch</a>
-            <a href="<?php echo $base_url; ?>/public/dashboard.php" class="btn" style="margin-left: 1rem; background-color: var(--gray-500);">Về trang chủ</a>
-
+            <div class="button-group">
+                <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-primary">
+                    <i class="fas fa-history"></i> Lịch sử giao dịch
+                </a>
+                <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-outline">
+                    <i class="fas fa-user-circle"></i> Quản lý tài khoản
+                </a>
+            </div>
         </div>
-    </main>
+    </div>
 </div>
 
 <?php
-// --- Include Footer ---
 include $project_root_path . '/private/includes/footer.php';
 ?>

@@ -81,7 +81,6 @@ include $project_root_path . '/private/includes/header.php';
 
 <!-- CSS cho Trang Thanh Toán -->
 <style>
-    /* ... (Existing CSS styles from prompt remain unchanged) ... */
     .payment-summary, .payment-qr-section {
         background-color: white;
         padding: 2rem;
@@ -260,6 +259,20 @@ include $project_root_path . '/private/includes/header.php';
      }
      .status-success { color: var(--success-600); }
      .status-error { color: var(--danger-600); }
+     
+    /* Responsive styles for mobile */
+    @media (max-width: 480px) {
+        .payment-summary, .payment-qr-section {
+            padding: 1rem;
+        }
+        .summary-total {
+            font-size: 1rem;
+        }
+        #qrcode {
+            width: 150px;
+            height: 150px;
+        }
+    }
 </style>
 
 <div class="dashboard-wrapper">

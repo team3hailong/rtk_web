@@ -187,9 +187,13 @@ try {
     if ($db && $db->getConnection() && $db->getConnection()->inTransaction()) {
         $db->getConnection()->rollBack();
     }
-    error_log("Error processing order: " . $e->getMessage());
-    $error_query = http_build_query(['error' => urlencode($e->getMessage()), 'package' => $package['package_id'] ?? $package_id]);
-    header('Location: ' . $base_url . '/public/pages/purchase/details.php?' . $error_query);
+    // Log the detailed error
+    error_log("Error processing order: " . $e->getMessage() . "\nStack Trace:\n" . $e->getTraceAsString());
+    // Redirect with a generic error message, avoid exposing details
+    $_SESSION['purchase_error'] = 'Đã xảy ra lỗi khi xử lý đơn hàng của bạn. Vui lòng thử lại.'; // Use session flash message
+    // Redirect back to package selection or details page with a generic indicator
+    $redirect_url = $base_url . '/public/pages/purchase/packages.php?error=processing_failed';
+    header('Location: ' . $redirect_url);
     exit;
 } finally {
     if ($db) {

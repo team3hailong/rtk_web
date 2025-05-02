@@ -37,8 +37,24 @@ if (!APP_DEBUG) {
         exit;
     });
     set_exception_handler(function($e) {
+        // Log the full error details to the error log file
         error_log("Uncaught Exception: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-        header('Location: ' . SITE_URL . '/public/pages/error.php');
+
+        // Set a generic error message for the user in the session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['error_message'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau hoặc liên hệ quản trị viên.';
+        // Optionally log minimal context if needed for user session, e.g., error ID
+
+        // Redirect to a generic error page without exposing details in URL
+        // Ensure SITE_URL is defined and correct
+        if (defined('SITE_URL')) {
+            header('Location: ' . SITE_URL . '/public/pages/error.php');
+        } else {
+            // Fallback if SITE_URL is not defined (should not happen ideally)
+            header('Location: /public/pages/error.php');
+        }
         exit;
     });
 }

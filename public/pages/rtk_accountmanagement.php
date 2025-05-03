@@ -25,14 +25,33 @@ require_once $project_root_path . '/private/classes/RtkAccount.php'; // Include 
 // Add CSS Link (Ideally should be inside <head> in header.php)
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css">';
 
+// --- Xử lý tham số từ URL cho phân trang ---
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($currentPage < 1) $currentPage = 1;
+
+$perPage = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+// Chỉ cho phép các giá trị cụ thể cho per_page
+if (!in_array($perPage, [10, 20, 50])) {
+    $perPage = 10; // Mặc định
+}
+
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+// Chỉ cho phép các filter hợp lệ
+if (!in_array($filter, ['all', 'active', 'expired', 'pending'])) {
+    $filter = 'all'; // Mặc định
+}
 
 // ===============================================
-// == FETCH ACCOUNT DATA FROM DATABASE ==
+// == FETCH ACCOUNT DATA FROM DATABASE WITH PAGINATION ==
 // ===============================================
 $db = new Database();
 $rtkAccountManager = new RtkAccount($db); // Instantiate RtkAccount
 $userId = $_SESSION['user_id']; // Get user ID from session
-$accounts = $rtkAccountManager->getAccountsByUserId($userId); // Fetch data using RtkAccount
+
+// Lấy dữ liệu với phân trang
+$result = $rtkAccountManager->getAccountsByUserIdWithPagination($userId, $currentPage, $perPage, $filter);
+$accounts = $result['accounts'];
+$pagination = $result['pagination'];
 
 // Close the database connection if necessary (optional, depends on Database class implementation)
 // $db->close();
@@ -66,6 +85,17 @@ function format_date_display($date_str) {
         return 'N/A';
     }
 }
+
+// Hàm tạo URL phân trang với các tham số hiện tại
+function getPaginationUrl($page, $perPage, $filter) {
+    $params = [];
+    $params['page'] = $page;
+    $params['per_page'] = $perPage;
+    if ($filter !== 'all') {
+        $params['filter'] = $filter;
+    }
+    return '?' . http_build_query($params);
+}
 ?>
 
 <div class="dashboard-wrapper">
@@ -79,12 +109,22 @@ function format_date_display($date_str) {
             
             <div class="filter-section">
                 <div class="filter-buttons-group">
-                    <button class="filter-button active" data-filter="all">Tất cả</button>
-                    <button class="filter-button" data-filter="active">Hoạt động</button>
-                    <button class="filter-button" data-filter="expired">Hết hạn</button>
-                    <button class="filter-button" data-filter="pending">Đã khóa</button>
+                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
+                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
+                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
+                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Đã khóa</button>
                 </div>
-                <input type="text" class="search-box" placeholder="Tìm kiếm theo ID, Tên TK, Tên trạm...">
+                <div class="search-and-per-page">
+                    <div class="per-page-selector">
+                        <label for="per-page">Hiển thị:</label>
+                        <select id="per-page" class="per-page-select">
+                            <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
+                            <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
+                            <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                        </select>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Tìm kiếm theo ID, Tên TK, Tên trạm...">
+                </div>
             </div>
             
             <div class="accounts-table-wrapper">
@@ -177,6 +217,73 @@ function format_date_display($date_str) {
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Pagination controls -->
+            <?php if ($pagination['total_pages'] > 1): ?>
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Hiển thị <?php echo count($accounts); ?> trên tổng số <?php echo $pagination['total']; ?> tài khoản
+                </div>
+                <div class="pagination-controls">
+                    <?php if ($pagination['current_page'] > 1): ?>
+                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button" title="Trang đầu">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button" title="Trang trước">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="pagination-button disabled" title="Trang đầu">
+                            <i class="fas fa-angle-double-left"></i>
+                        </span>
+                        <span class="pagination-button disabled" title="Trang trước">
+                            <i class="fas fa-angle-left"></i>
+                        </span>
+                    <?php endif; ?>
+
+                    <?php
+                    // Hiển thị các trang xung quanh trang hiện tại
+                    $startPage = max(1, $pagination['current_page'] - 2);
+                    $endPage = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                    
+                    // Đảm bảo luôn hiển thị ít nhất 5 trang nếu có thể
+                    if ($endPage - $startPage + 1 < 5 && $pagination['total_pages'] >= 5) {
+                        if ($startPage == 1) {
+                            $endPage = min(5, $pagination['total_pages']);
+                        } elseif ($endPage == $pagination['total_pages']) {
+                            $startPage = max(1, $pagination['total_pages'] - 4);
+                        }
+                    }
+                    
+                    for ($i = $startPage; $i <= $endPage; $i++): 
+                    ?>
+                        <?php if ($i == $pagination['current_page']): ?>
+                            <span class="pagination-button active"><?php echo $i; ?></span>
+                        <?php else: ?>
+                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endif; ?>
+                    <?php endfor; ?>
+
+                    <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button" title="Trang sau">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button" title="Trang cuối">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="pagination-button disabled" title="Trang sau">
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                        <span class="pagination-button disabled" title="Trang cuối">
+                            <i class="fas fa-angle-double-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -232,6 +339,14 @@ function format_date_display($date_str) {
 <!-- Add script to define base URL for JS -->
 <script>
     const baseUrl = '<?php echo $base_url; ?>';
+    // Thêm biến cấu hình cho phân trang
+    const paginationConfig = {
+        currentPage: <?php echo $pagination['current_page']; ?>,
+        perPage: <?php echo $perPage; ?>,
+        totalPages: <?php echo $pagination['total_pages']; ?>,
+        totalRecords: <?php echo $pagination['total']; ?>,
+        currentFilter: '<?php echo $filter; ?>'
+    };
 </script>
 <!-- Add link to external JS file -->
 <script src="<?php echo $base_url; ?>/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>

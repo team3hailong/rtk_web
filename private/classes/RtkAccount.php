@@ -8,6 +8,143 @@ class RtkAccount {
         $this->conn = $db->getConnection();
     }
 
+    public function getAccountsByUserIdWithPagination($userId, $page = 1, $perPage = 10, $filter = 'all') {
+        try {
+            $start = ($page - 1) * $perPage;
+            
+            $statusCondition = "";
+            if ($filter !== 'all') {
+                if ($filter === 'active') {
+                    $statusCondition = "AND r.end_time > NOW() AND sa.enabled = 1";
+                } elseif ($filter === 'expired') {
+                    $statusCondition = "AND r.end_time <= NOW()";
+                } elseif ($filter === 'pending') {
+                    $statusCondition = "AND r.status = 'pending' OR sa.enabled = 0";
+                }
+            }
+
+            $countSql = "SELECT COUNT(*) as total
+                        FROM survey_account sa
+                        JOIN registration r ON sa.registration_id = r.id
+                        WHERE r.user_id = :user_id 
+                        AND sa.deleted_at IS NULL
+                        $statusCondition";
+
+            $countStmt = $this->conn->prepare($countSql);
+            $countStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $countStmt->execute();
+            $totalRecords = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+            
+            $sql = "SELECT 
+                    sa.id,
+                    sa.username_acc,
+                    sa.password_acc,
+                    sa.enabled,
+                    CASE 
+                        WHEN sa.enabled = 1 THEN 'Đang hoạt động'
+                        ELSE 'Đã khóa'
+                    END as enabled_status,
+                    r.start_time,
+                    r.end_time,
+                    r.status as reg_status,
+                    p.name as package_name,
+                    p.duration_text,
+                    DATEDIFF(r.end_time, r.start_time) as duration_days,
+                    l.province,
+                    GROUP_CONCAT(
+                        JSON_OBJECT(
+                            'mountpoint', mp.mountpoint,
+                            'ip', mp.ip,
+                            'port', mp.port
+                        ) SEPARATOR '|'
+                    ) as mountpoints_json,
+                    pay.confirmed_at
+                FROM survey_account sa
+                JOIN registration r ON sa.registration_id = r.id
+                JOIN package p ON r.package_id = p.id
+                JOIN location l ON r.location_id = l.id
+                LEFT JOIN mount_point mp ON l.id = mp.location_id
+                LEFT JOIN payment pay ON r.id = pay.registration_id
+                WHERE r.user_id = :user_id 
+                AND sa.deleted_at IS NULL
+                $statusCondition
+                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
+                         r.start_time, r.end_time, r.status, p.name, 
+                         p.duration_text, l.province, pay.confirmed_at, r.location_id
+                ORDER BY sa.created_at DESC
+                LIMIT :start, :per_page";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+            $stmt->bindParam(':per_page', $perPage, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($accounts as &$account) {
+                $account['mountpoints'] = [];
+                if (!empty($account['mountpoints_json'])) {
+                    $mountpoints_array = explode('|', $account['mountpoints_json']);
+                    foreach ($mountpoints_array as $mp_json) {
+                        if ($mp_json !== 'null' && $mp_json !== null) {
+                            $mp_data = json_decode($mp_json, true);
+                            if ($mp_data && !empty($mp_data['mountpoint'])) {
+                                $account['mountpoints'][] = $mp_data;
+                            }
+                        }
+                    }
+                }
+                unset($account['mountpoints_json']);
+
+                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                    $account['effective_start_time'] = $account['start_time'];
+                } else {
+                    $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
+                }
+                $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
+                if ($account['confirmed_at']) {
+                    $start = new DateTime($account['effective_start_time']);
+                    $start->setTimezone($tz);
+                    $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
+                    $account['effective_end_time'] = $start->format('Y-m-d H:i:s');
+                } else {
+                    $end = new DateTime($account['end_time']);
+                    $end->setTimezone($tz);
+                    $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
+                }
+                $start_disp = new DateTime($account['effective_start_time']);
+                $start_disp->setTimezone($tz);
+                $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
+                $account['status'] = $this->calculateAccountStatus($account);
+            }
+            
+            $totalPages = ceil($totalRecords / $perPage);
+
+            return [
+                'accounts' => $accounts,
+                'pagination' => [
+                    'total' => $totalRecords,
+                    'per_page' => $perPage,
+                    'current_page' => $page,
+                    'total_pages' => $totalPages
+                ]
+            ];
+
+        } catch (PDOException $e) {
+            error_log("Error fetching RTK accounts with pagination: " . $e->getMessage());
+            return [
+                'accounts' => [],
+                'pagination' => [
+                    'total' => 0,
+                    'per_page' => $perPage,
+                    'current_page' => $page,
+                    'total_pages' => 0
+                ]
+            ];
+        }
+    }
+
     public function getAccountsByUserId($userId) {
         try {
             $sql = "SELECT 
@@ -54,7 +191,6 @@ class RtkAccount {
             $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             foreach ($accounts as &$account) {
-                // Parse mountpoints from JSON string
                 $account['mountpoints'] = [];
                 if (!empty($account['mountpoints_json'])) {
                     $mountpoints_array = explode('|', $account['mountpoints_json']);
@@ -67,15 +203,13 @@ class RtkAccount {
                         }
                     }
                 }
-                unset($account['mountpoints_json']); // Remove the raw JSON string
+                unset($account['mountpoints_json']);
 
-                // Adjust start_time based on package type
                 if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
-                // --- Set timezone to Asia/Ho_Chi_Minh (UTC+7) for display ---
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
                 if ($account['confirmed_at']) {
                     $start = new DateTime($account['effective_start_time']);
@@ -90,7 +224,6 @@ class RtkAccount {
                 $start_disp = new DateTime($account['effective_start_time']);
                 $start_disp->setTimezone($tz);
                 $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
-                // Set account status
                 $account['status'] = $this->calculateAccountStatus($account);
             }
             
@@ -122,8 +255,6 @@ class RtkAccount {
     }
 
     private function getStationsForAccount($accountId) {
-        // Placeholder - you can implement actual station fetching logic here
-        // For now, return empty array
         return [];
     }
 
@@ -163,7 +294,7 @@ class RtkAccount {
                    WHERE id = :account_id";
 
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':password', $newPassword); // Store plain password without hashing
+            $stmt->bindParam(':password', $newPassword);
             $stmt->bindParam(':account_id', $accountId);
             
             return $stmt->execute();

@@ -6,13 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const modalOverlay = document.getElementById('account-details-modal');
     const modalTitle = document.getElementById('modal-title');
-    const modalAccountId = document.getElementById('modal-account-id');
     const modalUsername = document.getElementById('modal-username');
     const modalPassword = document.getElementById('modal-password');
     const modalStartTime = document.getElementById('modal-start-time');
     const modalEndTime = document.getElementById('modal-end-time');
-    const modalProvince = document.getElementById('modal-province');
-    const modalStatusBadge = document.getElementById('modal-status-badge');
     const modalMountpointsList = document.getElementById('modal-mountpoints-list');
     
     // Filter buttons functionality
@@ -102,29 +99,44 @@ document.addEventListener('DOMContentLoaded', function() {
     window.showAccountDetails = function(account) {
         if (!modalOverlay || !account) return;
         
-        modalTitle.textContent = `Chi Tiết Tài Khoản ${account.id}`;
-        modalAccountId.textContent = account.id;
+        modalTitle.textContent = `Chi Tiết Tài Khoản`;
         modalUsername.textContent = account.username;
         modalPassword.textContent = account.password;
         modalStartTime.textContent = account.start_time;
         modalEndTime.textContent = account.end_time;
-        modalProvince.textContent = account.province;
         
-        // Set status badge
-        modalStatusBadge.className = 'status-badge status-badge-modal ' + account.status_class;
-        modalStatusBadge.textContent = account.status;
-        
-        // Populate mountpoints
+        // Populate mountpoints as a table
         modalMountpointsList.innerHTML = '';
         if (account.mountpoints && account.mountpoints.length > 0) {
             account.mountpoints.forEach(mp => {
-                const li = document.createElement('li');
-                li.textContent = mp.mountpoint || mp;
-                modalMountpointsList.appendChild(li);
+                const row = document.createElement('tr');
+                
+                // Đổi thứ tự thành "IP, Port, Trạm" thay vì "Trạm, IP, Port"
+                const ipCell = document.createElement('td');
+                ipCell.textContent = mp.ip || 'N/A';
+                
+                const portCell = document.createElement('td');
+                portCell.textContent = mp.port || 'N/A';
+                
+                const mpCell = document.createElement('td');
+                mpCell.textContent = mp.mountpoint || 'N/A';
+                
+                // Thêm các ô vào hàng theo thứ tự mới
+                row.appendChild(ipCell);
+                row.appendChild(portCell);
+                row.appendChild(mpCell);
+                
+                modalMountpointsList.appendChild(row);
             });
             document.getElementById('mountpoints-section').style.display = 'block';
         } else {
-            document.getElementById('mountpoints-section').style.display = 'none';
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.setAttribute('colspan', '3');
+            cell.textContent = 'Không có dữ liệu trạm';
+            cell.style.textAlign = 'center';
+            row.appendChild(cell);
+            modalMountpointsList.appendChild(row);
         }
         
         // Show the modal

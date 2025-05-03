@@ -91,11 +91,11 @@ function format_date_display($date_str) {
                 <table class="accounts-table">
                     <thead>
                         <tr>
-                            <th>ID Tài khoản</th>
                             <th>Tên đăng nhập</th>
                             <th>Mật khẩu</th>
                             <th>Tỉnh/TP</th>
-                            <th>Thời hạn</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời hạn đến</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
@@ -155,10 +155,10 @@ function format_date_display($date_str) {
                                     $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
                                 ?>
                                 <tr data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
-                                    <td><strong><?php echo htmlspecialchars($account_id_display); ?></strong></td>
                                     <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
                                     <td><?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?></td>
                                     <td class="status">
                                         <span class="status-badge <?php echo $status_class; ?>">
@@ -189,18 +189,41 @@ function format_date_display($date_str) {
             <button class="modal-close-btn" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p><strong>ID:</strong> <span id="modal-account-id"></span></p>
-            <p><strong>Tên đăng nhập:</strong> <span id="modal-username"></span></p>
-            <p><strong>Mật khẩu:</strong> <span id="modal-password"></span></p>
-            <p><strong>Thời gian bắt đầu:</strong> <span id="modal-start-time"></span></p>
-            <p><strong>Thời gian kết thúc:</strong> <span id="modal-end-time"></span></p>
-            <p><strong>Tỉnh/TP:</strong> <span id="modal-province"></span></p>
-            <p><strong>Trạng thái:</strong>
-                <span id="modal-status-badge" class="status-badge status-badge-modal"></span>
-            </p>
-            <div id="mountpoints-section">
-                <p><strong>Mountpoints:</strong></p>
-                <ul id="modal-mountpoints-list" class="mountpoint-list"></ul>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Tài khoản:</div>
+                    <div class="detail-value" id="modal-username"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Mật khẩu:</div>
+                    <div class="detail-value" id="modal-password"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Thời gian bắt đầu:</div>
+                    <div class="detail-value" id="modal-start-time"></div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Thời hạn đến:</div>
+                    <div class="detail-value" id="modal-end-time"></div>
+                </div>
+            </div>
+            
+            <div class="mountpoints-section" id="mountpoints-section">
+                <h5>Danh sách các trạm (Mountpoints)</h5>
+                <div class="mountpoint-list-container">
+                    <table class="mountpoint-table">
+                        <thead>
+                            <tr>
+                                <th>IP</th>
+                                <th>Port</th>
+                                <th>Trạm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-mountpoints-list">
+                            <!-- Mountpoints will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

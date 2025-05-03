@@ -11,81 +11,101 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalStartTime = document.getElementById('modal-start-time');
     const modalEndTime = document.getElementById('modal-end-time');
     const modalMountpointsList = document.getElementById('modal-mountpoints-list');
+    const perPageSelect = document.getElementById('per-page');
     
     // Filter buttons functionality
     const filterButtons = document.querySelectorAll('.filter-button');
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Get filter value
+            // Lấy giá trị filter mới
             const filterValue = this.dataset.filter;
             
-            // Filter accounts
-            filterAccounts(filterValue);
+            // Chuyển hướng đến URL với filter mới
+            window.location.href = buildPaginationUrl({
+                filter: filterValue,
+                page: 1 // Luôn reset về trang đầu tiên khi filter thay đổi
+            });
         });
     });
+
+    // Xử lý thay đổi số mục trên mỗi trang
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            // Lấy số mục trên mỗi trang từ giá trị đã chọn
+            const perPage = this.value;
+            
+            // Chuyển hướng đến URL với per_page mới
+            window.location.href = buildPaginationUrl({
+                perPage: perPage,
+                page: 1 // Luôn reset về trang đầu tiên khi số lượng mục thay đổi
+            });
+        });
+    }
+
+    // Xây dựng URL phân trang với các tham số được cung cấp
+    function buildPaginationUrl(params = {}) {
+        // Lấy các tham số hiện tại từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Lấy tham số hiện tại
+        let page = params.page || urlParams.get('page') || paginationConfig.currentPage;
+        let perPage = params.perPage || urlParams.get('per_page') || paginationConfig.perPage;
+        let filter = params.filter || urlParams.get('filter') || paginationConfig.currentFilter;
+        
+        // Loại bỏ giá trị mặc định nếu không cần thiết
+        if (filter === 'all') filter = null;
+        
+        // Tạo đối tượng URL params mới
+        const newParams = new URLSearchParams();
+        
+        // Thêm các tham số vào URL
+        if (page && page !== '1') newParams.append('page', page);
+        if (perPage && perPage !== '10') newParams.append('per_page', perPage);
+        if (filter) newParams.append('filter', filter);
+        
+        // Trả về URL với các tham số mới
+        const queryString = newParams.toString();
+        return queryString ? `?${queryString}` : window.location.pathname;
+    }
 
     // Search functionality
     const searchBox = document.querySelector('.search-box');
     if (searchBox) {
         searchBox.addEventListener('input', function() {
-            // Get current active filter
-            const activeFilter = document.querySelector('.filter-button.active').dataset.filter;
+            // Lấy giá trị tìm kiếm
+            const searchTerm = this.value.toLowerCase().trim();
             
-            // Apply both filter and search
-            filterAndSearchAccounts(activeFilter, this.value.toLowerCase().trim());
+            // Áp dụng tìm kiếm client-side trong trang hiện tại
+            searchAccounts(searchTerm);
         });
     }
 
-    // Function to filter accounts
-    function filterAccounts(filter) {
+    // Hàm tìm kiếm tài khoản trong trang hiện tại
+    function searchAccounts(searchTerm) {
         const accounts = document.querySelectorAll('.accounts-table tbody tr');
-        const searchTerm = (document.querySelector('.search-box')?.value || '').toLowerCase().trim();
         
         accounts.forEach(account => {
-            if (!account.dataset.status) return; // Skip non-data rows like empty state
+            if (!account.dataset.searchTerms) return; // Bỏ qua hàng không phải dữ liệu
             
-            let status = account.dataset.status;
+            const searchTerms = account.dataset.searchTerms;
+            const matchesSearch = !searchTerm || searchTerms.includes(searchTerm);
             
-            // Map "pending" to "locked" for filter purpose since we renamed "Đang xử lý" to "Đã khóa"
-            const matchesFilter = filter === 'all' || 
-                                 (filter === 'pending' && status === 'pending') || 
-                                 (filter === 'active' && status === 'active') ||
-                                 (filter === 'expired' && status === 'expired');
-            
-            if (searchTerm) {
-                // If there's a search term, apply search filter too
-                const searchTerms = account.dataset.searchTerms || '';
-                const matchesSearch = searchTerm === '' || searchTerms.includes(searchTerm);
-                account.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
-            } else {
-                account.style.display = matchesFilter ? '' : 'none';
-            }
+            account.style.display = matchesSearch ? '' : 'none';
         });
+        
+        // Cập nhật thông tin phân trang
+        updatePaginationInfo();
     }
     
-    // Function to filter and search accounts
-    function filterAndSearchAccounts(filter, searchTerm) {
-        const accounts = document.querySelectorAll('.accounts-table tbody tr');
+    // Cập nhật thông tin phân trang dựa trên số lượng hàng hiện đang hiển thị
+    function updatePaginationInfo() {
+        const paginationInfo = document.querySelector('.pagination-info');
+        if (!paginationInfo) return;
         
-        accounts.forEach(account => {
-            if (!account.dataset.status) return; // Skip non-data rows
-            
-            const status = account.dataset.status;
-            const searchTerms = account.dataset.searchTerms || '';
-            
-            const matchesFilter = filter === 'all' || 
-                                 (filter === 'pending' && status === 'pending') || 
-                                 (filter === 'active' && status === 'active') ||
-                                 (filter === 'expired' && status === 'expired');
-            const matchesSearch = searchTerm === '' || searchTerms.includes(searchTerm);
-            
-            account.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
-        });
+        const visibleRows = document.querySelectorAll('.accounts-table tbody tr[style=""]').length;
+        const totalFiltered = document.querySelectorAll('.accounts-table tbody tr:not([style*="none"])').length;
+        
+        paginationInfo.textContent = `Hiển thị ${totalFiltered} trên tổng số ${paginationConfig.totalRecords} tài khoản`;
     }
 
     // Close Modal

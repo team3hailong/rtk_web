@@ -13,6 +13,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalMountpointsList = document.getElementById('modal-mountpoints-list');
     const perPageSelect = document.getElementById('per-page');
     
+    // Export elements
+    const exportButton = document.getElementById('export-excel');
+    const selectAllButton = document.getElementById('select-all-accounts');
+    const selectedCountElement = document.getElementById('selected-count');
+    const accountCheckboxes = document.querySelectorAll('.account-checkbox');
+    const exportForm = document.getElementById('export-form');
+    
+    // Xử lý chọn tài khoản và cập nhật trạng thái nút xuất Excel
+    function updateExportButtonState() {
+        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
+        const count = checkedBoxes.length;
+        
+        // Cập nhật số lượng tài khoản đã chọn
+        if (selectedCountElement) {
+            selectedCountElement.textContent = count;
+        }
+        
+        // Bật/tắt nút xuất Excel
+        if (exportButton) {
+            exportButton.disabled = count === 0;
+        }
+    }
+    
+    // Thêm sự kiện cho từng checkbox
+    accountCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateExportButtonState);
+    });
+    
+    // Xử lý nút chọn tất cả
+    if (selectAllButton) {
+        selectAllButton.addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.account-checkbox');
+            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !allChecked;
+            });
+            
+            updateExportButtonState();
+            
+            // Cập nhật text của nút
+            this.innerHTML = !allChecked ? 
+                '<i class="fas fa-times-square"></i> Bỏ chọn tất cả' : 
+                '<i class="fas fa-check-square"></i> Chọn tất cả';
+        });
+    }
+    
+    // Xử lý nút xuất Excel
+    if (exportButton) {
+        exportButton.addEventListener('click', function() {
+            if (document.querySelectorAll('.account-checkbox:checked').length > 0) {
+                exportForm.submit();
+            }
+        });
+    }
+    
     // Filter buttons functionality
     const filterButtons = document.querySelectorAll('.filter-button');
     filterButtons.forEach(button => {
@@ -174,8 +230,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close modal with Escape key
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        if (event.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
             closeModal();
         }
     });
+    
+    // Khởi tạo trạng thái nút xuất khi tải trang
+    updateExportButtonState();
 });

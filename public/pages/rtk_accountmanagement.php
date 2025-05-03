@@ -127,96 +127,113 @@ function getPaginationUrl($page, $perPage, $filter) {
                 </div>
             </div>
             
-            <div class="accounts-table-wrapper">
-                <table class="accounts-table">
-                    <thead>
-                        <tr>
-                            <th>Tên đăng nhập</th>
-                            <th>Mật khẩu</th>
-                            <th>Tỉnh/TP</th>
-                            <th>Thời gian bắt đầu</th>
-                            <th>Thời hạn đến</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($accounts)): ?>
+            <!-- Thêm nút Export Excel -->
+            <div class="export-section">
+                <button id="export-excel" class="export-button" disabled>
+                    <i class="fas fa-file-excel"></i> Xuất Excel
+                </button>
+                <button id="select-all-accounts" class="select-all-button">
+                    <i class="fas fa-check-square"></i> Chọn tất cả
+                </button>
+                <span class="export-info">Đã chọn: <span id="selected-count">0</span> tài khoản</span>
+            </div>
+            
+            <form id="export-form" method="post" action="<?php echo $base_url; ?>/public/handlers/export_rtk_accounts.php">
+                <div class="accounts-table-wrapper">
+                    <table class="accounts-table">
+                        <thead>
                             <tr>
-                                <td colspan="7">
-                                    <div class="empty-state">
-                                        <i class="fas fa-user-circle"></i>
-                                        <p>Chưa có tài khoản nào</p>
-                                        <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
-                                    </div>
-                                </td>
+                                <th class="select-column">Chọn</th>
+                                <th>Tên đăng nhập</th>
+                                <th>Mật khẩu</th>
+                                <th>Tỉnh/TP</th>
+                                <th>Thời gian bắt đầu</th>
+                                <th>Thời hạn đến</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
                             </tr>
-                        <?php else: ?>
-                            <?php foreach ($accounts as $account): ?>
-                                <?php
-                                    // Xử lý dữ liệu hiển thị
-                                    $status_class = 'status-' . $account['status'];
-                                    $days_diff = calculate_days_diff($account['effective_end_time']);
-                                    $account_id_display = str_replace('RTK_', '#', $account['id'] ?? 'N/A');
-                                    
-                                    // Đổi tên trạng thái
-                                    $status_text = $account['enabled_status'];
-                                    if ($status_text === 'Đang hoạt động') {
-                                        $status_text = 'Hoạt động';
-                                    } elseif ($status_text === 'Đang xử lý') {
-                                        $status_text = 'Đã khóa';
-                                    }
-                                    
-                                    // Chuỗi search terms
-                                    $search_terms = [];
-                                    $search_terms[] = $account['id'] ?? '';
-                                    $search_terms[] = $account['username_acc'] ?? '';
-                                    $search_terms[] = $account['province'] ?? '';
-                                    if (!empty($account['mountpoints'])) {
-                                        foreach ($account['mountpoints'] as $mp) {
-                                            $search_terms[] = $mp['mountpoint'] ?? '';
-                                        }
-                                    }
-                                    $search_terms = array_filter($search_terms); 
-                                    $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
-                                    
-                                    // JSON data cho modal
-                                    $account_details = [
-                                        'id' => $account['id'],
-                                        'username' => $account['username_acc'],
-                                        'password' => $account['password_acc'],
-                                        'start_time' => date('d/m/Y H:i', strtotime($account['effective_start_time'])),
-                                        'end_time' => date('d/m/Y H:i', strtotime($account['effective_end_time'])),
-                                        'status' => $status_text,
-                                        'status_class' => $status_class,
-                                        'province' => $account['province'] ?? 'N/A',
-                                        'mountpoints' => $account['mountpoints'] ?? []
-                                    ];
-                                    $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
-                                ?>
-                                <tr data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
-                                    <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
-                                    <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
-                                    <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
-                                    <td><?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?></td>
-                                    <td class="status">
-                                        <span class="status-badge <?php echo $status_class; ?>">
-                                            <?php echo htmlspecialchars($status_text); ?>
-                                        </span>
-                                    </td>
-                                    <td class="actions">
-                                        <button class="action-button btn-details" title="Xem chi tiết" 
-                                                onclick='showAccountDetails(<?php echo $account_json; ?>)'>
-                                            <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
-                                        </button>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($accounts)): ?>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="empty-state">
+                                            <i class="fas fa-user-circle"></i>
+                                            <p>Chưa có tài khoản nào</p>
+                                            <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+                                        </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            <?php else: ?>
+                                <?php foreach ($accounts as $account): ?>
+                                    <?php
+                                        // Xử lý dữ liệu hiển thị
+                                        $status_class = 'status-' . $account['status'];
+                                        $days_diff = calculate_days_diff($account['effective_end_time']);
+                                        $account_id_display = str_replace('RTK_', '#', $account['id'] ?? 'N/A');
+                                        
+                                        // Đổi tên trạng thái
+                                        $status_text = $account['enabled_status'];
+                                        if ($status_text === 'Đang hoạt động') {
+                                            $status_text = 'Hoạt động';
+                                        } elseif ($status_text === 'Đang xử lý') {
+                                            $status_text = 'Đã khóa';
+                                        }
+                                        
+                                        // Chuỗi search terms
+                                        $search_terms = [];
+                                        $search_terms[] = $account['id'] ?? '';
+                                        $search_terms[] = $account['username_acc'] ?? '';
+                                        $search_terms[] = $account['province'] ?? '';
+                                        if (!empty($account['mountpoints'])) {
+                                            foreach ($account['mountpoints'] as $mp) {
+                                                $search_terms[] = $mp['mountpoint'] ?? '';
+                                            }
+                                        }
+                                        $search_terms = array_filter($search_terms); 
+                                        $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
+                                        
+                                        // JSON data cho modal và export
+                                        $account_details = [
+                                            'id' => $account['id'],
+                                            'username' => $account['username_acc'],
+                                            'password' => $account['password_acc'],
+                                            'start_time' => date('d/m/Y H:i', strtotime($account['effective_start_time'])),
+                                            'end_time' => date('d/m/Y H:i', strtotime($account['effective_end_time'])),
+                                            'status' => $status_text,
+                                            'status_class' => $status_class,
+                                            'province' => $account['province'] ?? 'N/A',
+                                            'mountpoints' => $account['mountpoints'] ?? []
+                                        ];
+                                        $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
+                                    ?>
+                                    <tr data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
+                                        <td class="select-column">
+                                            <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox">
+                                        </td>
+                                        <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?></td>
+                                        <td class="status">
+                                            <span class="status-badge <?php echo $status_class; ?>">
+                                                <?php echo htmlspecialchars($status_text); ?>
+                                            </span>
+                                        </td>
+                                        <td class="actions">
+                                            <button type="button" class="action-button btn-details" title="Xem chi tiết" 
+                                                    onclick='showAccountDetails(<?php echo $account_json; ?>)'>
+                                                <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
             
             <!-- Pagination controls -->
             <?php if ($pagination['total_pages'] > 1): ?>

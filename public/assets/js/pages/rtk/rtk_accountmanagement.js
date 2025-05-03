@@ -3,6 +3,18 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const modalOverlay = document.getElementById('account-details-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalAccountId = document.getElementById('modal-account-id');
+    const modalUsername = document.getElementById('modal-username');
+    const modalPassword = document.getElementById('modal-password');
+    const modalStartTime = document.getElementById('modal-start-time');
+    const modalEndTime = document.getElementById('modal-end-time');
+    const modalProvince = document.getElementById('modal-province');
+    const modalStatusBadge = document.getElementById('modal-status-badge');
+    const modalMountpointsList = document.getElementById('modal-mountpoints-list');
+    
     // Filter buttons functionality
     const filterButtons = document.querySelectorAll('.filter-button');
     filterButtons.forEach(button => {
@@ -21,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Search functionality
-    const searchInput = document.getElementById('account-search');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
+    const searchBox = document.querySelector('.search-box');
+    if (searchBox) {
+        searchBox.addEventListener('input', function() {
             // Get current active filter
             const activeFilter = document.querySelector('.filter-button.active').dataset.filter;
             
@@ -32,102 +44,106 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // View details buttons
-    const viewButtons = document.querySelectorAll('.btn-view');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const accountId = this.dataset.accountId;
-            const username = this.dataset.username;
-            const password = this.dataset.password;
-            const startDate = this.dataset.start;
-            const endDate = this.dataset.end;
-            const status = this.dataset.status;
-            const province = this.dataset.province;
-            const mountpoints = JSON.parse(this.dataset.mountpoints);
-            
-            // Here you would typically open a modal with these details
-            // For now, let's log them to console
-            console.log({
-                accountId, username, password, startDate, endDate, status, province, mountpoints
-            });
-            
-            // Example implementation of a modal (you would need to add this HTML to your page)
-            // You could also create the modal dynamically with JavaScript
-            const modal = document.getElementById('account-detail-modal');
-            if (modal) {
-                // Populate modal with account details
-                document.getElementById('modal-account-id').textContent = accountId;
-                document.getElementById('modal-username').textContent = username;
-                document.getElementById('modal-password').textContent = password;
-                document.getElementById('modal-start-date').textContent = formatDate(startDate);
-                document.getElementById('modal-end-date').textContent = formatDate(endDate);
-                document.getElementById('modal-status').textContent = status;
-                document.getElementById('modal-province').textContent = province;
-                
-                // Populate mountpoints
-                const mountpointsList = document.getElementById('modal-mountpoints');
-                mountpointsList.innerHTML = '';
-                mountpoints.forEach(mp => {
-                    const li = document.createElement('li');
-                    li.textContent = mp.mountpoint;
-                    mountpointsList.appendChild(li);
-                });
-                
-                // Show the modal
-                modal.style.display = 'block';
-            }
-        });
-    });
-
-    // Close modal functionality (if modal exists)
-    const closeButton = document.querySelector('.close-modal');
-    if (closeButton) {
-        closeButton.addEventListener('click', function() {
-            document.getElementById('account-detail-modal').style.display = 'none';
-        });
-    }
-
     // Function to filter accounts
     function filterAccounts(filter) {
-        const accounts = document.querySelectorAll('.account-card');
+        const accounts = document.querySelectorAll('.accounts-table tbody tr');
+        const searchTerm = (document.querySelector('.search-box')?.value || '').toLowerCase().trim();
         
         accounts.forEach(account => {
-            const status = account.dataset.status;
+            if (!account.dataset.status) return; // Skip non-data rows like empty state
             
-            if (filter === 'all' || status === filter) {
-                account.style.display = 'flex';
+            let status = account.dataset.status;
+            
+            // Map "pending" to "locked" for filter purpose since we renamed "Đang xử lý" to "Đã khóa"
+            const matchesFilter = filter === 'all' || 
+                                 (filter === 'pending' && status === 'pending') || 
+                                 (filter === 'active' && status === 'active') ||
+                                 (filter === 'expired' && status === 'expired');
+            
+            if (searchTerm) {
+                // If there's a search term, apply search filter too
+                const searchTerms = account.dataset.searchTerms || '';
+                const matchesSearch = searchTerm === '' || searchTerms.includes(searchTerm);
+                account.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
             } else {
-                account.style.display = 'none';
+                account.style.display = matchesFilter ? '' : 'none';
             }
         });
     }
     
     // Function to filter and search accounts
     function filterAndSearchAccounts(filter, searchTerm) {
-        const accounts = document.querySelectorAll('.account-card');
+        const accounts = document.querySelectorAll('.accounts-table tbody tr');
         
         accounts.forEach(account => {
+            if (!account.dataset.status) return; // Skip non-data rows
+            
             const status = account.dataset.status;
             const searchTerms = account.dataset.searchTerms || '';
             
-            const matchesFilter = filter === 'all' || status === filter;
+            const matchesFilter = filter === 'all' || 
+                                 (filter === 'pending' && status === 'pending') || 
+                                 (filter === 'active' && status === 'active') ||
+                                 (filter === 'expired' && status === 'expired');
             const matchesSearch = searchTerm === '' || searchTerms.includes(searchTerm);
             
-            if (matchesFilter && matchesSearch) {
-                account.style.display = 'flex';
-            } else {
-                account.style.display = 'none';
+            account.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
+        });
+    }
+
+    // Close Modal
+    window.closeModal = function() {
+        if (modalOverlay) {
+            modalOverlay.classList.remove('active');
+        }
+    };
+
+    // Show Account Details Modal
+    window.showAccountDetails = function(account) {
+        if (!modalOverlay || !account) return;
+        
+        modalTitle.textContent = `Chi Tiết Tài Khoản ${account.id}`;
+        modalAccountId.textContent = account.id;
+        modalUsername.textContent = account.username;
+        modalPassword.textContent = account.password;
+        modalStartTime.textContent = account.start_time;
+        modalEndTime.textContent = account.end_time;
+        modalProvince.textContent = account.province;
+        
+        // Set status badge
+        modalStatusBadge.className = 'status-badge status-badge-modal ' + account.status_class;
+        modalStatusBadge.textContent = account.status;
+        
+        // Populate mountpoints
+        modalMountpointsList.innerHTML = '';
+        if (account.mountpoints && account.mountpoints.length > 0) {
+            account.mountpoints.forEach(mp => {
+                const li = document.createElement('li');
+                li.textContent = mp.mountpoint || mp;
+                modalMountpointsList.appendChild(li);
+            });
+            document.getElementById('mountpoints-section').style.display = 'block';
+        } else {
+            document.getElementById('mountpoints-section').style.display = 'none';
+        }
+        
+        // Show the modal
+        modalOverlay.classList.add('active');
+    };
+    
+    // Close modal when clicking outside content
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(event) {
+            if (event.target === modalOverlay) {
+                closeModal();
             }
         });
     }
     
-    // Helper function to format dates
-    function formatDate(dateString) {
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
-        } catch (e) {
-            return dateString || 'N/A';
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            closeModal();
         }
-    }
+    });
 });

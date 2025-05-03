@@ -70,111 +70,140 @@ function format_date_display($date_str) {
 
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
-    <?php // Giả sử sidebar.php nằm trong thư mục private/includes ở gốc
-          include $project_root_path . '/private/includes/sidebar.php';
-    ?>
+    <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
 
     <!-- Main Content -->
-    <main class="content-wrapper">
-
-        <div class="account-page-header">
-             <h2>Quản Lý Tài Khoản</h2>
-             <!-- Có thể thêm các thông tin khác hoặc nút hành động chung ở đây -->
-        </div>
-
-
-        <div class="filter-search-section">
-            <div class="filter-tabs">
-                <button class="filter-button active" data-filter="all">Tất cả</button>
-                <button class="filter-button" data-filter="active">Đang hoạt động</button>
-                <button class="filter-button" data-filter="expired">Hết hạn</button>
-                <button class="filter-button" data-filter="pending">Đang xử lý</button>
-            </div>
-            <input type="text" class="search-input" id="account-search" placeholder="Tìm kiếm theo ID, Tên TK, Tên trạm...">
-        </div>
-
-        <div class="accounts-list" id="accounts-list-container">
-            <?php if (empty($accounts)): ?>
-                <div class="empty-state">
-                    <h3>Chưa có tài khoản nào</h3>
-                    <p>Bạn chưa đăng ký hoặc mua tài khoản nào. Hãy bắt đầu ngay!</p>
-                    <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+    <div class="content-wrapper accounts-content-wrapper">
+        <div class="accounts-wrapper">
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>
+            
+            <div class="filter-section">
+                <div class="filter-buttons-group">
+                    <button class="filter-button active" data-filter="all">Tất cả</button>
+                    <button class="filter-button" data-filter="active">Hoạt động</button>
+                    <button class="filter-button" data-filter="expired">Hết hạn</button>
+                    <button class="filter-button" data-filter="pending">Đã khóa</button>
                 </div>
-            <?php else: ?>
-                <?php foreach ($accounts as $account): ?>
-                    <?php
-                        $status_class = 'status-' . $account['status'];
-                        $days_diff = calculate_days_diff($account['effective_end_time']);
-                        $account_id_display = $account['id'];
-                        
-                        // Tạo chuỗi search terms an toàn
-                        $search_terms = [];
-                        $search_terms[] = $account['id'] ?? '';
-                        $search_terms[] = $account['username_acc'] ?? '';
-                        $search_terms[] = $account['province'] ?? '';
-                        if (!empty($account['mountpoints'])) {
-                            foreach ($account['mountpoints'] as $mp) {
-                                $search_terms[] = $mp['mountpoint'] ?? '';
-                            }
-                        }
-                        $search_terms = array_filter($search_terms); // Loại bỏ các giá trị rỗng
-                        $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
-                    ?>
-                    <div class="account-card <?php echo $status_class; ?>" data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
-                        <!-- Section 1: Thông tin cơ bản -->
-                        <div class="card-section">
-                            <strong>Tài khoản <?php echo htmlspecialchars(str_replace('RTK_', '#', $account['id'] ?? 'N/A')); ?></strong>
-                            <p>Tên đăng nhập: <?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></p>
-                            <p>Mật khẩu: <?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></p>
-                        </div>
+                <input type="text" class="search-box" placeholder="Tìm kiếm theo ID, Tên TK, Tên trạm...">
+            </div>
+            
+            <div class="accounts-table-wrapper">
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>ID Tài khoản</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Mật khẩu</th>
+                            <th>Tỉnh/TP</th>
+                            <th>Thời hạn</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($accounts)): ?>
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <i class="fas fa-user-circle"></i>
+                                        <p>Chưa có tài khoản nào</p>
+                                        <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($accounts as $account): ?>
+                                <?php
+                                    // Xử lý dữ liệu hiển thị
+                                    $status_class = 'status-' . $account['status'];
+                                    $days_diff = calculate_days_diff($account['effective_end_time']);
+                                    $account_id_display = str_replace('RTK_', '#', $account['id'] ?? 'N/A');
+                                    
+                                    // Đổi tên trạng thái
+                                    $status_text = $account['enabled_status'];
+                                    if ($status_text === 'Đang hoạt động') {
+                                        $status_text = 'Hoạt động';
+                                    } elseif ($status_text === 'Đang xử lý') {
+                                        $status_text = 'Đã khóa';
+                                    }
+                                    
+                                    // Chuỗi search terms
+                                    $search_terms = [];
+                                    $search_terms[] = $account['id'] ?? '';
+                                    $search_terms[] = $account['username_acc'] ?? '';
+                                    $search_terms[] = $account['province'] ?? '';
+                                    if (!empty($account['mountpoints'])) {
+                                        foreach ($account['mountpoints'] as $mp) {
+                                            $search_terms[] = $mp['mountpoint'] ?? '';
+                                        }
+                                    }
+                                    $search_terms = array_filter($search_terms); 
+                                    $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
+                                    
+                                    // JSON data cho modal
+                                    $account_details = [
+                                        'id' => $account['id'],
+                                        'username' => $account['username_acc'],
+                                        'password' => $account['password_acc'],
+                                        'start_time' => date('d/m/Y H:i', strtotime($account['effective_start_time'])),
+                                        'end_time' => date('d/m/Y H:i', strtotime($account['effective_end_time'])),
+                                        'status' => $status_text,
+                                        'status_class' => $status_class,
+                                        'province' => $account['province'] ?? 'N/A',
+                                        'mountpoints' => $account['mountpoints'] ?? []
+                                    ];
+                                    $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
+                                ?>
+                                <tr data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
+                                    <td><strong><?php echo htmlspecialchars($account_id_display); ?></strong></td>
+                                    <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?></td>
+                                    <td class="status">
+                                        <span class="status-badge <?php echo $status_class; ?>">
+                                            <?php echo htmlspecialchars($status_text); ?>
+                                        </span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-button btn-details" title="Xem chi tiết" 
+                                                onclick='showAccountDetails(<?php echo $account_json; ?>)'>
+                                            <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-                        <!-- Section 2: Trạng thái & Thời hạn -->
-                        <div class="card-section">
-                            <p>
-                                <span class="badge-status <?php echo $status_class; ?>">
-                                    <?php echo htmlspecialchars($account['enabled_status']); ?>
-                                </span>
-                            </p>
-                            <p>Bắt đầu: <?php echo date('d/m/Y H:i', strtotime($account['effective_start_time'])); ?></p>
-                            <p>Kết thúc: <?php echo date('d/m/Y H:i', strtotime($account['effective_end_time'])); ?></p>
-                        </div>
-
-                        <!-- Section 3: Thông tin Trạm -->
-                        <div class="card-section">
-                            <p>Tỉnh/TP: <?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></p>
-                            <?php if (!empty($account['mountpoints'])): ?>
-                                <p>Mountpoints:</p>
-                                <ul class="mountpoint-list">
-                                    <?php foreach ($account['mountpoints'] as $mp): ?>
-                                        <li><?php echo htmlspecialchars($mp['mountpoint']); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php else: ?>
-                                <p>Mountpoints: Chưa có dữ liệu</p>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Section 4: Hành động -->
-                        <div class="card-actions">
-                            <button type="button" class="btn-view" 
-                                data-account-id="<?php echo $account['id']; ?>" 
-                                data-username="<?php echo htmlspecialchars($account['username_acc']); ?>"
-                                data-password="<?php echo htmlspecialchars($account['password_acc']); ?>"
-                                data-start="<?php echo htmlspecialchars($account['effective_start_time']); ?>"
-                                data-end="<?php echo htmlspecialchars($account['effective_end_time']); ?>"
-                                data-status="<?php echo htmlspecialchars($account['enabled_status']); ?>"
-                                data-province="<?php echo htmlspecialchars($account['province']); ?>"
-                                data-mountpoints='<?php echo htmlspecialchars(json_encode($account['mountpoints'])); ?>'
-                            >
-                                Xem chi tiết
-                            </button>
-                        </div>
-                    </div><!-- /.account-card -->
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div><!-- /.accounts-list -->
-
-    </main>
+<!-- Account Details Modal -->
+<div id="account-details-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 id="modal-title">Chi Tiết Tài Khoản</h4>
+            <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p><strong>ID:</strong> <span id="modal-account-id"></span></p>
+            <p><strong>Tên đăng nhập:</strong> <span id="modal-username"></span></p>
+            <p><strong>Mật khẩu:</strong> <span id="modal-password"></span></p>
+            <p><strong>Thời gian bắt đầu:</strong> <span id="modal-start-time"></span></p>
+            <p><strong>Thời gian kết thúc:</strong> <span id="modal-end-time"></span></p>
+            <p><strong>Tỉnh/TP:</strong> <span id="modal-province"></span></p>
+            <p><strong>Trạng thái:</strong>
+                <span id="modal-status-badge" class="status-badge status-badge-modal"></span>
+            </p>
+            <div id="mountpoints-section">
+                <p><strong>Mountpoints:</strong></p>
+                <ul id="modal-mountpoints-list" class="mountpoint-list"></ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Add script to define base URL for JS -->
@@ -184,8 +213,6 @@ function format_date_display($date_str) {
 <!-- Add link to external JS file -->
 <script src="<?php echo $base_url; ?>/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>
 
-
 <?php
-// --- Include Footer ---
-// Giả sử footer.php nằm trong thư mục private/includes ở gốc
 include $project_root_path . '/private/includes/footer.php';
+?>

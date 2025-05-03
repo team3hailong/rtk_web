@@ -1,7 +1,29 @@
 #map {height: calc(100vh - 120px); width: 100%; border-radius: var(--rounded-md); border: 1px solid var(--gray-200); background-color: var(--gray-100);}
-.map-controls {position: absolute; top: 10px; right: 10px; z-index: 1000; background: #fff; padding: 10px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-.map-type-btn {margin: 0 5px; padding: 6px 12px; border: 1px solid #ccc; background: #f5f5f5; cursor: pointer; border-radius: 3px;}
-.map-type-btn.active {background: var(--primary-color); color: #fff; border-color: var(--primary-color);}
+.map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: auto;
+}
+.map-type-btn {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex: 0 1 auto;
+    text-align: center;
+}
+.map-type-btn.active {background: var(--primary-color);  border-color: var(--primary-color);}
 .station-label div {padding: 3px 5px; border-radius: 3px; font-size: 12px; white-space: nowrap; color: black; text-shadow: 1px 1px 2px white; background: none;}
 .map-legend {
     position: absolute;
@@ -41,9 +63,9 @@
 
 /* Styles for the location button - moved from inline styles */
 #getCurrentLocation {
-    margin-top: 10px;
     background-color: #3498db;
     color: white;
+    margin-top: 0;
 }
 
 /* Style for legend title - moved from inline styles */
@@ -62,4 +84,82 @@
 /* Style for map container */
 #map-container {
     position: relative;
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+    #map {
+        height: calc(100vh - 180px); /* Adjust height for mobile */
+    }
+    
+    .map-controls {
+        flex-direction: row;
+        top: auto;
+        bottom: 10px;
+        right: 50%;
+        transform: translateX(50%);
+        width: 90%;
+        max-width: 400px;
+        justify-content: center;
+    }
+    
+    .map-type-btn {
+        flex: 1 1 auto;
+        margin: 0;
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .map-legend {
+        bottom: 80px; /* Move legend above controls */
+        left: 10px;
+        right: auto;
+        max-width: 160px;
+        font-size: 10px;
+        padding: 8px;
+    }
+    
+    .legend-color {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .legend-title {
+        font-size: 11px;
+    }
+    
+    .content-wrapper {
+        padding: 1rem 0.5rem;
+    }
+    
+    h2.text-2xl {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    p.text-gray-600 {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Additional styles for very small screens */
+@media (max-width: 480px) {
+    #map {
+        height: calc(100vh - 200px);
+    }
+    
+    .map-controls {
+        padding: 5px;
+        gap: 3px;
+    }
+    
+    .map-type-btn {
+        padding: 6px 4px;
+        font-size: 0.8rem;
+    }
+    
+    .map-controls, .map-legend {
+        background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    }
 }

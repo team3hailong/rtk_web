@@ -77,14 +77,23 @@ unset($_SESSION['error_details']);
     <div class="error-container">
         <div class="error-icon">&#9888;</div> <!-- Biểu tượng cảnh báo -->
         <h1>Đã xảy ra lỗi</h1>
-        <p><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></p>
-
-        <?php if (isset($error_details)): ?>
-            <h2>Chi tiết lỗi (dành cho debug):</h2>
-            <pre class="error-details"><?php echo htmlspecialchars(print_r($error_details, true), ENT_QUOTES, 'UTF-8'); ?></pre>
+        <?php 
+            session_start(); // Start session to access session variables
+            $errorMessage = $_SESSION['error_message'] ?? 'Đã có lỗi xảy ra trong quá trình xử lý yêu cầu của bạn. Vui lòng thử lại sau hoặc liên hệ quản trị viên.';
+            // Clear the error message after displaying it
+            unset($_SESSION['error_message']);
+        ?>
+        <p><?php echo htmlspecialchars($errorMessage); ?></p>
+        
+        <?php if (defined('APP_DEBUG') && APP_DEBUG && isset($_SESSION['debug_error_details'])): ?>
+            <div class="error-details">
+                <strong>Chi tiết lỗi (Chế độ Debug):</strong>
+                <pre><?php echo htmlspecialchars($_SESSION['debug_error_details']); ?></pre>
+            </div>
+            <?php unset($_SESSION['debug_error_details']); // Clear debug details ?>
         <?php endif; ?>
 
-        <p><a href="/">Quay lại trang chủ</a></p>
+        <p>Bạn có thể <a href="javascript:history.back()">quay lại trang trước</a> hoặc trở về <a href="/">trang chủ</a>.</p>
     </div>
 </body>
 </html>

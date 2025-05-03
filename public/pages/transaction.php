@@ -40,10 +40,12 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
         <div class="transactions-wrapper">
             <h2 class="text-2xl font-semibold mb-5">Lịch Sử Giao Dịch</h2>
             <div class="filter-section">
-                 <button class="filter-button active" data-filter="all">Tất cả</button>
-                <button class="filter-button" data-filter="completed">Hoàn thành</button>
-                <button class="filter-button" data-filter="pending">Chờ xử lý</button>
-                <button class="filter-button" data-filter="failed">Thất bại</button>
+                <div class="filter-buttons-group">
+                    <button class="filter-button active" data-filter="all">Tất cả</button>
+                    <button class="filter-button" data-filter="completed">Hoàn thành</button>
+                    <button class="filter-button" data-filter="pending">Chờ xử lý</button>
+                    <button class="filter-button" data-filter="failed">Thất bại</button>
+                </div>
                 <input type="text" class="search-box" placeholder="Tìm theo ID, Loại GD...">
             </div>
             <div class="transactions-table-wrapper">
@@ -94,14 +96,14 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                                     </td>
                                     <td class="actions">
                                         <button class="action-button btn-details" title="Xem chi tiết" onclick='showTransactionDetails(<?php echo $tx_details_json; ?>)'>
-                                            <i class="fas fa-eye"></i> Chi tiết
+                                            <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
                                         </button>
                                         <?php $needs_proof = ($tx['status'] === 'pending' && !empty($tx['registration_id'])); ?>
                                         <?php if ($needs_proof): ?>
                                             <a href="<?php echo $base_url; ?>/public/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($tx['registration_id']); ?>"
                                                class="action-button btn-upload-proof"
                                                title="Gửi minh chứng cho GD này (ĐK: <?php echo htmlspecialchars($tx['registration_id']); ?>)">
-                                                <i class="fas fa-upload"></i> Gửi MC
+                                                <i class="fas fa-upload"></i> <span class="action-text">Gửi MC</span>
                                             </a>
                                         <?php endif; ?>
                                         <?php
@@ -118,11 +120,11 @@ if ($invoice_row) {
 <?php if ($tx['status'] === 'completed'): ?>
     <?php if ($has_invoice && $invoice_id): ?>
         <a href="<?php echo $base_url; ?>/public/pages/invoice/completed_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice-success" title="Xem hóa đơn <?php echo htmlspecialchars($invoice_id); ?>">
-            <i class="fas fa-check-circle"></i> Xem HĐ
+            <i class="fas fa-check-circle"></i> <span class="action-text">Xem HĐ</span>
         </a>
     <?php else: ?>
         <a href="<?php echo $base_url; ?>/public/pages/invoice/request_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice" title="Yêu cầu xuất hóa đơn">
-            <i class="fas fa-file-invoice-dollar"></i> Hóa đơn
+            <i class="fas fa-file-invoice-dollar"></i> <span class="action-text">Hóa đơn</span>
         </a>
     <?php endif; ?>
 <?php endif; ?>
@@ -132,7 +134,7 @@ if ($invoice_row) {
                                                 class="action-button btn-reason"
                                                 title="Xem lý do thất bại"
                                                 onclick="showFailureReason('<?php echo htmlspecialchars($display_id); ?>', '<?php echo htmlspecialchars($failure_reason); ?>')">
-                                                <i class="fas fa-info-circle"></i> Lý do
+                                                <i class="fas fa-info-circle"></i> <span class="action-text">Lý do</span>
                                             </button>
                                         <?php endif; ?>
                                     </td>
@@ -178,4 +180,3 @@ if ($invoice_row) {
 <script src="<?php echo $base_url; ?>/public/assets/js/pages/transaction.js"></script>
 <?php
 include $project_root_path . '/private/includes/footer.php';
-?>

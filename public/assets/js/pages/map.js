@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: 'Tiles &copy; Esri', maxZoom: 19});
     normalLayer.addTo(map);
     let currentLayer = normalLayer;
+    let isNormalMap = true; // Thêm biến để theo dõi loại bản đồ hiện tại
     let userLocationMarker = null;
     let userLocationCircle = null;
+    
+    // Cập nhật chức năng nút định vị
     document.getElementById('getCurrentLocation').addEventListener('click', function() {
         if (navigator.geolocation) {
             this.textContent = "Đang tìm vị trí...";
@@ -64,26 +67,36 @@ document.addEventListener('DOMContentLoaded', function () {
             alert("Trình duyệt của bạn không hỗ trợ định vị vị trí.");
         }
     });
-    document.getElementById('mapNormal').onclick = function() {
-        if (currentLayer !== normalLayer) {
-            map.removeLayer(currentLayer); 
-            map.addLayer(normalLayer); 
-            currentLayer = normalLayer;
-            this.classList.add('active');
-            document.getElementById('mapSatellite').classList.remove('active');
-            updateCirclesColor(false);
-        }
-    };
-    document.getElementById('mapSatellite').onclick = function() {
-        if (currentLayer !== satelliteLayer) {
-            map.removeLayer(currentLayer); 
-            map.addLayer(satelliteLayer); 
+    
+    // Cập nhật chức năng nút chuyển đổi loại bản đồ
+    const toggleMapTypeBtn = document.getElementById('toggleMapType');
+    toggleMapTypeBtn.addEventListener('click', function() {
+        if (isNormalMap) {
+            // Chuyển từ bản đồ thường sang vệ tinh
+            map.removeLayer(currentLayer);
+            map.addLayer(satelliteLayer);
             currentLayer = satelliteLayer;
-            this.classList.add('active');
-            document.getElementById('mapNormal').classList.remove('active');
-            updateCirclesColor(true);
+            this.textContent = "Bản đồ thường";
+            updateCirclesColor(true); // Cập nhật màu cho bản đồ vệ tinh
+            isNormalMap = false;
+        } else {
+            // Chuyển từ bản đồ vệ tinh sang bản đồ thường
+            map.removeLayer(currentLayer);
+            map.addLayer(normalLayer);
+            currentLayer = normalLayer;
+            this.textContent = "Bản đồ vệ tinh";
+            updateCirclesColor(false); // Cập nhật màu cho bản đồ thường
+            isNormalMap = true;
         }
-    };
+    });
+    
+    // Cập nhật giá trị nút ban đầu dựa trên trạng thái ban đầu của bản đồ
+    if (isNormalMap) {
+        toggleMapTypeBtn.textContent = "Bản đồ vệ tinh";
+    } else {
+        toggleMapTypeBtn.textContent = "Bản đồ thường";
+    }
+
     const stationInfo = new Map();
     function updateCirclesColor(isSatellite) {
         const opacity = isSatellite ? 0.5 : 0.3;

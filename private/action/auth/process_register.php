@@ -159,7 +159,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (Exception $e) {
             // Rollback transaction nếu có lỗi
             $conn->rollback();
-            $errors[] = "Đã xảy ra lỗi trong quá trình đăng ký: " . $e->getMessage();
+            // Log the detailed error
+            error_log("Registration Error: " . $e->getMessage() . "\nStack Trace:\n" . $e->getTraceAsString());
+            // Set a generic error message for the user
+            $errors[] = "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.";
              // Lưu lỗi vào session và chuyển hướng lại form
             $_SESSION['errors'] = $errors;
             header("Location: ../../../public/pages/auth/register.php");

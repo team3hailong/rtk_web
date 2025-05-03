@@ -95,18 +95,18 @@ if (empty($token)) {
         $stmt->close();
         
     } catch (Exception $e) {
-        error_log("Email verification error: " . $e->getMessage());
+        error_log("Email verification error: " . $e->getMessage() . "\nStack Trace:\n" . $e->getTraceAsString());
         $message = 'Đã có lỗi xảy ra trong quá trình xác thực email.';
         
-        // Log lỗi hệ thống
+        // Log lỗi hệ thống - Log generic message to DB
         $sql = "INSERT INTO error_logs (error_type, error_message, stack_trace, ip_address) VALUES (?, ?, ?, ?)";
         $stmt_error = $conn->prepare($sql);
         if ($stmt_error) {
             $error_type = 'email_verification_system';
-            $error_message = "System error during email verification";
-            $stack_trace = $e->getMessage() . "\n" . $e->getTraceAsString();
+            $error_message_db = "System error during email verification for token starting with: " . substr($token, 0, 10);
+            $stack_trace_db = "Details in server error log."; // Generic trace for DB
             $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-            $stmt_error->bind_param("ssss", $error_type, $error_message, $stack_trace, $ip);
+            $stmt_error->bind_param("ssss", $error_type, $error_message_db, $stack_trace_db, $ip);
             $stmt_error->execute();
             $stmt_error->close();
         }

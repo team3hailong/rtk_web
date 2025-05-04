@@ -58,19 +58,19 @@ class RtkAccount {
                             'port', mp.port
                         ) SEPARATOR '|'
                     ) as mountpoints_json,
-                    pay.confirmed_at
+                    th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
                 JOIN registration r ON sa.registration_id = r.id
                 JOIN package p ON r.package_id = p.id
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
-                LEFT JOIN payment pay ON r.id = pay.registration_id
+                LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
                 $statusCondition
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
                          r.start_time, r.end_time, r.status, p.name, 
-                         p.duration_text, l.province, pay.confirmed_at, r.location_id
+                         p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC
                 LIMIT :start, :per_page";
 
@@ -170,18 +170,18 @@ class RtkAccount {
                             'port', mp.port
                         ) SEPARATOR '|'
                     ) as mountpoints_json,
-                    pay.confirmed_at
+                    th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
                 JOIN registration r ON sa.registration_id = r.id
                 JOIN package p ON r.package_id = p.id
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
-                LEFT JOIN payment pay ON r.id = pay.registration_id
+                LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
                          r.start_time, r.end_time, r.status, p.name, 
-                         p.duration_text, l.province, pay.confirmed_at, r.location_id
+                         p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC";
 
             $stmt = $this->conn->prepare($sql);

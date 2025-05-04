@@ -6,7 +6,7 @@ Thumbs.db
 .env
 
 # Vendor packages
-/vendor/
+
 
 # File logs và dữ liệu tạm
 /private/logs/*.log

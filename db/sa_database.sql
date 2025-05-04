@@ -1,9 +1,16 @@
 -- phpMyAdmin SQL Dump
--- Cleaned and Corrected Version
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: May 04, 2025 at 10:13 AM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -11,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `qeqlwgvdhosting_sa_database`
+-- Database: `sa2`
 --
 
 -- --------------------------------------------------------
@@ -21,21 +28,36 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `activity_logs` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `action` varchar(100) NOT NULL,
-  `entity_type` varchar(50) NOT NULL,
-  `entity_id` varchar(100) NOT NULL,
-  `old_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `new_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `entity_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `entity_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `old_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `new_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `activity_logs` not provided in original dump
+-- Dumping data for table `activity_logs`
 --
+
+INSERT INTO `activity_logs` (`id`, `user_id`, `action`, `entity_type`, `entity_id`, `old_values`, `new_values`, `ip_address`, `user_agent`, `created_at`) VALUES
+(1, 1, 'verification_email_sent', 'user', '1', NULL, '{\"email\":\"nguyendozxc15@gmail.com\",\"verification_token\":\"9357c4e3fe...\",\"timestamp\":\"2025-05-04 08:07:05\"}', '::1', NULL, '2025-05-04 15:07:05'),
+(2, 1, 'email_verified', 'user', '1', NULL, '{\"status\":\"verified\",\"email\":\"nguyendozxc15@gmail.com\",\"timestamp\":\"2025-05-04 08:07:34\"}', '::1', NULL, '2025-05-04 15:07:34'),
+(3, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:07:39'),
+(4, 1, 'purchase', 'registration', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:07:53'),
+(5, 1, 'purchase', 'registration', '2', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:31:12'),
+(6, 1, 'purchase', 'registration', '3', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:34:14'),
+(7, 1, 'purchase', 'registration', '4', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:34:45'),
+(8, 1, 'purchase', 'registration', '5', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:35:29'),
+(9, 1, 'purchase', 'registration', '6', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:45:16'),
+(10, 1, 'purchase', 'registration', '7', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:46:02'),
+(11, 1, 'purchase', 'registration', '8', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:48:57'),
+(12, 1, 'purchase', 'registration', '9', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 15:50:45'),
+(13, 1, 'login', 'user', '1', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36', '2025-05-04 16:57:36');
 
 -- --------------------------------------------------------
 
@@ -44,13 +66,13 @@ CREATE TABLE `activity_logs` (
 --
 
 CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `admin_username` varchar(50) NOT NULL,
-  `admin_password` varchar(255) NOT NULL,
-  `role` enum('admin','customercare') NOT NULL, -- Corrected ENUM definition
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','customercare') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -59,7 +81,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `name`, `admin_username`, `admin_password`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'QTV', 'admin', '$2y$10$qEbpftR9g9gfKjhpp33wbucjSDbCtF5NPIDD2s.6lVk7mvDJRzTYW', 'admin', '2025-04-30 11:21:02', '2025-05-02 06:27:17'),
-(2, 'Test', 'cskh', '$2y$10$gAgHVViZxxfJhs8zqB36L.uTyc/4CLD/P9cRebFjKWDX.paGeSlX2', 'customercare', '2025-05-02 06:27:03', '2025-05-03 05:37:13'); -- Corrected ENUM value
+(2, 'Test', 'cskh', '$2y$10$gAgHVViZxxfJhs8zqB36L.uTyc/4CLD/P9cRebFjKWDX.paGeSlX2', 'customercare', '2025-05-02 06:27:03', '2025-05-03 05:37:13');
 
 -- --------------------------------------------------------
 
@@ -68,18 +90,14 @@ INSERT INTO `admin` (`id`, `name`, `admin_username`, `admin_password`, `role`, `
 --
 
 CREATE TABLE `collaborator` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `referral_code` varchar(20) NOT NULL,
-  `status` enum('pending','approved','rejected') DEFAULT 'pending',
-  `balance` decimal(15,2) DEFAULT 0.00,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `referral_code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','approved','rejected') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `balance` decimal(15,2) DEFAULT '0.00',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `collaborator` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -88,18 +106,14 @@ CREATE TABLE `collaborator` (
 --
 
 CREATE TABLE `error_logs` (
-  `id` int(11) NOT NULL,
-  `error_type` varchar(50) NOT NULL,
-  `error_message` text NOT NULL,
-  `stack_trace` text DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `error_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `error_message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `stack_trace` text COLLATE utf8mb4_unicode_ci,
+  `user_id` int DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `error_logs` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -108,24 +122,20 @@ CREATE TABLE `error_logs` (
 --
 
 CREATE TABLE `guide` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `content` longtext NOT NULL,
-  `author_id` int(11) NOT NULL,
-  `topic` varchar(255) DEFAULT NULL,
-  `status` enum('draft','published','archived') NOT NULL DEFAULT 'draft',
-  `thumbnail` varchar(255) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `view_count` int(11) NOT NULL DEFAULT 0,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author_id` int NOT NULL,
+  `topic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('draft','published','archived') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `thumbnail` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `view_count` int NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `published_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `guide` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -134,17 +144,13 @@ CREATE TABLE `guide` (
 --
 
 CREATE TABLE `invoice` (
-  `id` int(11) NOT NULL,
-  `transaction_history_id` int(11) NOT NULL,
-  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
-  `invoice_file` varchar(255) DEFAULT NULL,
-  `rejected_reason` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `transaction_history_id` int NOT NULL,
+  `status` enum('pending','approved','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `invoice_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rejected_reason` text COLLATE utf8mb4_unicode_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `invoice` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -153,11 +159,11 @@ CREATE TABLE `invoice` (
 --
 
 CREATE TABLE `location` (
-  `id` int(11) NOT NULL,
-  `province` varchar(100) NOT NULL,
-  `province_code` varchar(10) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `province` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `province_code` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -236,11 +242,11 @@ INSERT INTO `location` (`id`, `province`, `province_code`, `status`, `created_at
 --
 
 CREATE TABLE `mount_point` (
-  `id` varchar(64) NOT NULL,
-  `location_id` int(11) NOT NULL,
-  `ip` varchar(100) NOT NULL,
-  `port` int(11) NOT NULL,
-  `mountpoint` varchar(100) NOT NULL
+  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `location_id` int NOT NULL,
+  `ip` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `port` int NOT NULL,
+  `mountpoint` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -284,19 +290,19 @@ INSERT INTO `mount_point` (`id`, `location_id`, `ip`, `port`, `mountpoint`) VALU
 --
 
 CREATE TABLE `package` (
-  `id` int(11) NOT NULL,
-  `package_id` varchar(50) NOT NULL,
-  `name` varchar(150) NOT NULL,
+  `id` int NOT NULL,
+  `package_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(15,2) NOT NULL,
-  `duration_text` varchar(100) NOT NULL,
-  `features_json` text DEFAULT NULL,
-  `is_recommended` tinyint(1) NOT NULL DEFAULT 0,
-  `button_text` varchar(100) NOT NULL DEFAULT 'Chọn Gói',
-  `savings_text` varchar(100) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `display_order` int(11) NOT NULL DEFAULT 0,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `duration_text` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `features_json` text COLLATE utf8mb4_unicode_ci,
+  `is_recommended` tinyint(1) NOT NULL DEFAULT '0',
+  `button_text` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Chọn Gói',
+  `savings_text` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `display_order` int NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -314,45 +320,19 @@ INSERT INTO `package` (`id`, `package_id`, `name`, `price`, `duration_text`, `fe
 -- --------------------------------------------------------
 
 --
--- Table structure for table `payment`
---
-
-CREATE TABLE `payment` (
-  `id` int(11) NOT NULL,
-  `registration_id` int(11) NOT NULL,
-  `payment_image` varchar(255) DEFAULT NULL,
-  `export_invoice` tinyint(1) DEFAULT 0,
-  `invoice_info` text DEFAULT NULL,
-  `confirmed` tinyint(1) DEFAULT 0,
-  `confirmed_at` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `payment` not provided in original dump
---
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `payment_methods`
 --
 
 CREATE TABLE `payment_methods` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `bank_name` varchar(100) NOT NULL,
-  `account_number` varchar(50) NOT NULL,
-  `account_holder` varchar(100) NOT NULL,
-  `is_default` tinyint(1) DEFAULT 0,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `bank_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_number` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `account_holder` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_default` tinyint(1) DEFAULT '0',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `payment_methods` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -361,28 +341,41 @@ CREATE TABLE `payment_methods` (
 --
 
 CREATE TABLE `registration` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `package_id` int(11) DEFAULT NULL,
-  `location_id` int(11) DEFAULT NULL,
-  `collaborator_id` int(11) DEFAULT NULL,
-  `num_account` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `package_id` int DEFAULT NULL,
+  `location_id` int DEFAULT NULL,
+  `collaborator_id` int DEFAULT NULL,
+  `num_account` int DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
   `base_price` decimal(15,2) DEFAULT NULL,
-  `vat_percent` float NOT NULL DEFAULT 0,
-  `vat_amount` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `vat_percent` float NOT NULL DEFAULT '0',
+  `vat_amount` decimal(15,2) NOT NULL DEFAULT '0.00',
   `total_price` decimal(15,2) NOT NULL,
-  `status` enum('pending','active','rejected') NOT NULL DEFAULT 'pending',
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `status` enum('pending','active','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
-  `rejection_reason` text DEFAULT NULL
+  `rejection_reason` text COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `registration` not provided in original dump
+-- Dumping data for table `registration`
 --
+
+INSERT INTO `registration` (`id`, `user_id`, `package_id`, `location_id`, `collaborator_id`, `num_account`, `start_time`, `end_time`, `base_price`, `vat_percent`, `vat_amount`, `total_price`, `status`, `created_at`, `updated_at`, `deleted_at`, `rejection_reason`) VALUES
+(1, 1, 7, 63, NULL, 1, '2025-05-03 08:07:53', '2025-05-03 08:07:53', 0.00, 0, 0.00, 0.00, 'active', '2025-05-04 15:07:53', '2025-05-04 15:09:19', NULL, NULL),
+(2, 1, 1, 63, NULL, 3, '2025-05-04 08:31:12', '2025-06-04 08:31:12', 100000.00, 0, 0.00, 300000.00, 'pending', '2025-05-04 15:31:12', '2025-05-04 15:31:12', NULL, NULL),
+(3, 1, 2, 63, NULL, 2, '2025-05-04 08:34:14', '2025-08-04 08:34:14', 270000.00, 0, 0.00, 540000.00, 'pending', '2025-05-04 15:34:14', '2025-05-04 15:34:14', NULL, NULL),
+(4, 1, 7, 63, NULL, 1, '2025-05-04 08:34:45', '2025-05-11 08:34:45', 0.00, 0, 0.00, 0.00, 'active', '2025-05-04 15:34:45', '2025-05-04 15:34:45', NULL, NULL),
+(5, 1, 2, 63, NULL, 2, '2025-05-04 08:35:29', '2025-08-04 08:35:29', 270000.00, 0, 0.00, 540000.00, 'pending', '2025-05-04 15:35:29', '2025-05-04 15:35:29', NULL, NULL),
+(6, 1, 7, 63, NULL, 1, '2025-05-04 08:45:16', '2025-05-11 08:45:16', 0.00, 0, 0.00, 0.00, 'active', '2025-05-04 15:45:16', '2025-05-04 15:45:17', NULL, NULL),
+(7, 1, 7, 63, NULL, 1, '2025-05-04 08:46:02', '2025-05-11 08:46:02', 0.00, 0, 0.00, 0.00, 'active', '2025-05-04 15:46:02', '2025-05-04 15:46:03', NULL, NULL),
+(8, 1, 7, 63, NULL, 1, '2025-05-04 08:48:57', '2025-05-11 08:48:57', 0.00, 0, 0.00, 0.00, 'active', '2025-05-04 15:48:57', '2025-05-04 15:48:58', NULL, NULL),
+(9, 1, 1, 63, NULL, 4, '2025-05-04 08:50:45', '2025-06-04 08:50:45', 100000.00, 0, 0.00, 400000.00, 'pending', '2025-05-04 15:50:45', '2025-05-04 15:50:45', NULL, NULL),
+(10, 1, 2, 63, NULL, 1, '2025-05-04 09:32:08', '2025-08-02 09:32:08', 270000.00, 10, 27000.00, 297000.00, 'pending', '2025-05-04 16:32:08', NULL, NULL, NULL),
+(11, 1, 3, 63, NULL, 4, '2025-05-04 09:34:40', '2025-10-31 09:34:40', 2000000.00, 10, 200000.00, 2200000.00, 'pending', '2025-05-04 16:34:40', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -391,9 +384,9 @@ CREATE TABLE `registration` (
 --
 
 CREATE TABLE `role_permissions` (
-  `role` enum('admin','customercare') NOT NULL, -- Ensure consistency with `admin` table
-  `permission` varchar(100) NOT NULL,
-  `allowed` tinyint(1) NOT NULL DEFAULT 0
+  `role` enum('admin','customercare') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `permission` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `allowed` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -426,13 +419,13 @@ INSERT INTO `role_permissions` (`role`, `permission`, `allowed`) VALUES
 --
 
 CREATE TABLE `station` (
-  `id` varchar(64) NOT NULL,
-  `station_name` varchar(100) NOT NULL,
-  `identificationName` varchar(254) DEFAULT NULL,
-  `mountpoint_id` varchar(64) NOT NULL,
+  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `station_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `identificationName` varchar(254) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mountpoint_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lat` decimal(10,8) NOT NULL,
   `long` decimal(11,8) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Trạng thái hoạt động của trạm (1: active, 0: inactive)'
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Trạng thái hoạt động của trạm (1: active, 0: inactive)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -469,25 +462,32 @@ INSERT INTO `station` (`id`, `station_name`, `identificationName`, `mountpoint_i
 --
 
 CREATE TABLE `survey_account` (
-  `id` varchar(64) NOT NULL,
-  `registration_id` int(11) NOT NULL,
-  `username_acc` varchar(100) NOT NULL,
-  `password_acc` varchar(255) NOT NULL,
-  `concurrent_user` int(11) DEFAULT 1,
-  `enabled` tinyint(1) DEFAULT 1,
-  `caster` varchar(100) DEFAULT NULL,
-  `user_type` int(11) DEFAULT NULL,
-  `regionIds` int(11) DEFAULT NULL,
-  `customerBizType` int(11) DEFAULT 1,
-  `area` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `registration_id` int NOT NULL,
+  `username_acc` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_acc` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `concurrent_user` int DEFAULT '1',
+  `enabled` tinyint(1) DEFAULT '1',
+  `caster` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_type` int DEFAULT NULL,
+  `regionIds` int DEFAULT NULL,
+  `customerBizType` int DEFAULT '1',
+  `area` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `survey_account` not provided in original dump
+-- Dumping data for table `survey_account`
 --
+
+INSERT INTO `survey_account` (`id`, `registration_id`, `username_acc`, `password_acc`, `concurrent_user`, `enabled`, `caster`, `user_type`, `regionIds`, `customerBizType`, `area`, `created_at`, `updated_at`, `deleted_at`) VALUES
+('RTK_1_1746346075', 1, 'TRIAL_YBI001', '0981190564', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-05-04 15:07:55', NULL, NULL),
+('RTK_4_1746347685', 4, 'TRIAL_YBI002', '0981190564', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-05-04 15:34:45', NULL, NULL),
+('RTK_6_1746348317', 6, 'TRIAL_YBI003', '0981190564', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-05-04 15:45:17', NULL, NULL),
+('RTK_7_1746348363', 7, 'TRIAL_YBI004', '0981190564', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-05-04 15:46:03', NULL, NULL),
+('RTK_8_1746348538', 8, 'TRIAL_YBI005', '0981190564', 1, 1, NULL, NULL, NULL, 1, NULL, '2025-05-04 15:48:58', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -496,20 +496,35 @@ CREATE TABLE `survey_account` (
 --
 
 CREATE TABLE `transaction_history` (
-  `id` int(11) NOT NULL,
-  `registration_id` int(11) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
-  `transaction_type` enum('purchase','renewal','refund') NOT NULL,
+  `id` int NOT NULL,
+  `registration_id` int DEFAULT NULL,
+  `user_id` int NOT NULL,
+  `transaction_type` enum('purchase','renewal','refund') COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(15,2) NOT NULL,
-  `status` enum('pending','completed','failed','refunded') DEFAULT 'pending',
-  `payment_method` enum('Chuyển khoản ngân hàng') DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `status` enum('pending','completed','failed','refunded') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `payment_method` enum('Chuyển khoản ngân hàng') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `export_invoice` tinyint(1) DEFAULT '0',
+  `invoice_info` text COLLATE utf8mb4_unicode_ci,
+  `payment_confirmed` tinyint(1) DEFAULT '0',
+  `payment_confirmed_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `transaction_history` not provided in original dump
+-- Dumping data for table `transaction_history`
 --
+
+INSERT INTO `transaction_history` (`id`, `registration_id`, `user_id`, `transaction_type`, `amount`, `status`, `payment_method`, `payment_image`, `export_invoice`, `invoice_info`, `payment_confirmed`, `payment_confirmed_at`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'purchase', 0.00, 'completed', NULL, NULL, 0, NULL, 0, NULL, '2025-05-04 15:07:53', '2025-05-04 15:07:55'),
+(5, 5, 1, 'purchase', 540000.00, 'pending', NULL, 'reg_5_1746347734.png', 0, NULL, 0, NULL, '2025-05-04 15:35:29', '2025-05-04 15:35:34'),
+(6, 6, 1, 'purchase', 0.00, 'completed', NULL, NULL, 0, NULL, 0, NULL, '2025-05-04 15:45:16', '2025-05-04 15:45:17'),
+(7, 7, 1, 'purchase', 0.00, 'completed', NULL, NULL, 0, NULL, 0, NULL, '2025-05-04 15:46:02', '2025-05-04 15:46:03'),
+(8, 8, 1, 'purchase', 0.00, 'completed', NULL, NULL, 0, NULL, 0, NULL, '2025-05-04 15:48:57', '2025-05-04 15:48:58'),
+(9, 9, 1, 'purchase', 400000.00, 'pending', NULL, 'reg_9_1746348650.png', 0, NULL, 0, NULL, '2025-05-04 15:50:45', '2025-05-04 15:50:50'),
+(10, 10, 1, 'renewal', 297000.00, 'pending', NULL, NULL, 0, NULL, 0, NULL, '2025-05-04 16:32:08', NULL),
+(11, 11, 1, 'renewal', 2200000.00, 'pending', NULL, 'reg_11_1746351288.png', 0, NULL, 0, NULL, '2025-05-04 16:34:40', '2025-05-04 16:34:48');
 
 -- --------------------------------------------------------
 
@@ -518,27 +533,30 @@ CREATE TABLE `transaction_history` (
 --
 
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `username` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `is_collaborator` tinyint(1) NOT NULL DEFAULT 0,
+  `id` int NOT NULL,
+  `username` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_collaborator` tinyint(1) NOT NULL DEFAULT '0',
   `is_company` tinyint(1) DEFAULT NULL,
-  `company_name` varchar(255) DEFAULT NULL,
-  `tax_code` varchar(100) DEFAULT NULL,
+  `company_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tax_code` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tax_registered` tinyint(1) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Trạng thái người dùng (1: active, 0: inactive)',
-  `email_verified` tinyint(1) NOT NULL DEFAULT 0,
-  `email_verify_token` varchar(255) DEFAULT NULL
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Trạng thái người dùng (1: active, 0: inactive)',
+  `email_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `email_verify_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `user` not provided in original dump
+-- Dumping data for table `user`
 --
+
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `phone`, `is_collaborator`, `is_company`, `company_name`, `tax_code`, `tax_registered`, `created_at`, `updated_at`, `deleted_at`, `status`, `email_verified`, `email_verify_token`) VALUES
+(1, 'nguyendozxc15@gmail.com', 'nguyendozxc15@gmail.com', '$2y$10$XMvGqqa23okG.TkFUcugyOmxBua9rk9XsrFe.0LQeJIO.HNXjqr06', '0981190564', 0, 0, NULL, NULL, NULL, '2025-05-04 15:07:00', '2025-05-04 15:07:34', NULL, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -547,18 +565,14 @@ CREATE TABLE `user` (
 --
 
 CREATE TABLE `user_sessions` (
-  `session_id` varchar(128) NOT NULL,
-  `user_id` int(11) NOT NULL, -- Corrected data type to match user.id
-  `ip_address` varchar(45) NOT NULL,
-  `user_agent` text DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `last_activity` datetime NOT NULL DEFAULT current_timestamp(),
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
+  `session_id` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int NOT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_activity` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `user_sessions` not provided in original dump
---
 
 -- --------------------------------------------------------
 
@@ -567,18 +581,21 @@ CREATE TABLE `user_sessions` (
 --
 
 CREATE TABLE `user_settings` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `notification_email` tinyint(1) DEFAULT 1,
-  `notification_sms` tinyint(1) DEFAULT 0,
-  `theme_preference` enum('light','dark') DEFAULT 'light',
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `notification_email` tinyint(1) DEFAULT '1',
+  `notification_sms` tinyint(1) DEFAULT '0',
+  `theme_preference` enum('light','dark') COLLATE utf8mb4_unicode_ci DEFAULT 'light',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Data for table `user_settings` not provided in original dump
+-- Dumping data for table `user_settings`
 --
+
+INSERT INTO `user_settings` (`id`, `user_id`, `notification_email`, `notification_sms`, `theme_preference`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 0, 'light', '2025-05-04 15:07:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -587,18 +604,14 @@ CREATE TABLE `user_settings` (
 --
 
 CREATE TABLE `withdrawal` (
-  `id` int(11) NOT NULL,
-  `collaborator_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `collaborator_id` int NOT NULL,
   `amount` decimal(15,2) NOT NULL,
-  `bank_info` text DEFAULT NULL,
-  `status` enum('pending','completed','rejected') DEFAULT 'pending',
-  `created_at` datetime DEFAULT current_timestamp(),
+  `bank_info` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','completed','rejected') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `processed_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Data for table `withdrawal` not provided in original dump
---
 
 --
 -- Indexes for dumped tables
@@ -670,13 +683,6 @@ ALTER TABLE `package`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_package_id` (`package_id`),
   ADD KEY `idx_active_order` (`is_active`,`display_order`);
-
---
--- Indexes for table `payment`
---
-ALTER TABLE `payment`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `registration_id` (`registration_id`);
 
 --
 -- Indexes for table `payment_methods`
@@ -761,91 +767,85 @@ ALTER TABLE `withdrawal`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 110
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `collaborator`
 --
 ALTER TABLE `collaborator`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `error_logs`
 --
 ALTER TABLE `error_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 2
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `guide`
 --
 ALTER TABLE `guide`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 2
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 3
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `location`
 --
 ALTER TABLE `location`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `package`
 --
 ALTER TABLE `package`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `payment`
---
-ALTER TABLE `payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 21
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `registration`
 --
 ALTER TABLE `registration`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 27
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 26
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 8
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_settings`
 --
 ALTER TABLE `user_settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; -- Reset AUTO_INCREMENT if needed, original had value 7
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `withdrawal`
 --
 ALTER TABLE `withdrawal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -888,12 +888,6 @@ ALTER TABLE `mount_point`
   ADD CONSTRAINT `fk_mount_point_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Constraints for table `payment`
---
-ALTER TABLE `payment`
-  ADD CONSTRAINT `fk_payment_registration` FOREIGN KEY (`registration_id`) REFERENCES `registration` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
@@ -903,10 +897,10 @@ ALTER TABLE `payment_methods`
 -- Constraints for table `registration`
 --
 ALTER TABLE `registration`
-  ADD CONSTRAINT `fk_registration_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_registration_package` FOREIGN KEY (`package_id`) REFERENCES `package` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_registration_collaborator` FOREIGN KEY (`collaborator_id`) REFERENCES `collaborator` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_registration_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_registration_collaborator` FOREIGN KEY (`collaborator_id`) REFERENCES `collaborator` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_registration_package` FOREIGN KEY (`package_id`) REFERENCES `package` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_registration_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `station`
@@ -931,7 +925,7 @@ ALTER TABLE `transaction_history`
 -- Constraints for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  ADD CONSTRAINT `fk_user_sessions_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE; -- Added missing FK constraint
+  ADD CONSTRAINT `fk_user_sessions_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_settings`
@@ -944,7 +938,6 @@ ALTER TABLE `user_settings`
 --
 ALTER TABLE `withdrawal`
   ADD CONSTRAINT `fk_withdrawal_collaborator` FOREIGN KEY (`collaborator_id`) REFERENCES `collaborator` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

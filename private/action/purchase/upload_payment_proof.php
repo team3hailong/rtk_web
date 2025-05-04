@@ -130,39 +130,29 @@ try {
         throw new Exception('Access denied. You do not own this registration.');
     }
 
-    // Check if a payment record already exists
-    $sql_find_payment = "SELECT id FROM payment WHERE registration_id = :registration_id";
-    $stmt_find = $conn->prepare($sql_find_payment);
+    // Find and update the transaction history record instead of the payment table
+    $sql_find_transaction = "SELECT id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
+    $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+    $stmt_find->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_find->execute();
-    $existing_payment_id = $stmt_find->fetchColumn();
+    $transaction_id = $stmt_find->fetchColumn();
 
-    if ($existing_payment_id) {
-        // Update existing payment record
-        $sql_update = "UPDATE payment SET payment_image = :payment_image, confirmed = 0, confirmed_at = NULL, updated_at = NOW() WHERE id = :payment_id";
-        $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
-        $stmt_update->bindParam(':payment_id', $existing_payment_id, PDO::PARAM_INT);
-        $stmt_update->execute();
-    } else {
-        // Insert new payment record
-        $sql_insert = "INSERT INTO payment (registration_id, payment_image, confirmed, created_at, updated_at)
-                       VALUES (:registration_id, :payment_image, 0, NOW(), NOW())";
-        $stmt_insert = $conn->prepare($sql_insert);
-        $stmt_insert->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-        $stmt_insert->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
-        $stmt_insert->execute();
+    if (!$transaction_id) {
+        throw new Exception('No pending transaction found for this registration.');
     }
 
-    // --- NEW: Update transaction_history ---
-    $sql_update_transaction = "UPDATE transaction_history
-                               SET updated_at = NOW()
-                               WHERE registration_id = :registration_id
-                               AND status = 'pending'"; // Only update pending transactions
-    $stmt_update_trans = $conn->prepare($sql_update_transaction);
-    $stmt_update_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-    $stmt_update_trans->execute();
-    // --- END NEW ---
+    // Update transaction record with payment image
+    $sql_update = "UPDATE transaction_history 
+                   SET payment_image = :payment_image, 
+                       payment_confirmed = 0, 
+                       payment_confirmed_at = NULL, 
+                       updated_at = NOW() 
+                   WHERE id = :transaction_id";
+    $stmt_update = $conn->prepare($sql_update);
+    $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
+    $stmt_update->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+    $stmt_update->execute();
 
     $conn->commit(); // Commit transaction
 

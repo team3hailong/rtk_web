@@ -440,3 +440,593 @@
 [03-May-2025 03:54:46 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
 [03-May-2025 03:54:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
 [03-May-2025 03:54:46 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:13 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:13 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:13 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:13 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:13 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:21 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:21 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:21 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:27 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:27 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:27 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:29 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:29 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:29 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:30 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:30 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:30 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:34 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:34 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:34 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:35 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:35 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:35 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:50:37 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:50:37 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:50:37 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:13 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:13 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:14 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:14 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:51:14 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:16 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:16 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:51:16 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:56 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:56 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:51:56 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:57 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:57 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:51:57 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:51:58 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:51:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:51:58 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:52:05 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:52:05 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:52:05 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:52:06 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:52:06 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:52:06 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:52:06 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:52:06 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:52:06 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 07:52:10 UTC] Database init: Using database 'sa_database' on host '127.0.0.1'
+[04-May-2025 07:52:10 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 07:52:10 UTC] [Database Connect] Connection to database 'sa_database' successful.
+[04-May-2025 08:07:41 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:41 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:41 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:43 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:43 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:43 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:46 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:46 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:49 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:49 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:53 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:54 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:54 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:54 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:55 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:55 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:55 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:57 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:57 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:07:59 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:07:59 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:07:59 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:08:04 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:08:04 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:08:04 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:08:07 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:08:07 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:08:07 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:08:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:08:45 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:08:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:08:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:08:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:08:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:08:52 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:08:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:09:22 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:09:22 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:09:22 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:09:33 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:09:33 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:09:33 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:30:33 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:30:33 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:30:33 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:30:37 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:30:37 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:30:37 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:30:49 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:30:49 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:30:49 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:30:49 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:30:49 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:30:49 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:30:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:30:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:30:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:05 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:05 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:05 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:07 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:07 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:08 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:08 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:08 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:08 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:12 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:12 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:12 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:12 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:12 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:12 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:12 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:12 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:12 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:14 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:14 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:20 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:20 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:20 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:21 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:21 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:21 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:52 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:54 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:54 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:54 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:57 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:31:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:31:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:31:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:32:08 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:32:08 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:32:08 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:32:26 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:32:26 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:32:26 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:32:27 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:32:27 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:32:27 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:09 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:09 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:10 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:10 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:10 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:10 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:14 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:14 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:14 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:14 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:14 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:15 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:15 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:15 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:19 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:19 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:19 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:20 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:20 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:20 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:24 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:24 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:24 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:32 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:32 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:32 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:35 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:35 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:35 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:41 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:41 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:42 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:42 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:42 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:42 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:45 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:45 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:46 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:46 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:34:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:34:52 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:34:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:07 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:07 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:07 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:23 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:23 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:25 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:25 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:25 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:25 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:29 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:29 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:29 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:29 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:29 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:29 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:29 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:29 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:29 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:30 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:30 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:30 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:34 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:34 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:34 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:35 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:35 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:35 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:35:56 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:35:56 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:35:56 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:36:47 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:36:47 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:36:47 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:36:48 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:36:48 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:36:48 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:36:56 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:36:56 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:36:56 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:36:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:36:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:36:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:36:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:36:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:01 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:01 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:01 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:02 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:03 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:03 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:03 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:04 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:04 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:04 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:06 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:06 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:06 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:06 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:06 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:06 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:37:08 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:37:08 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:37:08 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:43:44 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:43:44 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:43:44 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:43:46 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:43:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:43:46 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:43:46 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:43:47 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:43:47 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:43:47 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:02 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:49 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:49 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:49 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:49 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:52 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:52 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:52 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:52 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:53 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:53 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:54 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:54 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:54 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:54 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:55 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:55 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:55 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:55 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:44:56 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:44:56 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:44:56 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:44:56 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:09 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:09 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:09 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:09 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:10 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:10 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:10 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:10 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:10 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:10 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:10 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:10 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:12 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:12 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:13 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:13 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:13 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:13 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:16 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:16 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:16 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:16 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:16 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:16 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:16 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:16 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:16 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:17 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:17 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:17 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:17 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:17 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:17 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:17 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:19 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:19 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:19 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:19 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:20 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:20 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:20 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:20 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:20 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:20 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:20 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:20 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:51 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:51 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:53 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:53 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:54 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:54 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:45:54 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:54 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:45:55 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:55 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:56 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:56 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:45:56 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:45:56 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:02 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:46:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:02 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:02 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:03 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:03 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:46:03 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:03 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:03 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:46:03 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:03 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:46:05 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:46:05 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:46:05 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:46:05 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:47:39 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:47:39 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:47:40 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:47:40 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:47:40 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:47:40 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:48:44 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:44 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:44 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:46 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:46 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:47 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:47 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:47 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:47 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:47 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:47 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:50 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:50 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:50 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:50 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:48:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:51 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:51 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:48:52 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:52 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:57 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:57 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:57 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:58 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:58 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:58 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:58 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:48:59 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:48:59 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:48:59 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:48:59 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:49:00 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:00 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:00 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:00 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:49:19 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:19 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:19 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:19 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:49:19 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:19 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:19 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:19 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:49:20 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:20 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:20 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:20 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:49:44 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:44 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:44 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:46 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:46 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:46 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:49 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:49 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:49 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:49:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:49:51 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:49:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:15 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:15 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:15 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:17 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:17 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:17 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:24 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:24 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:24 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:27 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:27 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:27 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:27 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:50:28 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:28 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:28 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:35 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:35 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:35 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:36 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:36 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:36 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:38 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:38 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:38 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:38 UTC] Error fetching RTK accounts with pagination: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'sa2.payment' doesn't exist
+[04-May-2025 08:50:39 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:39 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:40 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:40 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:40 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:40 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:45 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:45 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:45 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:47 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:47 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:47 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:50 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:50 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:50 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:51 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:51 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:51 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:53 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:53 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:53 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:50:55 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:50:55 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:50:55 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:52:00 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:52:00 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:52:00 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:52:17 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:52:17 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:52:17 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:53:26 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:53:26 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:53:26 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:55:24 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:55:24 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:55:24 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:55:25 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:55:25 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:55:25 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:55:48 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:55:48 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:55:48 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:56:10 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:56:10 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:56:10 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:56:11 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:56:11 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:56:11 UTC] [Database Connect] Connection to database 'sa2' successful.
+[04-May-2025 08:56:14 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
+[04-May-2025 08:56:14 UTC] [Database GetConnection] No active connection found. Attempting to connect...
+[04-May-2025 08:56:14 UTC] [Database Connect] Connection to database 'sa2' successful.

@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Check if session is already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Require file cấu hình - đã bao gồm các tiện ích đường dẫn
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
 
@@ -65,9 +68,9 @@ foreach ($transactions as &$tx) {
     // Format amount with thousand separators
     $tx['amount_formatted'] = number_format($tx['amount'], 0, ',', '.') . ' đ';
     
-    // Format date
-    $tx['time'] = date('d/m/Y H:i', strtotime($tx['time']));
-    $tx['updated_at'] = date('d/m/Y H:i', strtotime($tx['updated_at']));
+    // Format date - fix null parameter issue with strtotime()
+    $tx['time'] = !empty($tx['time']) ? date('d/m/Y H:i', strtotime($tx['time'])) : 'N/A';
+    $tx['updated_at'] = !empty($tx['updated_at']) ? date('d/m/Y H:i', strtotime($tx['updated_at'])) : 'N/A';
     
     // Set method display text
     $tx['method'] = $tx['payment_method'] ?? 'Chuyển khoản ngân hàng';
@@ -321,4 +324,6 @@ function showTransactionDetails(txData) {
 }
 </script>
 
-<?php include $project_root_path . '/private/includes/footer.php'; ?>
+
+
+include $project_root_path . '/private/includes/footer.php';

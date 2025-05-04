@@ -41,15 +41,19 @@ if (!$registration_id) {
     exit;
 }
 
-// --- Fetch Existing Payment Proof ---
+// --- Fetch Existing Payment Proof from transaction_history instead of payment table ---
 $existing_proof_image = null;
 $existing_proof_url = null;
 try {
     $db = new Database();
     $conn = $db->getConnection();
-    $sql_get_proof = "SELECT payment_image FROM payment WHERE registration_id = :registration_id LIMIT 1";
+    $sql_get_proof = "SELECT payment_image FROM transaction_history 
+                     WHERE registration_id = :registration_id 
+                     AND user_id = :user_id
+                     LIMIT 1";
     $stmt_get_proof = $conn->prepare($sql_get_proof);
     $stmt_get_proof->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+    $stmt_get_proof->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
     $stmt_get_proof->execute();
     $existing_proof_image = $stmt_get_proof->fetchColumn();
 

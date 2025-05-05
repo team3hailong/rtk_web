@@ -20,10 +20,11 @@ include $project_root_path . '/private/includes/header.php';
 
 // --- Include Database and Repository ---
 require_once $project_root_path . '/private/classes/Database.php';
-require_once $project_root_path . '/private/classes/RtkAccount.php'; // Include the RtkAccount class
+require_once $project_root_path . '/private/classes/RtkAccount.php';
 
-// Add CSS Link (Ideally should be inside <head> in header.php)
+// Chỉ include file CSS/JS tối ưu (đã gộp, không include file cũ)
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css">';
+echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>';
 
 // --- Xử lý tham số từ URL cho phân trang ---
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -53,8 +54,8 @@ $result = $rtkAccountManager->getAccountsByUserIdWithPagination($userId, $curren
 $accounts = $result['accounts'];
 $pagination = $result['pagination'];
 
-// Close the database connection if necessary (optional, depends on Database class implementation)
-// $db->close();
+// Đóng kết nối database sau khi lấy dữ liệu (nếu class hỗ trợ)
+if (method_exists($db, 'close')) { $db->close(); }
 
 // Hàm tính toán ngày còn lại/quá hạn (ví dụ)
 function calculate_days_diff($end_date_str) {
@@ -316,11 +317,21 @@ function getPaginationUrl($page, $perPage, $filter) {
             <div class="detail-grid">
                 <div class="detail-item">
                     <div class="detail-label">Tài khoản:</div>
-                    <div class="detail-value" id="modal-username"></div>
+                    <div class="detail-value-container">
+                        <div class="detail-value" id="modal-username"></div>
+                        <button class="copy-btn" data-copy-target="modal-username" title="Sao chép tài khoản">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Mật khẩu:</div>
-                    <div class="detail-value" id="modal-password"></div>
+                    <div class="detail-value-container">
+                        <div class="detail-value" id="modal-password"></div>
+                        <button class="copy-btn" data-copy-target="modal-password" title="Sao chép mật khẩu">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Thời gian bắt đầu:</div>
@@ -365,8 +376,6 @@ function getPaginationUrl($page, $perPage, $filter) {
         currentFilter: '<?php echo $filter; ?>'
     };
 </script>
-<!-- Add link to external JS file -->
-<script src="<?php echo $base_url; ?>/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>
 
 <?php
 include $project_root_path . '/private/includes/footer.php';

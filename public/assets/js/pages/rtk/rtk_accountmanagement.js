@@ -48,15 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xử lý nút chọn tất cả
     if (selectAllButton) {
         selectAllButton.addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('.account-checkbox:visible'); // Chỉ chọn các checkbox đang hiển thị
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            
+            // Only select checkboxes in visible rows
+            const checkboxes = Array.from(document.querySelectorAll('.account-checkbox')).filter(cb => {
+                const row = cb.closest('tr');
+                return row && row.style.display !== 'none';
+            });
+            const allChecked = checkboxes.length > 0 && checkboxes.every(checkbox => checkbox.checked);
             checkboxes.forEach(checkbox => {
                 checkbox.checked = !allChecked;
             });
-            
             updateExportButtonState();
-            
             // Cập nhật text của nút
             this.innerHTML = !allChecked ? 
                 '<i class="fas fa-times-square"></i> Bỏ chọn tất cả' : 
@@ -155,33 +156,28 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyFilters() {
         const accounts = document.querySelectorAll('.accounts-table tbody tr:not(.empty-state-row)');
         let visibleCount = 0;
-        
+        // Split search terms for multi-keyword search
+        const searchTerms = currentSearchTerm.split(/\s+/).filter(Boolean);
         accounts.forEach(account => {
             if (!account.dataset.searchTerms) return; // Bỏ qua hàng không phải dữ liệu
-            
-            // Kiểm tra điều kiện tìm kiếm
-            const matchesSearch = !currentSearchTerm || account.dataset.searchTerms.includes(currentSearchTerm);
-            
+            // Multi-keyword, case-insensitive search
+            const searchData = account.dataset.searchTerms.toLowerCase();
+            const matchesSearch = !searchTerms.length || searchTerms.every(term => searchData.includes(term));
             // Kiểm tra điều kiện lọc theo trạng thái
             let matchesFilter = true;
             if (currentFilter !== 'all') {
                 const accountStatus = account.dataset.status;
                 matchesFilter = (currentFilter === accountStatus);
             }
-            
             // Hiển thị/ẩn dựa trên kết quả lọc
             const shouldDisplay = matchesSearch && matchesFilter;
             account.style.display = shouldDisplay ? '' : 'none';
-            
             if (shouldDisplay) visibleCount++;
         });
-        
         // Hiển thị thông báo "Không có dữ liệu" nếu không có tài khoản nào phù hợp
         handleEmptyState(visibleCount === 0);
-        
         // Cập nhật thông tin phân trang
         updatePaginationInfo(visibleCount);
-        
         // Cập nhật nút chọn tất cả
         if (selectAllButton) {
             selectAllButton.innerHTML = '<i class="fas fa-check-square"></i> Chọn tất cả';
@@ -279,6 +275,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show the modal
         modalOverlay.classList.add('active');
     };
+    
+    // Xử lý nút copy trong modal chi tiết
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Lấy target để copy
+            const targetId = this.getAttribute('data-copy-target');
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // Tạo một textarea element để copy text
+                const textarea = document.createElement('textarea');
+                textarea.value = targetElement.textContent;
+                document.body.appendChild(textarea);
+                textarea.select();
+                
+                try {
+                    // Sao chép vào clipboard
+                    document.execCommand('copy');
+                    
+                    // Thay đổi icon và thêm class để chỉ ra đã copy thành công
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        const originalClass = icon.className;
+                        icon.className = 'fas fa-check';
+                        this.classList.add('copied');
+                        
+                        // Sau 2 giây, đổi lại icon và class ban đầu
+                        setTimeout(() => {
+                            icon.className = originalClass;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Không thể sao chép: ', err);
+                }
+                
+                // Dọn dẹp
+                document.body.removeChild(textarea);
+            }
+        });
+    });
     
     // Close modal when clicking outside content
     if (modalOverlay) {

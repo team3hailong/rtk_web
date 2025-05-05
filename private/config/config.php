@@ -5,12 +5,11 @@ require_once __DIR__ . '/env_loader.php';
 // Load tiện ích xử lý đường dẫn
 require_once dirname(__DIR__) . '/utils/path_helpers/bootstrap.php';
 
-<<<<<<< HEAD
+
 // Thiết lập múi giờ mặc định là +7 (Asia/Ho_Chi_Minh)
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-=======
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
+
 // RTK API credentials
 define('RTK_API_URL', env('RTK_API_URL', 'http://203.171.25.138:8090/openapi/broadcast/users'));
 define('RTK_API_ACCESS_KEY', env('RTK_API_ACCESS_KEY', 'Zb5F6iKUuAISy4qY'));

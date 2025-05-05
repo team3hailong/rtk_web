@@ -15,19 +15,12 @@ class RtkAccount {
             $statusCondition = "";
             if ($filter !== 'all') {
                 if ($filter === 'active') {
-<<<<<<< HEAD
                     $statusCondition = "AND sa.end_time > NOW() AND sa.enabled = 1";
                 } elseif ($filter === 'expired') {
                     $statusCondition = "AND sa.end_time <= NOW()";
                 } elseif ($filter === 'pending') {
                     $statusCondition = "AND (r.status = 'pending' OR sa.enabled = 0)";
-=======
-                    $statusCondition = "AND r.end_time > NOW() AND sa.enabled = 1";
-                } elseif ($filter === 'expired') {
-                    $statusCondition = "AND r.end_time <= NOW()";
-                } elseif ($filter === 'pending') {
-                    $statusCondition = "AND r.status = 'pending' OR sa.enabled = 0";
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
+
                 }
             }
 
@@ -48,7 +41,6 @@ class RtkAccount {
                     sa.username_acc,
                     sa.password_acc,
                     sa.enabled,
-<<<<<<< HEAD
                     sa.start_time as sa_start_time,
                     sa.end_time as sa_end_time,
                     sa.concurrent_user,
@@ -57,8 +49,7 @@ class RtkAccount {
                     sa.regionIds,
                     sa.customerBizType,
                     sa.area,
-=======
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
+
                     CASE 
                         WHEN sa.enabled = 1 THEN 'Đang hoạt động'
                         ELSE 'Đã khóa'
@@ -84,18 +75,12 @@ class RtkAccount {
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
-<<<<<<< HEAD
+
                 LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
                 $statusCondition
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
-=======
-                WHERE r.user_id = :user_id 
-                AND sa.deleted_at IS NULL
-                $statusCondition
-                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                          r.start_time, r.end_time, r.status, p.name, 
                          p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC
@@ -124,19 +109,17 @@ class RtkAccount {
                 }
                 unset($account['mountpoints_json']);
 
-<<<<<<< HEAD
+
                 // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
                 if (!empty($account['sa_start_time'])) {
                     $account['effective_start_time'] = $account['sa_start_time'];
                 } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
-=======
-                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
+
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
-<<<<<<< HEAD
+
 
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
                 
@@ -144,10 +127,7 @@ class RtkAccount {
                 if (!empty($account['sa_end_time'])) {
                     $account['effective_end_time'] = $account['sa_end_time'];
                 } else if ($account['confirmed_at']) {
-=======
-                $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
-                if ($account['confirmed_at']) {
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
+
                     $start = new DateTime($account['effective_start_time']);
                     $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
@@ -157,7 +137,6 @@ class RtkAccount {
                     $end->setTimezone($tz);
                     $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
                 }
-<<<<<<< HEAD
                 
                 // Format start time
                 $start_disp = new DateTime($account['effective_start_time']);
@@ -166,11 +145,6 @@ class RtkAccount {
                 
                 // Thêm thông tin bổ sung
                 $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
-=======
-                $start_disp = new DateTime($account['effective_start_time']);
-                $start_disp->setTimezone($tz);
-                $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                 $account['status'] = $this->calculateAccountStatus($account);
             }
             
@@ -207,7 +181,7 @@ class RtkAccount {
                     sa.username_acc,
                     sa.password_acc,
                     sa.enabled,
-<<<<<<< HEAD
+
                     sa.start_time as sa_start_time,
                     sa.end_time as sa_end_time,
                     sa.concurrent_user,
@@ -216,8 +190,6 @@ class RtkAccount {
                     sa.regionIds,
                     sa.customerBizType,
                     sa.area,
-=======
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                     CASE 
                         WHEN sa.enabled = 1 THEN 'Đang hoạt động'
                         ELSE 'Đã khóa'
@@ -243,16 +215,10 @@ class RtkAccount {
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
-<<<<<<< HEAD
                 LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
-=======
-                WHERE r.user_id = :user_id 
-                AND sa.deleted_at IS NULL
-                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                          r.start_time, r.end_time, r.status, p.name, 
                          p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC";
@@ -278,19 +244,16 @@ class RtkAccount {
                 }
                 unset($account['mountpoints_json']);
 
-<<<<<<< HEAD
+
                 // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
                 if (!empty($account['sa_start_time'])) {
                     $account['effective_start_time'] = $account['sa_start_time'];
                 } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
-=======
-                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
-<<<<<<< HEAD
+
 
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
                 
@@ -298,10 +261,6 @@ class RtkAccount {
                 if (!empty($account['sa_end_time'])) {
                     $account['effective_end_time'] = $account['sa_end_time'];
                 } else if ($account['confirmed_at']) {
-=======
-                $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
-                if ($account['confirmed_at']) {
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                     $start = new DateTime($account['effective_start_time']);
                     $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
@@ -311,7 +270,6 @@ class RtkAccount {
                     $end->setTimezone($tz);
                     $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
                 }
-<<<<<<< HEAD
                 
                 // Format start time
                 $start_disp = new DateTime($account['effective_start_time']);
@@ -320,11 +278,6 @@ class RtkAccount {
                 
                 // Thêm thông tin bổ sung
                 $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
-=======
-                $start_disp = new DateTime($account['effective_start_time']);
-                $start_disp->setTimezone($tz);
-                $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                 $account['status'] = $this->calculateAccountStatus($account);
             }
             
@@ -356,7 +309,6 @@ class RtkAccount {
     }
 
     private function getStationsForAccount($accountId) {
-<<<<<<< HEAD
         try {
             $sql = "SELECT s.* 
                    FROM station s
@@ -375,18 +327,11 @@ class RtkAccount {
             error_log("Error fetching stations for account: " . $e->getMessage());
             return [];
         }
-=======
-        return [];
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
     }
 
     public function getAccountById($accountId) {
         try {
-<<<<<<< HEAD
             $sql = "SELECT sa.*, r.start_time as reg_start_time, r.end_time as reg_end_time,
-=======
-            $sql = "SELECT sa.*, r.start_time as start_date, r.end_time as end_date,
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
                           r.status as reg_status, p.name as package_name,
                           DATEDIFF(r.end_time, r.start_time) as duration_days
                    FROM survey_account sa
@@ -401,7 +346,6 @@ class RtkAccount {
             $account = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($account) {
-<<<<<<< HEAD
                 // Ưu tiên sử dụng thời gian từ bảng survey_account
                 if (!empty($account['start_time'])) {
                     $account['effective_start_time'] = $account['start_time'];
@@ -418,10 +362,6 @@ class RtkAccount {
                 $account['status'] = $this->calculateAccountStatus($account);
                 $account['stations'] = $this->getStationsForAccount($account['id']);
                 $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
-=======
-                $account['status'] = $this->calculateAccountStatus($account);
-                $account['stations'] = $this->getStationsForAccount($account['id']);
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
             }
             
             return $account;
@@ -483,7 +423,6 @@ class RtkAccount {
             return false;
         }
     }
-<<<<<<< HEAD
     
     public function getAccountsInGroup($registrationId) {
         try {
@@ -539,7 +478,5 @@ class RtkAccount {
             return false;
         }
     }
-=======
->>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
 }
 ?>

@@ -325,5 +325,5 @@ function showTransactionDetails(txData) {
 </script>
 
 
-
+<?php
 include $project_root_path . '/private/includes/footer.php';

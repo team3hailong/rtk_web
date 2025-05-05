@@ -15,11 +15,11 @@ class RtkAccount {
             $statusCondition = "";
             if ($filter !== 'all') {
                 if ($filter === 'active') {
-                    $statusCondition = "AND r.end_time > NOW() AND sa.enabled = 1";
+                    $statusCondition = "AND sa.end_time > NOW() AND sa.enabled = 1";
                 } elseif ($filter === 'expired') {
-                    $statusCondition = "AND r.end_time <= NOW()";
+                    $statusCondition = "AND sa.end_time <= NOW()";
                 } elseif ($filter === 'pending') {
-                    $statusCondition = "AND r.status = 'pending' OR sa.enabled = 0";
+                    $statusCondition = "AND (r.status = 'pending' OR sa.enabled = 0)";
                 }
             }
 
@@ -40,6 +40,14 @@ class RtkAccount {
                     sa.username_acc,
                     sa.password_acc,
                     sa.enabled,
+                    sa.start_time as sa_start_time,
+                    sa.end_time as sa_end_time,
+                    sa.concurrent_user,
+                    sa.caster,
+                    sa.user_type,
+                    sa.regionIds,
+                    sa.customerBizType,
+                    sa.area,
                     CASE 
                         WHEN sa.enabled = 1 THEN 'Đang hoạt động'
                         ELSE 'Đã khóa'
@@ -65,10 +73,11 @@ class RtkAccount {
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
+                LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
                 $statusCondition
-                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
+                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
                          r.start_time, r.end_time, r.status, p.name, 
                          p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC
@@ -97,13 +106,21 @@ class RtkAccount {
                 }
                 unset($account['mountpoints_json']);
 
-                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
+                if (!empty($account['sa_start_time'])) {
+                    $account['effective_start_time'] = $account['sa_start_time'];
+                } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
+
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
-                if ($account['confirmed_at']) {
+                
+                // Ưu tiên sử dụng thời gian end từ bảng survey_account nếu có
+                if (!empty($account['sa_end_time'])) {
+                    $account['effective_end_time'] = $account['sa_end_time'];
+                } else if ($account['confirmed_at']) {
                     $start = new DateTime($account['effective_start_time']);
                     $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
@@ -113,9 +130,14 @@ class RtkAccount {
                     $end->setTimezone($tz);
                     $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
                 }
+                
+                // Format start time
                 $start_disp = new DateTime($account['effective_start_time']);
                 $start_disp->setTimezone($tz);
                 $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
+                
+                // Thêm thông tin bổ sung
+                $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
                 $account['status'] = $this->calculateAccountStatus($account);
             }
             
@@ -152,6 +174,14 @@ class RtkAccount {
                     sa.username_acc,
                     sa.password_acc,
                     sa.enabled,
+                    sa.start_time as sa_start_time,
+                    sa.end_time as sa_end_time,
+                    sa.concurrent_user,
+                    sa.caster,
+                    sa.user_type,
+                    sa.regionIds,
+                    sa.customerBizType,
+                    sa.area,
                     CASE 
                         WHEN sa.enabled = 1 THEN 'Đang hoạt động'
                         ELSE 'Đã khóa'
@@ -177,9 +207,10 @@ class RtkAccount {
                 JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
+                LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
                 WHERE r.user_id = :user_id 
                 AND sa.deleted_at IS NULL
-                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, 
+                GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
                          r.start_time, r.end_time, r.status, p.name, 
                          p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC";
@@ -205,13 +236,21 @@ class RtkAccount {
                 }
                 unset($account['mountpoints_json']);
 
-                if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
+                if (!empty($account['sa_start_time'])) {
+                    $account['effective_start_time'] = $account['sa_start_time'];
+                } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
+
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
-                if ($account['confirmed_at']) {
+                
+                // Ưu tiên sử dụng thời gian end từ bảng survey_account nếu có
+                if (!empty($account['sa_end_time'])) {
+                    $account['effective_end_time'] = $account['sa_end_time'];
+                } else if ($account['confirmed_at']) {
                     $start = new DateTime($account['effective_start_time']);
                     $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
@@ -221,9 +260,14 @@ class RtkAccount {
                     $end->setTimezone($tz);
                     $account['effective_end_time'] = $end->format('Y-m-d H:i:s');
                 }
+                
+                // Format start time
                 $start_disp = new DateTime($account['effective_start_time']);
                 $start_disp->setTimezone($tz);
                 $account['effective_start_time'] = $start_disp->format('Y-m-d H:i:s');
+                
+                // Thêm thông tin bổ sung
+                $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
                 $account['status'] = $this->calculateAccountStatus($account);
             }
             
@@ -255,12 +299,29 @@ class RtkAccount {
     }
 
     private function getStationsForAccount($accountId) {
-        return [];
+        try {
+            $sql = "SELECT s.* 
+                   FROM station s
+                   JOIN mount_point mp ON s.mountpoint_id = mp.id
+                   JOIN location l ON mp.location_id = l.id
+                   JOIN registration r ON l.id = r.location_id
+                   JOIN survey_account sa ON r.id = sa.registration_id
+                   WHERE sa.id = :account_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':account_id', $accountId, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching stations for account: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAccountById($accountId) {
         try {
-            $sql = "SELECT sa.*, r.start_time as start_date, r.end_time as end_date,
+            $sql = "SELECT sa.*, r.start_time as reg_start_time, r.end_time as reg_end_time,
                           r.status as reg_status, p.name as package_name,
                           DATEDIFF(r.end_time, r.start_time) as duration_days
                    FROM survey_account sa
@@ -275,8 +336,22 @@ class RtkAccount {
             $account = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($account) {
+                // Ưu tiên sử dụng thời gian từ bảng survey_account
+                if (!empty($account['start_time'])) {
+                    $account['effective_start_time'] = $account['start_time'];
+                } else {
+                    $account['effective_start_time'] = $account['reg_start_time'];
+                }
+                
+                if (!empty($account['end_time'])) {
+                    $account['effective_end_time'] = $account['end_time'];
+                } else {
+                    $account['effective_end_time'] = $account['reg_end_time'];
+                }
+                
                 $account['status'] = $this->calculateAccountStatus($account);
                 $account['stations'] = $this->getStationsForAccount($account['id']);
+                $account['concurrent_users'] = $account['concurrent_user'] ?? 1;
             }
             
             return $account;
@@ -335,6 +410,61 @@ class RtkAccount {
 
         } catch (PDOException $e) {
             error_log("Error enabling RTK account: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function getAccountsInGroup($registrationId) {
+        try {
+            $sql = "SELECT sa.* 
+                  FROM survey_account sa
+                  JOIN account_groups ag ON sa.id = ag.survey_account_id
+                  WHERE ag.registration_id = :registration_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':registration_id', $registrationId, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            error_log("Error getting accounts in group: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    public function updateAccountDetails($accountId, $data) {
+        try {
+            $validFields = ['username_acc', 'password_acc', 'enabled', 'concurrent_user', 
+                            'start_time', 'end_time', 'caster', 'user_type', 
+                            'regionIds', 'customerBizType', 'area'];
+            
+            $updates = [];
+            $params = [':account_id' => $accountId];
+            
+            foreach ($data as $field => $value) {
+                if (in_array($field, $validFields)) {
+                    $updates[] = "$field = :$field";
+                    $params[":$field"] = $value;
+                }
+            }
+            
+            if (empty($updates)) {
+                return false;
+            }
+            
+            $updates[] = "updated_at = NOW()";
+            $sql = "UPDATE survey_account SET " . implode(', ', $updates) . " WHERE id = :account_id";
+            
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $param => &$value) {
+                $stmt->bindParam($param, $value);
+            }
+            
+            return $stmt->execute();
+            
+        } catch (PDOException $e) {
+            error_log("Error updating RTK account details: " . $e->getMessage());
             return false;
         }
     }

@@ -543,3 +543,24 @@
 [05-May-2025 12:08:57 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
 [05-May-2025 12:08:57 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [05-May-2025 12:08:57 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:22:59 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:22:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:01 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:01 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:01 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:01 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.

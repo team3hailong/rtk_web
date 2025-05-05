@@ -173,12 +173,22 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         $days_diff = calculate_days_diff($account['effective_end_time']);
                                         $account_id_display = str_replace('RTK_', '#', $account['id'] ?? 'N/A');
                                         
-                                        // Đổi tên trạng thái
-                                        $status_text = $account['enabled_status'];
-                                        if ($status_text === 'Đang hoạt động') {
+                                        // Đảm bảo data-status phải khớp với giá trị filter trong JS và nút filter trên UI
+                                        $data_status = $account['status']; // Lấy từ hàm calculateAccountStatus() trong class RtkAccount
+                                        
+                                        // Hiển thị văn bản trạng thái cho người dùng
+                                        if ($data_status === 'active') {
                                             $status_text = 'Hoạt động';
-                                        } elseif ($status_text === 'Đang xử lý') {
+                                        } elseif ($data_status === 'expired') {
+                                            $status_text = 'Hết hạn';
+                                        } elseif ($data_status === 'pending' || $data_status === 'locked') {
                                             $status_text = 'Đã khóa';
+                                            // Đối với filter, phân loại cả 'pending' và 'locked' là 'pending'
+                                            if ($data_status === 'locked') {
+                                                $data_status = 'pending';  // Để phù hợp với filter button 'pending'
+                                            }
+                                        } else {
+                                            $status_text = 'Không xác định';
                                         }
                                         
                                         // Chuỗi search terms
@@ -186,6 +196,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         $search_terms[] = $account['id'] ?? '';
                                         $search_terms[] = $account['username_acc'] ?? '';
                                         $search_terms[] = $account['province'] ?? '';
+                                        $search_terms[] = $status_text ?? '';  // Thêm status text vào search terms
                                         if (!empty($account['mountpoints'])) {
                                             foreach ($account['mountpoints'] as $mp) {
                                                 $search_terms[] = $mp['mountpoint'] ?? '';
@@ -208,7 +219,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         ];
                                         $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
                                     ?>
-                                    <tr data-status="<?php echo $account['status']; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
+                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
                                         <td class="select-column">
                                             <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox">
                                         </td>

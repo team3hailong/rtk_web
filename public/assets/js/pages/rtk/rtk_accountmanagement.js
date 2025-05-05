@@ -163,12 +163,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Multi-keyword, case-insensitive search
             const searchData = account.dataset.searchTerms.toLowerCase();
             const matchesSearch = !searchTerms.length || searchTerms.every(term => searchData.includes(term));
+            
             // Kiểm tra điều kiện lọc theo trạng thái
             let matchesFilter = true;
             if (currentFilter !== 'all') {
                 const accountStatus = account.dataset.status;
+                // Đảm bảo filter status khớp với data-status và hiển thị đúng trạng thái
                 matchesFilter = (currentFilter === accountStatus);
             }
+            
             // Hiển thị/ẩn dựa trên kết quả lọc
             const shouldDisplay = matchesSearch && matchesFilter;
             account.style.display = shouldDisplay ? '' : 'none';

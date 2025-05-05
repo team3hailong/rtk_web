@@ -38,7 +38,7 @@ if (!in_array($perPage, [10, 20, 50])) {
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 // Chỉ cho phép các filter hợp lệ
-if (!in_array($filter, ['all', 'active', 'expired', 'pending'])) {
+if (!in_array($filter, ['all', 'active', 'expired', 'locked'])) {
     $filter = 'all'; // Mặc định
 }
 
@@ -113,7 +113,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                     <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
                     <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
                     <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
-                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Đã khóa</button>
+                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
                 </div>
                 <div class="search-and-per-page">
                     <div class="per-page-selector">
@@ -183,10 +183,8 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             $status_text = 'Hết hạn';
                                         } elseif ($data_status === 'pending' || $data_status === 'locked') {
                                             $status_text = 'Đã khóa';
-                                            // Đối với filter, phân loại cả 'pending' và 'locked' là 'pending'
-                                            if ($data_status === 'locked') {
-                                                $data_status = 'pending';  // Để phù hợp với filter button 'pending'
-                                            }
+                                            // Đảm bảo tất cả các trạng thái không hoạt động đều hiển thị là 'locked'
+                                            $data_status = 'locked';
                                         } else {
                                             $status_text = 'Không xác định';
                                         }

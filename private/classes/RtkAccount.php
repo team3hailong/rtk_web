@@ -18,9 +18,8 @@ class RtkAccount {
                     $statusCondition = "AND sa.end_time > NOW() AND sa.enabled = 1";
                 } elseif ($filter === 'expired') {
                     $statusCondition = "AND sa.end_time <= NOW()";
-                } elseif ($filter === 'pending') {
-                    $statusCondition = "AND (r.status = 'pending' OR sa.enabled = 0)";
-
+                } elseif ($filter === 'locked') {
+                    $statusCondition = "AND sa.enabled = 0";
                 }
             }
 
@@ -293,16 +292,13 @@ class RtkAccount {
         $now = new DateTime();
         $endDate = new DateTime($account['effective_end_time']);
         
-        if ($account['reg_status'] === 'pending') {
-            return 'pending';
+        // Không còn sử dụng trạng thái 'pending' nữa
+        if ($account['enabled'] == 0) {
+            return 'locked';
         }
         
         if ($now > $endDate) {
             return 'expired';
-        }
-        
-        if ($account['enabled'] == 0) {
-            return 'locked';
         }
         
         return 'active';

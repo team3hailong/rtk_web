@@ -20,10 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const accountCheckboxes = document.querySelectorAll('.account-checkbox');
     const exportForm = document.getElementById('export-form');
     
+<<<<<<< HEAD
     // Theo dõi trạng thái lọc và tìm kiếm hiện tại
     let currentFilter = paginationConfig.currentFilter || 'all';
     let currentSearchTerm = '';
     
+=======
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
     // Xử lý chọn tài khoản và cập nhật trạng thái nút xuất Excel
     function updateExportButtonState() {
         const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
@@ -48,7 +51,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xử lý nút chọn tất cả
     if (selectAllButton) {
         selectAllButton.addEventListener('click', function() {
+<<<<<<< HEAD
             const checkboxes = document.querySelectorAll('.account-checkbox:visible'); // Chỉ chọn các checkbox đang hiển thị
+=======
+            const checkboxes = document.querySelectorAll('.account-checkbox');
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
             const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
             
             checkboxes.forEach(checkbox => {
@@ -80,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Lấy giá trị filter mới
             const filterValue = this.dataset.filter;
             
+<<<<<<< HEAD
             // Cập nhật lớp active cho button
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
@@ -96,6 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     page: 1 // Luôn reset về trang đầu tiên khi filter thay đổi
                 });
             }
+=======
+            // Chuyển hướng đến URL với filter mới
+            window.location.href = buildPaginationUrl({
+                filter: filterValue,
+                page: 1 // Luôn reset về trang đầu tiên khi filter thay đổi
+            });
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
         });
     });
 
@@ -144,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchBox) {
         searchBox.addEventListener('input', function() {
             // Lấy giá trị tìm kiếm
+<<<<<<< HEAD
             currentSearchTerm = this.value.toLowerCase().trim();
             
             // Áp dụng lọc và tìm kiếm
@@ -155,10 +171,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function applyFilters() {
         const accounts = document.querySelectorAll('.accounts-table tbody tr:not(.empty-state-row)');
         let visibleCount = 0;
+=======
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            // Áp dụng tìm kiếm client-side trong trang hiện tại
+            searchAccounts(searchTerm);
+        });
+    }
+
+    // Hàm tìm kiếm tài khoản trong trang hiện tại
+    function searchAccounts(searchTerm) {
+        const accounts = document.querySelectorAll('.accounts-table tbody tr');
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
         
         accounts.forEach(account => {
             if (!account.dataset.searchTerms) return; // Bỏ qua hàng không phải dữ liệu
             
+<<<<<<< HEAD
             // Kiểm tra điều kiện tìm kiếm
             const matchesSearch = !currentSearchTerm || account.dataset.searchTerms.includes(currentSearchTerm);
             
@@ -223,6 +252,27 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!paginationInfo) return;
         
         paginationInfo.textContent = `Hiển thị ${visibleCount} trên tổng số ${paginationConfig.totalRecords} tài khoản`;
+=======
+            const searchTerms = account.dataset.searchTerms;
+            const matchesSearch = !searchTerm || searchTerms.includes(searchTerm);
+            
+            account.style.display = matchesSearch ? '' : 'none';
+        });
+        
+        // Cập nhật thông tin phân trang
+        updatePaginationInfo();
+    }
+    
+    // Cập nhật thông tin phân trang dựa trên số lượng hàng hiện đang hiển thị
+    function updatePaginationInfo() {
+        const paginationInfo = document.querySelector('.pagination-info');
+        if (!paginationInfo) return;
+        
+        const visibleRows = document.querySelectorAll('.accounts-table tbody tr[style=""]').length;
+        const totalFiltered = document.querySelectorAll('.accounts-table tbody tr:not([style*="none"])').length;
+        
+        paginationInfo.textContent = `Hiển thị ${totalFiltered} trên tổng số ${paginationConfig.totalRecords} tài khoản`;
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
     }
 
     // Close Modal
@@ -296,6 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+<<<<<<< HEAD
     // Nếu đã chọn filter, tự động kích hoạt nút filter tương ứng
     if (currentFilter && currentFilter !== 'all') {
         const activeFilterButton = document.querySelector(`.filter-button[data-filter="${currentFilter}"]`);
@@ -304,6 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+=======
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39
     // Khởi tạo trạng thái nút xuất khi tải trang
     updateExportButtonState();
 });

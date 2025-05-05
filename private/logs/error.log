@@ -11,6 +11,7 @@
 [04-May-2025 10:02:40 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
 [04-May-2025 10:02:40 UTC] [Database GetConnection] No active connection found. Attempting to connect...
 [04-May-2025 10:02:40 UTC] [Database Connect] Connection to database 'sa2' successful.
+<<<<<<< HEAD
 [04-May-2025 10:28:30 UTC] Database init: Using database 'sa2' on host '127.0.0.1'
 [04-May-2025 10:28:30 UTC] [Database GetConnection] No active connection found. Attempting to connect...
 [04-May-2025 10:28:30 UTC] [Database Connect] Connection to database 'sa2' successful.
@@ -564,3 +565,5 @@
 [05-May-2025 12:23:04 Asia/Ho_Chi_Minh] Database init: Using database 'newdb' on host '127.0.0.1'
 [05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [05-May-2025 12:23:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'newdb' successful.
+=======
+>>>>>>> fdb846ab7b7ee896ea5a7a023765246ce690ff39

@@ -13,10 +13,8 @@
 function calculateEndTime(string $startTime, string $durationText): ?string {
     try {
         $date = new DateTime($startTime);
-        // Trim whitespace AND common leading non-alphanumeric chars like '/'
-        $trimmedDuration = trim($durationText, " /\t\n\r\0\x0B");
-        $durationTextLower = mb_strtolower($trimmedDuration, 'UTF-8'); // Use mb_strtolower for Unicode
-
+        $durationTextLower = mb_strtolower(trim($durationText));
+        
         // Check for lifetime first
         if ($durationTextLower === 'vĩnh viễn') {
             // Set a very far future date for 'lifetime'
@@ -39,16 +37,40 @@ function calculateEndTime(string $startTime, string $durationText): ?string {
                 return $date->format('Y-m-d H:i:s');
             }
         }
-
-        // If no match or invalid number, log and return null
-        // Log the original input for better debugging
-        error_log("Could not parse duration text (original: '" . $durationText . "', processed: '" . $durationTextLower . "')");
-        return null;
-
+        
+        // Handle duration formats like "/ 3 tháng" or "/ 1 năm" by removing the initial slash
+        if (preg_match('/^\/\s*(\d+)\s*(tháng|thang|năm|nam)$/u', $durationTextLower, $matches)) {
+            $amount = (int)$matches[1];
+            $unit = $matches[2];
+            
+            if ($amount > 0) {
+                if ($unit === 'tháng' || $unit === 'thang') {
+                    $date->modify("+$amount months");
+                } elseif ($unit === 'năm' || $unit === 'nam') {
+                    $date->modify("+$amount years");
+                }
+                return $date->format('Y-m-d H:i:s');
+            }
+        }
+        
+        // If all above failed, try a simple approach with number of days
+        // Example: If duration was 30 days, 60 days, 365 days
+        if (preg_match('/^(\d+)\s*days?$/i', $durationTextLower, $matches)) {
+            $days = (int)$matches[1];
+            if ($days > 0) {
+                $date->modify("+$days days");
+                return $date->format('Y-m-d H:i:s');
+            }
+        }
+        
+        // Default: Add 30 days if we can't determine the duration
+        error_log("Could not parse duration text: '$durationText', defaulting to 30 days");
+        $date->modify('+30 days');
+        return $date->format('Y-m-d H:i:s');
+        
     } catch (Exception $e) {
-        // Log the error
-        error_log("Error calculating end time: " . $e->getMessage() . " | StartTime: $startTime, DurationText: $durationText");
-        return null; // Return null on exception
+        error_log("Error calculating end time: " . $e->getMessage());
+        return null;
     }
 }
 

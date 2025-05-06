@@ -29,6 +29,11 @@ $user_id = $_SESSION['user_id'];
 $registration_id = $_SESSION['pending_registration_id'];
 $session_total_price = $_SESSION['pending_total_price']; // Get total price from session
 $is_trial = $_SESSION['pending_is_trial'] ?? false; // Check if it's a trial from session
+$is_renewal = $_SESSION['is_renewal'] ?? false; // Check if it's a renewal process
+
+// Lấy mảng các registration IDs cho trường hợp gia hạn nhiều tài khoản
+$registration_ids = $_SESSION['pending_registration_ids'] ?? [$registration_id];
+$renewal_details = $_SESSION['pending_renewal_details'] ?? null;
 
 // --- Fetch Payment Details using Helper ---
 $payment_details_result = getPaymentPageDetails($registration_id, $user_id, $session_total_price);
@@ -290,7 +295,75 @@ include $project_root_path . '/private/includes/header.php';
             <!-- Cột Tóm tắt đơn hàng (Luôn hiển thị) -->
             <section class="payment-summary">
                 <h3>Thông tin đăng ký</h3>
-                 <div class="summary-item" style="font-size: var(--font-size-sm);">
+                <?php if ($is_renewal): ?>
+                <!-- Hiển thị thông tin gia hạn nhiều tài khoản -->
+                <div class="summary-item" style="font-size: var(--font-size-sm);">
+                    <span>Loại giao dịch:</span>
+                    <strong>Gia hạn tài khoản</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Số lượng tài khoản:</span>
+                    <strong><?php echo $renewal_details ? $renewal_details['total_accounts'] : count($registration_ids); ?> tài khoản</strong>
+                </div>
+                
+                <?php if (count($registration_ids) > 0): ?>
+                <div style="margin-top: 1rem; border: 1px solid var(--gray-200); border-radius: var(--rounded-md); padding: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem; font-weight: var(--font-semibold); color: var(--gray-700);">Danh sách tài khoản gia hạn:</h4>
+                    <table style="width: 100%; font-size: var(--font-size-sm);">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--gray-200);">
+                                <th style="text-align: left; padding: 0.5rem 0;">Mã đăng ký</th>
+                                <th style="text-align: right; padding: 0.5rem 0;">Số tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                            // Lấy thông tin chi tiết cho từng registration
+                            $db = new Database();
+                            $conn = $db->getConnection();
+                            
+                            foreach ($registration_ids as $reg_id):
+                                // Lấy thông tin tài khoản và gói
+                                $stmt = $conn->prepare("
+                                    SELECT r.id, sa.username_acc, p.name as package_name, r.total_price 
+                                    FROM registration r
+                                    JOIN account_groups ag ON r.id = ag.registration_id
+                                    JOIN survey_account sa ON ag.survey_account_id = sa.id
+                                    JOIN package p ON r.package_id = p.id
+                                    WHERE r.id = ? AND r.user_id = ?
+                                ");
+                                $stmt->execute([$reg_id, $user_id]);
+                                $acc_info = $stmt->fetch(PDO::FETCH_ASSOC);
+                                
+                                if ($acc_info):
+                        ?>
+                            <tr style="border-bottom: 1px dashed var(--gray-100);">
+                                <td style="padding: 0.5rem 0;">
+                                    <?php echo htmlspecialchars($acc_info['username_acc']); ?>
+                                    <span style="display: block; color: var(--gray-500); font-size: 0.85em;">
+                                        <?php echo htmlspecialchars($acc_info['package_name']); ?>
+                                    </span>
+                                </td>
+                                <td style="text-align: right; padding: 0.5rem 0;"><?php echo number_format($acc_info['total_price'], 0, ',', '.'); ?> đ</td>
+                            </tr>
+                        <?php 
+                                endif;
+                            endforeach;
+                            $db->close();
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+                
+                <div class="summary-item summary-total" style="margin-top: 1.5rem;">
+                    <span>Tổng thanh toán:</span>
+                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                </div>
+                
+                <?php else: ?>
+                <!-- Hiển thị thông tin đơn đăng ký thường -->
+                <div class="summary-item" style="font-size: var(--font-size-sm);">
                     <span>Mã đăng ký:</span>
                     <strong><?php echo htmlspecialchars($registration_id); ?></strong>
                  </div>
@@ -310,6 +383,7 @@ include $project_root_path . '/private/includes/header.php';
                     <span>Tổng thanh toán:</span>
                     <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
                 </div>
+                <?php endif; ?>
             </section>
 
             <?php if ($is_trial): ?>

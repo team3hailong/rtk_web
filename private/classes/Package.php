@@ -72,6 +72,21 @@ class Package {
         return $packages;
     }
 
+    /**
+     * Lấy tất cả các gói khả dụng cho gia hạn (loại trừ trial nếu cần)
+     */
+    public function getAllPackagesForRenewal(): array {
+        $packages = [];
+        try {
+            $stmt = $this->conn->prepare("SELECT id, name, price, duration_text FROM package WHERE is_active = 1 AND (package_id IS NULL OR package_id != 'trial_7d') ORDER BY display_order ASC");
+            $stmt->execute();
+            $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching packages for renewal: " . $e->getMessage());
+        }
+        return $packages;
+    }
+
     public function closeConnection(): void {
         $this->db->close();
     }

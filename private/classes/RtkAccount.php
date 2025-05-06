@@ -474,5 +474,26 @@ class RtkAccount {
             return false;
         }
     }
+
+    /**
+     * Lấy thông tin nhiều tài khoản theo danh sách ID, chỉ của user hiện tại (dùng cho gia hạn)
+     */
+    public function getAccountsByIdsForRenewal($userId, $accountIds) {
+        if (empty($accountIds) || !is_array($accountIds)) return [];
+        $placeholders = implode(',', array_fill(0, count($accountIds), '?'));
+        $sql = "SELECT sa.id, sa.username_acc, sa.end_time
+                FROM survey_account sa
+                JOIN registration r ON sa.registration_id = r.id
+                WHERE sa.id IN ($placeholders) AND r.user_id = ? AND sa.deleted_at IS NULL";
+        $stmt = $this->conn->prepare($sql);
+        $i = 1;
+        foreach ($accountIds as $k => $id) {
+            $stmt->bindValue($k+1, $id, PDO::PARAM_STR);
+            $i++;
+        }
+        $stmt->bindValue($i, $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

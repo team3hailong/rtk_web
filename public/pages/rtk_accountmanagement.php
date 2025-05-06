@@ -133,6 +133,11 @@ function getPaginationUrl($page, $perPage, $filter) {
                 <button id="export-excel" class="export-button" disabled>
                     <i class="fas fa-file-excel"></i> Xuất Excel
                 </button>
+                <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline;">
+                    <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2; margin-left:8px;" disabled>
+                        <i class="fas fa-redo"></i> Gia hạn
+                    </button>
+                </form>
                 <button id="select-all-accounts" class="select-all-button">
                     <i class="fas fa-check-square"></i> Chọn tất cả
                 </button>
@@ -384,6 +389,46 @@ function getPaginationUrl($page, $perPage, $filter) {
         totalRecords: <?php echo $pagination['total']; ?>,
         currentFilter: '<?php echo $filter; ?>'
     };
+
+    // Bổ sung logic cho nút Gia hạn
+    const renewalBtn = document.getElementById('renewal-btn');
+    const renewalForm = document.getElementById('renewal-form');
+    function updateRenewalButtonState() {
+        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
+        if (renewalBtn) renewalBtn.disabled = checkedBoxes.length === 0;
+    }
+    // Khi chọn checkbox, cập nhật nút Gia hạn
+    document.querySelectorAll('.account-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateRenewalButtonState);
+    });
+    // Khi submit renewal, thêm selected_accounts vào renewal-form
+    if (renewalForm) {
+        renewalForm.addEventListener('submit', function(e) {
+            // Xóa input cũ
+            renewalForm.querySelectorAll('input[name="selected_accounts[]"]').forEach(i => i.remove());
+            // Thêm input cho các account đã chọn
+            document.querySelectorAll('.account-checkbox:checked').forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selected_accounts[]';
+                input.value = cb.value;
+                renewalForm.appendChild(input);
+            });
+            if (renewalForm.querySelectorAll('input[name="selected_accounts[]"]').length === 0) {
+                e.preventDefault();
+            }
+        });
+    }
+    // Khi chọn checkbox, cập nhật luôn nút Export Excel như cũ
+    function updateExportAndRenewalButtons() {
+        updateExportButtonState();
+        updateRenewalButtonState();
+    }
+    document.querySelectorAll('.account-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateExportAndRenewalButtons);
+    });
+    // Khởi tạo trạng thái nút khi tải trang
+    updateExportAndRenewalButtons();
 </script>
 
 <?php

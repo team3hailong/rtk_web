@@ -167,6 +167,12 @@ try {
     $_SESSION['pending_total_price'] = $final_total_price;
     $_SESSION['pending_is_trial'] = $is_trial_package; // Store trial status
 
+    // Đảm bảo xóa các biến session liên quan đến renewal
+    unset($_SESSION['is_renewal']);
+    unset($_SESSION['renewal_account_ids']);
+    unset($_SESSION['pending_renewal_details']);
+    unset($_SESSION['pending_registration_ids']);
+
     // Ensure session data is written before redirecting (optional but good practice)
     session_write_close();
 

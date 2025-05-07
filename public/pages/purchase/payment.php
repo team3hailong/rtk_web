@@ -31,9 +31,17 @@ $session_total_price = $_SESSION['pending_total_price']; // Get total price from
 $is_trial = $_SESSION['pending_is_trial'] ?? false; // Check if it's a trial from session
 $is_renewal = $_SESSION['is_renewal'] ?? false; // Check if it's a renewal process
 
+// Reset biến renewal nếu đây là giao dịch mua mới
+if (!isset($_SESSION['is_renewal'])) {
+    $is_renewal = false;
+    // Đảm bảo các biến liên quan đến renewal cũng được reset
+    unset($_SESSION['renewal_account_ids']);
+    unset($_SESSION['pending_renewal_details']);
+}
+
 // Lấy mảng các registration IDs cho trường hợp gia hạn nhiều tài khoản
-$registration_ids = $_SESSION['pending_registration_ids'] ?? [$registration_id];
-$renewal_details = $_SESSION['pending_renewal_details'] ?? null;
+$registration_ids = $is_renewal ? ($_SESSION['renewal_account_ids'] ?? [$registration_id]) : [$registration_id];
+$renewal_details = $is_renewal ? ($_SESSION['pending_renewal_details'] ?? null) : null;
 
 // --- Fetch Payment Details using Helper ---
 $payment_details_result = getPaymentPageDetails($registration_id, $user_id, $session_total_price);

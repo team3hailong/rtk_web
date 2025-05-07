@@ -735,3 +735,91 @@
 [07-May-2025 22:13:55 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
 [07-May-2025 22:13:55 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [07-May-2025 22:13:55 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[07-May-2025 22:50:32 Asia/Ho_Chi_Minh] PHP Error [2]: require_once(E:\Application\laragon\www\rtk_web/vendor/autoload.php): Failed to open stream: No such file or directory in E:\Application\laragon\www\rtk_web\private\utils\email_helper.php on line 6
+[07-May-2025 22:51:15 Asia/Ho_Chi_Minh] PHP Error [2]: require_once(E:\Application\laragon\www\rtk_web/vendor/autoload.php): Failed to open stream: No such file or directory in E:\Application\laragon\www\rtk_web\private\utils\email_helper.php on line 6
+[07-May-2025 22:54:43 Asia/Ho_Chi_Minh] Registration Error: Duplicate entry 'Long2005' for key 'user.uq_user_username'
+Stack Trace:
+#0 E:\Application\laragon\www\rtk_web\private\action\auth\process_register.php(119): mysqli_stmt->execute()
+#1 E:\Application\laragon\www\rtk_web\public\handlers\action_handler.php(97): include('E:\\Application\\...')
+#2 {main}
+[07-May-2025 22:55:47 Asia/Ho_Chi_Minh] Registration Error: Duplicate entry 'nguyendozxc15@gmail.com' for key 'user.uq_user_username'
+Stack Trace:
+#0 E:\Application\laragon\www\rtk_web\private\action\auth\process_register.php(119): mysqli_stmt->execute()
+#1 E:\Application\laragon\www\rtk_web\public\handlers\action_handler.php(97): include('E:\\Application\\...')
+#2 {main}
+[07-May-2025 22:57:09 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:09 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:17 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:17 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:17 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:17 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:31 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:31 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:35 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:35 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:44 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:44 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 22:57:44 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:51 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:51 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 22:57:51 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:57:52 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:57:52 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 22:57:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 22:58:25 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 22:58:25 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 22:58:25 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:15:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:15:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:15:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:15:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:03 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:03 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:03 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:19 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:19 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:22 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:22 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:22 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:27 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:27 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:28 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:28 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:28 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:51 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:51 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:51 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[07-May-2025 23:16:53 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
+[07-May-2025 23:16:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[07-May-2025 23:16:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.

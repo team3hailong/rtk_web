@@ -34,6 +34,10 @@ $packages = $packageObj->getAllPackagesForRenewal(); // Hàm này bạn cần th
 $db->close();
 $packageObj->closeConnection();
 
+// Include CSRF helper and generate token
+require_once $project_root_path . '/private/utils/csrf_helper.php';
+$csrf_token = generate_csrf_token();
+
 if (empty($accounts)) {
     header('Location: ' . $base_url . '/public/pages/rtk_accountmanagement.php?error=invalid_account');
     exit;
@@ -152,7 +156,10 @@ if (empty($packages)) {
 <div class="container">
     <h2>Gia hạn tài khoản RTK</h2>
     
-    <form method="post" action="<?php echo $base_url; ?>/private/action/purchase/process_renewal.php" id="renewal-form">
+    <form method="post" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_renewal" id="renewal-form">
+        <!-- inject CSRF token -->
+        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+        
         <!-- Hiển thị giải thích về việc chỉ chọn 1 gói -->
         <div class="package-selection">
             <div class="package-title">Chọn một gói gia hạn cho tất cả tài khoản (<?php echo count($accounts); ?> tài khoản)</div>

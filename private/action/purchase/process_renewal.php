@@ -16,8 +16,8 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 $selected_accounts = $_POST['selected_accounts'] ?? [];
-$package_ids = $_POST['package_id'] ?? [];
-if (empty($selected_accounts) || !is_array($selected_accounts) || empty($package_ids)) {
+$package_id = $_POST['package_id'] ?? null;
+if (empty($selected_accounts) || !is_array($selected_accounts) || empty($package_id)) {
     header('Location: ' . $base_url . '/public/pages/rtk_accountmanagement.php?error=invalid_renewal_data');
     exit;
 }
@@ -28,109 +28,135 @@ $packageObj = new Package();
 
 try {
     $conn->beginTransaction();
-    $registration_ids = [];
-    $total_price = 0;
     
+    // Xác thực dữ liệu đầu vào
+    if (empty($selected_accounts) || empty($package_id)) {
+        throw new Exception('Thông tin gia hạn không hợp lệ.');
+    }
+    
+    // Lấy thông tin gói đã chọn
+    $package = $packageObj->getPackageById((int)$package_id);
+    if (!$package) {
+        throw new Exception('Gói gia hạn không tồn tại.');
+    }
+    
+    // Lấy thời điểm hiện tại
+    $now = new DateTime();
+    $now_str = $now->format('Y-m-d H:i:s');
+    
+    // Tạo mảng lưu các account_id và location để kiểm tra
+    $account_data = [];
+    $location_id = null;
+    $total_accounts = count($selected_accounts);
+    
+    // Xác định location_id và kiểm tra tính hợp lệ của các tài khoản
     foreach ($selected_accounts as $account_id) {
-        $pkg_id = $package_ids[$account_id] ?? null;
-        if (!$pkg_id) continue;
-        
-        $package = $packageObj->getPackageById((int)$pkg_id);
-        if (!$package) continue;
-        
-        // Lấy thông tin account cũ
         $stmt = $conn->prepare("SELECT sa.*, r.location_id, r.num_account, l.province_code FROM survey_account sa 
                               JOIN registration r ON sa.registration_id = r.id 
                               JOIN location l ON r.location_id = l.id 
                               WHERE sa.id = ? AND sa.deleted_at IS NULL");
         $stmt->execute([$account_id]);
         $acc = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$acc) continue;
+        
+        if (!$acc) {
+            throw new Exception('Một hoặc nhiều tài khoản không tồn tại.');
+        }
+        
+        // Nếu chưa có location_id, lấy từ tài khoản đầu tiên
+        if ($location_id === null) {
+            $location_id = $acc['location_id'];
+        }
         
         // Tính thời gian bắt đầu: lấy end_time cũ hoặc NOW nếu đã hết hạn
-        $now = new DateTime();
         $old_end = new DateTime($acc['end_time'] ?? 'now');
         $start_time = ($old_end > $now) ? $old_end : $now;
         
-        // Tính thời gian kết thúc mới dựa trên gói đã chọn
-        $end_time = calculateEndTime($start_time->format('Y-m-d H:i:s'), $package['duration_text']);
-        if (!$end_time) {
-            // Nếu không thể tính toán end_time, log lỗi và bỏ qua
-            error_log("Failed to calculate end time for account {$account_id} with duration {$package['duration_text']}");
-            continue;
-        }
-        
-        // 1. Insert registration mới cho gói gia hạn
-        $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, created_at, updated_at) 
-                   VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, 0, 0, :total_price, 'pending', NOW(), NOW())";
-        $stmt_reg = $conn->prepare($sql_reg);
-        $stmt_reg->execute([
-            ':user_id' => $user_id,
-            ':package_id' => $package['id'],
-            ':location_id' => $acc['location_id'],
-            ':num_account' => $acc['num_account'],
-            ':start_time' => $start_time->format('Y-m-d H:i:s'),
-            ':end_time' => $end_time,
-            ':base_price' => $package['price'],
-            ':total_price' => $package['price'],
-        ]);
-        
-        $registration_id = $conn->lastInsertId();
-        if (!$registration_id) throw new Exception('Không thể tạo đăng ký mới.');
-        
-        // 2. Insert account_groups - liên kết registration mới với account cũ
+        $account_data[$account_id] = [
+            'acc_info' => $acc,
+            'start_time' => $start_time->format('Y-m-d H:i:s')
+        ];
+    }
+    
+    // Tính thời gian kết thúc dựa trên gói đã chọn (sử dụng thời gian bắt đầu từ tài khoản đầu tiên)
+    $first_acc = reset($account_data);
+    $end_time = calculateEndTime($first_acc['start_time'], $package['duration_text']);
+    if (!$end_time) {
+        throw new Exception('Không thể tính toán thời gian kết thúc.');
+    }
+    
+    // Tính tổng giá trị cho toàn bộ giao dịch
+    $total_price = $package['price'] * $total_accounts;
+    
+    // 1. Tạo một đăng ký mới cho tất cả tài khoản
+    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, created_at, updated_at) 
+               VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, 0, 0, :total_price, 'pending', NOW(), NOW())";
+    $stmt_reg = $conn->prepare($sql_reg);
+    $stmt_reg->execute([
+        ':user_id' => $user_id,
+        ':package_id' => $package['id'],
+        ':location_id' => $location_id,
+        ':num_account' => $total_accounts,
+        ':start_time' => $first_acc['start_time'], 
+        ':end_time' => $end_time,
+        ':base_price' => $package['price'],
+        ':total_price' => $total_price
+    ]);
+    
+    $registration_id = $conn->lastInsertId();
+    if (!$registration_id) {
+        throw new Exception('Không thể tạo đăng ký mới.');
+    }
+    
+    // 2. Liên kết tất cả tài khoản với đăng ký mới
+    foreach ($account_data as $account_id => $data) {
         $stmt_ag = $conn->prepare("INSERT INTO account_groups (registration_id, survey_account_id) VALUES (?, ?)");
         $stmt_ag->execute([$registration_id, $account_id]);
-        
-        // 3. Insert transaction_history cho việc gia hạn
-        $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                                 VALUES (?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
-        $stmt_th->execute([$registration_id, $user_id, $package['price']]);
-        
-        // Cộng tổng giá tiền
-        $total_price += $package['price'];
-        $registration_ids[] = $registration_id;
     }
+    
+    // 3. Tạo một giao dịch duy nhất cho việc gia hạn
+    $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
+                             VALUES (?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
+    $stmt_th->execute([$registration_id, $user_id, $total_price]);
+    
+    $transaction_id = $conn->lastInsertId();
     
     $conn->commit();
     
-    // Lưu tất cả registration_ids và thông tin chi tiết vào session để hiển thị đầy đủ trên trang thanh toán
-    if (!empty($registration_ids)) {
-        $_SESSION['pending_registration_ids'] = $registration_ids; // Lưu tất cả registration IDs
-        $_SESSION['pending_registration_id'] = end($registration_ids); // Vẫn giữ lại để tương thích với code cũ
-        $_SESSION['pending_total_price'] = $total_price; // Tổng giá trị thanh toán
-        $_SESSION['pending_is_trial'] = false;
-        $_SESSION['is_renewal'] = true; // Đánh dấu đây là gia hạn để xử lý riêng
-        $_SESSION['renewal_account_ids'] = $selected_accounts; // Lưu lại danh sách account để sau khi thanh toán sẽ cập nhật
-        
-        // Lưu thêm thông tin chi tiết cho trang thanh toán hiển thị
-        $_SESSION['pending_renewal_details'] = [
-            'total_accounts' => count($selected_accounts),
-            'total_price' => $total_price,
-            'timestamp' => time()
-        ];
-        
-        // Log renewal request
-        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-        $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
-        $log_data = json_encode([
-            'registration_ids' => $registration_ids,
-            'selected_accounts' => $selected_accounts,
-            'total_price' => $total_price
-        ]);
-        $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
-                                  VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, NOW())");
-        $stmt_log->execute([$user_id, end($registration_ids), $ip, $ua, $log_data]);
-        
-        header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
-        exit;
-    } else {
-        throw new Exception('Không có tài khoản nào được gia hạn thành công.');
-    }
+    // Lưu thông tin vào session để xử lý ở trang thanh toán
+    $_SESSION['pending_registration_id'] = $registration_id;
+    $_SESSION['pending_total_price'] = $total_price;
+    $_SESSION['pending_is_trial'] = false;
+    $_SESSION['is_renewal'] = true; 
+    $_SESSION['renewal_account_ids'] = $selected_accounts; 
+    
+    // Lưu thêm thông tin chi tiết cho trang thanh toán hiển thị
+    $_SESSION['pending_renewal_details'] = [
+        'total_accounts' => $total_accounts,
+        'total_price' => $total_price,
+        'timestamp' => time(),
+        'package_name' => $package['name']
+    ];
+    
+    // Log renewal request
+    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+    $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
+    $log_data = json_encode([
+        'registration_id' => $registration_id,
+        'selected_accounts' => $selected_accounts,
+        'total_price' => $total_price,
+        'package' => $package['name']
+    ]);
+    $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
+                              VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, NOW())");
+    $stmt_log->execute([$user_id, $registration_id, $ip, $ua, $log_data]);
+    
+    header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
+    exit;
+
 } catch (Exception $e) {
     if (isset($conn) && $conn->inTransaction()) $conn->rollBack();
-    error_log('Renewal error: ' . $e->getMessage());
-    header('Location: ' . $base_url . '/public/pages/rtk_accountmanagement.php?error=renewal_failed&message=' . urlencode($e->getMessage()));
+    $_SESSION['error'] = $e->getMessage();
+    header('Location: ' . $base_url . '/public/pages/rtk_accountmanagement.php?error=' . urlencode($e->getMessage()));
     exit;
 } finally {
     if (isset($db)) $db->close();

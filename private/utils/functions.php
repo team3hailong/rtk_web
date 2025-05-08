@@ -12,7 +12,7 @@
  */
 function calculateEndTime(string $startTime, string $durationText): ?string {
     try {
-        $date = new DateTime($startTime);
+        $date = new DateTime($startTime, new DateTimeZone('Asia/Ho_Chi_Minh'));
         $durationTextLower = mb_strtolower(trim($durationText));
         
         // Check for lifetime first

@@ -289,8 +289,8 @@ class RtkAccount {
     }
 
     private function calculateAccountStatus($account) {
-        $now = new DateTime();
-        $endDate = new DateTime($account['effective_end_time']);
+        $now = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $endDate = new DateTime($account['effective_end_time'], new DateTimeZone('Asia/Ho_Chi_Minh'));
         
         // Không còn sử dụng trạng thái 'pending' nữa
         if ($account['enabled'] == 0) {

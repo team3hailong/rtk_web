@@ -823,3 +823,6 @@ Stack Trace:
 [07-May-2025 23:16:53 Asia/Ho_Chi_Minh] Database init: Using database 'sa2' on host '127.0.0.1'
 [07-May-2025 23:16:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [07-May-2025 23:16:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa2' successful.
+[08-May-2025 08:41:36 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[08-May-2025 08:41:36 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[08-May-2025 08:41:36 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.

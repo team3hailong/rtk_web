@@ -41,7 +41,7 @@ try {
     }
     
     // Lấy thời điểm hiện tại
-    $now = new DateTime();
+    $now = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
     $now_str = $now->format('Y-m-d H:i:s');
     
     // Tạo mảng lưu các account_id và location để kiểm tra
@@ -68,7 +68,7 @@ try {
         }
         
         // Tính thời gian bắt đầu: lấy end_time cũ hoặc NOW nếu đã hết hạn
-        $old_end = new DateTime($acc['end_time'] ?? 'now');
+        $old_end = new DateTime($acc['end_time'] ?? 'now', new DateTimeZone('Asia/Ho_Chi_Minh'));
         $start_time = ($old_end > $now) ? $old_end : $now;
         
         $account_data[$account_id] = [

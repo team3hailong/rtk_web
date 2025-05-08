@@ -128,7 +128,11 @@ if (isset($pdo)) {
                                 echo $description;
                                 ?>
                             </p>
-                            <small><?php echo htmlspecialchars(date('d/m/Y H:i:s', strtotime($activity['created_at']))); ?></small>
+                            <small><?php 
+                                // Ensure date is displayed in Asia/Ho_Chi_Minh timezone
+                                $activityDate = new DateTime($activity['created_at'], new DateTimeZone('Asia/Ho_Chi_Minh'));
+                                echo htmlspecialchars($activityDate->format('d/m/Y H:i:s')); 
+                            ?></small>
                         </div>
                     <?php endforeach; ?>
                 <?php elseif (!isset($pdo)): ?>

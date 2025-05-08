@@ -153,8 +153,11 @@ try {
         }
         
         // Xử lý định dạng ngày giờ
-        $startDate = date('d/m/Y H:i:s', strtotime($account['effective_start_time']));
-        $endDate = date('d/m/Y H:i:s', strtotime($account['effective_end_time']));
+        $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
+        $startDateTime = new DateTime($account['effective_start_time'], $tz);
+        $endDateTime = new DateTime($account['effective_end_time'], $tz);
+        $startDate = $startDateTime->format('d/m/Y H:i:s');
+        $endDate = $endDateTime->format('d/m/Y H:i:s');
         
         // Gộp danh sách mountpoints
         $mountpointText = '';

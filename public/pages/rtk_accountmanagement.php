@@ -61,8 +61,9 @@ if (method_exists($db, 'close')) { $db->close(); }
 function calculate_days_diff($end_date_str) {
     if (!$end_date_str) return ['remaining' => null, 'expired' => null];
     try {
-        $end_date = new DateTime($end_date_str);
-        $now = new DateTime();
+        $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
+        $end_date = new DateTime($end_date_str, $tz);
+        $now = new DateTime('now', $tz);
         $interval = $now->diff($end_date);
         $days = (int)$interval->format('%r%a'); // %r gives sign, %a total days
 
@@ -80,7 +81,7 @@ function calculate_days_diff($end_date_str) {
 function format_date_display($date_str) {
     if (!$date_str) return 'N/A';
     try {
-        $date = new DateTime($date_str);
+        $date = new DateTime($date_str, new DateTimeZone('Asia/Ho_Chi_Minh'));
         return $date->format('d-m-Y'); // Định dạng dd-mm-yyyy
     } catch (Exception $e) {
         return 'N/A';

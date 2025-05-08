@@ -67,6 +67,133 @@ class Transaction {
     }
 
     /**
+     * Fetches transaction history for a specific user with pagination.
+     *
+     * @param int $userId The ID of the user whose transactions to fetch.
+     * @param int $currentPage The current page number (default: 1).
+     * @param int $perPage The number of items per page (default: 10).
+     * @param string $filter The filter to apply ('all', 'completed', 'pending', 'failed').
+     * @return array An array containing transactions and pagination metadata.
+     */
+    public function getTransactionsByUserIdWithPagination(int $userId, int $currentPage = 1, int $perPage = 10, string $filter = 'all'): array {
+        if ($userId <= 0) {
+            return ['transactions' => [], 'pagination' => $this->createEmptyPaginationData($currentPage, $perPage)];
+        }
+
+        $pdo = $this->db->getConnection();
+        if (!$pdo) {
+            error_log("Database connection failed in getTransactionsByUserIdWithPagination.");
+            return ['transactions' => [], 'pagination' => $this->createEmptyPaginationData($currentPage, $perPage)];
+        }
+
+        // Calculate offset
+        $offset = ($currentPage - 1) * $perPage;
+
+        // Base SQL for both count and data queries
+        $baseSql = "FROM
+                    transaction_history th
+                LEFT JOIN
+                    registration r ON th.registration_id = r.id
+                WHERE
+                    th.user_id = :user_id";
+
+        // Add filter condition if not 'all'
+        if ($filter !== 'all') {
+            $baseSql .= " AND th.status = :status";
+        }
+
+        // First, get total count for pagination
+        $countSql = "SELECT COUNT(*) as total " . $baseSql;
+        
+        try {
+            $stmt = $pdo->prepare($countSql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            
+            if ($filter !== 'all') {
+                $stmt->bindParam(':status', $filter, PDO::PARAM_STR);
+            }
+            
+            $stmt->execute();
+            $totalCount = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+            
+            // Calculate pagination metadata
+            $totalPages = ceil($totalCount / $perPage);
+            
+            // Ensure current page is valid
+            if ($currentPage > $totalPages && $totalPages > 0) {
+                $currentPage = $totalPages;
+                $offset = ($currentPage - 1) * $perPage;
+            }
+            
+            // Now get the actual data with limit and offset
+            $dataSql = "SELECT
+                    th.id,
+                    th.registration_id,
+                    th.user_id,
+                    th.transaction_type,
+                    th.amount,
+                    th.status,
+                    th.payment_method,
+                    th.created_at,
+                    th.updated_at,
+                    r.rejection_reason
+                " . $baseSql . "
+                ORDER BY
+                    th.created_at DESC
+                LIMIT :limit OFFSET :offset";
+            
+            $stmt = $pdo->prepare($dataSql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            
+            if ($filter !== 'all') {
+                $stmt->bindParam(':status', $filter, PDO::PARAM_STR);
+            }
+            
+            $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Create pagination metadata
+            $pagination = [
+                'total' => $totalCount,
+                'per_page' => $perPage,
+                'current_page' => $currentPage,
+                'total_pages' => $totalPages
+            ];
+            
+            return [
+                'transactions' => $transactions ?: [],
+                'pagination' => $pagination
+            ];
+            
+        } catch (PDOException $e) {
+            error_log("Database Error in getTransactionsByUserIdWithPagination: " . $e->getMessage());
+            return ['transactions' => [], 'pagination' => $this->createEmptyPaginationData($currentPage, $perPage)];
+        } catch (Exception $e) {
+            error_log("Error in getTransactionsByUserIdWithPagination: " . $e->getMessage());
+            return ['transactions' => [], 'pagination' => $this->createEmptyPaginationData($currentPage, $perPage)];
+        }
+    }
+
+    /**
+     * Creates empty pagination data structure
+     * 
+     * @param int $currentPage The current page
+     * @param int $perPage Items per page
+     * @return array Empty pagination data
+     */
+    private function createEmptyPaginationData($currentPage, $perPage): array {
+        return [
+            'total' => 0,
+            'per_page' => $perPage,
+            'current_page' => $currentPage,
+            'total_pages' => 0
+        ];
+    }
+
+    /**
      * Helper: Get status display text and class for a transaction status
      * @param string $status
      * @return array

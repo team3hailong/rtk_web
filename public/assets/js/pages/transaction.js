@@ -53,54 +53,126 @@ document.addEventListener('keydown', function(event) {
 function showFailureReason(transactionId, reason) {
     alert(`Lý do thất bại cho GD #${transactionId}:\n\n${reason || 'Không có thông tin lý do.'}`);
 }
+
+// --- Pagination & Filter Handling ---
+function buildPaginationUrl(options = {}) {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (options.page) {
+        params.set('page', options.page);
+    }
+    
+    if (options.perPage) {
+        params.set('per_page', options.perPage);
+    }
+    
+    if (options.filter && options.filter !== 'all') {
+        params.set('filter', options.filter);
+    } else if (options.filter === 'all') {
+        params.delete('filter');
+    }
+    
+    return `${window.location.pathname}?${params.toString()}`;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.filter-button');
     const transactionRows = document.querySelectorAll('.transactions-table tbody tr');
     const searchBox = document.querySelector('.search-box');
+    const perPageSelect = document.getElementById('per-page');
+    
+    // Handle filter buttons (redirect with the selected filter)
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            applyFiltersAndSearch();
+            const filter = this.getAttribute('data-filter');
+            const url = buildPaginationUrl({
+                page: 1, // Reset to page 1 when changing filter
+                filter: filter,
+                perPage: paginationConfig.perPage
+            });
+            window.location.href = url;
         });
     });
-    searchBox.addEventListener('input', function() {
-        applyFiltersAndSearch();
-    });
-    function applyFiltersAndSearch() {
-        const activeFilterButton = document.querySelector('.filter-button.active');
-        const filterValue = activeFilterButton ? activeFilterButton.getAttribute('data-filter') : 'all';
+    
+    // Handle per-page selector
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            const perPage = this.value;
+            const url = buildPaginationUrl({
+                page: 1, // Reset to page 1 when changing per_page
+                perPage: perPage,
+                filter: paginationConfig.currentFilter
+            });
+            window.location.href = url;
+        });
+    }
+    
+    // Handle client-side search (doesn't affect pagination)
+    if (searchBox) {
+        searchBox.addEventListener('input', function() {
+            applyClientSideSearch();
+        });
+    }
+    
+    function applyClientSideSearch() {
         const searchTerm = searchBox.value.toLowerCase().trim();
+        
         transactionRows.forEach(row => {
             if (row.querySelector('.empty-state')) {
                 row.style.display = '';
                 return;
             }
-            const statusCell = row.querySelector('td.status .status-badge');
-            let rowStatus = 'unknown';
-            if (statusCell) {
-                if (statusCell.classList.contains('status-completed')) rowStatus = 'completed';
-                else if (statusCell.classList.contains('status-pending')) rowStatus = 'pending';
-                else if (statusCell.classList.contains('status-failed')) rowStatus = 'failed';
-                else if (statusCell.classList.contains('status-refunded')) rowStatus = 'refunded';
-                else if (statusCell.classList.contains('status-cancelled')) rowStatus = 'cancelled';
-            }
-            const statusMatch = (filterValue === 'all' || rowStatus === filterValue);
+            
             const idCell = row.cells[0]?.textContent.toLowerCase() || '';
+            const timeCell = row.cells[1]?.textContent.toLowerCase() || '';
             const amountCell = row.cells[2]?.textContent.toLowerCase() || '';
             const methodCell = row.cells[3]?.textContent.toLowerCase() || '';
-            const searchMatch = (searchTerm === '' || idCell.includes(searchTerm) || amountCell.includes(searchTerm) || methodCell.includes(searchTerm));
-            if (statusMatch && searchMatch) {
+            const statusCell = row.cells[4]?.textContent.toLowerCase() || '';
+            
+            const searchMatch = (searchTerm === '' || 
+                                idCell.includes(searchTerm) || 
+                                timeCell.includes(searchTerm) || 
+                                amountCell.includes(searchTerm) || 
+                                methodCell.includes(searchTerm) ||
+                                statusCell.includes(searchTerm));
+            
+            if (searchMatch) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
             }
         });
+        
         const visibleRows = Array.from(transactionRows).filter(row => row.style.display !== 'none' && !row.querySelector('.empty-state'));
-        const emptyStateRow = document.querySelector('.transactions-table tbody .empty-state');
-        if (visibleRows.length === 0 && !emptyStateRow) {
-            console.log("No transactions match the current filter/search.");
+        if (visibleRows.length === 0) {
+            showNoResults();
+        } else {
+            hideNoResults();
         }
     }
-    applyFiltersAndSearch();
+    
+    function showNoResults() {
+        let noResultsRow = document.querySelector('.no-results-row');
+        if (!noResultsRow) {
+            const tbody = document.querySelector('.transactions-table tbody');
+            noResultsRow = document.createElement('tr');
+            noResultsRow.className = 'no-results-row';
+            noResultsRow.innerHTML = `<td colspan="6"><div class="empty-state"><i class="fas fa-search"></i><p>Không tìm thấy giao dịch phù hợp</p></div></td>`;
+            tbody.appendChild(noResultsRow);
+        } else {
+            noResultsRow.style.display = '';
+        }
+    }
+    
+    function hideNoResults() {
+        const noResultsRow = document.querySelector('.no-results-row');
+        if (noResultsRow) {
+            noResultsRow.style.display = 'none';
+        }
+    }
+    
+    // Initialize search
+    if (searchBox) {
+        applyClientSideSearch();
+    }
 });

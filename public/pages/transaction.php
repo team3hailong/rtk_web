@@ -24,14 +24,44 @@ require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Transaction.php';
 require_once $project_root_path . '/private/utils/functions.php';
 
+// --- Pagination parameters ---
+$currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($currentPage < 1) $currentPage = 1;
+
+$perPage = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
+// Chỉ cho phép các giá trị cụ thể cho per_page
+if (!in_array($perPage, [10, 20, 50])) {
+    $perPage = 10; // Mặc định
+}
+
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+// Chỉ cho phép các filter hợp lệ
+if (!in_array($filter, ['all', 'completed', 'pending', 'failed', 'cancelled'])) {
+    $filter = 'all'; // Mặc định
+}
+
 // Khởi tạo kết nối DB cho các truy vấn trực tiếp
 $db = new Database();
 $conn = $db->getConnection();
 
-// --- Fetch Real Transactions ---
+// --- Fetch Transactions with pagination ---
 $transactionHandler = new Transaction($db);
-$transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch transactions for the user
+$result = $transactionHandler->getTransactionsByUserIdWithPagination(
+    $user_id, $currentPage, $perPage, $filter
+); 
+$transactions = $result['transactions'];
+$pagination = $result['pagination'];
 
+// Hàm tạo URL phân trang với các tham số hiện tại
+function getPaginationUrl($page, $perPage, $filter) {
+    $params = [];
+    $params['page'] = $page;
+    $params['per_page'] = $perPage;
+    if ($filter !== 'all') {
+        $params['filter'] = $filter;
+    }
+    return '?' . http_build_query($params);
+}
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/transaction/transaction.css" />
 <div class="dashboard-wrapper">
@@ -40,11 +70,23 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
         <div class="transactions-wrapper">
             <h2 class="text-2xl font-semibold mb-5">Lịch Sử Giao Dịch</h2>
             <div class="filter-section">
-                 <button class="filter-button active" data-filter="all">Tất cả</button>
-                <button class="filter-button" data-filter="completed">Hoàn thành</button>
-                <button class="filter-button" data-filter="pending">Chờ xử lý</button>
-                <button class="filter-button" data-filter="failed">Thất bại</button>
-                <input type="text" class="search-box" placeholder="Tìm theo ID, Loại GD...">
+                <div class="filter-buttons-group">
+                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
+                    <button class="filter-button <?php echo $filter === 'completed' ? 'active' : ''; ?>" data-filter="completed">Hoàn thành</button>
+                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Chờ xử lý</button>
+                    <button class="filter-button <?php echo $filter === 'failed' ? 'active' : ''; ?>" data-filter="failed">Thất bại</button>
+                </div>
+                <div class="search-and-per-page">
+                    <div class="per-page-selector">
+                        <label for="per-page">Hiển thị:</label>
+                        <select id="per-page" class="per-page-select">
+                            <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
+                            <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
+                            <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                        </select>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Tìm theo ID, Loại GD...">
+                </div>
             </div>
             <div class="transactions-table-wrapper">
                 <table class="transactions-table">
@@ -82,7 +124,7 @@ $transactions = $transactionHandler->getTransactionsByUserId($user_id); // Fetch
                                     ];
                                     $tx_details_json = htmlspecialchars(json_encode($tx_details_for_modal), ENT_QUOTES, 'UTF-8');
                                 ?>
-                                <tr>
+                                <tr data-status="<?php echo strtolower($tx['status']); ?>">
                                     <td><strong><?php echo htmlspecialchars($display_id); ?></strong></td>
                                     <td><?php echo htmlspecialchars($tx['created_at']); ?></td>
                                     <td class="amount"><?php echo number_format($tx['amount'], 0, ',', '.'); ?> đ</td>
@@ -144,6 +186,73 @@ if ($invoice_row) {
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Pagination controls -->
+            <?php if ($pagination['total_pages'] > 1): ?>
+            <div class="pagination-controls">
+                <div class="pagination-info">
+                    Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
+                    đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 
+                    trong tổng số <?php echo $pagination['total']; ?> giao dịch
+                </div>
+                <div class="pagination-buttons">
+                    <?php if ($pagination['current_page'] > 1): ?>
+                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="pagination-button disabled">
+                            <i class="fas fa-angle-double-left"></i>
+                        </span>
+                        <span class="pagination-button disabled">
+                            <i class="fas fa-angle-left"></i>
+                        </span>
+                    <?php endif; ?>
+                    
+                    <?php
+                    // Display pagination numbers with ellipsis for large page counts
+                    $start = max(1, $pagination['current_page'] - 2);
+                    $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                    
+                    if ($start > 1) {
+                        echo '<span class="pagination-ellipsis">...</span>';
+                    }
+                    
+                    for ($i = $start; $i <= $end; $i++):
+                    ?>
+                        <?php if ($i == $pagination['current_page']): ?>
+                            <span class="pagination-button active"><?php echo $i; ?></span>
+                        <?php else: ?>
+                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
+                        <?php endif; ?>
+                    <?php endfor; 
+                    
+                    if ($end < $pagination['total_pages']) {
+                        echo '<span class="pagination-ellipsis">...</span>';
+                    }
+                    ?>
+                    
+                    <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    <?php else: ?>
+                        <span class="pagination-button disabled">
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                        <span class="pagination-button disabled">
+                            <i class="fas fa-angle-double-right"></i>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -175,6 +284,16 @@ if ($invoice_row) {
         </div>
     </div>
 </div>
+<script>
+    // Thêm biến cấu hình cho phân trang
+    const paginationConfig = {
+        currentPage: <?php echo $pagination['current_page']; ?>,
+        perPage: <?php echo $perPage; ?>,
+        totalPages: <?php echo $pagination['total_pages']; ?>,
+        totalRecords: <?php echo $pagination['total']; ?>,
+        currentFilter: '<?php echo $filter; ?>'
+    };
+</script>
 <script src="<?php echo $base_url; ?>/public/assets/js/pages/transaction.js"></script>
 <?php
 include $project_root_path . '/private/includes/footer.php';

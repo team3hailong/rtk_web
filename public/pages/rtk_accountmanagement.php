@@ -255,64 +255,64 @@ function getPaginationUrl($page, $perPage, $filter) {
             
             <!-- Pagination controls -->
             <?php if ($pagination['total_pages'] > 1): ?>
-            <div class="pagination-container">
+            <div class="pagination-controls">
                 <div class="pagination-info">
-                    Hiển thị <?php echo count($accounts); ?> trên tổng số <?php echo $pagination['total']; ?> tài khoản
+                    Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
+                    đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 
+                    trong tổng số <?php echo $pagination['total']; ?> tài khoản
                 </div>
-                <div class="pagination-controls">
+                <div class="pagination-buttons">
                     <?php if ($pagination['current_page'] > 1): ?>
-                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button" title="Trang đầu">
+                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-double-left"></i>
                         </a>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button" title="Trang trước">
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-left"></i>
                         </a>
                     <?php else: ?>
-                        <span class="pagination-button disabled" title="Trang đầu">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-double-left"></i>
                         </span>
-                        <span class="pagination-button disabled" title="Trang trước">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-left"></i>
                         </span>
                     <?php endif; ?>
-
-                    <?php
-                    // Hiển thị các trang xung quanh trang hiện tại
-                    $startPage = max(1, $pagination['current_page'] - 2);
-                    $endPage = min($pagination['total_pages'], $pagination['current_page'] + 2);
                     
-                    // Đảm bảo luôn hiển thị ít nhất 5 trang nếu có thể
-                    if ($endPage - $startPage + 1 < 5 && $pagination['total_pages'] >= 5) {
-                        if ($startPage == 1) {
-                            $endPage = min(5, $pagination['total_pages']);
-                        } elseif ($endPage == $pagination['total_pages']) {
-                            $startPage = max(1, $pagination['total_pages'] - 4);
-                        }
+                    <?php
+                    // Display pagination numbers with ellipsis for large page counts
+                    $start = max(1, $pagination['current_page'] - 2);
+                    $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                    
+                    if ($start > 1) {
+                        echo '<span class="pagination-ellipsis">...</span>';
                     }
                     
-                    for ($i = $startPage; $i <= $endPage; $i++): 
+                    for ($i = $start; $i <= $end; $i++):
                     ?>
                         <?php if ($i == $pagination['current_page']): ?>
                             <span class="pagination-button active"><?php echo $i; ?></span>
                         <?php else: ?>
-                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button">
-                                <?php echo $i; ?>
-                            </a>
+                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
                         <?php endif; ?>
-                    <?php endfor; ?>
-
+                    <?php endfor; 
+                    
+                    if ($end < $pagination['total_pages']) {
+                        echo '<span class="pagination-ellipsis">...</span>';
+                    }
+                    ?>
+                    
                     <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button" title="Trang sau">
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-right"></i>
                         </a>
-                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button" title="Trang cuối">
+                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-double-right"></i>
                         </a>
                     <?php else: ?>
-                        <span class="pagination-button disabled" title="Trang sau">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-right"></i>
                         </span>
-                        <span class="pagination-button disabled" title="Trang cuối">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-double-right"></i>
                         </span>
                     <?php endif; ?>

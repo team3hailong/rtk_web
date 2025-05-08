@@ -52,6 +52,7 @@
     max-width: 100%; 
     font-size: var(--font-size-sm); 
     margin-left: auto; 
+    box-sizing: border-box;
   }
   
   .search-box:focus { 

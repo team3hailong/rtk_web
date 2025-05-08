@@ -131,14 +131,16 @@ function getPaginationUrl($page, $perPage, $filter) {
             
             <!-- Thêm nút Export Excel -->
             <div class="export-section">
-                <button id="export-excel" class="export-button" disabled>
-                    <i class="fas fa-file-excel"></i> Xuất Excel
-                </button>
-                <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline;">
-                    <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2; margin-left:8px;" disabled>
-                        <i class="fas fa-redo"></i> Gia hạn
+                <div class="export-section-buttons">
+                    <button id="export-excel" class="export-button" disabled>
+                        <i class="fas fa-file-excel"></i> Xuất Excel
                     </button>
-                </form>
+                    <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline; flex: 1;">
+                        <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2;" disabled>
+                            <i class="fas fa-redo"></i> Gia hạn
+                        </button>
+                    </form>
+                </div>
                 <button id="select-all-accounts" class="select-all-button">
                     <i class="fas fa-check-square"></i> Chọn tất cả
                 </button>

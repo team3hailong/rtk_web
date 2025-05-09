@@ -26,6 +26,7 @@ define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
 
 // Site Configuration
 define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
+define('ADMIN_SITE', 'http://test2.taikhoandodac.vn');
 
 // Environment and error handling settings
 define('APP_ENV', env('APP_ENV', 'production'));

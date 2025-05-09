@@ -48,6 +48,7 @@ try {
 
     // Prepare the update statement - chỉ cập nhật 2 trường cần thiết
     $sql = "UPDATE user SET
+                is_company = 1,
                 company_name = :company_name,
                 tax_code = :tax_code,
                 updated_at = NOW()

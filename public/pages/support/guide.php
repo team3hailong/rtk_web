@@ -7,6 +7,7 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $project_root_path = PROJECT_ROOT_PATH;
+$admin_site = ADMIN_SITE;
 
 require_once $project_root_path . '/private/classes/Database.php';
 $db = new Database();
@@ -70,7 +71,9 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="guide-item" tabindex="0" onclick="window.location.href='guide_detail.php?slug=<?php echo urlencode($article['slug']); ?>'">
                         <div class="guide-item-content">
                             <?php if (!empty($article['thumbnail'])): ?>
-                                <img class="guide-thumb" src="<?php echo htmlspecialchars($article['thumbnail']); ?>" alt="Thumbnail">
+                                <img class="guide-thumb"
+                                     src="<?php echo $admin_site   . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
+                                     alt="Thumbnail">
                             <?php endif; ?>
                             <div class="guide-item-text">
                                 <div class="guide-title">
@@ -84,7 +87,14 @@ include $project_root_path . '/private/includes/header.php';
                                     <?php endif; ?>
                                     <span>Ngày đăng: <?php echo date('d/m/Y', strtotime($article['created_at'])); ?></span>
                                 </div>
-                                <div class="guide-summary"><?php echo htmlspecialchars(mb_substr(strip_tags($article['content']),0,120)) . (mb_strlen(strip_tags($article['content']))>120?'...':''); ?></div>
+                                <div class="guide-summary">
+                                    <?php
+                                    // decode HTML entities, strip tags, then truncate and escape
+                                    $text = html_entity_decode(strip_tags($article['content']), ENT_QUOTES, 'UTF-8');
+                                    echo htmlspecialchars(mb_substr($text, 0, 120), ENT_QUOTES, 'UTF-8')
+                                         . (mb_strlen($text) > 120 ? '...' : '');
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </div>

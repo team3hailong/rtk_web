@@ -56,3 +56,11 @@
     padding: 18px 6vw; 
   } 
 }
+
+/* Đảm bảo mọi ảnh trong nội dung không vượt quá khung */
+.guide-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

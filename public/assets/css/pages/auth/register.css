@@ -125,10 +125,33 @@ body {
 .success-message {
     background-color: #e8f5e9;
     color: #2e7d32;
-    padding: 10px;
+    padding: 15px;
     border-radius: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     border: 1px solid #a5d6a7;
-    font-size: 0.9rem;
+    font-size: 1rem;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeInPulse 0.5s ease-out;
+    line-height: 1.5;
+}
+
+@keyframes fadeInPulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#countdownTimer {
+    font-weight: bold;
+    color: #1b5e20;
+    font-size: 1.1rem;
 }

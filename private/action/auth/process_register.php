@@ -144,15 +144,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!$emailSent) {
                 // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
                 error_log("Failed to send verification email to: $email");
-            }
-
-            // Commit transaction nếu mọi thứ thành công
+            }            // Commit transaction nếu mọi thứ thành công
             $conn->commit();
 
             // Xóa dữ liệu form khỏi session và đặt thông báo thành công
             unset($_SESSION['form_data']);
             $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.";
             
+            // Chuyển hướng về trang đăng ký để hiển thị thông báo thành công
+            // JavaScript sẽ đếm ngược 7 giây trước khi chuyển hướng đến trang đăng nhập
             header("Location: ../../../public/pages/auth/register.php");
             exit();
 
@@ -167,16 +167,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['errors'] = $errors;
             header("Location: ../../../public/pages/auth/register.php");
             exit();
-        }
-
-    } else {
+        }    } else {
         // Lưu lỗi vào session và chuyển hướng lại form
         $_SESSION['errors'] = $errors;
+        $conn->close(); // Đóng kết nối trước khi chuyển hướng
         header("Location: ../../../public/pages/auth/register.php");
         exit();
     }
-
-    $conn->close();
 } else {
     // Nếu không phải POST request, chuyển hướng về trang đăng ký
     header("Location: ../../../public/pages/auth/register.php");

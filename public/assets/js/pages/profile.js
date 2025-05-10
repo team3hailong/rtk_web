@@ -1,34 +1,5 @@
-function toggleCompanyDetails(isChecked) {
-    const detailsDiv = document.getElementById('company_details');
-    // const companyNameInput = document.getElementById('company_name'); // Not strictly needed for required logic here
-    const taxCodeInput = document.getElementById('tax_code');
-
-    if (detailsDiv && taxCodeInput) { // Check if elements exist
-        detailsDiv.style.display = isChecked ? 'block' : 'none';
-        // Make tax code required if checkbox is checked
-        taxCodeInput.required = isChecked;
-
-        // Optionally clear company fields if unchecked
-        if (!isChecked) {
-            taxCodeInput.value = '';
-            // document.getElementById('company_name').value = ''; // Decide if you want to clear this
-        }
-    } else {
-        console.error("Company details elements not found.");
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Company Details Toggle ---
-    const isCompanyCheckbox = document.getElementById('is_company');
-    if (isCompanyCheckbox) {
-         // Initial call in case the page loads with the checkbox checked
-         toggleCompanyDetails(isCompanyCheckbox.checked);
-         // Add event listener for changes
-         isCompanyCheckbox.addEventListener('change', function() {
-             toggleCompanyDetails(this.checked);
-         });
-    }
+    // --- Company Details Toggle Removed ---
 
     // --- Input Focus Styling ---
     const inputs = document.querySelectorAll('.form-control');

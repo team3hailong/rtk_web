@@ -27,7 +27,7 @@ function fetchUserData($user_id) {
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT username, email, phone, is_company, company_name, tax_code 
+        $stmt = $pdo->prepare("SELECT username, email, phone 
                               FROM user 
                               WHERE id = ? AND deleted_at IS NULL");
         $stmt->execute([$user_id]);
@@ -69,23 +69,17 @@ if (!isset($_SESSION['user_id'])) {
 // --- Get Data from POST ---
 $user_id = $_SESSION['user_id'];
 $username = trim($_POST['username'] ?? '');
+$email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
-$is_company = isset($_POST['is_company']) ? 1 : 0;
-$company_name = $is_company ? trim($_POST['company_name'] ?? '') : null;
-$tax_code = $is_company ? trim($_POST['tax_code'] ?? '') : null;
-
-// If company name is empty but is_company is checked, use username
-if ($is_company && empty($company_name)) {
-    $company_name = $username;
-}
+// Removed is_company and company fields since they've been removed from the form
 
 // --- Basic Validation ---
 $errors = [];
 if (empty($username)) {
     $errors[] = "Tên người dùng không được để trống.";
 }
-if ($is_company && empty($tax_code)) {
-    $errors[] = "Mã số thuế không được để trống nếu đăng ký là công ty.";
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Địa chỉ email không hợp lệ.";
 }
 if (!empty($phone) && !preg_match('/^[0-9]{10,11}$/', $phone)) {
     $errors[] = "Số điện thoại không hợp lệ (phải có 10-11 chữ số).";
@@ -105,6 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
         if (!$pdo) {
             throw new Exception("Database connection failed.");
+        }        // Check if email is already taken by another user
+        if (!empty($email)) {
+            $stmt = $pdo->prepare("SELECT id FROM user WHERE email = ? AND id != ?");
+            $stmt->execute([$email, $user_id]);
+            if ($stmt->fetch()) {
+                throw new Exception("Địa chỉ email này đã được sử dụng bởi tài khoản khác.");
+            }
         }
 
         // Check if phone is already taken by another user
@@ -114,15 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
             if ($stmt->fetch()) {
                 throw new Exception("Số điện thoại này đã được sử dụng bởi tài khoản khác.");
             }
-        }
-
-        // Prepare the update statement
+        }        // Prepare the update statement
         $sql = "UPDATE user SET
                     username = :username,
+                    email = :email,
                     phone = :phone,
-                    is_company = :is_company,
-                    company_name = :company_name,
-                    tax_code = :tax_code,
                     updated_at = NOW()
                 WHERE id = :user_id AND deleted_at IS NULL";
 
@@ -130,21 +127,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
         // Bind parameters
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
-        $stmt->bindParam(':is_company', $is_company, PDO::PARAM_INT);
-        $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR);
-        $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         // Execute the update
-        $stmt->execute();
-
-        // Log activity
-        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, created_at) 
-                   VALUES (:user_id, 'update', 'user', :entity_id, NOW())";
+        $stmt->execute();        // Log activity
+        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details, created_at) 
+                   VALUES (:user_id, 'update', 'user', :entity_id, :details, NOW())";
         $stmt_log = $pdo->prepare($sql_log);
         $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+        $details = "Cập nhật thông tin hồ sơ: username, email, phone";
+        $stmt_log->bindParam(':details', $details, PDO::PARAM_STR);
         $stmt_log->execute();
 
         // After successful update, fetch fresh user data

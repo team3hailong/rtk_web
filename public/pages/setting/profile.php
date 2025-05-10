@@ -62,33 +62,14 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="form-group">
                         <label for="username">Tên người dùng / Công ty:</label>
                         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" required class="form-control">
-                    </div>
-                    <div class="form-group">
+                    </div>                    <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" readonly class="form-control readonly">
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="phone">Số điện thoại:</label>
                         <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" pattern="[0-9]{10,11}" title="Số điện thoại gồm 10 hoặc 11 chữ số" class="form-control">
-                    </div>
-                    <div class="form-group checkbox-group">
-                        <label for="is_company">
-                            <!-- Removed inline onchange, handled by profile.js -->
-                            <input type="checkbox" id="is_company" name="is_company" value="1" <?php echo ($user['is_company'] ?? 0) ? 'checked' : ''; ?>>
-                            Đăng ký với tư cách công ty?
-                        </label>
-                    </div>
-
-                    <div id="company_details" style="display: <?php echo ($user['is_company'] ?? 0) ? 'block' : 'none'; ?>;" class="company-details-group">
-                        <div class="form-group">
-                            <label for="company_name">Tên công ty (nếu khác tên người dùng):</label>
-                            <input type="text" id="company_name" name="company_name" value="<?php echo htmlspecialchars($user['company_name'] ?? ''); ?>" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="tax_code">Mã số thuế:</label>
-                            <input type="text" id="tax_code" name="tax_code" value="<?php echo htmlspecialchars($user['tax_code'] ?? ''); ?>" class="form-control">
-                        </div>
-                    </div>
+                    </div>                    <!-- Removed company registration checkbox and company details section -->
 
                     <div class="form-actions">
                          <button type="submit" name="update_profile" class="btn btn-primary">Cập nhật Hồ sơ</button>

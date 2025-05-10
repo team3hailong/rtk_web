@@ -3,10 +3,33 @@
  */
 document.addEventListener('DOMContentLoaded', function() {
     const successMessage = document.getElementById('successMessage');
+    
     if (successMessage) {
-        setTimeout(() => {
-            window.location.href = 'login.php'; // Redirect to login page
-        }, 1000); // 1000 milliseconds = 1 second
+        // Đếm ngược 7 giây trước khi chuyển hướng
+        let remainingTime = 7;
+        
+        // Thêm đoạn văn bản đếm ngược
+        const originalMessage = successMessage.textContent;
+        const countdownSpan = document.createElement('span');
+        countdownSpan.id = 'countdownTimer';
+        successMessage.appendChild(document.createElement('br'));
+        successMessage.appendChild(document.createTextNode('Chuyển hướng sau '));
+        successMessage.appendChild(countdownSpan);
+        successMessage.appendChild(document.createTextNode(' giây...'));
+        
+        // Cập nhật đếm ngược mỗi giây
+        const countdownInterval = setInterval(() => {
+            countdownSpan.textContent = remainingTime;
+            remainingTime--;
+            
+            if (remainingTime < 0) {
+                clearInterval(countdownInterval);
+                window.location.href = 'login.php'; // Chuyển hướng sang trang đăng nhập
+            }
+        }, 1000);
+        
+        // Hiển thị thời gian ban đầu
+        countdownSpan.textContent = remainingTime;
     }
 
     // Client-side validation for password match

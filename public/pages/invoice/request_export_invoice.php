@@ -104,7 +104,7 @@ if ($stmt_check_ownership->fetchColumn() == 0) {
 $stmt = $conn->prepare('
     SELECT th.id as transaction_id, th.created_at, 
            p.name as package_name, r.num_account, r.total_price, 
-           u.company_name, u.tax_code, u.email
+           u.company_name, u.tax_code, u.company_address, u.email
     FROM transaction_history th
     LEFT JOIN registration r ON th.registration_id = r.id
     LEFT JOIN package p ON r.package_id = p.id
@@ -162,6 +162,12 @@ include $project_root_path . '/private/includes/header.php';
                     <tr><td>Mã số thuế</td><td>:</td><td>
                         <?php if (!empty($info['tax_code'])): ?>
                             <?php echo htmlspecialchars($info['tax_code']); ?>
+                        <?php else: ?>
+                            <span class="text-danger">Chưa cung cấp</span>
+                        <?php endif; ?>                    </td></tr>
+                    <tr><td>Địa chỉ công ty</td><td>:</td><td>
+                        <?php if (!empty($info['company_address'])): ?>
+                            <?php echo htmlspecialchars($info['company_address']); ?>
                         <?php else: ?>
                             <span class="text-danger">Chưa cung cấp</span>
                         <?php endif; ?>

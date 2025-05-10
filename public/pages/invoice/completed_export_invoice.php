@@ -30,7 +30,7 @@ $conn = $db->getConnection();
 $stmt = $conn->prepare('
     SELECT th.id as transaction_id, th.created_at, 
            p.name as package_name, r.num_account, r.total_price, 
-           u.company_name, u.tax_code, u.email
+           u.company_name, u.tax_code, u.company_address, u.email
     FROM transaction_history th
     LEFT JOIN registration r ON th.registration_id = r.id
     LEFT JOIN package p ON r.package_id = p.id
@@ -71,10 +71,10 @@ include $project_root_path . '/private/includes/header.php';
                 </table>
             </div>
             <div class="invoice-section">
-                <h4>Thông tin xuất hóa đơn</h4>
-                <table class="info-table">
+                <h4>Thông tin xuất hóa đơn</h4>                <table class="info-table">
                     <tr><td>Tên công ty</td><td>:</td><td><?php echo htmlspecialchars($info['company_name'] ?? ''); ?></td></tr>
                     <tr><td>Mã số thuế</td><td>:</td><td><?php echo htmlspecialchars($info['tax_code'] ?? ''); ?></td></tr>
+                    <tr><td>Địa chỉ công ty</td><td>:</td><td><?php echo htmlspecialchars($info['company_address'] ?? ''); ?></td></tr>
                     <tr><td>Email</td><td>:</td><td><?php echo htmlspecialchars($info['email'] ?? ''); ?></td></tr>
                 </table>
             </div>

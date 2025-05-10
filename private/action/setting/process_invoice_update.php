@@ -22,6 +22,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $company_name = trim($_POST['company_name'] ?? '');
 $tax_code = trim($_POST['tax_code'] ?? '');
+$company_address = trim($_POST['company_address'] ?? '');
 
 // --- Basic Validation ---
 if (!empty($tax_code) && empty($company_name)) {
@@ -44,13 +45,12 @@ try {
 
     if (!$conn) {
         throw new Exception("Lỗi kết nối cơ sở dữ liệu.");
-    }
-
-    // Prepare the update statement - chỉ cập nhật 2 trường cần thiết
+    }    // Prepare the update statement - cập nhật 3 trường cần thiết
     $sql = "UPDATE user SET
                 is_company = 1,
                 company_name = :company_name,
                 tax_code = :tax_code,
+                company_address = :company_address,
                 updated_at = NOW()
             WHERE id = :user_id";
 
@@ -59,6 +59,7 @@ try {
     // Bind parameters
     $stmt->bindParam(':company_name', $company_name, PDO::PARAM_STR);
     $stmt->bindParam(':tax_code', $tax_code, PDO::PARAM_STR);
+    $stmt->bindParam(':company_address', $company_address, PDO::PARAM_STR);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
     // Execute the update

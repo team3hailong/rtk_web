@@ -22,7 +22,7 @@ require_once $project_root_path . '/private/utils/csrf_helper.php';
 $db = new Database();
 $conn = $db->getConnection();
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT company_name, tax_code FROM user WHERE id = ?");
+$stmt = $conn->prepare("SELECT company_name, tax_code, company_address FROM user WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -57,10 +57,13 @@ include $project_root_path . '/private/includes/header.php';
                 <div class="form-group">
                     <label for="company_name">Tên công ty</label>
                     <input type="text" id="company_name" name="company_name" class="form-control" value="<?php echo htmlspecialchars($user['company_name'] ?? ''); ?>">
-                </div>
-                <div class="form-group">
+                </div>                <div class="form-group">
                     <label for="tax_code">Mã số thuế</label>
                     <input type="text" id="tax_code" name="tax_code" class="form-control" value="<?php echo htmlspecialchars($user['tax_code'] ?? ''); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="company_address">Địa chỉ công ty</label>
+                    <input type="text" id="company_address" name="company_address" class="form-control" value="<?php echo htmlspecialchars($user['company_address'] ?? ''); ?>">
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
@@ -77,13 +80,13 @@ include $project_root_path . '/private/includes/header.php';
 document.getElementById('invoice-form').addEventListener('submit', function(e) {
     var companyName = document.getElementById('company_name').value.trim();
     var taxCode = document.getElementById('tax_code').value.trim();
+    var companyAddress = document.getElementById('company_address').value.trim();
     var errorElement = document.getElementById('client-error');
     
     // Reset error message
     errorElement.style.display = 'none';
     errorElement.textContent = '';
-    
-    // Basic validation
+      // Basic validation
     if (companyName === '' && taxCode !== '') {
         e.preventDefault();
         errorElement.textContent = 'Vui lòng nhập tên công ty nếu bạn cung cấp mã số thuế.';
@@ -94,6 +97,13 @@ document.getElementById('invoice-form').addEventListener('submit', function(e) {
     if (taxCode !== '' && !/^\d{10}(-\d{3})?$/.test(taxCode)) {
         e.preventDefault();
         errorElement.textContent = 'Mã số thuế không hợp lệ. Định dạng: 10 chữ số hoặc 10 chữ số-3 chữ số.';
+        errorElement.style.display = 'block';
+    }
+    
+    // Company address validation
+    if (companyName !== '' && companyAddress === '') {
+        e.preventDefault();
+        errorElement.textContent = 'Vui lòng nhập địa chỉ công ty.';
         errorElement.style.display = 'block';
     }
 });

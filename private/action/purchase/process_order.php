@@ -85,7 +85,7 @@ try {
     }
 
     // --- Calculate Start and End Dates (Example: using package duration text) ---
-    $start_time = new DateTime();
+    $start_time = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
     $end_time = clone $start_time;
     if (preg_match('/(\d+)\s*(Năm|Tháng|Ngày)/iu', $package['duration_text'], $matches)) {
         $num = (int)$matches[1];

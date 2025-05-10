@@ -122,6 +122,88 @@
 .pagination-button.active { background: var(--primary-500); border-color: var(--primary-500); color: white; font-weight: var(--font-medium); }
 .pagination-button.disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pagination-info {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.pagination-button:hover:not(.disabled) {
+    background-color: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+.pagination-button.active {
+    background-color: var(--primary-600);
+    border-color: var(--primary-700);
+    color: white;
+}
+
+.pagination-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    padding: 0 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pagination-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .pagination-buttons {
+        margin-top: 0.5rem;
+    }
+    
+    .pagination-button {
+        min-width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.8rem;
+    }
+}
+
 /* --- Modal --- */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
 .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -315,9 +397,136 @@
 
 /* --- Responsive --- */
 @media (max-width: 992px) { .accounts-table th, .accounts-table td { padding: 0.8rem 0.6rem; } }
-@media (max-width: 768px) { .accounts-content-wrapper { padding-top: 0.5rem; } .accounts-wrapper { padding: 0 0.75rem 1rem 0.75rem; } .filter-section { align-items: flex-start; flex-direction: column; margin-bottom: 1rem; } .filter-buttons-group { margin-bottom: 0.5rem; width: 100%; } .search-box { width: 100%; margin-left: 0; margin-top: 0.5rem; } .accounts-table-wrapper { border-radius: var(--rounded-md); margin: 0 -0.25rem; } .accounts-table th:nth-child(4), .accounts-table td:nth-child(4) { display: none; } .accounts-table th, .accounts-table td { padding: 0.7rem 0.5rem; font-size: var(--font-size-xs); } .accounts-table td.actions { width: 60px; min-width: 60px; padding: 0.5rem; } .modal-content { max-width: 95%; padding: 1.25rem; } .modal-header h4 { font-size: var(--font-size-sm); } .modal-body p { font-size: var(--font-size-xs); margin-bottom: 0.5rem; } .modal-body strong { min-width: 100px; display: block; margin-bottom: 0.2rem; } .modal-close-btn { font-size: 1.7rem; padding: 0.3rem; } .search-and-per-page { width: 100%; justify-content: space-between; } .pagination-container { flex-direction: column; gap: 0.75rem; align-items: center; } .pagination-info { text-align: center; margin: 0 auto; order: 2; } .pagination-controls { margin: 0 auto; order: 1; } }
-@media (max-width: 576px) { .accounts-wrapper { padding: 0 0.5rem 1rem 0.5rem; } h2 { font-size: 1.25rem; margin-bottom: 0.75rem; text-align: center; } .filter-section { gap: 0.35rem; } .filter-button { padding: 0.3rem 0.6rem; font-size: var(--font-size-xs); flex: 1; min-width: calc(25% - 0.35rem); text-align: center; } .accounts-table th:nth-child(5), .accounts-table td:nth-child(5) { display: none; } .accounts-table th:nth-child(1), .accounts-table td:nth-child(1) { width: 25%; } .accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 35%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { width: 25%; } .accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 15%; min-width: 50px; text-align: center; } .accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 15%; min-width: 50px; } .accounts-table th, .accounts-table td { padding: 0.5rem 0.3rem; font-size: 0.7rem; } .accounts-table td.actions { width: 50px; min-width: 50px; padding: 0.5rem 0.3rem; } .status-badge { min-width: auto; padding: 0.3rem 0.4rem; font-size: 0.65rem; } .search-and-per-page { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .search-box { width: 100%; } .per-page-selector { width: 100%; justify-content: space-between; } .pagination-button { width: 1.8rem; height: 1.8rem; font-size: var(--font-size-xs); } }
-@media (max-width: 400px) { .accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { display: none; } .accounts-table th, .accounts-table td { padding: 0.4rem 0.2rem; font-size: 0.65rem; } .accounts-table th:nth-child(1), .accounts-table td:nth-child(1) { width: 25%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 35%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 20%; } .accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 20%; } .modal-body strong { min-width: auto; margin-right: 0.3rem; } }
-@media (max-width: 768px) { .export-section { flex-direction: column; align-items: flex-start; gap: 0.75rem; } .export-button, .select-all-button { width: 100%; justify-content: center; } }
+@media (max-width: 768px) { 
+    .accounts-content-wrapper { padding-top: 0.5rem; } 
+    .accounts-wrapper { padding: 0 0.75rem 1rem 0.75rem; } 
+    .filter-section { align-items: flex-start; flex-direction: column; margin-bottom: 1rem; } 
+    .filter-buttons-group { margin-bottom: 0.5rem; width: 100%; } 
+    .search-box { width: 100%; margin-left: 0; margin-top: 0.5rem; } 
+    .search-and-per-page { width: 100%; justify-content: space-between; }
+    
+    /* Mobile Export Section */
+    .export-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        justify-content: space-between;
+    }
+    
+    /* Buttons Layout - First Row (Excel & Renewal) */
+    .export-section-buttons {
+        display: flex;
+        width: 100%;
+        gap: 0.5rem;
+    }
+    
+    /* Excel và Renewal nút cùng dòng trên mobile */
+    #export-excel {
+        flex: 1;
+        margin: 0;
+    }
+    
+    #renewal-btn {
+        flex: 1;
+        margin: 0 !important;
+    }
+    
+    .select-all-button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .accounts-table-wrapper { 
+        border-radius: var(--rounded-md); 
+        margin: 0 -0.25rem; 
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Cải thiện cuộn trên iOS */
+    } 
+    
+    .accounts-table th:nth-child(4), .accounts-table td:nth-child(4) { display: none; } 
+    .accounts-table th, .accounts-table td { padding: 0.7rem 0.5rem; font-size: var(--font-size-xs); } 
+    .accounts-table td.actions { width: 60px; min-width: 60px; padding: 0.5rem; } 
+    .modal-content { max-width: 95%; padding: 1.25rem; } 
+    .modal-header h4 { font-size: var(--font-size-sm); } 
+    .modal-body p { font-size: var(--font-size-xs); margin-bottom: 0.5rem; } 
+    .modal-body strong { min-width: 100px; display: block; margin-bottom: 0.2rem; } 
+    .modal-close-btn { font-size: 1.7rem; padding: 0.3rem; } 
+    
+    /* Fix pagination layout on mobile */
+    .pagination-container { 
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    } 
+    .pagination-info { 
+        width: 100%;
+        text-align: center;
+        order: 2;
+        margin-top: 0.75rem;
+    } 
+    .pagination-controls { 
+        order: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .pagination-button {
+        margin: 0.15rem;
+    }
+}
+@media (max-width: 576px) { 
+    .accounts-wrapper { padding: 0 0.5rem 1rem 0.5rem; } 
+    h2 { font-size: 1.25rem; margin-bottom: 0.75rem; text-align: center; } 
+    .filter-section { gap: 0.35rem; } 
+    .filter-button { padding: 0.3rem 0.6rem; font-size: var(--font-size-xs); flex: 1; min-width: calc(25% - 0.35rem); text-align: center; } 
+    .accounts-table th:nth-child(5), .accounts-table td:nth-child(5) { display: none; } 
+    .accounts-table th:nth-child(1), .accounts-table td:nth-child(1) { width: 25%; } 
+    .accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 35%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+    .accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { width: 25%; } 
+    .accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 15%; min-width: 50px; text-align: center; } 
+    .accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 15%; min-width: 50px; } 
+    .accounts-table th, .accounts-table td { padding: 0.5rem 0.3rem; font-size: 0.7rem; } 
+    .accounts-table td.actions { width: 50px; min-width: 50px; padding: 0.5rem 0.3rem; } 
+    .status-badge { min-width: auto; padding: 0.3rem 0.4rem; font-size: 0.65rem; } 
+    
+    .search-and-per-page { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 0.5rem; 
+        width: 100%; 
+    } 
+    .search-box { width: 100%; box-sizing: border-box; }
+    .per-page-selector { width: 100%; justify-content: space-between; } 
+    .pagination-button { width: 1.8rem; height: 1.8rem; font-size: var(--font-size-xs); }
+
+    /* Cải thiện export section trên mobile */
+    .export-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        width: 100%;
+    }
+    .export-button, .select-all-button, #renewal-btn {
+        width: 100%;
+        margin: 0.25rem 0;
+        display: flex;
+        justify-content: center;
+    }
+}
+@media (max-width: 400px) { 
+    .accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { display: none; } 
+    .accounts-table th, .accounts-table td { padding: 0.4rem 0.2rem; font-size: 0.65rem; } 
+    .accounts-table th:nth-child(1), .accounts-table td:nth-child(1) { width: 25%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+    .accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 35%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+    .accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 20%; } 
+    .accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 20%; } 
+    .modal-body strong { min-width: auto; margin-right: 0.3rem; } 
+}
+@media (max-width: 768px) { 
+    .export-section { flex-direction: column; align-items: flex-start; gap: 0.75rem; width: 100%; } 
+    .export-button, .select-all-button { width: 100%; justify-content: center; } 
+}
 @media (max-width: 576px) { .select-column { width: 30px !important; } .account-checkbox { width: 16px; height: 16px; } }
 /* ===================== END ===================== */

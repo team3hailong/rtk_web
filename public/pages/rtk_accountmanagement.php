@@ -61,8 +61,9 @@ if (method_exists($db, 'close')) { $db->close(); }
 function calculate_days_diff($end_date_str) {
     if (!$end_date_str) return ['remaining' => null, 'expired' => null];
     try {
-        $end_date = new DateTime($end_date_str);
-        $now = new DateTime();
+        $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
+        $end_date = new DateTime($end_date_str, $tz);
+        $now = new DateTime('now', $tz);
         $interval = $now->diff($end_date);
         $days = (int)$interval->format('%r%a'); // %r gives sign, %a total days
 
@@ -80,7 +81,7 @@ function calculate_days_diff($end_date_str) {
 function format_date_display($date_str) {
     if (!$date_str) return 'N/A';
     try {
-        $date = new DateTime($date_str);
+        $date = new DateTime($date_str, new DateTimeZone('Asia/Ho_Chi_Minh'));
         return $date->format('d-m-Y'); // Định dạng dd-mm-yyyy
     } catch (Exception $e) {
         return 'N/A';
@@ -130,14 +131,16 @@ function getPaginationUrl($page, $perPage, $filter) {
             
             <!-- Thêm nút Export Excel -->
             <div class="export-section">
-                <button id="export-excel" class="export-button" disabled>
-                    <i class="fas fa-file-excel"></i> Xuất Excel
-                </button>
-                <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline;">
-                    <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2; margin-left:8px;" disabled>
-                        <i class="fas fa-redo"></i> Gia hạn
+                <div class="export-section-buttons">
+                    <button id="export-excel" class="export-button" disabled>
+                        <i class="fas fa-file-excel"></i> Xuất Excel
                     </button>
-                </form>
+                    <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline; flex: 1;">
+                        <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2;" disabled>
+                            <i class="fas fa-redo"></i> Gia hạn
+                        </button>
+                    </form>
+                </div>
                 <button id="select-all-accounts" class="select-all-button">
                     <i class="fas fa-check-square"></i> Chọn tất cả
                 </button>
@@ -252,64 +255,64 @@ function getPaginationUrl($page, $perPage, $filter) {
             
             <!-- Pagination controls -->
             <?php if ($pagination['total_pages'] > 1): ?>
-            <div class="pagination-container">
+            <div class="pagination-controls">
                 <div class="pagination-info">
-                    Hiển thị <?php echo count($accounts); ?> trên tổng số <?php echo $pagination['total']; ?> tài khoản
+                    Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
+                    đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 
+                    trong tổng số <?php echo $pagination['total']; ?> tài khoản
                 </div>
-                <div class="pagination-controls">
+                <div class="pagination-buttons">
                     <?php if ($pagination['current_page'] > 1): ?>
-                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button" title="Trang đầu">
+                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-double-left"></i>
                         </a>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button" title="Trang trước">
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-left"></i>
                         </a>
                     <?php else: ?>
-                        <span class="pagination-button disabled" title="Trang đầu">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-double-left"></i>
                         </span>
-                        <span class="pagination-button disabled" title="Trang trước">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-left"></i>
                         </span>
                     <?php endif; ?>
-
-                    <?php
-                    // Hiển thị các trang xung quanh trang hiện tại
-                    $startPage = max(1, $pagination['current_page'] - 2);
-                    $endPage = min($pagination['total_pages'], $pagination['current_page'] + 2);
                     
-                    // Đảm bảo luôn hiển thị ít nhất 5 trang nếu có thể
-                    if ($endPage - $startPage + 1 < 5 && $pagination['total_pages'] >= 5) {
-                        if ($startPage == 1) {
-                            $endPage = min(5, $pagination['total_pages']);
-                        } elseif ($endPage == $pagination['total_pages']) {
-                            $startPage = max(1, $pagination['total_pages'] - 4);
-                        }
+                    <?php
+                    // Display pagination numbers with ellipsis for large page counts
+                    $start = max(1, $pagination['current_page'] - 2);
+                    $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                    
+                    if ($start > 1) {
+                        echo '<span class="pagination-ellipsis">...</span>';
                     }
                     
-                    for ($i = $startPage; $i <= $endPage; $i++): 
+                    for ($i = $start; $i <= $end; $i++):
                     ?>
                         <?php if ($i == $pagination['current_page']): ?>
                             <span class="pagination-button active"><?php echo $i; ?></span>
                         <?php else: ?>
-                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button">
-                                <?php echo $i; ?>
-                            </a>
+                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
                         <?php endif; ?>
-                    <?php endfor; ?>
-
+                    <?php endfor; 
+                    
+                    if ($end < $pagination['total_pages']) {
+                        echo '<span class="pagination-ellipsis">...</span>';
+                    }
+                    ?>
+                    
                     <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button" title="Trang sau">
+                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-right"></i>
                         </a>
-                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button" title="Trang cuối">
+                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
                             <i class="fas fa-angle-double-right"></i>
                         </a>
                     <?php else: ?>
-                        <span class="pagination-button disabled" title="Trang sau">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-right"></i>
                         </span>
-                        <span class="pagination-button disabled" title="Trang cuối">
+                        <span class="pagination-button disabled">
                             <i class="fas fa-angle-double-right"></i>
                         </span>
                     <?php endif; ?>

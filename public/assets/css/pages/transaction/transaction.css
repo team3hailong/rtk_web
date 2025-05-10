@@ -27,6 +27,12 @@
     justify-content: space-between;
   }
   
+  .filter-buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
   .filter-button { 
     padding: 0.4rem 0.9rem; 
     border: 1px solid var(--gray-300); 
@@ -44,6 +50,42 @@
     border-color: var(--primary-500); 
   }
   
+  .search-and-per-page {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: auto;
+  }
+  
+  .per-page-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+  }
+  
+  .per-page-select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-md);
+    background: white;
+    font-size: var(--font-size-sm);
+    color: var(--gray-800);
+    cursor: pointer;
+    appearance: none;
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+  
+  .per-page-select:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
+  }
+  
   .search-box { 
     padding: 0.5rem 0.8rem; 
     border: 1px solid var(--gray-300); 
@@ -52,6 +94,7 @@
     max-width: 100%; 
     font-size: var(--font-size-sm); 
     margin-left: auto; 
+    box-sizing: border-box;
   }
   
   .search-box:focus { 
@@ -327,6 +370,70 @@
     display: inline-block;
   }
   
+  /* Pagination Controls */
+  .pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .pagination-info {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+  }
+  
+  .pagination-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  
+  .pagination-button:hover:not(.disabled) {
+    background-color: var(--gray-100);
+    border-color: var(--gray-400);
+  }
+  
+  .pagination-button.active {
+    background-color: var(--primary-600);
+    border-color: var(--primary-700);
+    color: white;
+  }
+  
+  .pagination-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    padding: 0 0.25rem;
+  }
+  
   /* ===== RESPONSIVE STYLES ===== */
   
   /* Tablet & smaller screens */
@@ -355,32 +462,26 @@
     
     /* Filter section */
     .filter-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      flex-direction: column;
+      align-items: flex-start;
       gap: 0.5rem;
       margin-bottom: 1rem;
     }
     
-    .filter-button {
-      flex: none;
-      max-width: none;
+    .filter-buttons-group {
+      margin-bottom: 0.5rem;
       width: 100%;
-      text-align: center;
-      padding: 0.4rem 0.3rem;
-      white-space: nowrap;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-size-xs);
+    }
+    
+    .search-and-per-page {
+      width: 100%;
+      justify-content: space-between;
     }
     
     .search-box { 
       width: 100%;
       margin-left: 0;
       margin-top: 0.5rem;
-      grid-column: 1 / span 2;
-      order: 1;
     }
     
     /* Table */
@@ -429,30 +530,26 @@
       font-size: 0.9rem;
     }
     
+    /* Pagination */
+    .pagination-controls {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .pagination-buttons {
+      margin-top: 0.5rem;
+    }
+    
+    .pagination-button {
+      min-width: 1.8rem;
+      height: 1.8rem;
+      font-size: 0.8rem;
+    }
+    
     /* Modal */
     .modal-content { 
       max-width: 95%; 
       padding: 1.25rem;
-    }
-    
-    .modal-header h4 { 
-      font-size: var(--font-size-base);
-    }
-    
-    .modal-body p { 
-      font-size: var(--font-size-xs);
-      margin-bottom: 0.5rem;
-    }
-    
-    .modal-body strong { 
-      min-width: 100px; 
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-    
-    .modal-close-btn {
-      font-size: 1.7rem;
-      padding: 0.3rem;
     }
   }
   
@@ -481,6 +578,17 @@
       min-width: calc(25% - 0.35rem);
       text-align: center;
     }
+    
+    .search-and-per-page { 
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 0.5rem; 
+      width: 100%; 
+    }
+    
+    .search-box { width: 100%; box-sizing: border-box; }
+    
+    .per-page-selector { width: 100%; justify-content: space-between; }
     
     /* Hide method column and status column */
     .transactions-table th:nth-child(4), 
@@ -532,6 +640,28 @@
     .action-button {
       width: var(--mobile-action-btn-size);
       height: var(--mobile-action-btn-size);
+    }
+    
+    /* Pagination */
+    .pagination-info { 
+      width: 100%;
+      text-align: center;
+      order: 2;
+      margin-top: 0.75rem;
+    } 
+    
+    .pagination-controls { 
+      order: 1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .pagination-button {
+      margin: 0.15rem;
+      min-width: 1.8rem;
+      height: 1.8rem;
+      font-size: var(--font-size-xs);
     }
   }
   

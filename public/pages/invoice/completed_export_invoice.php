@@ -7,6 +7,7 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $project_root_path = PROJECT_ROOT_PATH;
+$admin_site = ADMIN_SITE;
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: ' . $base_url . '/public/pages/auth/login.php');
@@ -85,7 +86,7 @@ include $project_root_path . '/private/includes/header.php';
                         Yêu cầu xuất hóa đơn đã được chấp thuận.
                     </div>
                     <?php if (!empty($invoice['invoice_file'])): ?>
-                        <button type="button" class="btn btn-primary download-btn" onclick="downloadInvoiceFile('<?php echo $base_url . '/public/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
+                        <button type="button" class="btn btn-primary download-btn" onclick="downloadInvoiceFile('<?php echo $admin_site . '/public/uploads/invoice/' . urlencode($invoice['invoice_file']); ?>')">
                             <i class="fas fa-download"></i> Tải hóa đơn
                         </button>
                         <script>

@@ -7,6 +7,7 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $project_root_path = PROJECT_ROOT_PATH;
+$admin_site = ADMIN_SITE;
 
 require_once $project_root_path . '/private/classes/Database.php';
 $db = new Database();
@@ -41,7 +42,9 @@ include $project_root_path . '/private/includes/header.php';
                     <span>Ngày đăng: <?php echo date('d/m/Y', strtotime($article['created_at'])); ?></span>
                 </div>
                 <?php if (!empty($article['thumbnail'])): ?>
-                    <img class="guide-thumbnail" src="<?php echo htmlspecialchars($article['thumbnail']); ?>" alt="Thumbnail">
+                    <img class="guide-thumbnail"
+                         src="<?php echo $admin_site . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
+                         alt="Thumbnail">
                 <?php endif; ?>
                 <div class="guide-content"><?php echo $article['content']; ?></div>
                 <div class="guide-back-container"><a href="guide.php" class="guide-back-link">&larr; Quay lại danh sách bài viết</a></div>

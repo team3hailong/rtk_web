@@ -128,19 +128,19 @@ try {
     }
     if ($registration_data['user_id'] != $user_id) {
         throw new Exception('Access denied. You do not own this registration.');
-    }
-
-    // Find and update the transaction history record instead of the payment table
-    $sql_find_transaction = "SELECT id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
+    }    // Find and update the transaction history record instead of the payment table
+    $sql_find_transaction = "SELECT id, voucher_id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
     $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_find->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_find->execute();
-    $transaction_id = $stmt_find->fetchColumn();
+    $transaction = $stmt_find->fetch(PDO::FETCH_ASSOC);
 
-    if (!$transaction_id) {
+    if (!$transaction) {
         throw new Exception('No pending transaction found for this registration.');
     }
+    
+    $transaction_id = $transaction['id'];
 
     // Update transaction record with payment image
     $sql_update = "UPDATE transaction_history 

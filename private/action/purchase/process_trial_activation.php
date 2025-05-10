@@ -103,13 +103,31 @@ try {
 
     // 9. Thêm vào account_groups
     $stmt = $conn->prepare("INSERT INTO account_groups (registration_id, survey_account_id) VALUES (?, ?)");
-    $stmt->execute([$registration_id, $account_id]);
-
-    // 10. Cập nhật trạng thái đăng ký và transaction_history
+    $stmt->execute([$registration_id, $account_id]);    // 10. Cập nhật trạng thái đăng ký và transaction_history
     $stmt = $conn->prepare("UPDATE registration SET status = 'active', updated_at = NOW() WHERE id = ?");
     $stmt->execute([$registration_id]);
-    $stmt = $conn->prepare("UPDATE transaction_history SET status = 'completed', payment_confirmed = 1, payment_confirmed_at = NOW(), updated_at = NOW() WHERE registration_id = ? AND status = 'pending'");
+    
+    // Lấy transaction ID để cập nhật
+    $stmt = $conn->prepare("SELECT id, voucher_id FROM transaction_history WHERE registration_id = ? AND status = 'pending' LIMIT 1");
     $stmt->execute([$registration_id]);
+    $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($transaction) {
+        // Cập nhật transaction_history
+        $stmt = $conn->prepare("UPDATE transaction_history SET status = 'completed', payment_confirmed = 1, payment_confirmed_at = NOW(), updated_at = NOW() WHERE id = ?");
+        $stmt->execute([$transaction['id']]);
+        
+        // Nếu có voucher_id, tăng số lần sử dụng voucher
+        if (!empty($transaction['voucher_id'])) {
+            require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Voucher.php';
+            require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
+            $db = new Database();
+            $voucherService = new Voucher($db);
+            $voucherService->incrementUsage($transaction['voucher_id']);
+        }
+    } else {
+        throw new Exception('Không tìm thấy giao dịch cần cập nhật.');
+    }
 
     // 11. Ghi log hoạt động
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;

@@ -215,6 +215,63 @@ class Transaction {
         }
     }
 
+    /**
+     * Update transaction status and handle related operations like voucher usage
+     * 
+     * @param int $transactionId ID of the transaction to update
+     * @param string $status New status (completed, failed, cancelled, etc)
+     * @param bool $updateVoucher Whether to update voucher usage count when status is completed
+     * @return bool Success/failure of the operation
+     */
+    public function updateTransactionStatus($transactionId, $status, $updateVoucher = true) {
+        if (!in_array(strtolower($status), ['completed', 'pending', 'failed', 'cancelled', 'refunded'])) {
+            return false;
+        }
+        
+        try {
+            $pdo = $this->db->getConnection();
+            
+            // Start transaction
+            $pdo->beginTransaction();
+            
+            // Get transaction details first to check for voucher_id
+            $stmt = $pdo->prepare("SELECT voucher_id FROM transaction_history WHERE id = :id");
+            $stmt->bindParam(':id', $transactionId, PDO::PARAM_INT);
+            $stmt->execute();
+            $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Update transaction status
+            $updateStmt = $pdo->prepare("
+                UPDATE transaction_history 
+                SET 
+                    status = :status,
+                    updated_at = NOW()
+                WHERE id = :id
+            ");
+            $updateStmt->bindParam(':status', $status, PDO::PARAM_STR);
+            $updateStmt->bindParam(':id', $transactionId, PDO::PARAM_INT);
+            $updated = $updateStmt->execute();
+            
+            // If transaction is completed and has a voucher, increase voucher usage count
+            if ($status == 'completed' && $updateVoucher && !empty($transaction['voucher_id'])) {
+                require_once dirname(__FILE__) . '/Voucher.php';
+                $voucher = new Voucher($this->db);
+                $voucher->incrementUsage($transaction['voucher_id']);
+            }
+            
+            // Commit transaction
+            $pdo->commit();
+            
+            return $updated;
+        } catch (Exception $e) {
+            if ($pdo && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            error_log("Error updating transaction status: " . $e->getMessage());
+            return false;
+        }
+    }
+
     // --- Add other transaction-related methods as needed ---
     // Example: getTransactionById, createTransaction, updateTransactionStatus, etc.
 

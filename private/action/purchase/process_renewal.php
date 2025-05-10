@@ -112,11 +112,22 @@ try {
         $stmt_ag = $conn->prepare("INSERT INTO account_groups (registration_id, survey_account_id) VALUES (?, ?)");
         $stmt_ag->execute([$registration_id, $account_id]);
     }
+      // 3. Tạo một giao dịch duy nhất cho việc gia hạn
+    // Kiểm tra xem có voucher đã được áp dụng không
+    $voucher_id = null;
+    if (isset($_SESSION['renewal']['voucher_id'])) {
+        $voucher_id = $_SESSION['renewal']['voucher_id'];
+    }
     
-    // 3. Tạo một giao dịch duy nhất cho việc gia hạn
-    $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                             VALUES (?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
-    $stmt_th->execute([$registration_id, $user_id, $total_price]);
+    if ($voucher_id) {
+        $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
+                                 VALUES (?, ?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
+        $stmt_th->execute([$registration_id, $user_id, $voucher_id, $total_price]);
+    } else {
+        $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
+                                 VALUES (?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
+        $stmt_th->execute([$registration_id, $user_id, $total_price]);
+    }
     
     $transaction_id = $conn->lastInsertId();
     

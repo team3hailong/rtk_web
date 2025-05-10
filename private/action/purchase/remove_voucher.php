@@ -7,6 +7,8 @@
 
 // Include necessary files
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Voucher.php';
 
 // Initialize response array
 $response = [
@@ -65,6 +67,55 @@ $originalValues = [
     'voucher_code' => $_SESSION[$sessionKey]['voucher_code'] ?? '',
     'original_amount' => $_SESSION[$sessionKey]['original_amount'] ?? 0,
 ];
+
+$voucher_id = $_SESSION[$sessionKey]['voucher_id'];
+$user_id = $_SESSION['user_id'] ?? null;
+
+// Connect to database to update transaction if it exists
+try {
+    $db = new Database();
+    $voucherService = new Voucher($db);
+    
+    if (isset($_SESSION['pending_registration_id'])) {
+        $registration_id = $_SESSION['pending_registration_id'];
+        $original_amount = $_SESSION[$sessionKey]['original_amount'] ?? 0;
+        
+        // Get transaction ID
+        $pdo = $db->getConnection();
+        $stmt = $pdo->prepare("SELECT id FROM transaction_history WHERE registration_id = :reg_id AND status = 'pending'");
+        $stmt->bindParam(':reg_id', $registration_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $transaction_id = $stmt->fetchColumn();
+        
+        if ($transaction_id) {
+            // Update transaction to remove voucher and restore original amount
+            $stmt = $pdo->prepare("UPDATE transaction_history SET 
+                                   voucher_id = NULL, 
+                                   amount = :amount, 
+                                   updated_at = NOW() 
+                                   WHERE id = :id");
+            $stmt->bindParam(':amount', $original_amount);
+            $stmt->bindParam(':id', $transaction_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Remove user voucher usage record
+            if ($user_id && $voucher_id) {
+                $voucherService->removeUserVoucherUsage($user_id, $voucher_id, $transaction_id);
+            }
+        }
+    } else if ($user_id && $voucher_id) {
+        // If no transaction yet, just remove the latest usage record for this user and voucher
+        $voucherService->removeUserVoucherUsage($user_id, $voucher_id);
+    }
+    
+    // Decrease the voucher usage counter
+    if ($voucher_id) {
+        $voucherService->decrementUsage($voucher_id);
+    }
+} catch (Exception $e) {
+    error_log("Error updating transaction when removing voucher: " . $e->getMessage());
+    // Continue despite error since we still need to update session
+}
 
 // Remove voucher from session
 unset($_SESSION[$sessionKey]['voucher_id']);

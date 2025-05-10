@@ -4,6 +4,7 @@ $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php';
+require_once $project_root_path . '/private/classes/Voucher.php';
 require_once $project_root_path . '/private/utils/functions.php';
 require_once $project_root_path . '/private/api/rtk_system/account_api.php';
 
@@ -25,6 +26,10 @@ if (empty($selected_accounts) || !is_array($selected_accounts) || empty($package
 $db = new Database();
 $conn = $db->getConnection();
 $packageObj = new Package();
+
+// Initialize Voucher object and reset voucher session data when starting a new renewal
+$voucherObj = new Voucher($db);
+$voucherObj->resetVoucherSession('renewal');
 
 try {
     $conn->beginTransaction();

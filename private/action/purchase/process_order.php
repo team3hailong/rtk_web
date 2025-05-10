@@ -21,6 +21,7 @@ require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php'; // Need Package class to verify price/duration
 require_once $project_root_path . '/private/utils/functions.php'; // For helper functions if any
+require_once $project_root_path . '/private/classes/Voucher.php'; // Add Voucher class
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -112,6 +113,11 @@ try {
     // --- Database Interaction ---
     $db = new Database();
     $conn = $db->getConnection();
+    
+    // Reset any previously applied voucher session data
+    $voucherObj = new Voucher($db);
+    $voucherObj->resetVoucherSession('order');
+    
     $conn->beginTransaction();
 
     // 1. Insert into Registration

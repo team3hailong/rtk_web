@@ -60,6 +60,7 @@ Liên kết với bảng transaction_history:
 - Lưu voucher_id vào transaction_history khi tạo giao dịch mới
 - Cập nhật số lượt sử dụng khi giao dịch hoàn tất
 - Xử lý voucher trong các quy trình thanh toán khác nhau (mua mới, gia hạn)
+- Tự động reset dữ liệu voucher trong session khi bắt đầu đăng ký mới hoặc gia hạn
 
 ## Lưu ý
 - Chỉ cho phép áp dụng một voucher cho mỗi giao dịch
@@ -83,6 +84,8 @@ Liên kết với bảng transaction_history:
 3. Tăng số lượt sử dụng voucher khi giao dịch hoàn tất
 4. Cải thiện xử lý lỗi và hiển thị thông báo
 5. Tạo các phương thức hỗ trợ quản lý voucher
+6. Reset dữ liệu voucher khi bắt đầu quá trình đăng ký mới hoặc gia hạn
+7. Giới hạn số lần sử dụng voucher cho mỗi người dùng
 
 ## Cách quản lý voucher
 Quản trị viên có thể tạo và quản lý voucher thông qua giao diện quản trị (cần phát triển thêm). Mỗi voucher có thể được cấu hình với các thông số cụ thể như loại giảm giá, giá trị giảm giá, số lượt sử dụng và thời hạn hiệu lực.

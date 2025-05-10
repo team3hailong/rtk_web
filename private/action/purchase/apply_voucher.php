@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $voucherCode = isset($_POST['voucher_code']) ? trim($_POST['voucher_code']) : '';
 $orderAmount = isset($_POST['order_amount']) ? (float) $_POST['order_amount'] : 0;
 $orderContext = isset($_POST['context']) ? $_POST['context'] : 'purchase'; // purchase or renewal
+$userId = $_SESSION['user_id'] ?? null;
 
 // Debug information (remove in production)
 $debug_info = [
@@ -91,7 +92,7 @@ try {
 // Create Voucher instance and validate
 try {
     $voucherService = new Voucher($db);
-    $validationResult = $voucherService->validateVoucher($voucherCode, $orderAmount);
+    $validationResult = $voucherService->validateVoucher($voucherCode, $orderAmount, $userId);
 } catch (Exception $e) {
     $response['message'] = 'Lỗi xử lý mã giảm giá';
     $response['debug'] = $e->getMessage();
@@ -130,6 +131,44 @@ if ($voucher['voucher_type'] === 'extend_duration' && $sessionKey === 'renewal')
     // Store the additional months
     $_SESSION[$sessionKey]['additional_months'] = $applicationResult['additional_months'];
 }
+
+// Update transaction in database if it exists
+if (isset($_SESSION['pending_registration_id'])) {
+    $registration_id = $_SESSION['pending_registration_id'];
+    try {
+        $conn = $db->getConnection();
+        // Check if transaction exists and update it
+        $stmt = $conn->prepare("SELECT id FROM transaction_history WHERE registration_id = ? AND status = 'pending'");
+        $stmt->execute([$registration_id]);
+        $transaction_id = $stmt->fetchColumn();
+        
+        if ($transaction_id) {
+            // Update existing transaction with new voucher and amount
+            $stmt = $conn->prepare("UPDATE transaction_history SET 
+                                   voucher_id = ?, 
+                                   amount = ?, 
+                                   updated_at = NOW() 
+                                   WHERE id = ?");
+            $stmt->execute([$voucher['id'], $applicationResult['new_amount'], $transaction_id]);
+            
+            // Record user's voucher usage with transaction ID
+            if ($userId) {
+                $voucherService->recordUserVoucherUsage($userId, $voucher['id'], $transaction_id);
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error updating transaction with voucher: " . $e->getMessage());
+        // We continue despite error since session data still exists
+    }
+} else {
+    // Just record user's intended usage of voucher, transaction ID will be updated later
+    if ($userId) {
+        $voucherService->recordUserVoucherUsage($userId, $voucher['id']);
+    }
+}
+
+// Increment voucher usage counter
+$voucherService->incrementUsage($voucher['id']);
 
 // Prepare response
 $response = [

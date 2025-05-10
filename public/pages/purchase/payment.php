@@ -88,14 +88,27 @@ $order_description = "REG{$registration_id} MUA GOI"; // Keep it short
 $final_qr_payload = null;
 $vietqr_image_url = null;
 if (!$is_trial) {
-    $final_qr_payload = generate_vietqr_payload($verified_total_price, $order_description);
+    // Lấy giá tiền đã qua voucher nếu có
+    $final_price = $verified_total_price;
+    
+    // Nếu có voucher đã áp dụng, sử dụng giá sau khi áp dụng voucher
+    $session_key = $is_renewal ? 'renewal' : 'order';
+    if (isset($_SESSION[$session_key]['voucher_id']) && isset($_SESSION[$session_key]['voucher_discount'])) {
+        if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
+            $final_price = $_SESSION[$session_key]['amount'];
+        } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
+            $final_price = $_SESSION[$session_key]['total_price'];
+        }
+    }
+    
+    $final_qr_payload = generate_vietqr_payload($final_price, $order_description);
     // --- Generate img.vietqr.io URL ---
     $vietqr_image_url = sprintf(
         "https://img.vietqr.io/image/%s-%s-%s.png?amount=%d&addInfo=%s&accountName=%s",
         VIETQR_BANK_ID, // Bank BIN/ID
         VIETQR_ACCOUNT_NO, // Account Number
         defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2', // Template (e.g., compact2)
-        $verified_total_price, // Amount
+        $final_price, // Amount (với voucher nếu có)
         urlencode($order_description), // URL Encoded Description
         urlencode(VIETQR_ACCOUNT_NAME) // URL Encoded Account Name
     );
@@ -525,10 +538,22 @@ include $project_root_path . '/private/includes/header.php';
 
                 <div class="bank-details">
                     <p><strong>Thông tin chuyển khoản thủ công:</strong></p>
-                    <p>Ngân hàng: <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : (defined('VIETQR_BANK_ID') ? VIETQR_BANK_ID : 'N/A'); ?></strong></p>
-                    <p>Số tài khoản: <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong> <code title="Sao chép số tài khoản" data-copy-target="#account-number">Copy</code></p>
+                    <p>Ngân hàng: <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : (defined('VIETQR_BANK_ID') ? VIETQR_BANK_ID : 'N/A'); ?></strong></p>                    <p>Số tài khoản: <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong> <code title="Sao chép số tài khoản" data-copy-target="#account-number">Copy</code></p>
                     <p>Chủ tài khoản: <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong></p>
-                    <p>Số tiền: <strong id="payment-amount"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong> <code title="Sao chép số tiền" data-copy-target="#payment-amount">Copy</code></p>
+                    <p>Số tiền: <strong id="payment-amount">
+                        <?php 
+                        // Hiển thị giá sau khi áp dụng voucher nếu có
+                        $display_price = $verified_total_price;
+                        $session_key = $is_renewal ? 'renewal' : 'order';
+                        if (isset($_SESSION[$session_key]['voucher_id'])) {
+                            if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
+                                $display_price = $_SESSION[$session_key]['amount'];
+                            } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
+                                $display_price = $_SESSION[$session_key]['total_price'];
+                            }
+                        }
+                        echo number_format($display_price, 0, ',', '.'); 
+                        ?> đ</strong> <code title="Sao chép số tiền" data-copy-target="#payment-amount">Copy</code></p>
                     <p>Nội dung: <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong> <code title="Sao chép nội dung" data-copy-target="#payment-description">Copy</code></p>
                 </div>
 
@@ -565,6 +590,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const isTrial = <?php echo json_encode($is_trial); ?>;
     const isRenewal = <?php echo json_encode($is_renewal); ?>;
     const currentPrice = <?php echo json_encode((float)$verified_total_price); ?>;
+    const orderDescription = "<?php echo addslashes($order_description); ?>";
+    
+    // Hàm cập nhật mã QR với số tiền mới
+    function updateQRCode(amount) {
+        if (isTrial) return; // Không cần cập nhật QR nếu là gói dùng thử
+        
+        // Tạo URL mới cho VietQR với số tiền đã cập nhật
+        const newVietQRURL = `https://img.vietqr.io/image/<?php echo VIETQR_BANK_ID; ?>-<?php echo VIETQR_ACCOUNT_NO; ?>-<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2'; ?>.png?amount=${Math.round(amount)}&addInfo=${encodeURIComponent(orderDescription)}&accountName=${encodeURIComponent("<?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : ''; ?>")}`;
+        
+        // Tìm và cập nhật ảnh QR
+        const qrcodeImg = document.querySelector('#qrcode img');
+        if (qrcodeImg) {
+            qrcodeImg.src = newVietQRURL;
+        }
+    }
     
     // Khởi tạo biến để lưu trữ ID của voucher đã áp dụng
     let appliedVoucherId = null;
@@ -635,9 +675,17 @@ formData.append('order_amount', displayedPrice || currentPrice);
                     }
                     
                     discountInfo.textContent = discountMessage;
-                    
-                    // Cập nhật tổng tiền
+                      // Cập nhật tổng tiền
                     totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
+                    
+                    // Cập nhật số tiền trong phần thông tin thanh toán
+                    const paymentAmountElement = document.getElementById('payment-amount');
+                    if (paymentAmountElement) {
+                        paymentAmountElement.textContent = formatCurrency(data.data.new_amount);
+                    }
+                    
+                    // Cập nhật mã QR với số tiền mới
+                    updateQRCode(data.data.new_amount);
                     
                     // Hiển thị box voucher
                     voucherInfo.style.display = 'block';
@@ -696,9 +744,17 @@ formData.append('order_amount', displayedPrice || currentPrice);
                     
                     // Reset appliedVoucherId
                     appliedVoucherId = null;
-                    
-                    // Cập nhật lại tổng tiền
+                      // Cập nhật lại tổng tiền
                     totalPriceDisplay.textContent = formatCurrency(currentPrice);
+                    
+                    // Cập nhật số tiền trong phần thông tin thanh toán
+                    const paymentAmountElement = document.getElementById('payment-amount');
+                    if (paymentAmountElement) {
+                        paymentAmountElement.textContent = formatCurrency(currentPrice);
+                    }
+                    
+                    // Cập nhật mã QR với số tiền ban đầu
+                    updateQRCode(currentPrice);
                 } else {
                     voucherStatus.textContent = data.message;
                     voucherStatus.className = 'voucher-status error';
@@ -724,9 +780,10 @@ formData.append('order_amount', displayedPrice || currentPrice);
                 const targetSelector = this.getAttribute('data-copy-target');
                 const targetElement = document.querySelector(targetSelector);
                 if (targetElement) {
-                    let textToCopy = targetElement.innerText.trim();
-                    if (targetSelector === '#payment-amount') {
-                        textToCopy = textToCopy.replace(/đ|\.|,/g, '');
+                    let textToCopy = targetElement.innerText.trim();                    if (targetSelector === '#payment-amount') {
+                        // Lấy số tiền hiện tại (sau voucher nếu có) từ phần tử
+                        const currentAmount = document.querySelector(targetSelector).textContent.trim();
+                        textToCopy = currentAmount.replace(/đ|\.|,/g, '');
                     }
 
                      navigator.clipboard.writeText(textToCopy)

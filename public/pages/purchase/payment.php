@@ -223,6 +223,41 @@ include $project_root_path . '/private/includes/header.php';
         padding: 0;
         margin-left: 1rem;
     }
+    
+    /* Confirmation Dialog Styles */
+    .confirmation-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+    
+    .confirmation-content {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: var(--rounded-lg, 0.5rem);
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .confirmation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+    }
+    
+    .confirmation-buttons button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-radius: var(--rounded-md, 0.375rem);
+    }
 
     .payment-qr-section {
         text-align: center;
@@ -401,54 +436,30 @@ include $project_root_path . '/private/includes/header.php';
                     <span>Số lượng tài khoản:</span>
                     <strong><?php echo $renewal_details ? $renewal_details['total_accounts'] : count($registration_ids); ?> tài khoản</strong>
                 </div>
-                
-                <?php if (count($registration_ids) > 0): ?>
-                <div style="margin-top: 1rem; border: 1px solid var(--gray-200); border-radius: var(--rounded-md); padding: 0.5rem;">
-                    <h4 style="margin-bottom: 0.5rem; font-weight: var(--font-semibold); color: var(--gray-700);">Danh sách tài khoản gia hạn:</h4>
-                    <table style="width: 100%; font-size: var(--font-size-sm);">
-                        <thead>
-                            <tr style="border-bottom: 1px solid var(--gray-200);">
-                                <th style="text-align: left; padding: 0.5rem 0;">Mã đăng ký</th>
-                                <th style="text-align: right; padding: 0.5rem 0;">Số tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php 
-                            // Lấy thông tin chi tiết cho từng registration
-                            $db = new Database();
-                            $conn = $db->getConnection();
-                            
-                            foreach ($registration_ids as $reg_id):
-                                // Lấy thông tin tài khoản và gói
-                                $stmt = $conn->prepare("
-                                    SELECT r.id, sa.username_acc, p.name as package_name, r.total_price 
-                                    FROM registration r
-                                    JOIN account_groups ag ON r.id = ag.registration_id
-                                    JOIN survey_account sa ON ag.survey_account_id = sa.id
-                                    JOIN package p ON r.package_id = p.id
-                                    WHERE r.id = ? AND r.user_id = ?
-                                ");
-                                $stmt->execute([$reg_id, $user_id]);
-                                $acc_info = $stmt->fetch(PDO::FETCH_ASSOC);
-                                
-                                if ($acc_info):
-                        ?>
-                            <tr style="border-bottom: 1px dashed var(--gray-100);">
-                                <td style="padding: 0.5rem 0;">
-                                    <?php echo htmlspecialchars($acc_info['username_acc']); ?>
-                                    <span style="display: block; color: var(--gray-500); font-size: 0.85em;">
-                                        <?php echo htmlspecialchars($acc_info['package_name']); ?>
-                                    </span>
-                                </td>
-                                <td style="text-align: right; padding: 0.5rem 0;"><?php echo number_format($acc_info['total_price'], 0, ',', '.'); ?> đ</td>
-                            </tr>
-                        <?php 
-                                endif;
-                            endforeach;
-                            $db->close();
-                        ?>
-                        </tbody>
-                    </table>
+                  <?php if (count($registration_ids) > 0 && !$is_trial): ?>
+                <!-- Phần áp dụng voucher cho gia hạn -->
+                <div class="voucher-section">
+                    <h4>Mã giảm giá</h4>
+                    <div class="voucher-form">
+                        <input type="text" id="voucher-code" class="voucher-input" placeholder="Nhập mã giảm giá">
+                        <button type="button" id="apply-voucher" class="voucher-btn">Áp dụng</button>
+                    </div>
+                    <div id="voucher-status" class="voucher-status"></div>
+                    <div id="voucher-info" class="voucher-info" style="display: <?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_id']) ? 'block' : 'none'; ?>">
+                        <div>Mã giảm giá: <strong id="applied-voucher-code"><?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) ? htmlspecialchars($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) : ''; ?></strong> 
+                            <button type="button" id="remove-voucher" class="voucher-remove">Xóa</button>
+                        </div>
+                        <div id="discount-info">
+                            <?php 
+                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'])) {
+                                echo 'Giảm giá: ' . number_format($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'], 0, ',', '.') . ' đ';
+                            }
+                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months']) && $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] > 0) {
+                                echo 'Tăng thêm ' . $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] . ' tháng sử dụng';
+                            }
+                            ?>
+                        </div>
+                    </div>
                 </div>
                 <?php endif; ?>
                 
@@ -563,11 +574,9 @@ include $project_root_path . '/private/includes/header.php';
                 </p>
                  <p class="payment-instructions" style="margin-top: 0.5rem;">
                      Nếu gặp sự cố, vui lòng liên hệ bộ phận hỗ trợ.
-                 </p>
-
-                <!-- === Nút xác nhận và chuyển hướng === -->
+                 </p>                <!-- === Nút xác nhận và chuyển hướng === -->
                 <div style="text-align: center; margin-top: 2rem;">
-                    <button onclick="window.location.href='<?php echo $base_url; ?>/public/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($registration_id); ?>'" class="btn btn-primary" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base);">
+                    <button data-href="<?php echo $base_url; ?>/public/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($registration_id); ?>" class="btn btn-primary btn-payment-confirm" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base);">
                         Tôi đã thanh toán - Tải lên minh chứng
                     </button>
                     <p style="font-size: var(--font-size-sm); color: var(--gray-500); margin-top: 0.8rem;">
@@ -585,229 +594,19 @@ include $project_root_path . '/private/includes/header.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // --- Chức năng áp dụng voucher ---
-    const isTrial = <?php echo json_encode($is_trial); ?>;
-    const isRenewal = <?php echo json_encode($is_renewal); ?>;
-    const currentPrice = <?php echo json_encode((float)$verified_total_price); ?>;
-    const orderDescription = "<?php echo addslashes($order_description); ?>";
-    
-    // Hàm cập nhật mã QR với số tiền mới
-    function updateQRCode(amount) {
-        if (isTrial) return; // Không cần cập nhật QR nếu là gói dùng thử
-        
-        // Tạo URL mới cho VietQR với số tiền đã cập nhật
-        const newVietQRURL = `https://img.vietqr.io/image/<?php echo VIETQR_BANK_ID; ?>-<?php echo VIETQR_ACCOUNT_NO; ?>-<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2'; ?>.png?amount=${Math.round(amount)}&addInfo=${encodeURIComponent(orderDescription)}&accountName=${encodeURIComponent("<?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : ''; ?>")}`;
-        
-        // Tìm và cập nhật ảnh QR
-        const qrcodeImg = document.querySelector('#qrcode img');
-        if (qrcodeImg) {
-            qrcodeImg.src = newVietQRURL;
-        }
-    }
-    
-    // Khởi tạo biến để lưu trữ ID của voucher đã áp dụng
-    let appliedVoucherId = null;
-    
-    if (!isTrial) {
-        const voucherCodeInput = document.getElementById('voucher-code');
-        const applyVoucherBtn = document.getElementById('apply-voucher');
-        const removeVoucherBtn = document.getElementById('remove-voucher');
-        const voucherStatus = document.getElementById('voucher-status');
-        const voucherInfo = document.getElementById('voucher-info');
-        const appliedVoucherCode = document.getElementById('applied-voucher-code');
-        const discountInfo = document.getElementById('discount-info');
-        const totalPriceDisplay = document.getElementById('total-price-display');
-        
-        // Hàm định dạng tiền tệ
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
-        };
-        
-        // Sự kiện khi nhấn nút áp dụng voucher
-        applyVoucherBtn.addEventListener('click', function() {
-            const voucherCode = voucherCodeInput.value.trim();
-            if (!voucherCode) {
-                voucherStatus.textContent = 'Vui lòng nhập mã giảm giá';
-                voucherStatus.className = 'voucher-status error';
-                return;
-            }
-            
-            // Disable nút khi đang gửi request
-            applyVoucherBtn.disabled = true;
-            voucherStatus.textContent = 'Đang kiểm tra...';
-            voucherStatus.className = 'voucher-status';
-            
-            // Tạo FormData
-            const formData = new FormData();
-            formData.append('voucher_code', voucherCode);
-            // Make sure we're using the most current price from the display
-const displayedPrice = parseFloat(totalPriceDisplay.textContent.replace(/[^\d]/g, ''));
-formData.append('order_amount', displayedPrice || currentPrice);
-            formData.append('context', isRenewal ? 'renewal' : 'purchase');
-            formData.append('csrf_token', '<?php echo generate_csrf_token(); ?>');
-            
-            // Gửi request tới action_handler
-            fetch('<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=apply_voucher', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())            .then(data => {
-                console.log('Voucher response:', data); // Debug log
-                
-                if (data.status) {
-                    // Voucher hợp lệ
-                    voucherStatus.textContent = data.message;
-                    voucherStatus.className = 'voucher-status success';
-                    
-                    // Hiển thị thông tin voucher
-                    appliedVoucherId = data.data.voucher_id;
-                    appliedVoucherCode.textContent = data.data.voucher_code;
-                    
-                    // Hiển thị thông tin giảm giá
-                    let discountMessage = '';
-                    if (data.data.voucher_type === 'percentage_discount') {
-                        discountMessage = `Giảm giá: ${formatCurrency(data.data.discount_value)}`;
-                    } else if (data.data.voucher_type === 'fixed_discount') {
-                        discountMessage = `Giảm giá cố định: ${formatCurrency(data.data.discount_value)}`;
-                    } else if (data.data.voucher_type === 'extend_duration') {
-                        discountMessage = `Tăng thêm ${data.data.additional_months} tháng sử dụng`;
-                    }
-                    
-                    discountInfo.textContent = discountMessage;
-                      // Cập nhật tổng tiền
-                    totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
-                    
-                    // Cập nhật số tiền trong phần thông tin thanh toán
-                    const paymentAmountElement = document.getElementById('payment-amount');
-                    if (paymentAmountElement) {
-                        paymentAmountElement.textContent = formatCurrency(data.data.new_amount);
-                    }
-                    
-                    // Cập nhật mã QR với số tiền mới
-                    updateQRCode(data.data.new_amount);
-                    
-                    // Hiển thị box voucher
-                    voucherInfo.style.display = 'block';
-                    
-                    // Clear input
-                    voucherCodeInput.value = '';
-                    
-                    // Tạm thời ẩn form nhập voucher
-                    voucherCodeInput.style.display = 'none';
-                    applyVoucherBtn.style.display = 'none';
-                    
-                } else {
-                    // Voucher không hợp lệ
-                    voucherStatus.textContent = data.message;
-                    voucherStatus.className = 'voucher-status error';
-                }
-            })            .catch(error => {
-                voucherStatus.textContent = 'Lỗi khi kiểm tra mã giảm giá. Vui lòng thử lại sau.';
-                voucherStatus.className = 'voucher-status error';
-                console.error('Voucher application error:', error);
-            })
-            .finally(() => {
-                // Enable lại nút
-                applyVoucherBtn.disabled = false;
-            });
-        });
-        
-        // Sự kiện khi nhấn nút xóa voucher
-        removeVoucherBtn.addEventListener('click', function() {
-            // Disable nút khi đang gửi request
-            removeVoucherBtn.disabled = true;
-            
-            // Tạo FormData
-            const formData = new FormData();
-            formData.append('context', isRenewal ? 'renewal' : 'purchase');
-            formData.append('csrf_token', '<?php echo generate_csrf_token(); ?>');
-            
-            // Gửi request tới action_handler
-            fetch('<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=remove_voucher', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status) {
-                    // Xóa voucher thành công
-                    voucherStatus.textContent = data.message;
-                    voucherStatus.className = 'voucher-status';
-                    
-                    // Ẩn thông tin voucher
-                    voucherInfo.style.display = 'none';
-                    
-                    // Hiển thị lại form nhập voucher
-                    voucherCodeInput.style.display = 'block';
-                    applyVoucherBtn.style.display = 'block';
-                    
-                    // Reset appliedVoucherId
-                    appliedVoucherId = null;
-                      // Cập nhật lại tổng tiền
-                    totalPriceDisplay.textContent = formatCurrency(currentPrice);
-                    
-                    // Cập nhật số tiền trong phần thông tin thanh toán
-                    const paymentAmountElement = document.getElementById('payment-amount');
-                    if (paymentAmountElement) {
-                        paymentAmountElement.textContent = formatCurrency(currentPrice);
-                    }
-                    
-                    // Cập nhật mã QR với số tiền ban đầu
-                    updateQRCode(currentPrice);
-                } else {
-                    voucherStatus.textContent = data.message;
-                    voucherStatus.className = 'voucher-status error';
-                }
-            })
-            .catch(error => {
-                voucherStatus.textContent = 'Lỗi khi xóa mã giảm giá';
-                voucherStatus.className = 'voucher-status error';
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // Enable lại nút
-                removeVoucherBtn.disabled = false;
-            });
-        });
-    }
-    
-    // --- Chức năng Copy (Chỉ cần nếu không phải trial) ---
-    if (!isTrial) {
-        const copyButtons = document.querySelectorAll('.bank-details code[data-copy-target]');
-        copyButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const targetSelector = this.getAttribute('data-copy-target');
-                const targetElement = document.querySelector(targetSelector);
-                if (targetElement) {
-                    let textToCopy = targetElement.innerText.trim();                    if (targetSelector === '#payment-amount') {
-                        // Lấy số tiền hiện tại (sau voucher nếu có) từ phần tử
-                        const currentAmount = document.querySelector(targetSelector).textContent.trim();
-                        textToCopy = currentAmount.replace(/đ|\.|,/g, '');
-                    }
-
-                     navigator.clipboard.writeText(textToCopy)
-                        .then(() => {
-                            const originalText = this.innerText;
-                            this.innerText = 'Đã chép!';
-                            this.style.backgroundColor = 'var(--success-100, #D1FAE5)';
-                            this.style.borderColor = 'var(--success-300, #6EE7B7)';
-                            setTimeout(() => {
-                                this.innerText = originalText;
-                                 this.style.backgroundColor = '';
-                                 this.style.borderColor = '';
-                            }, 1500);
-                        })
-                        .catch(err => {
-                            console.error('Lỗi sao chép: ', err);
-                            prompt('Không thể tự động sao chép. Vui lòng sao chép thủ công:', textToCopy);
-                        });
-                }
-            });
-        });
-    }
-});
+// Biến được chèn từ PHP để JS xử lý
+const JS_IS_TRIAL = <?php echo json_encode($is_trial); ?>;
+const JS_IS_RENEWAL = <?php echo json_encode($is_renewal); ?>;
+const JS_CURRENT_PRICE = <?php echo json_encode((float)$verified_total_price); ?>;
+const JS_ORDER_DESCRIPTION = "<?php echo addslashes($order_description); ?>";
+const JS_BASE_URL = "<?php echo $base_url; ?>";
+const JS_CSRF_TOKEN = "<?php echo generate_csrf_token(); ?>";
+const JS_VIETQR_BANK_ID = "<?php echo VIETQR_BANK_ID; ?>";
+const JS_VIETQR_ACCOUNT_NO = "<?php echo VIETQR_ACCOUNT_NO; ?>";
+const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2'; ?>";
+const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : ''; ?>";
 </script>
+<script src="<?php echo $base_url; ?>/public/assets/js/payment_voucher.js"></script>
 
 <?php
 // --- Include Footer ---

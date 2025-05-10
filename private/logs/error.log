@@ -387,3 +387,222 @@
 [10-May-2025 11:03:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
 [10-May-2025 11:03:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [10-May-2025 11:03:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 11:42:57 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:28 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:28 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:10:28 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:29 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:29 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:10:29 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:32 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:32 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:10:32 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:32 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:32 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:10:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:17:27 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:17:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:17:27 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:17:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:35 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:18:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:37 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:37 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:18:45 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:18:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:18:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:19:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:19:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:19:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:19:12 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:19:12 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:19:12 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:19:21 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:19:21 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:19:21 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:48 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:48 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:58 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:58 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:59 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:27:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:27:59 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:00 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:05 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:05 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:05 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:05 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:09 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:09 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:28:09 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:13 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:13 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:28:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:13 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:28:21 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:28:21 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:28:21 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:31:00 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:31:00 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:31:00 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:31:00 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:26 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:26 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:27 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:27 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:33 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:33 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:33 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:35 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:41 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:41 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:41 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:41 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:45 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:47 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:47 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:53 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:34:54 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:34:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:34:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:36:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:36:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:36:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:36:40 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:36:40 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:36:40 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:51 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:51 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:38:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:39:02 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:39:02 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:39:02 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:39:10 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:39:10 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:39:10 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:39:12 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:39:12 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:39:12 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:39:59 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:39:59 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:39:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:01 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:01 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:40:01 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:01 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:01 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 20:40:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.

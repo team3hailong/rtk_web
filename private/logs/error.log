@@ -823,3 +823,46 @@
 [10-May-2025 21:27:35 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
 [10-May-2025 21:27:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [10-May-2025 21:27:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:16:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:16:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:16:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:16:38 Asia/Ho_Chi_Minh] Uncaught Exception: Class "SupportRequest" not found
+#0 {main}
+[10-May-2025 23:17:15 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:17:15 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:17:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:19:09 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:19:09 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:19:09 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:19:30 Asia/Ho_Chi_Minh] PHP Error [8]: session_start(): Ignoring session_start() because a session is already active (started from C:\laragon\www\rtk_web\public\handlers\action_handler.php on line 8) in C:\laragon\www\rtk_web\private\action\support\process_support_request.php on line 23
+[10-May-2025 23:20:44 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:20:44 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:20:44 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:20:47 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:20:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:20:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:20:55 Asia/Ho_Chi_Minh] PHP Error [8]: session_start(): Ignoring session_start() because a session is already active (started from C:\laragon\www\rtk_web\public\handlers\action_handler.php on line 8) in C:\laragon\www\rtk_web\private\action\support\process_support_request.php on line 23
+[10-May-2025 23:23:32 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:23:32 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:23:32 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:23:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:23:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:23:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:23:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:23:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:23:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:23:45 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:23:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:23:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:28:02 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:28:02 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:28:02 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:28:04 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:28:04 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:28:04 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[10-May-2025 23:28:10 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.

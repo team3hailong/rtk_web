@@ -78,10 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_
         $has_tokens = isset($_SESSION['csrf_tokens']) && is_array($_SESSION['csrf_tokens']);
         $token_count = $has_tokens ? count($_SESSION['csrf_tokens']) : 0;
         error_log("[CSRF DEBUG] User: $user_id has $token_count tokens in session");
-        
-        // Đối với form submission thông thường, set thông báo lỗi trong session và chuyển hướng
+          // Đối với form submission thông thường, set thông báo lỗi trong session và chuyển hướng
         // thay vì trả về JSON response
-        $_SESSION['error'] = 'CSRF validation failed. Vui lòng thử lại.';
+        // Xác định loại thông báo lỗi dựa vào module 
+        if ($module == 'support') {
+            $_SESSION['support_error'] = 'Phiên làm việc không hợp lệ, vui lòng thử lại.';
+        } else {
+            $_SESSION['error'] = 'Phiên làm việc không hợp lệ, vui lòng thử lại.';
+        }
         
         $referer = $_SERVER['HTTP_REFERER'] ?? '';
         if (!empty($referer)) {

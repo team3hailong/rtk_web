@@ -58,7 +58,9 @@ require_once $project_root_path . '/private/utils/csrf_helper.php';
 
 // Danh sách các action không cần kiểm tra CSRF (như API endpoints)
 $csrf_exempt_actions = [
-    'auth/verify-email'  // Verification qua email link không cần CSRF
+    'auth/verify-email',  // Verification qua email link không cần CSRF
+    'purchase/apply_voucher',  // Voucher applications via AJAX
+    'purchase/remove_voucher'  // Voucher removal via AJAX
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_exempt_actions)) {

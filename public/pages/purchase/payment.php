@@ -31,6 +31,23 @@ $session_total_price = $_SESSION['pending_total_price']; // Get total price from
 $is_trial = $_SESSION['pending_is_trial'] ?? false; // Check if it's a trial from session
 $is_renewal = $_SESSION['is_renewal'] ?? false; // Check if it's a renewal process
 
+// Create order/renewal session object required by voucher system
+if ($is_renewal) {
+    if (!isset($_SESSION['renewal'])) {
+        $_SESSION['renewal'] = [
+            'registration_ids' => isset($_SESSION['renewal_account_ids']) ? $_SESSION['renewal_account_ids'] : [$registration_id],
+            'amount' => $session_total_price
+        ];
+    }
+} else {
+    if (!isset($_SESSION['order'])) {
+        $_SESSION['order'] = [
+            'registration_id' => $registration_id,
+            'total_price' => $session_total_price
+        ];
+    }
+}
+
 // Reset biến renewal nếu đây là giao dịch mua mới
 if (!isset($_SESSION['is_renewal'])) {
     $is_renewal = false;
@@ -121,8 +138,7 @@ include $project_root_path . '/private/includes/header.php';
         gap: 1rem; /* Khoảng cách giữa label và value */
         flex-wrap: wrap; /* Cho phép xuống dòng nếu không đủ chỗ */
     }
-    .summary-item span:first-child { flex-shrink: 0;} /* Không co label */
-    .summary-item strong {
+    .summary-item span:first-child { flex-shrink: 0;} /* Không co label */    .summary-item strong {
         font-weight: var(--font-semibold); /* Đậm hơn medium */
         color: var(--gray-900);
         text-align: right; /* Căn phải giá trị */
@@ -134,6 +150,65 @@ include $project_root_path . '/private/includes/header.php';
         font-size: 1.25rem; /* --font-size-xl */
         font-weight: var(--font-bold);
         color: var(--primary-600);
+    }
+    
+    /* Voucher styles */
+    .voucher-section {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--rounded-md);
+    }
+    .voucher-form {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .voucher-input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--rounded-md);
+        font-size: var(--font-size-sm);
+    }
+    .voucher-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--primary-600);
+        color: white;
+        border: none;
+        border-radius: var(--rounded-md);
+        font-weight: var(--font-medium);
+        cursor: pointer;
+    }
+    .voucher-btn:hover {
+        background-color: var(--primary-700);
+    }
+    .voucher-status {
+        margin-top: 0.5rem;
+        font-size: var(--font-size-sm);
+    }
+    .voucher-status.success {
+        color: var(--success-600);
+    }
+    .voucher-status.error {
+        color: var(--danger-600);
+    }
+    .voucher-info {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        background-color: var(--success-50);
+        border: 1px solid var(--success-200);
+        border-radius: var(--rounded-md);
+        display: none;
+    }
+    .voucher-remove {
+        color: var(--danger-600);
+        background: none;
+        border: none;
+        font-size: var(--font-size-sm);
+        cursor: pointer;
+        padding: 0;
+        margin-left: 1rem;
     }
 
     .payment-qr-section {
@@ -386,10 +461,36 @@ include $project_root_path . '/private/includes/header.php';
                 <div class="summary-item">
                     <span>Tỉnh/Thành phố:</span>
                     <strong><?php echo htmlspecialchars($province); ?></strong>
+                </div>                <!-- Phần áp dụng voucher -->
+                <?php if (!$is_trial): ?>
+                <div class="voucher-section">
+                    <h4>Mã giảm giá</h4>
+                    <div class="voucher-form">
+                        <input type="text" id="voucher-code" class="voucher-input" placeholder="Nhập mã giảm giá">
+                        <button type="button" id="apply-voucher" class="voucher-btn">Áp dụng</button>
+                    </div>
+                    <div id="voucher-status" class="voucher-status"></div>
+                    <div id="voucher-info" class="voucher-info" style="display: <?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_id']) ? 'block' : 'none'; ?>">
+                        <div>Mã giảm giá: <strong id="applied-voucher-code"><?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) ? htmlspecialchars($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) : ''; ?></strong> 
+                            <button type="button" id="remove-voucher" class="voucher-remove">Xóa</button>
+                        </div>
+                        <div id="discount-info">
+                            <?php 
+                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'])) {
+                                echo 'Giảm giá: ' . number_format($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'], 0, ',', '.') . ' đ';
+                            }
+                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months']) && $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] > 0) {
+                                echo 'Tăng thêm ' . $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] . ' tháng sử dụng';
+                            }
+                            ?>
+                        </div>
+                    </div>
                 </div>
+                <?php endif; ?>
+
                 <div class="summary-item summary-total">
                     <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <?php endif; ?>
             </section>
@@ -460,8 +561,162 @@ include $project_root_path . '/private/includes/header.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Chức năng Copy (Chỉ cần nếu không phải trial) ---
+    // --- Chức năng áp dụng voucher ---
     const isTrial = <?php echo json_encode($is_trial); ?>;
+    const isRenewal = <?php echo json_encode($is_renewal); ?>;
+    const currentPrice = <?php echo json_encode((float)$verified_total_price); ?>;
+    
+    // Khởi tạo biến để lưu trữ ID của voucher đã áp dụng
+    let appliedVoucherId = null;
+    
+    if (!isTrial) {
+        const voucherCodeInput = document.getElementById('voucher-code');
+        const applyVoucherBtn = document.getElementById('apply-voucher');
+        const removeVoucherBtn = document.getElementById('remove-voucher');
+        const voucherStatus = document.getElementById('voucher-status');
+        const voucherInfo = document.getElementById('voucher-info');
+        const appliedVoucherCode = document.getElementById('applied-voucher-code');
+        const discountInfo = document.getElementById('discount-info');
+        const totalPriceDisplay = document.getElementById('total-price-display');
+        
+        // Hàm định dạng tiền tệ
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
+        };
+        
+        // Sự kiện khi nhấn nút áp dụng voucher
+        applyVoucherBtn.addEventListener('click', function() {
+            const voucherCode = voucherCodeInput.value.trim();
+            if (!voucherCode) {
+                voucherStatus.textContent = 'Vui lòng nhập mã giảm giá';
+                voucherStatus.className = 'voucher-status error';
+                return;
+            }
+            
+            // Disable nút khi đang gửi request
+            applyVoucherBtn.disabled = true;
+            voucherStatus.textContent = 'Đang kiểm tra...';
+            voucherStatus.className = 'voucher-status';
+            
+            // Tạo FormData
+            const formData = new FormData();
+            formData.append('voucher_code', voucherCode);
+            // Make sure we're using the most current price from the display
+const displayedPrice = parseFloat(totalPriceDisplay.textContent.replace(/[^\d]/g, ''));
+formData.append('order_amount', displayedPrice || currentPrice);
+            formData.append('context', isRenewal ? 'renewal' : 'purchase');
+            formData.append('csrf_token', '<?php echo generate_csrf_token(); ?>');
+            
+            // Gửi request tới action_handler
+            fetch('<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=apply_voucher', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())            .then(data => {
+                console.log('Voucher response:', data); // Debug log
+                
+                if (data.status) {
+                    // Voucher hợp lệ
+                    voucherStatus.textContent = data.message;
+                    voucherStatus.className = 'voucher-status success';
+                    
+                    // Hiển thị thông tin voucher
+                    appliedVoucherId = data.data.voucher_id;
+                    appliedVoucherCode.textContent = data.data.voucher_code;
+                    
+                    // Hiển thị thông tin giảm giá
+                    let discountMessage = '';
+                    if (data.data.voucher_type === 'percentage_discount') {
+                        discountMessage = `Giảm giá: ${formatCurrency(data.data.discount_value)}`;
+                    } else if (data.data.voucher_type === 'fixed_discount') {
+                        discountMessage = `Giảm giá cố định: ${formatCurrency(data.data.discount_value)}`;
+                    } else if (data.data.voucher_type === 'extend_duration') {
+                        discountMessage = `Tăng thêm ${data.data.additional_months} tháng sử dụng`;
+                    }
+                    
+                    discountInfo.textContent = discountMessage;
+                    
+                    // Cập nhật tổng tiền
+                    totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
+                    
+                    // Hiển thị box voucher
+                    voucherInfo.style.display = 'block';
+                    
+                    // Clear input
+                    voucherCodeInput.value = '';
+                    
+                    // Tạm thời ẩn form nhập voucher
+                    voucherCodeInput.style.display = 'none';
+                    applyVoucherBtn.style.display = 'none';
+                    
+                } else {
+                    // Voucher không hợp lệ
+                    voucherStatus.textContent = data.message;
+                    voucherStatus.className = 'voucher-status error';
+                }
+            })            .catch(error => {
+                voucherStatus.textContent = 'Lỗi khi kiểm tra mã giảm giá. Vui lòng thử lại sau.';
+                voucherStatus.className = 'voucher-status error';
+                console.error('Voucher application error:', error);
+            })
+            .finally(() => {
+                // Enable lại nút
+                applyVoucherBtn.disabled = false;
+            });
+        });
+        
+        // Sự kiện khi nhấn nút xóa voucher
+        removeVoucherBtn.addEventListener('click', function() {
+            // Disable nút khi đang gửi request
+            removeVoucherBtn.disabled = true;
+            
+            // Tạo FormData
+            const formData = new FormData();
+            formData.append('context', isRenewal ? 'renewal' : 'purchase');
+            formData.append('csrf_token', '<?php echo generate_csrf_token(); ?>');
+            
+            // Gửi request tới action_handler
+            fetch('<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=remove_voucher', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    // Xóa voucher thành công
+                    voucherStatus.textContent = data.message;
+                    voucherStatus.className = 'voucher-status';
+                    
+                    // Ẩn thông tin voucher
+                    voucherInfo.style.display = 'none';
+                    
+                    // Hiển thị lại form nhập voucher
+                    voucherCodeInput.style.display = 'block';
+                    applyVoucherBtn.style.display = 'block';
+                    
+                    // Reset appliedVoucherId
+                    appliedVoucherId = null;
+                    
+                    // Cập nhật lại tổng tiền
+                    totalPriceDisplay.textContent = formatCurrency(currentPrice);
+                } else {
+                    voucherStatus.textContent = data.message;
+                    voucherStatus.className = 'voucher-status error';
+                }
+            })
+            .catch(error => {
+                voucherStatus.textContent = 'Lỗi khi xóa mã giảm giá';
+                voucherStatus.className = 'voucher-status error';
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                // Enable lại nút
+                removeVoucherBtn.disabled = false;
+            });
+        });
+    }
+    
+    // --- Chức năng Copy (Chỉ cần nếu không phải trial) ---
     if (!isTrial) {
         const copyButtons = document.querySelectorAll('.bank-details code[data-copy-target]');
         copyButtons.forEach(button => {

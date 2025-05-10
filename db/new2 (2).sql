@@ -430,7 +430,7 @@ INSERT INTO `package` (`id`, `package_id`, `name`, `price`, `duration_text`, `fe
 -- Table structure for table `payment_methods`
 --
 
-CREATE TABLE `payment_methods` (
+CREATE TABLE `bank_info` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
   `bank_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

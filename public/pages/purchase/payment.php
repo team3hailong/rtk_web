@@ -14,6 +14,9 @@ require_once $project_root_path . '/private/utils/vietqr_helper.php'; // Include
 require_once $project_root_path . '/private/utils/payment_helper.php'; // Include the new payment helper
 require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
 
+// --- VAT Rate ---
+$vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 8; // Lấy từ .env hoặc mặc định 8%
+
 // --- Authentication & Pending Order Check ---
 if (!isset($_SESSION['user_id'])) {
     header('Location: ' . $base_url . '/public/pages/auth/login.php?error=not_logged_in'); // Adjusted path
@@ -89,17 +92,21 @@ $final_qr_payload = null;
 $vietqr_image_url = null;
 if (!$is_trial) {
     // Lấy giá tiền đã qua voucher nếu có
-    $final_price = $verified_total_price;
+    $base_price = $verified_total_price;
     
     // Nếu có voucher đã áp dụng, sử dụng giá sau khi áp dụng voucher
     $session_key = $is_renewal ? 'renewal' : 'order';
     if (isset($_SESSION[$session_key]['voucher_id']) && isset($_SESSION[$session_key]['voucher_discount'])) {
         if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
-            $final_price = $_SESSION[$session_key]['amount'];
+            $base_price = $_SESSION[$session_key]['amount'];
         } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
-            $final_price = $_SESSION[$session_key]['total_price'];
+            $base_price = $_SESSION[$session_key]['total_price'];
         }
     }
+    
+    // Tính thuế VAT
+    $vat_amount = $base_price * ($vat_value / 100);
+    $final_price = $base_price + $vat_amount;
     
     $final_qr_payload = generate_vietqr_payload($final_price, $order_description);
     // --- Generate img.vietqr.io URL ---
@@ -462,10 +469,17 @@ include $project_root_path . '/private/includes/header.php';
                     </div>
                 </div>
                 <?php endif; ?>
-                
+                  <div class="summary-item">
+                    <span>Giá trị đơn hàng:</span>
+                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Thuế VAT (<?php echo $vat_value; ?>%):</span>
+                    <strong><?php echo number_format($verified_total_price * ($vat_value / 100), 0, ',', '.'); ?> đ</strong>
+                </div>
                 <div class="summary-item summary-total" style="margin-top: 1.5rem;">
                     <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($verified_total_price + ($verified_total_price * ($vat_value / 100)), 0, ',', '.'); ?> đ</strong>
                 </div>
                 
                 <?php else: ?>
@@ -510,11 +524,17 @@ include $project_root_path . '/private/includes/header.php';
                         </div>
                     </div>
                 </div>
-                <?php endif; ?>
-
+                <?php endif; ?>                <div class="summary-item">
+                    <span>Giá trị đơn hàng:</span>
+                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Thuế VAT (<?php echo $vat_value; ?>%):</span>
+                    <strong><?php echo number_format($verified_total_price * ($vat_value / 100), 0, ',', '.'); ?> đ</strong>
+                </div>
                 <div class="summary-item summary-total">
                     <span>Tổng thanh toán:</span>
-                    <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong id="total-price-display"><?php echo number_format($verified_total_price + ($verified_total_price * ($vat_value / 100)), 0, ',', '.'); ?> đ</strong>
                 </div>
                 <?php endif; ?>
             </section>
@@ -597,7 +617,9 @@ include $project_root_path . '/private/includes/header.php';
 // Biến được chèn từ PHP để JS xử lý
 const JS_IS_TRIAL = <?php echo json_encode($is_trial); ?>;
 const JS_IS_RENEWAL = <?php echo json_encode($is_renewal); ?>;
-const JS_CURRENT_PRICE = <?php echo json_encode((float)$verified_total_price); ?>;
+const JS_BASE_PRICE = <?php echo json_encode((float)$verified_total_price); ?>;
+const JS_VAT_VALUE = <?php echo json_encode((float)$vat_value); ?>;
+const JS_CURRENT_PRICE = <?php echo json_encode((float)($verified_total_price + ($verified_total_price * ($vat_value / 100)))); ?>;
 const JS_ORDER_DESCRIPTION = "<?php echo addslashes($order_description); ?>";
 const JS_BASE_URL = "<?php echo $base_url; ?>";
 const JS_CSRF_TOKEN = "<?php echo generate_csrf_token(); ?>";

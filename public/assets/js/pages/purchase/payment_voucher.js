@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Chức năng áp dụng voucher ---
     const isTrial = JS_IS_TRIAL; // Được thay thế bởi PHP
     const isRenewal = JS_IS_RENEWAL; // Được thay thế bởi PHP
-    const currentPrice = JS_CURRENT_PRICE; // Được thay thế bởi PHP
+    const basePrice = JS_BASE_PRICE; // Giá cơ bản trước thuế
+    const vatValue = JS_VAT_VALUE; // Tỷ lệ VAT
+    const currentPrice = JS_CURRENT_PRICE; // Đã bao gồm VAT
     const orderDescription = JS_ORDER_DESCRIPTION; // Được thay thế bởi PHP
     const baseUrl = JS_BASE_URL; // Được thay thế bởi PHP
     

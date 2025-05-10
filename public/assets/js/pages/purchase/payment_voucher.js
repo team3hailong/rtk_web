@@ -1,5 +1,7 @@
 // Script JS để xử lý các chức năng voucher và xác nhận chuyển trang
 document.addEventListener('DOMContentLoaded', function() {
+    // Biến cờ để kiểm soát việc hiển thị hộp thoại xác nhận
+    let allowBrowserDialog = true;
     // --- Chức năng áp dụng voucher ---
     const isTrial = JS_IS_TRIAL; // Được thay thế bởi PHP
     const isRenewal = JS_IS_RENEWAL; // Được thay thế bởi PHP
@@ -259,22 +261,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    }
-      // Thêm xác nhận khi người dùng cố gắng rời khỏi trang
+    }      // Thêm xác nhận khi người dùng cố gắng rời khỏi trang
     function setupNavigationConfirmation() {
-        // Xác nhận khi tải lại trang hoặc đóng tab
+        // Xác nhận khi tải lại trang hoặc đóng tab, nhưng chỉ khi không có hộp thoại tùy chỉnh nào đang hiển thị
         window.addEventListener('beforeunload', function(e) {
-            e.preventDefault();
-            e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang thanh toán?';
-            return e.returnValue;
+            if (allowBrowserDialog) {
+                e.preventDefault();
+                e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang thanh toán?';
+                return e.returnValue;
+            }
         });
         
         // Xác nhận khi nhấp vào các liên kết trong sidebar
         const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+        sidebarLinks.forEach(link => {            link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetHref = this.getAttribute('href');
+                
+                // Tắt hộp thoại trình duyệt khi hiển thị hộp thoại tùy chỉnh
+                allowBrowserDialog = false;
                 
                 showConfirmationDialog(
                     'Xác nhận chuyển trang',
@@ -284,13 +289,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 );
             });
-        });
-          // Xác nhận khi nhấp vào nút đã thanh toán
+        });        // Xác nhận khi nhấp vào nút đã thanh toán
         const paymentConfirmBtn = document.querySelector('.btn-payment-confirm');
         if (paymentConfirmBtn) {
             paymentConfirmBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetHref = this.getAttribute('data-href');
+                
+                // Tắt hộp thoại trình duyệt khi hiển thị hộp thoại tùy chỉnh
+                allowBrowserDialog = false;
                 
                 showConfirmationDialog(
                     'Xác nhận đã thanh toán',
@@ -302,8 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-    
-    // Hàm hiển thị hộp thoại xác nhận
+      // Hàm hiển thị hộp thoại xác nhận
     function showConfirmationDialog(title, message, onConfirm) {
         // Tạo phần tử dialog
         const dialogOverlay = document.createElement('div');
@@ -372,10 +378,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         dialogOverlay.appendChild(dialogContent);
         document.body.appendChild(dialogOverlay);
-        
-        // Xử lý sự kiện các nút
+          // Xử lý sự kiện các nút
         cancelBtn.addEventListener('click', function() {
             document.body.removeChild(dialogOverlay);
+            // Kích hoạt lại hộp thoại trình duyệt sau khi đóng hộp thoại tùy chỉnh
+            allowBrowserDialog = true;
         });
         
         confirmBtn.addEventListener('click', function() {
@@ -384,11 +391,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             document.body.removeChild(dialogOverlay);
         });
-        
-        // Đóng dialog khi click bên ngoài
+          // Đóng dialog khi click bên ngoài
         dialogOverlay.addEventListener('click', function(e) {
             if (e.target === dialogOverlay) {
                 document.body.removeChild(dialogOverlay);
+                // Kích hoạt lại hộp thoại trình duyệt sau khi đóng hộp thoại tùy chỉnh
+                allowBrowserDialog = true;
             }
         });
     }

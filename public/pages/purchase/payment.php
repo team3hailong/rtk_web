@@ -606,7 +606,7 @@ const JS_VIETQR_ACCOUNT_NO = "<?php echo VIETQR_ACCOUNT_NO; ?>";
 const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2'; ?>";
 const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : ''; ?>";
 </script>
-<script src="<?php echo $base_url; ?>/public/assets/js/payment_voucher.js"></script>
+<script src="<?php echo $base_url; ?>/public/assets/js/pages/purchase/payment_voucher.js"></script>
 
 <?php
 // --- Include Footer ---

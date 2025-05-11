@@ -71,13 +71,34 @@ try {
                 $stmt->bindParam(':id', $transaction_id, PDO::PARAM_INT);
                 $stmt->execute();
                 $payment_confirmed = (bool)$stmt->fetchColumn();
-            }
-            
-            // Only calculate commission if status is completed and payment is confirmed
+            }            // Only calculate commission if status is completed and payment is confirmed
             if ($new_status === 'completed' && $payment_confirmed) {
                 $referralService = new Referral($db);
-                $referralService->calculateCommission($transaction_id);
-                error_log("Processing commission for transaction ID: $transaction_id with confirmed payment");
+                
+                // Check if commission record already exists
+                $commissionExists = false;
+                $checkStmt = $pdo->prepare("SELECT id, status FROM referral_commission WHERE transaction_id = :transaction_id");
+                $checkStmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+                $checkStmt->execute();
+                $commissionRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($commissionRecord) {
+                    // Make sure it's set to approved if it's not already
+                    if ($commissionRecord['status'] !== 'approved') {
+                        $updateStmt = $pdo->prepare("
+                            UPDATE referral_commission 
+                            SET status = 'approved', updated_at = NOW()
+                            WHERE transaction_id = :transaction_id
+                        ");
+                        $updateStmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+                        $updateStmt->execute();
+                        error_log("Updated existing commission for transaction ID: $transaction_id to approved status");
+                    }
+                } else {
+                    // Calculate and add new commission record - this will set status to 'approved' automatically
+                    $result = $referralService->calculateCommission($transaction_id);
+                    error_log("Processing new commission for transaction ID: $transaction_id with confirmed payment. Result: " . ($result ? "Success" : "Failed"));
+                }
             } else {
                 error_log("Skipping commission for transaction ID: $transaction_id - Status: $new_status, Payment confirmed: " . ($payment_confirmed ? "Yes" : "No"));
             }

@@ -3,6 +3,12 @@
 session_start();
 require_once dirname(__DIR__, 3) . '/private/config/config.php';
 
+// Generate CSRF token
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "/public/pages/auth/login.php");
@@ -43,27 +49,33 @@ $withdrawalMessage = '';
 $withdrawalStatus = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_withdrawal'])) {
-    $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-    $bankName = filter_input(INPUT_POST, 'bank_name', FILTER_SANITIZE_STRING);
-    $accountNumber = filter_input(INPUT_POST, 'account_number', FILTER_SANITIZE_STRING);
-    $accountHolder = filter_input(INPUT_POST, 'account_holder', FILTER_SANITIZE_STRING);
-    
-    if ($amount && $bankName && $accountNumber && $accountHolder) {
-        $result = $referralService->createWithdrawalRequest($user_id, $amount, $bankName, $accountNumber, $accountHolder);
-        $withdrawalStatus = $result['success'] ? 'success' : 'error';
-        $withdrawalMessage = $result['message'];
-        
-        if ($result['success']) {
-            // Refresh data after successful request
-            $totalCommissionEarned = $referralService->getTotalCommissionEarned($user_id);
-            $totalCommissionPaid = $referralService->getTotalCommissionPaid($user_id);
-            $pendingWithdrawals = $referralService->getTotalPendingWithdrawals($user_id);
-            $availableBalance = $totalCommissionEarned - $totalCommissionPaid - $pendingWithdrawals;
-            $withdrawalHistory = $referralService->getWithdrawalHistory($user_id);
-        }
-    } else {
+    // CSRF check
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $withdrawalStatus = 'error';
-        $withdrawalMessage = 'Vui lòng điền đầy đủ thông tin yêu cầu.';
+        $withdrawalMessage = 'CSRF token không hợp lệ. Vui lòng thử lại.';
+    } else {
+        $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
+        $bankName = filter_input(INPUT_POST, 'bank_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $accountNumber = filter_input(INPUT_POST, 'account_number', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $accountHolder = filter_input(INPUT_POST, 'account_holder', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+        if ($amount && $bankName && $accountNumber && $accountHolder) {
+            $result = $referralService->createWithdrawalRequest($user_id, $amount, $bankName, $accountNumber, $accountHolder);
+            $withdrawalStatus = $result['success'] ? 'success' : 'error';
+            $withdrawalMessage = $result['message'];
+            
+            if ($result['success']) {
+                // Refresh data after successful request
+                $totalCommissionEarned = $referralService->getTotalCommissionEarned($user_id);
+                $totalCommissionPaid = $referralService->getTotalCommissionPaid($user_id);
+                $pendingWithdrawals = $referralService->getTotalPendingWithdrawals($user_id);
+                $availableBalance = $totalCommissionEarned - $totalCommissionPaid - $pendingWithdrawals;
+                $withdrawalHistory = $referralService->getWithdrawalHistory($user_id);
+            }
+        } else {
+            $withdrawalStatus = 'error';
+            $withdrawalMessage = 'Vui lòng điền đầy đủ thông tin yêu cầu.';
+        }
     }
 }
 
@@ -283,11 +295,11 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                             </div>
                         </div>                          <?php if (!empty($commissionTransactions)): ?>
                             <h5>Chi tiết giao dịch người được giới thiệu</h5>
-                            
-                            <div class="alert alert-info mb-3">
+                              <div class="alert alert-info mb-3">
                                 <p><strong>Thông tin trạng thái hoa hồng:</strong></p>
                                 <ul class="mb-0">
                                     <li><span class="badge badge-success">Đã duyệt</span> - Hoa hồng đã được tự động duyệt và sẵn sàng để rút</li>
+                                    <li><span class="badge badge-info">Đang duyệt</span> - Hệ thống đang xử lý hoa hồng cho giao dịch thành công</li>
                                     <li><span class="badge badge-warning">Đang xử lý</span> - Giao dịch đang xử lý, hoa hồng sẽ được duyệt sau khi hoàn tất</li>
                                     <li><span class="badge badge-primary">Đã thanh toán</span> - Hoa hồng đã được thanh toán vào tài khoản của bạn</li>
                                     <li><span class="badge badge-secondary">Chưa đủ điều kiện</span> - Giao dịch không thành công hoặc chưa được xác nhận</li>
@@ -315,63 +327,30 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                                                 <td><?php echo number_format($transaction['transaction_amount'], 0, ',', '.'); ?> VNĐ</td>
                                                 <td><?php echo number_format($transaction['commission_amount'], 0, ',', '.'); ?> VNĐ</td>
                                                 <td>
-                                                    <?php 
-                                                    $tx_status_class = '';
-                                                    $tx_status_text = '';
-                                                    switch (strtolower($transaction['transaction_status'])) {
-                                                        case 'completed':
-                                                            $tx_status_class = 'badge-success';
-                                                            $tx_status_text = 'Hoàn tất';
-                                                            break;
-                                                        case 'pending':
-                                                            $tx_status_class = 'badge-warning';
-                                                            $tx_status_text = 'Đang xử lý';
-                                                            break;
-                                                        case 'failed':
-                                                            $tx_status_class = 'badge-danger';
-                                                            $tx_status_text = 'Thất bại';
-                                                            break;
-                                                        case 'refunded':
-                                                            $tx_status_class = 'badge-info';
-                                                            $tx_status_text = 'Hoàn tiền';
-                                                            break;
-                                                        default:
-                                                            $tx_status_class = 'badge-secondary';
-                                                            $tx_status_text = ucfirst($transaction['transaction_status']);
+                                                    <?php
+                                                    // Trạng thái giao dịch
+                                                    if (
+                                                        strtolower($transaction['transaction_status']) === 'completed' &&
+                                                        isset($transaction['payment_confirmed']) && $transaction['payment_confirmed'] == 1
+                                                    ) {
+                                                        echo '<span class="badge badge-success">Thành công</span>';
+                                                    } else {
+                                                        echo '<span class="badge badge-warning">Đang chờ</span>';
                                                     }
                                                     ?>
-                                                    <span class="badge <?php echo $tx_status_class; ?>"><?php echo $tx_status_text; ?></span>
-                                                    <?php if (isset($transaction['payment_confirmed']) && $transaction['payment_confirmed'] == 1): ?>
-                                                        <span class="badge badge-success">Đã xác nhận</span>
-                                                    <?php endif; ?>
-                                                </td>                                                <td>
-                                                    <?php 
-                                                    $commission_class = '';
-                                                    $commission_text = '';
-                                                    
-                                                    switch (strtolower($transaction['status'])) {
-                                                        case 'approved':
-                                                            $commission_class = 'badge-success';
-                                                            $commission_text = 'Đã duyệt';
-                                                            break;
-                                                        case 'paid':
-                                                            $commission_class = 'badge-primary';
-                                                            $commission_text = 'Đã thanh toán';
-                                                            break;
-                                                        case 'pending':
-                                                            $commission_class = 'badge-warning';
-                                                            $commission_text = 'Đang xử lý';
-                                                            break;
-                                                        case 'cancelled':
-                                                            $commission_class = 'badge-danger';
-                                                            $commission_text = 'Đã hủy';
-                                                            break;
-                                                        default:
-                                                            $commission_class = 'badge-secondary';
-                                                            $commission_text = 'Chưa đủ điều kiện';
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    // Trạng thái hoa hồng
+                                                    if (
+                                                        strtolower($transaction['transaction_status']) === 'completed' &&
+                                                        isset($transaction['payment_confirmed']) && $transaction['payment_confirmed'] == 1
+                                                    ) {
+                                                        echo '<span class="badge badge-success">Đã duyệt</span>';
+                                                    } else {
+                                                        echo '<span class="badge badge-warning">Đang chờ</span>';
                                                     }
                                                     ?>
-                                                    <span class="badge <?php echo $commission_class; ?>"><?php echo $commission_text; ?></span>
                                                 </td>
                                                 <td><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
                                             </tr>
@@ -408,7 +387,8 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                                     </ul>
                                 </div>
                                 
-                                <form method="post" action="">
+                                <form method="post" action="" id="withdrawal-form">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                                     <div class="form-group">
                                         <label for="amount">Số tiền muốn rút (VNĐ) <span class="text-danger">*</span></label>
                                         <input type="number" class="form-control" id="amount" name="amount" 
@@ -437,9 +417,10 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                                                <?php echo $availableBalance < 100000 ? 'disabled' : ''; ?>>
                                     </div>
                                     
-                                    <button type="submit" name="submit_withdrawal" class="btn btn-primary"
+                                    <button type="submit" name="submit_withdrawal" class="btn btn-primary" id="withdraw-btn"
                                             <?php echo $availableBalance < 100000 ? 'disabled' : ''; ?>>
-                                        Gửi yêu cầu rút tiền
+                                        <span id="withdraw-btn-text">Gửi yêu cầu rút tiền</span>
+                                        <span id="withdraw-btn-loading" style="display:none"><i class="fas fa-spinner fa-spin"></i> Đang gửi...</span>
                                     </button>
                                 </form>
                             </div>
@@ -510,14 +491,18 @@ function copyReferralCode() {
     var copyText = document.getElementById("referral-code");
     copyText.select();
     document.execCommand("copy");
-    alert("Đã sao chép mã giới thiệu: " + copyText.value);
+    if (confirm("Đã sao chép mã giới thiệu: " + copyText.value + "\nBạn có muốn chia sẻ ngay không?")) {
+        // Có thể mở popup chia sẻ nếu muốn
+    }
 }
 
 function copyReferralLink() {
     var copyText = document.getElementById("referral-link");
     copyText.select();
     document.execCommand("copy");
-    alert("Đã sao chép liên kết giới thiệu!");
+    if (confirm("Đã sao chép liên kết giới thiệu!\nBạn có muốn chia sẻ ngay không?")) {
+        // Có thể mở popup chia sẻ nếu muốn
+    }
 }
 
 // Script để xử lý các tab và hiệu ứng
@@ -533,17 +518,30 @@ $(document).ready(function() {
         $('.alert').fadeOut('slow');
     }, 5000);
     
-    // Form validation cho yêu cầu rút tiền
-    $('form').submit(function(event) {
+    // Form validation & loading
+    $('#withdrawal-form').submit(function(event) {
         var amount = $('#amount').val();
         var bankName = $('#bank_name').val();
         var accountNumber = $('#account_number').val();
         var accountHolder = $('#account_holder').val();
-        
+        var available = <?php echo (int)$availableBalance; ?>;
         if (!amount || !bankName || !accountNumber || !accountHolder) {
             event.preventDefault();
-            alert('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.');        }
+            alert('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.');
+            return false;
+        }
+        if (parseInt(amount) > available) {
+            event.preventDefault();
+            alert('Số dư khả dụng không đủ!');
+            return false;
+        }
+        $('#withdraw-btn-text').hide();
+        $('#withdraw-btn-loading').show();
+        $('#withdraw-btn').prop('disabled', true);
     });
+    
+    // Responsive table
+    $('.table-responsive').css('overflow-x', 'auto');
 });
 </script>
         </div>

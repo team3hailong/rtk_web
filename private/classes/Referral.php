@@ -169,12 +169,21 @@ class Referral {
                 error_log("Commission calculation failed: Transaction ID $transactionId not found");
                 $this->conn->rollBack();
                 return false; // Transaction not found
-            }
-              // Check if status is 'completed' and payment confirmed
+            }              // Check if status is 'completed' and payment confirmed
             if (strtolower($transaction['status']) !== 'completed' || !isset($transaction['payment_confirmed']) || $transaction['payment_confirmed'] != 1) {
                 error_log("Commission calculation skipped: Transaction ID $transactionId has status '{$transaction['status']}' or payment not confirmed");
                 $this->conn->rollBack();
                 return false; // Transaction not completed or payment not confirmed
+            }
+            
+            // Double check that we're not creating a duplicate commission
+            $checkStmt = $this->conn->prepare("SELECT id FROM referral_commission WHERE transaction_id = :transaction_id");
+            $checkStmt->bindParam(':transaction_id', $transactionId, PDO::PARAM_INT);
+            $checkStmt->execute();
+            if ($checkStmt->fetchColumn()) {
+                error_log("Commission calculation skipped: Commission already exists for transaction ID $transactionId");
+                $this->conn->rollBack();
+                return true; // Already exists, return success
             }
               $purchaserId = $transaction['user_id'];
             $transactionAmount = $transaction['amount'];
@@ -415,9 +424,7 @@ class Referral {
             error_log("Error fetching withdrawal history: " . $e->getMessage());
             return [];
         }
-    }
-
-    /**
+    }    /**
      * Get detailed commission transactions for a user
      * 
      * @param int $userId User ID to get commission details for
@@ -434,14 +441,19 @@ class Referral {
                     th.created_at,
                     u.username as referred_username,
                     u.id as referred_user_id,
+                    -- Use actual commission amount from referral_commission if it exists
+                    COALESCE(rc.commission_amount, 
+                        CASE 
+                            WHEN th.status = 'completed' AND th.payment_confirmed = 1 
+                            THEN (th.amount * :commission_rate) 
+                            ELSE 0 
+                        END
+                    ) as commission_amount,                    -- Use actual status from referral_commission if it exists
+                    -- Otherwise, if transaction is completed and payment confirmed, show as approved
                     CASE 
-                        WHEN th.status = 'completed' AND th.payment_confirmed = 1 
-                        THEN (th.amount * :commission_rate) 
-                        ELSE 0 
-                    END as commission_amount,                    CASE 
-                        WHEN th.status = 'completed' AND th.payment_confirmed = 1 
-                        THEN 'approved' 
-                        ELSE 'pending' 
+                        WHEN rc.id IS NOT NULL THEN rc.status
+                        WHEN th.status = 'completed' AND th.payment_confirmed = 1 THEN 'approved'
+                        ELSE 'pending'
                     END as status
                 FROM 
                     referred_user ru

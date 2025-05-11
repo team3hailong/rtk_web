@@ -49,22 +49,24 @@ $page_title = "Quản lý giới thiệu";
 require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
 ?>
 
-<!-- Sử dụng CSS tương tự như trang quản lý tài khoản -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
+<!-- Sử dụng CSS mới để đồng bộ giao diện -->
 <style>
-    /* Variables CSS - Tương thích với trang tài khoản */
+    /* Variables CSS - Giữ nguyên và có thể bổ sung nếu cần */
     :root {
+        --primary-color: #28a745; /* Green for primary actions */
+        --primary-hover-color: #218838;
+        --secondary-color: #6c757d; /* Gray for secondary elements */
+        --light-gray-color: #f8f9fa;
+        --border-color: #dee2e6;
+        --text-color: #212529;
+        --text-muted-color: #6c757d;
+        --white-color: #fff;
         --blue-500: #2196F3;
         --blue-600: #1976D2;
         --green-500: #4CAF50;
         --green-600: #388E3C;
         --red-500: #F44336;
         --orange-500: #FF9800;
-        --red-bg-light: #ffebee;
-        --red-text-dark: #c62828;
-        --orange-bg-light: #fff3e0;
-        --orange-text-dark: #ef6c00;
         --gray-100: #f3f4f6;
         --gray-200: #e5e7eb;
         --gray-300: #d1d5db;
@@ -73,196 +75,165 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         --gray-600: #4b5563;
         --gray-700: #374151;
         --gray-800: #1f2937;
+        --rounded-sm: 0.25rem;
         --rounded-md: 0.375rem;
         --rounded-lg: 0.5rem;
-        --rounded-full: 9999px;
         --font-size-xs: 0.75rem;
         --font-size-sm: 0.875rem;
+        --font-size-base: 1rem;
         --font-size-lg: 1.125rem;
-        --font-medium: 500;
         --font-semibold: 600;
-        --primary-500: #2196F3;
-        --primary-600: #1976D2;
-        --table-border-color: var(--gray-200);
-        --table-head-bg: var(--gray-100);
+        --font-bold: 700;
     }
 
-    /* Layout chung - giữ khoảng cách với sidebar như trang quản lý tài khoản */
+    /* General Layout - from rtk_accountmanagement.css */
     .dashboard-wrapper {
         display: flex;
         min-height: 100vh;
+        background-color: var(--light-gray-color); /* Consistent background */
     }
 
-    .content-wrapper {
+    .content-wrapper { /* Applied to referral-content-wrapper */
         flex: 1;
-        padding: 1.5rem;
-        background-color: #f5f7fa;
+        padding: 1.5rem; /* Standard padding */
+        background-color: var(--light-gray-color);
     }
 
-    /* Card styles - tương tự trang quản lý tài khoản */
+    /* Page Title */
+    h2.text-2xl.font-semibold.mb-4 { /* Already consistent */
+        font-size: 1.5rem;
+        font-weight: var(--font-semibold);
+        color: var(--gray-800);
+        margin-bottom: 1.5rem; /* Standardized margin */
+    }
+    
+    h4 {
+        font-size: 1.2rem;
+        font-weight: var(--font-semibold);
+        color: var(--gray-700);
+        margin-bottom: 1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+        font-weight: var(--font-semibold);
+        color: var(--gray-600);
+        margin-bottom: 0.75rem;
+    }
+
+    /* Card Styling - Consistent with rtk_accountmanagement.php */
     .card {
-        background: white;
+        background-color: var(--white-color);
+        border: 1px solid var(--border-color);
         border-radius: var(--rounded-lg);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         margin-bottom: 1.5rem;
-        border: 1px solid var(--gray-200);
     }
 
     .card-header {
-        padding: 1rem 1.25rem;
-        background-color: white;
-        border-bottom: 1px solid var(--gray-200);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        background-color: var(--white-color);
+        padding: 0.75rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        border-top-left-radius: var(--rounded-lg);
+        border-top-right-radius: var(--rounded-lg);
+    }
+    
+    .card-header.p-2 { /* Override for tighter tab header */
+        padding: 0.5rem;
     }
 
     .card-body {
         padding: 1.25rem;
     }
 
-    /* Typography điều chỉnh phù hợp */
-    h1, h2, h3, h4, h5, h6 {
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        font-weight: var(--font-semibold);
-        line-height: 1.2;
-    }
-
-    h2.page-title {
-        font-size: 1.5rem;
-        color: var(--gray-800);
-        margin-bottom: 1.5rem;
-    }
-
-    /* Tables - giống phong cách trang quản lý tài khoản */
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-top: 1rem;
-    }
-    
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    
-    .table th, .table td {
-        padding: 0.75rem 1rem;
-        vertical-align: middle;
-        border-top: 1px solid var(--table-border-color);
-        font-size: var(--font-size-sm);
-    }
-    
-    .table thead th {
-        background-color: var(--table-head-bg);
-        font-weight: var(--font-medium);
-        border-bottom: 2px solid var(--table-border-color);
-        color: var(--gray-700);
-    }
-    
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: var(--gray-100);
-    }
-
-    /* Form elements - nhất quán với trang quản lý tài khoản */
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form-control {
-        display: block;
-        width: 100%;
-        padding: 0.5rem 0.75rem;
-        font-size: var(--font-size-sm);
-        line-height: 1.5;
-        color: var(--gray-700);
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--rounded-md);
-        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    }
-    
-    .form-control:focus {
-        border-color: var(--primary-500);
-        outline: 0;
-        box-shadow: 0 0 0 3px rgba(33,150,243,.2);
-    }
-
-    /* Buttons - nhất quán với trang quản lý tài khoản */
-    .btn {
-        display: inline-block;
-        font-weight: var(--font-medium);
-        color: white;
-        text-align: center;
-        vertical-align: middle;
-        cursor: pointer;
-        user-select: none;
-        padding: 0.5rem 1rem;
-        font-size: var(--font-size-sm);
-        line-height: 1.5;
-        border-radius: var(--rounded-md);
-        transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    }
-    
-    .btn-primary {
-        background-color: var(--primary-500);
-        border: 1px solid var(--primary-600);
-    }
-    
-    .btn-primary:hover {
-        background-color: var(--primary-600);
-    }
-    
-    .btn-outline-secondary {
-        color: var(--gray-600);
-        background-color: transparent;
-        border: 1px solid var(--gray-400);
-    }
-    
-    .btn-outline-secondary:hover {
-        background-color: var(--gray-200);
-    }
-    
-    /* Tab styles - phong cách tab đồng nhất */
+    /* Tab Styling - Clean and modern */
     .nav-tabs {
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         flex-wrap: wrap;
-        padding-left: 0;
-        margin-bottom: 0;
         list-style: none;
-        border-bottom: 1px solid var(--gray-200);
+        padding-left: 0;
+        margin-bottom: 0; /* Remove default margin */
     }
-    
+
     .nav-tabs .nav-item {
-        margin-bottom: -1px;
+        margin-bottom: -1px; /* Align with border */
     }
-    
+
     .nav-tabs .nav-link {
         display: block;
         padding: 0.75rem 1rem;
-        border: none;
-        color: var(--gray-600);
-        font-weight: var(--font-medium);
-        text-decoration: none;
-    }
-    
-    .nav-tabs .nav-link.active {
-        color: var(--primary-500);
+        border: 1px solid transparent;
+        border-top-left-radius: var(--rounded-md);
+        border-top-right-radius: var(--rounded-md);
+        color: var(--text-muted-color);
         font-weight: var(--font-semibold);
-        border-bottom: 3px solid var(--primary-500);
+        text-decoration: none;
+        font-size: var(--font-size-sm);
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .nav-tabs .nav-link:hover,
+    .nav-tabs .nav-link:focus {
+        border-color: var(--gray-200) var(--gray-200) var(--border-color);
+        color: var(--primary-color);
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        background-color: var(--white-color);
+        border-color: var(--border-color) var(--border-color) var(--white-color);
+        border-bottom: 2px solid var(--primary-color); /* Active indicator */
+        font-weight: var(--font-bold);
     }
     
     .tab-content > .tab-pane {
         display: none;
     }
-    
     .tab-content > .active {
         display: block;
     }
+
+    /* Form Elements - Consistent Styling */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        font-size: var(--font-size-sm);
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--text-color);
+        background-color: var(--white-color);
+        background-clip: padding-box;
+        border: 1px solid var(--border-color);
+        border-radius: var(--rounded-md);
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
     
-    /* Input group - nhất quán với trang quản lý tài khoản */
+    .form-control[readonly] {
+        background-color: var(--gray-100);
+        opacity: 1;
+    }
+
+    label {
+        font-weight: var(--font-semibold);
+        margin-bottom: 0.5rem;
+        display: inline-block;
+        color: var(--gray-700);
+        font-size: var(--font-size-sm);
+    }
+
+    /* Input Group Styling */
     .input-group {
         position: relative;
         display: flex;
@@ -270,7 +241,7 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         align-items: stretch;
         width: 100%;
     }
-    
+
     .input-group > .form-control {
         position: relative;
         flex: 1 1 auto;
@@ -278,147 +249,283 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         min-width: 0;
         margin-bottom: 0;
     }
+
+    .input-group > .form-control:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .input-group > .form-control:not(:first-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
     
     .input-group-append {
         display: flex;
         margin-left: -1px;
     }
+
+    .input-group-append .btn {
+        position: relative;
+        z-index: 2;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    /* Button Styling */
+    .btn {
+        display: inline-block;
+        font-weight: var(--font-semibold);
+        color: var(--white-color);
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.6rem 1rem;
+        font-size: var(--font-size-sm);
+        line-height: 1.5;
+        border-radius: var(--rounded-md);
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .btn-primary {
+        color: var(--white-color);
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    .btn-primary:hover {
+        background-color: var(--primary-hover-color);
+        border-color: var(--primary-hover-color);
+    }
+    .btn-primary:disabled {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        opacity: 0.65;
+    }
+
+    .btn-outline-secondary {
+        color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+    .btn-outline-secondary:hover {
+        color: var(--white-color);
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+    .btn-outline-secondary i {
+        margin-right: 0.35rem;
+    }
     
-    /* Badge styles - đồng nhất với trang quản lý tài khoản */
+    /* Table Styling - Consistent with rtk_accountmanagement.php */
+    .table-responsive {
+        overflow-x: auto;
+        margin-bottom: 1rem; /* Add some space below table */
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        border-collapse: collapse; /* Ensure borders are clean */
+    }
+
+    .table th,
+    .table td {
+        padding: 0.85rem 1rem; /* Adjusted padding */
+        vertical-align: middle;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid var(--border-color);
+        background-color: var(--gray-100); /* Header background */
+        color: var(--gray-700);
+        font-weight: var(--font-bold);
+        font-size: var(--font-size-sm);
+        text-align: left; /* Ensure text alignment */
+    }
+
+    .table tbody tr:nth-of-type(odd) {
+        background-color: rgba(0,0,0,0.02); /* Subtle striping */
+    }
+    .table tbody tr:hover {
+        background-color: rgba(0,0,0,0.04);
+    }
+
+    /* Badge Styling */
     .badge {
         display: inline-block;
-        padding: 0.35em 0.65em;
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-semibold);
+        padding: 0.35em 0.6em;
+        font-size: 0.8em; /* Slightly larger for readability */
+        font-weight: var(--font-bold);
         line-height: 1;
         text-align: center;
         white-space: nowrap;
         vertical-align: baseline;
-        border-radius: 0.25rem;
+        border-radius: var(--rounded-sm);
     }
-    
     .badge-primary { background-color: var(--blue-500); color: white; }
     .badge-success { background-color: var(--green-500); color: white; }
     .badge-warning { background-color: var(--orange-500); color: white; }
     .badge-danger { background-color: var(--red-500); color: white; }
-    .badge-info { background-color: var(--blue-500); color: white; }
+    .badge-info { background-color: var(--blue-500); color: white; } /* Using blue for info */
     .badge-secondary { background-color: var(--gray-500); color: white; }
-    
-    /* Alert styles */
+
+    /* Alert Styling */
     .alert {
         position: relative;
-        padding: 1rem 1.25rem;
+        padding: 0.85rem 1.25rem;
         margin-bottom: 1rem;
         border: 1px solid transparent;
         border-radius: var(--rounded-md);
+        font-size: var(--font-size-sm);
     }
-    
     .alert-info { background-color: #e1f5fe; border-color: #b3e5fc; color: #01579b; }
     .alert-success { background-color: #e8f5e9; border-color: #c8e6c9; color: #1b5e20; }
     .alert-warning { background-color: #fff8e1; border-color: #ffecb3; color: #ff6f00; }
     .alert-danger { background-color: #ffebee; border-color: #ffcdd2; color: #b71c1c; }
-    
-    /* Grid system for layout */
-    .container-fluid { width: 100%; padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto; }
-    .row { display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
-    
-    .col-md-4, .col-md-6 {
+    .alert strong { font-weight: var(--font-bold); }
+    .alert ul { padding-left: 1.5rem; margin-bottom: 0; }
+    .alert ul li { margin-bottom: 0.25rem; }
+
+    /* Commission Summary Cards Styling */
+    .commission-summary-card {
+        color: var(--white-color);
+        border-radius: var(--rounded-md);
+        padding: 1.25rem;
+        margin-bottom: 1rem; /* For spacing on mobile */
+    }
+    .commission-summary-card .card-title {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-semibold);
+        margin-bottom: 0.5rem;
+        opacity: 0.9;
+    }
+    .commission-summary-card h2 {
+        font-size: 1.75rem;
+        font-weight: var(--font-bold);
+        margin: 0;
+        color: var(--white-color); /* Ensure h2 inside is white */
+    }
+    .bg-card-primary { background-color: var(--blue-500); }
+    .bg-card-success { background-color: var(--green-500); }
+    .bg-card-info { background-color: var(--orange-500); } /* Using orange for "Đã rút" for variety */
+
+    /* Grid system for layout (simplified) */
+    .row { display: flex; flex-wrap: wrap; margin-right: -10px; margin-left: -10px; }
+    .col-md-4, .col-md-6, .col-md-8, .col-md-12 {
         position: relative;
         width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
+        padding-right: 10px;
+        padding-left: 10px;
+        margin-bottom: 1rem; /* Add default bottom margin for columns */
     }
-    
+
     @media (min-width: 768px) {
         .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
         .col-md-6 { flex: 0 0 50%; max-width: 50%; }
+        .col-md-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+        .col-md-12 { flex: 0 0 100%; max-width: 100%; }
+        .col-md-4, .col-md-6, .col-md-8, .col-md-12 { margin-bottom: 0; } /* Reset on larger screens if row handles spacing */
     }
     
-    /* Utility classes */
-    .d-flex { display: flex !important; }
-    .justify-content-between { justify-content: space-between !important; }
+    /* Utilities */
     .mb-0 { margin-bottom: 0 !important; }
     .mb-3 { margin-bottom: 1rem !important; }
     .mb-4 { margin-bottom: 1.5rem !important; }
     .mt-4 { margin-top: 1.5rem !important; }
     .p-3 { padding: 1rem !important; }
     .text-danger { color: var(--red-500) !important; }
-    .text-muted { color: var(--gray-600) !important; }
-    .text-white { color: white !important; }
-    
-    /* Card styling for info boxes */
-    .card.bg-primary { background-color: var(--blue-500) !important; }
-    .card.bg-success { background-color: var(--green-500) !important; }
-    .card.bg-info { background-color: var(--blue-500) !important; }
-    .card.bg-light { background-color: var(--gray-100) !important; }
-      /* Responsive fixes - cải tiến để match với trang tài khoản */
+    .text-muted { color: var(--text-muted-color) !important; }
+    .d-flex { display: flex !important; }
+    .justify-content-between { justify-content: space-between !important; }
+    .align-items-center { align-items: center !important; }
+
+    /* Responsive Table (from existing, good to keep) */
     @media (max-width: 767.98px) {
-        .input-group { flex-direction: column; }
-        .input-group > .form-control { width: 100%; margin-bottom: 0.5rem; }
-        .input-group-append { margin-left: 0; width: 100%; }
-        .input-group-append button { width: 100%; }
-        
-        .card-body { padding: 1rem 0.75rem; }
-        .row { margin-right: -10px; margin-left: -10px; }
-        .col-md-4, .col-md-6 { padding-right: 10px; padding-left: 10px; }
-        
-        /* Cải thiện bảng trên mobile */
+        .content-wrapper { padding: 1rem; }
+        h2.text-2xl.font-semibold.mb-4 { font-size: 1.25rem; margin-bottom: 1rem; }
+        h4 { font-size: 1.1rem; }
+
+        .nav-tabs .nav-link { padding: 0.6rem 0.5rem; font-size: 0.8rem;}
+        .nav-tabs { justify-content: space-around; } /* Better for mobile */
+        .nav-tabs .nav-item { flex-grow: 1; text-align: center; }
+
+
+        .table-responsive { border: none; box-shadow: none; }
         .table, .table thead, .table tbody, .table th, .table td, .table tr { 
             display: block; 
         }
-        
         .table thead tr { 
             position: absolute;
             top: -9999px;
             left: -9999px;
         }
-        
-        .table-mobile-ready tr { border: 1px solid var(--gray-300); margin-bottom: 0.75rem; }
-        
-        .table-mobile-ready td { 
+        .table tr { 
+            border: 1px solid var(--border-color); 
+            margin-bottom: 0.75rem; 
+            border-radius: var(--rounded-md);
+            background-color: var(--white-color);
+        }
+        .table td { 
             border: none;
             border-bottom: 1px solid var(--gray-200); 
             position: relative;
-            padding-left: 40% !important; 
+            padding-left: 45% !important; 
             text-align: right;
+            display: flex; /* For better alignment of content and pseudo-element */
+            justify-content: space-between; /* Align label and value */
+            align-items: center;
+            min-height: 38px; /* Ensure consistent height */
         }
-        
-        .table-mobile-ready td:before { 
+        .table td:before { 
             content: attr(data-label);
             position: absolute;
             left: 0.75rem;
-            width: 35%; 
+            width: 40%; 
             white-space: nowrap;
-            font-weight: var(--font-medium);
+            font-weight: var(--font-semibold);
             text-align: left;
             color: var(--gray-700);
         }
-        
-        .table-mobile-ready td:last-child { border-bottom: none; }
-        
-        /* Nav tabs responsive */
-        .nav-tabs .nav-item { flex: 1 1 auto; text-align: center; }
-        .nav-tabs .nav-link { padding: 0.5rem 0.25rem; font-size: 0.85rem; }
+        .table td:last-child { border-bottom: none; }
+
+        .input-group { flex-direction: column; }
+        .input-group > .form-control { width: 100%; margin-bottom: 0.5rem; border-radius: var(--rounded-md) !important; }
+        .input-group-append { margin-left: 0; width: 100%; }
+        .input-group-append .btn { width: 100%; border-radius: var(--rounded-md) !important;}
+
+        .row { margin-right: -5px; margin-left: -5px; }
+        .col-md-4, .col-md-6, .col-md-8, .col-md-12 { padding-right: 5px; padding-left: 5px; margin-bottom: 1rem; }
     }
-    
-    @media (max-width: 575.98px) {
-        .page-title { font-size: 1.25rem; margin-bottom: 1rem; }
-        h4 { font-size: 1.1rem; }
-        
-        /* Cải thiện card info trên mobile */
-        .card-body h2 { font-size: 1.25rem; }
-        .card-body h5.card-title { font-size: 0.9rem; }
+
+    /* Toast Message Styling (from existing, good to keep) */
+    #toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
+    .toast-message {
+        background-color: rgba(33, 150, 243, 0.9); /* var(--blue-500) with alpha */
+        color: white;
+        padding: 12px 20px;
+        border-radius: var(--rounded-md);
+        margin-top: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        min-width: 250px;
+        font-size: var(--font-size-sm);
     }
 </style>
 
 <div class="dashboard-wrapper">
-    <?php include PROJECT_ROOT_PATH . '/private/includes/sidebar.php'; ?>
-    <div class="content-wrapper referral-content-wrapper">        <div class="referral-wrapper">
-            <h2 class="page-title">Quản Lý Giới Thiệu</h2>
-        
+    <?php include PROJECT_ROOT_PATH . '/private/includes/sidebar.php'; ?>    <div class="content-wrapper referral-content-wrapper">
+        <h2 class="text-2xl font-semibold mb-5">Chương trình giới thiệu</h2>
         <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs" id="referralTabs" role="tablist">
+            <div class="card-header p-2">
+                <ul class="nav nav-tabs card-header-tabs mb-0" id="referralTabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="referral-link-tab" data-toggle="tab" href="#referral-link" role="tab">Liên kết giới thiệu</a>
                     </li>
@@ -436,9 +543,8 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
             
             <div class="card-body">
                 <div class="tab-content" id="referralTabsContent">
-                    <!-- Tab 1: Referral Link -->
-                    <div class="tab-pane fade show active" id="referral-link" role="tabpanel">
-                        <h4 class="mb-4">Liên kết giới thiệu của bạn</h4>
+                    <!-- Tab 1: Referral Link -->                    <div class="tab-pane fade show active" id="referral-link" role="tabpanel">
+                        <h4 class="mb-3">Liên kết giới thiệu của bạn</h4>
                         <div class="alert alert-info">
                             <strong>Chính sách hoa hồng:</strong> Bạn sẽ nhận được 5% giá trị thanh toán từ người dùng mà bạn giới thiệu.
                         </div>

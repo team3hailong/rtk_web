@@ -1,0 +1,25 @@
+/* Main Content Layout */
+
+/* Dashboard wrapper - container for sidebar and content */
+.dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+/* Content wrapper - the main content area next to sidebar */
+.content-wrapper {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #f9fafb;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 1rem;
+        width: 100%;
+    }
+}

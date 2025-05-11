@@ -7,6 +7,12 @@ $errors = $_SESSION['errors'] ?? [];
 $success_message = $_SESSION['success_message'] ?? null;
 $formData = $_SESSION['form_data'] ?? [];
 
+// Check for referral code in URL
+$referralCode = $_GET['ref'] ?? '';
+if($referralCode) {
+    $formData['referral_code'] = $referralCode;
+}
+
 unset($_SESSION['errors']);
 unset($_SESSION['success_message']);
 unset($_SESSION['form_data']);
@@ -65,10 +71,13 @@ $base_url = BASE_URL;
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
                 <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
+            </div>            <div class="form-group">
                 <label for="confirm_password">Xác nhận mật khẩu:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <div class="form-group">
+                <label for="referral_code">Mã giới thiệu (không bắt buộc):</label>
+                <input type="text" id="referral_code" name="referral_code" value="<?= htmlspecialchars($formData['referral_code'] ?? '') ?>">
             </div>
 
             <button type="submit" class="btn-register">Đăng Ký</button>

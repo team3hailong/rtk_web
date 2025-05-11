@@ -9,7 +9,7 @@ $nav_items = [
     ['label' => 'Mua tài khoản', 'icon' => 'fa-shopping-cart', 'url' => '/pages/purchase/packages.php', 'active_check' => 'packages.php'],
     ['label' => 'Quản lý tài khoản', 'icon' => 'fa-tasks', 'url' => '/pages/rtk_accountmanagement.php', 'active_check' => 'rtk_accountmanagement.php'], // Assuming this file exists or will be created
     ['label' => 'Quản lý giao dịch', 'icon' => 'fa-file-invoice-dollar', 'url' => '/pages/transaction.php', 'active_check' => 'transaction.php'], // Assuming this file exists or will be created
-    ['label' => 'Chương trình giới thiệu', 'icon' => 'fa-users', 'url' => '/pages/referral.php', 'active_check' => 'referral.php'], // Assuming this file exists or will be created
+    ['label' => 'Chương trình giới thiệu', 'icon' => 'fa-users', 'url' => '/pages/referral/dashboard_referal.php', 'active_check' => 'dashboard_referal.php'],
 
     // Trợ giúp section
     ['type' => 'section', 'label' => 'Trợ giúp'],

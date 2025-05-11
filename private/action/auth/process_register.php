@@ -6,8 +6,7 @@ require_once __DIR__ . '/../../utils/email_helper.php';
 $errors = [];
 $formData = [];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Lấy và làm sạch dữ liệu
+if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ liệu
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
@@ -17,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_name = $is_company ? trim($_POST['company_name'] ?? '') : null;
     $tax_code = $is_company ? trim($_POST['tax_code'] ?? '') : null;
     $tax_registered = ($is_company && isset($_POST['tax_registered'])) ? 1 : null;
+    $referral_code = trim($_POST['referral_code'] ?? '');
 
     // Lưu dữ liệu form vào session để hiển thị lại nếu có lỗi
     $formData = $_POST;
@@ -145,8 +145,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
                 error_log("Failed to send verification email to: $email");
             }            // Commit transaction nếu mọi thứ thành công
-            $conn->commit();
-
+            $conn->commit();            // Process referral if a code was provided
+            if (!empty($referral_code)) {
+                require_once __DIR__ . '/../../classes/Referral.php';
+                require_once __DIR__ . '/../../classes/Database.php';
+                
+                // Initialize Referral service with PDO connection
+                $db = new Database();
+                $referralService = new Referral($db);
+                
+                // Track the referral
+                $referralService->trackReferral($user_id, $referral_code);
+            }
+            
             // Xóa dữ liệu form khỏi session và đặt thông báo thành công
             unset($_SESSION['form_data']);
             $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.";

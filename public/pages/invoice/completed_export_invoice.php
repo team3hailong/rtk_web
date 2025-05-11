@@ -14,39 +14,20 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
-require_once $project_root_path . '/private/classes/Database.php';
-
+require_once $project_root_path . '/private/classes/invoice/InvoiceService.php';
 
 $tx_id = isset($_GET['tx_id']) ? intval($_GET['tx_id']) : 0;
 if ($tx_id <= 0) {
     die('Tham số không hợp lệ.');
 }
 
-$db = new Database();
-$conn = $db->getConnection();
-
-// Lấy thông tin giao dịch, gói, user, registration
-$stmt = $conn->prepare('
-    SELECT th.id as transaction_id, th.created_at, 
-           p.name as package_name, r.num_account, r.total_price, 
-           u.company_name, u.tax_code, u.company_address, u.email
-    FROM transaction_history th
-    LEFT JOIN registration r ON th.registration_id = r.id
-    LEFT JOIN package p ON r.package_id = p.id
-    LEFT JOIN user u ON th.user_id = u.id
-    WHERE th.id = ?
-');
-$stmt->execute([$tx_id]);
-$info = $stmt->fetch(PDO::FETCH_ASSOC);
+// Initialize InvoiceService and fetch data
+$service = new InvoiceService();
+$info = $service->getTransactionInfo($tx_id);
 if (!$info) {
     die('Không tìm thấy giao dịch.');
 }
-
-// Lấy thông tin invoice
-$stmt2 = $conn->prepare('SELECT * FROM invoice WHERE transaction_history_id = ?');
-$stmt2->execute([$tx_id]);
-$invoice = $stmt2->fetch(PDO::FETCH_ASSOC);
+$invoice = $service->getInvoice($tx_id);
 if (!$invoice) {
     die('Không tìm thấy yêu cầu xuất hóa đơn cho giao dịch này.');
 }

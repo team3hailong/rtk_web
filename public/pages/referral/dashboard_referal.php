@@ -565,7 +565,7 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                             <div class="form-group">
                                 <label>Liên kết giới thiệu:</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="referral-link" 
+                                    <input type="text" class="form-control" id="referral-link-input" 
                                            value="<?php echo BASE_URL; ?>/public/pages/auth/register.php?ref=<?php echo $referralCode; ?>" readonly>
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" onclick="copyReferralLink()">
@@ -867,7 +867,7 @@ function copyReferralCode() {
 }
 
 function copyReferralLink() {
-    var copyText = document.getElementById("referral-link");
+    var copyText = document.getElementById("referral-link-input");
     if (!copyText) return;
     
     try {

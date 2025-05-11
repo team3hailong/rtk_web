@@ -2,9 +2,7 @@
 session_start();
 $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';
-require_once $project_root_path . '/private/classes/Database.php';
-require_once $project_root_path . '/private/classes/Package.php';
-require_once $project_root_path . '/private/classes/RtkAccount.php';
+require_once $project_root_path . '/private/classes/purchase/RenewalService.php';
 
 $base_url = BASE_URL;
 
@@ -22,17 +20,11 @@ if (empty($selected_accounts) || !is_array($selected_accounts)) {
     exit;
 }
 
-// Lấy thông tin tài khoản từ DB
-$db = new Database();
-$rtkAccount = new RtkAccount($db);
-$accounts = $rtkAccount->getAccountsByIdsForRenewal($user_id, $selected_accounts); // Hàm này bạn cần thêm vào class RtkAccount
-
-// Lấy danh sách gói gia hạn
-$packageObj = new Package();
-$packages = $packageObj->getAllPackagesForRenewal(); // Hàm này bạn cần thêm vào class Package
-
-$db->close();
-$packageObj->closeConnection();
+// Lấy thông tin tài khoản và gói qua RenewalService
+$renewalService = new RenewalService();
+$accounts = $renewalService->getAccountsByIdsForRenewal($user_id, $selected_accounts);
+$packages = $renewalService->getAllPackagesForRenewal();
+$renewalService->close();
 
 // Include CSRF helper and generate token
 require_once $project_root_path . '/private/utils/csrf_helper.php';
@@ -53,104 +45,8 @@ if (empty($packages)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gia hạn tài khoản RTK</title>
-    <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/base.css">
-    <style>
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .package-selection {
-            margin-bottom: 30px;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .package-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .package-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        .package-card {
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .package-card.selected {
-            border-color: #4CAF50;
-            background-color: #f0fff0;
-        }
-        .package-name {
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .package-price {
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        .package-duration {
-            color: #666;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-        .accounts-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .accounts-table th, .accounts-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        .accounts-table th {
-            background-color: #f2f2f2;
-        }
-        .total-section {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .grand-total {
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
-            text-align: right;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-        }
-        .btn-primary {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .btn-secondary {
-            background-color: #f1f1f1;
-            color: #333;
-            text-decoration: none;
-            display: inline-block;
-        }
-    </style>
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/base.css">
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/pages/purchase/renewal.css">
 </head>
 <body>
 <div class="container">
@@ -229,41 +125,8 @@ if (empty($packages)) {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const packageCards = document.querySelectorAll('.package-card');
-    const packageIdInput = document.getElementById('package-id-input');
-    const selectedPackageName = document.getElementById('selected-package-name');
-    const packagePrice = document.getElementById('package-price');
-    const totalPrice = document.getElementById('total-price');
-    const submitButton = document.getElementById('submit-button');
-    const accountCount = <?php echo count($accounts); ?>;
-    
-    packageCards.forEach(card => {
-        card.addEventListener('click', function() {
-            // Bỏ chọn tất cả các thẻ
-            packageCards.forEach(c => c.classList.remove('selected'));
-            
-            // Chọn thẻ hiện tại
-            this.classList.add('selected');
-            
-            // Lấy thông tin gói
-            const packageId = this.dataset.packageId;
-            const price = parseFloat(this.dataset.packagePrice);
-            
-            // Cập nhật form và hiển thị
-            packageIdInput.value = packageId;
-            selectedPackageName.textContent = this.querySelector('.package-name').textContent;
-            packagePrice.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' đ';
-            
-            // Tính tổng giá trị
-            const total = price * accountCount;
-            totalPrice.textContent = new Intl.NumberFormat('vi-VN').format(total) + ' đ';
-            
-            // Cho phép submit form
-            submitButton.disabled = false;
-        });
-    });
-});
+window.RENEWAL_PAGE_DATA = { accountCount: <?php echo count($accounts); ?> };
 </script>
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/renewal.js"></script>
 </body>
 </html>

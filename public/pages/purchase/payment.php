@@ -6,13 +6,13 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
+$base_path = PUBLIC_URL;
 $project_root_path = PROJECT_ROOT_PATH;
 
 // --- Include Required Files ---
 require_once $project_root_path . '/private/utils/functions.php'; // For CRC function if moved there
-require_once $project_root_path . '/private/utils/vietqr_helper.php'; // Include the new VietQR helper
-require_once $project_root_path . '/private/utils/payment_helper.php'; // Include the new payment helper
 require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
+require_once $project_root_path . '/private/classes/purchase/PaymentService.php';
 
 // --- VAT Rate ---
 $vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 8; // Lấy từ .env hoặc mặc định 8%
@@ -63,8 +63,9 @@ if (!isset($_SESSION['is_renewal'])) {
 $registration_ids = $is_renewal ? ($_SESSION['renewal_account_ids'] ?? [$registration_id]) : [$registration_id];
 $renewal_details = $is_renewal ? ($_SESSION['pending_renewal_details'] ?? null) : null;
 
-// --- Fetch Payment Details using Helper ---
-$payment_details_result = getPaymentPageDetails($registration_id, $user_id, $session_total_price);
+// --- Fetch Payment Details using PaymentService ---
+$paymentService = new PaymentService();
+$payment_details_result = $paymentService->getPaymentPageDetails($registration_id, $user_id, $session_total_price);
 
 if (!$payment_details_result['success']) {
     // Handle errors reported by the helper function
@@ -91,10 +92,7 @@ $order_description = "REG{$registration_id} MUA GOI"; // Keep it short
 $final_qr_payload = null;
 $vietqr_image_url = null;
 if (!$is_trial) {
-    // Lấy giá tiền đã qua voucher nếu có
     $base_price = $verified_total_price;
-    
-    // Nếu có voucher đã áp dụng, sử dụng giá sau khi áp dụng voucher
     $session_key = $is_renewal ? 'renewal' : 'order';
     if (isset($_SESSION[$session_key]['voucher_id']) && isset($_SESSION[$session_key]['voucher_discount'])) {
         if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
@@ -103,22 +101,11 @@ if (!$is_trial) {
             $base_price = $_SESSION[$session_key]['total_price'];
         }
     }
-    
-    // Tính thuế VAT
     $vat_amount = $base_price * ($vat_value / 100);
     $final_price = $base_price + $vat_amount;
-    
-    $final_qr_payload = generate_vietqr_payload($final_price, $order_description);
-    // --- Generate img.vietqr.io URL ---
-    $vietqr_image_url = sprintf(
-        "https://img.vietqr.io/image/%s-%s-%s.png?amount=%d&addInfo=%s&accountName=%s",
-        VIETQR_BANK_ID, // Bank BIN/ID
-        VIETQR_ACCOUNT_NO, // Account Number
-        defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2', // Template (e.g., compact2)
-        $final_price, // Amount (với voucher nếu có)
-        urlencode($order_description), // URL Encoded Description
-        urlencode(VIETQR_ACCOUNT_NAME) // URL Encoded Account Name
-    );
+    $qr = $paymentService->generateVietQR($final_price, $order_description); // <-- Số tiền QR là tổng thanh toán
+    $final_qr_payload = $qr['payload'];
+    $vietqr_image_url = $qr['image_url'];
 }
 
 // --- User Info ---
@@ -130,293 +117,7 @@ include $project_root_path . '/private/includes/header.php';
 ?>
 
 <!-- CSS cho Trang Thanh Toán -->
-<style>
-    .payment-summary, .payment-qr-section {
-        background-color: white;
-        padding: 2rem;
-        border-radius: var(--rounded-lg);
-        border: 1px solid var(--gray-200);
-        margin-bottom: 2rem;
-    }
-
-    .payment-summary h3, .payment-qr-section h3 {
-        font-size: var(--font-size-lg);
-        font-weight: var(--font-semibold);
-        color: var(--gray-800);
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid var(--gray-200);
-        padding-bottom: 0.75rem;
-    }
-
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center; /* Căn giữa nếu text dài */
-        margin-bottom: 0.75rem;
-        font-size: var(--font-size-base);
-        color: var(--gray-700);
-        gap: 1rem; /* Khoảng cách giữa label và value */
-        flex-wrap: wrap; /* Cho phép xuống dòng nếu không đủ chỗ */
-    }
-    .summary-item span:first-child { flex-shrink: 0;} /* Không co label */    .summary-item strong {
-        font-weight: var(--font-semibold); /* Đậm hơn medium */
-        color: var(--gray-900);
-        text-align: right; /* Căn phải giá trị */
-    }
-    .summary-total {
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--gray-300);
-        font-size: 1.25rem; /* --font-size-xl */
-        font-weight: var(--font-bold);
-        color: var(--primary-600);
-    }
-    
-    /* Voucher styles */
-    .voucher-section {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background-color: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: var(--rounded-md);
-    }
-    .voucher-form {
-        display: flex;
-        gap: 0.5rem;
-    }
-    .voucher-input {
-        flex: 1;
-        padding: 0.5rem;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--rounded-md);
-        font-size: var(--font-size-sm);
-    }
-    .voucher-btn {
-        padding: 0.5rem 1rem;
-        background-color: var(--primary-600);
-        color: white;
-        border: none;
-        border-radius: var(--rounded-md);
-        font-weight: var(--font-medium);
-        cursor: pointer;
-    }
-    .voucher-btn:hover {
-        background-color: var(--primary-700);
-    }
-    .voucher-status {
-        margin-top: 0.5rem;
-        font-size: var(--font-size-sm);
-    }
-    .voucher-status.success {
-        color: var(--success-600);
-    }
-    .voucher-status.error {
-        color: var(--danger-600);
-    }
-    .voucher-info {
-        margin-top: 1rem;
-        padding: 0.75rem;
-        background-color: var(--success-50);
-        border: 1px solid var(--success-200);
-        border-radius: var(--rounded-md);
-        display: none;
-    }
-    .voucher-remove {
-        color: var(--danger-600);
-        background: none;
-        border: none;
-        font-size: var(--font-size-sm);
-        cursor: pointer;
-        padding: 0;
-        margin-left: 1rem;
-    }
-    
-    /* Confirmation Dialog Styles */
-    .confirmation-dialog {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-    }
-    
-    .confirmation-content {
-        background-color: white;
-        padding: 1.5rem;
-        border-radius: var(--rounded-lg, 0.5rem);
-        max-width: 400px;
-        width: 90%;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .confirmation-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 1.5rem;
-    }
-    
-    .confirmation-buttons button {
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        border-radius: var(--rounded-md, 0.375rem);
-    }
-
-    .payment-qr-section {
-        text-align: center;
-    }
-
-    #qrcode {
-        width: 250px; /* Kích thước QR */
-        height: 250px;
-        margin: 1rem auto 1.5rem auto; /* Căn giữa QR */
-        border: 5px solid white; /* Khung trắng quanh QR */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        display: flex; /* Để căn giữa placeholder nếu JS chưa chạy */
-        align-items: center;
-        justify-content: center;
-        background-color: var(--gray-100); /* Nền chờ */
-    }
-    #qrcode img { /* Style cho thẻ img do thư viện JS tạo ra */
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain; /* Đảm bảo QR không bị méo */
-    }
-
-    .bank-details p {
-        margin-bottom: 0.5rem;
-        color: var(--gray-600);
-        font-size: var(--font-size-sm); /* Chữ nhỏ hơn chút */
-    }
-     .bank-details strong {
-         color: var(--gray-800);
-         font-weight: var(--font-semibold);
-     }
-     .bank-details code {
-        background-color: var(--gray-100);
-        padding: 0.2em 0.5em;
-        border-radius: var(--rounded-sm);
-        font-family: monospace;
-        color: var(--gray-700);
-        cursor: pointer;
-        border: 1px solid var(--gray-200);
-        display: inline-block; /* Để có padding */
-        margin-left: 5px;
-        position: relative; /* Cho tooltip nếu muốn */
-     }
-    .bank-details code:hover::after {
-        content: 'Sao chép';
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--gray-800);
-        color: white;
-        padding: 2px 6px;
-        border-radius: var(--rounded-sm);
-        font-size: 0.7rem;
-        white-space: nowrap;
-        margin-bottom: 4px;
-    }
-
-
-    .payment-instructions {
-        margin-top: 1.5rem;
-        font-size: var(--font-size-sm);
-        color: var(--gray-500);
-        line-height: 1.6;
-    }
-
-
-     @media (max-width: 768px) {
-        .content-wrapper {
-            padding: 1rem !important;
-        }
-        .payment-summary, .payment-qr-section {
-            padding: 1.5rem;
-        }
-         #qrcode {
-            width: 200px;
-            height: 200px;
-        }
-        .payment-container {
-             grid-template-columns: 1fr; /* Stack 2 cột trên mobile */
-        }
-    }
-
-    .upload-section {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background-color: var(--gray-50);
-        border: 1px dashed var(--gray-300);
-        border-radius: var(--rounded-md);
-        text-align: center;
-    }
-    .upload-section h4 {
-        font-size: var(--font-size-base);
-        font-weight: var(--font-semibold);
-        color: var(--gray-700);
-        margin-bottom: 1rem;
-    }
-    .upload-section p {
-        font-size: var(--font-size-sm);
-        color: var(--gray-500);
-        margin-bottom: 1rem;
-    }
-    .upload-section input[type="file"] {
-        display: block;
-        margin: 1rem auto;
-        padding: 0.5rem;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--rounded-md);
-        max-width: 300px; /* Giới hạn chiều rộng */
-        cursor: pointer;
-    }
-     .upload-section .btn-upload {
-        /* Style giống btn-primary hoặc btn-secondary */
-        padding: 0.6rem 1.2rem;
-        background-color: var(--primary-600);
-        color: white;
-        border: none;
-        border-radius: var(--rounded-md);
-        font-weight: var(--font-medium);
-        cursor: pointer;
-        transition: background-color 0.2s;
-     }
-     .upload-section .btn-upload:hover {
-         background-color: var(--primary-700);
-     }
-     .upload-section .btn-upload:disabled {
-         background-color: var(--gray-400);
-         cursor: not-allowed;
-     }
-     #upload-status {
-         margin-top: 1rem;
-         font-size: var(--font-size-sm);
-         font-weight: var(--font-medium);
-     }
-     .status-success { color: var(--success-600); }
-     .status-error { color: var(--danger-600); }
-     
-    /* Responsive styles for mobile */
-    @media (max-width: 480px) {
-        .payment-summary, .payment-qr-section {
-            padding: 1rem;
-        }
-        .summary-total {
-            font-size: 1rem;
-        }
-        #qrcode {
-            width: 150px;
-            height: 150px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/purchase/payment.css">
 
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
@@ -573,7 +274,7 @@ include $project_root_path . '/private/includes/header.php';
                     <p>Chủ tài khoản: <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong></p>
                     <p>Số tiền: <strong id="payment-amount">
                         <?php 
-                        // Hiển thị giá sau khi áp dụng voucher nếu có
+                        // Hiển thị tổng thanh toán (đã bao gồm VAT)
                         $display_price = $verified_total_price;
                         $session_key = $is_renewal ? 'renewal' : 'order';
                         if (isset($_SESSION[$session_key]['voucher_id'])) {
@@ -583,7 +284,8 @@ include $project_root_path . '/private/includes/header.php';
                                 $display_price = $_SESSION[$session_key]['total_price'];
                             }
                         }
-                        echo number_format($display_price, 0, ',', '.'); 
+                        $display_price_with_vat = $display_price + ($display_price * ($vat_value / 100));
+                        echo number_format($display_price_with_vat, 0, ',', '.'); 
                         ?> đ</strong> <code title="Sao chép số tiền" data-copy-target="#payment-amount">Copy</code></p>
                     <p>Nội dung: <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong> <code title="Sao chép nội dung" data-copy-target="#payment-description">Copy</code></p>
                 </div>
@@ -613,22 +315,8 @@ include $project_root_path . '/private/includes/header.php';
     </main>
 </div>
 
-<script>
-// Biến được chèn từ PHP để JS xử lý
-const JS_IS_TRIAL = <?php echo json_encode($is_trial); ?>;
-const JS_IS_RENEWAL = <?php echo json_encode($is_renewal); ?>;
-const JS_BASE_PRICE = <?php echo json_encode((float)$verified_total_price); ?>;
-const JS_VAT_VALUE = <?php echo json_encode((float)$vat_value); ?>;
-const JS_CURRENT_PRICE = <?php echo json_encode((float)($verified_total_price + ($verified_total_price * ($vat_value / 100)))); ?>;
-const JS_ORDER_DESCRIPTION = "<?php echo addslashes($order_description); ?>";
-const JS_BASE_URL = "<?php echo $base_url; ?>";
-const JS_CSRF_TOKEN = "<?php echo generate_csrf_token(); ?>";
-const JS_VIETQR_BANK_ID = "<?php echo VIETQR_BANK_ID; ?>";
-const JS_VIETQR_ACCOUNT_NO = "<?php echo VIETQR_ACCOUNT_NO; ?>";
-const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? VIETQR_IMAGE_TEMPLATE : 'compact2'; ?>";
-const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : ''; ?>";
-</script>
-<script src="<?php echo $base_url; ?>/public/assets/js/pages/purchase/payment_voucher.js"></script>
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/payment_data.js"></script>
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/payment_voucher.js"></script>
 
 <?php
 // --- Include Footer ---

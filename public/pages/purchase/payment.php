@@ -317,7 +317,8 @@ include $project_root_path . '/private/includes/header.php';
 
 <!-- JavaScript variables needed for payment scripts -->
 <script>
-    // Define variables needed by payment_data.js and payment_voucher.js    const JS_IS_TRIAL = <?php echo $is_trial ? 'true' : 'false'; ?>;
+    // Define variables needed by payment_data.js and payment_voucher.js
+    const JS_IS_TRIAL = <?php echo $is_trial ? 'true' : 'false'; ?>;
     const JS_IS_RENEWAL = <?php echo $is_renewal ? 'true' : 'false'; ?>;
     const JS_BASE_PRICE = <?php echo $verified_total_price; ?>;
     const JS_VAT_VALUE = <?php echo $vat_value; ?>;

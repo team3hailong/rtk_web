@@ -47,6 +47,8 @@ $base_url = BASE_URL;
             <div class="form-group">
                 <label for="password">Mật khẩu:</label>
                 <input type="password" id="password" name="password" required>
+            </div>            <div class="forgot-password">
+                <a href="forgot_password.php">Quên mật khẩu?</a>
             </div>
             <button type="submit" class="btn-login">Đăng Nhập</button>
         </form>

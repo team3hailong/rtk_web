@@ -43,7 +43,9 @@ if (!file_exists($target_script)) {
 $public_actions = [
     'auth/process_login',
     'auth/process_register',
-    'auth/verify-email'
+    'auth/verify-email',
+    'auth/process_forgot_password',
+    'auth/process_reset_password'
 ];
 
 // Check if the current action requires authentication
@@ -59,8 +61,10 @@ require_once $project_root_path . '/private/utils/csrf_helper.php';
 // Danh sách các action không cần kiểm tra CSRF (như API endpoints)
 $csrf_exempt_actions = [
     'auth/verify-email',  // Verification qua email link không cần CSRF
+    'auth/process_forgot_password',  // Form quên mật khẩu không cần CSRF
+    'auth/process_reset_password',  // Form đặt lại mật khẩu không cần CSRF
     'purchase/apply_voucher',  // Voucher applications via AJAX
-    'purchase/remove_voucher'  // Voucher removal via AJAX
+    'purchase/remove_voucher',  // Voucher removal via AJAX
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_exempt_actions)) {

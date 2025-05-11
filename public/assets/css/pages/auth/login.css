@@ -71,6 +71,21 @@ body {
     background-color: #388e3c; /* Darker green on hover */
 }
 
+.forgot-password {
+    text-align: right;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #2e7d32;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
 .register-link {
     text-align: center;
     margin-top: 20px;

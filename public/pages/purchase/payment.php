@@ -315,8 +315,24 @@ include $project_root_path . '/private/includes/header.php';
     </main>
 </div>
 
-<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/payment_data.js"></script>
-<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/payment_voucher.js"></script>
+<!-- JavaScript variables needed for payment scripts -->
+<script>
+    // Define variables needed by payment_data.js and payment_voucher.js    const JS_IS_TRIAL = <?php echo $is_trial ? 'true' : 'false'; ?>;
+    const JS_IS_RENEWAL = <?php echo $is_renewal ? 'true' : 'false'; ?>;
+    const JS_BASE_PRICE = <?php echo $verified_total_price; ?>;
+    const JS_VAT_VALUE = <?php echo $vat_value; ?>;
+    const JS_CURRENT_PRICE = <?php echo $verified_total_price + ($verified_total_price * ($vat_value / 100)); ?>;
+    const JS_ORDER_DESCRIPTION = "<?php echo htmlspecialchars($order_description, ENT_QUOTES, 'UTF-8'); ?>";
+    const JS_BASE_URL = "<?php echo htmlspecialchars($base_url, ENT_QUOTES, 'UTF-8'); ?>";
+    const JS_CSRF_TOKEN = "<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>";
+    const JS_VIETQR_BANK_ID = "<?php echo defined('VIETQR_BANK_ID') ? htmlspecialchars(VIETQR_BANK_ID, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    const JS_VIETQR_ACCOUNT_NO = "<?php echo defined('VIETQR_ACCOUNT_NO') ? htmlspecialchars(VIETQR_ACCOUNT_NO, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? htmlspecialchars(VIETQR_IMAGE_TEMPLATE, ENT_QUOTES, 'UTF-8') : 'compact'; ?>";
+    const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? htmlspecialchars(VIETQR_ACCOUNT_NAME, ENT_QUOTES, 'UTF-8') : ''; ?>";
+</script>
+
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_data.js"></script>
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_voucher.js"></script>
 
 <?php
 // --- Include Footer ---

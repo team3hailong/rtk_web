@@ -44,41 +44,6 @@ $withdrawalHistory = $referralService->getWithdrawalHistory($user_id);
 // Get commission transactions
 $commissionTransactions = $referralService->getCommissionTransactions($user_id);
 
-// Process withdrawal request if submitted
-$withdrawalMessage = '';
-$withdrawalStatus = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_withdrawal'])) {
-    // CSRF check
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        $withdrawalStatus = 'error';
-        $withdrawalMessage = 'CSRF token không hợp lệ. Vui lòng thử lại.';
-    } else {
-        $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-        $bankName = filter_input(INPUT_POST, 'bank_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $accountNumber = filter_input(INPUT_POST, 'account_number', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $accountHolder = filter_input(INPUT_POST, 'account_holder', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        
-        if ($amount && $bankName && $accountNumber && $accountHolder) {
-            $result = $referralService->createWithdrawalRequest($user_id, $amount, $bankName, $accountNumber, $accountHolder);
-            $withdrawalStatus = $result['success'] ? 'success' : 'error';
-            $withdrawalMessage = $result['message'];
-            
-            if ($result['success']) {
-                // Refresh data after successful request
-                $totalCommissionEarned = $referralService->getTotalCommissionEarned($user_id);
-                $totalCommissionPaid = $referralService->getTotalCommissionPaid($user_id);
-                $pendingWithdrawals = $referralService->getTotalPendingWithdrawals($user_id);
-                $availableBalance = $totalCommissionEarned - $totalCommissionPaid - $pendingWithdrawals;
-                $withdrawalHistory = $referralService->getWithdrawalHistory($user_id);
-            }
-        } else {
-            $withdrawalStatus = 'error';
-            $withdrawalMessage = 'Vui lòng điền đầy đủ thông tin yêu cầu.';
-        }
-    }
-}
-
 // Include header and sidebar
 $page_title = "Quản lý giới thiệu";
 require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
@@ -153,15 +118,6 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         <div class="container-fluid">
             <h1 class="page-title">Quản Lý Giới Thiệu</h1>
         
-        <?php if (!empty($withdrawalMessage)): ?>
-        <div class="alert alert-<?php echo $withdrawalStatus === 'success' ? 'success' : 'danger'; ?> alert-dismissible fade show">
-            <?php echo $withdrawalMessage; ?>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <?php endif; ?>
-
         <div class="card">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" id="referralTabs" role="tablist">
@@ -387,7 +343,9 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
                                     </ul>
                                 </div>
                                 
-                                <form method="post" action="" id="withdrawal-form">
+                                <div class="alert" id="withdrawal-message" style="display:none;"></div>
+                                
+                                <form id="withdrawal-form">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                                     <div class="form-group">
                                         <label for="amount">Số tiền muốn rút (VNĐ) <span class="text-danger">*</span></label>
@@ -483,8 +441,9 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
 
 <script>
 function copyReferralCode() {
@@ -520,33 +479,70 @@ $(document).ready(function() {
     
     // Form validation & loading
     $('#withdrawal-form').submit(function(event) {
-        var amount = $('#amount').val();
-        var bankName = $('#bank_name').val();
-        var accountNumber = $('#account_number').val();
-        var accountHolder = $('#account_holder').val();
-        var available = <?php echo (int)$availableBalance; ?>;
+        event.preventDefault();
+        
+        var form = $(this);
+        var withdrawBtn = $('#withdraw-btn');
+        var btnText = $('#withdraw-btn-text');
+        var btnLoading = $('#withdraw-btn-loading');
+        var messageDiv = $('#withdrawal-message');
+
+        var amount = parseFloat($('#amount').val());
+        var bankName = $('#bank_name').val().trim();
+        var accountNumber = $('#account_number').val().trim();
+        var accountHolder = $('#account_holder').val().trim();
+        var available = parseFloat(<?php echo (float)$availableBalance; ?>);
+        var minWithdrawal = 100000;
+
+        messageDiv.hide().removeClass('alert-success alert-danger');
+
         if (!amount || !bankName || !accountNumber || !accountHolder) {
-            event.preventDefault();
-            alert('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.');
+            messageDiv.text('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.').addClass('alert-danger').show();
             return false;
         }
-        if (parseInt(amount) > available) {
-            event.preventDefault();
-            alert('Số dư khả dụng không đủ!');
+        if (isNaN(amount) || amount <= 0) {
+            messageDiv.text('Số tiền không hợp lệ.').addClass('alert-danger').show();
             return false;
         }
-        $('#withdraw-btn-text').hide();
-        $('#withdraw-btn-loading').show();
-        $('#withdraw-btn').prop('disabled', true);
+        if (amount < minWithdrawal) {
+            messageDiv.text('Số tiền rút tối thiểu là ' + minWithdrawal.toLocaleString('vi-VN') + ' VNĐ.').addClass('alert-danger').show();
+            return false;
+        }
+        if (amount > available) {
+            messageDiv.text('Số dư khả dụng không đủ!').addClass('alert-danger').show();
+            return false;
+        }
+
+        btnText.hide();
+        btnLoading.show();
+        withdrawBtn.prop('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo BASE_URL; ?>/private/action/referral/process_withdrawal.php',
+            data: form.serialize(),
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    messageDiv.text(response.message).removeClass('alert-danger').addClass('alert-success').show();
+                    setTimeout(function(){ location.reload(); }, 2000);
+                } else {
+                    messageDiv.text(response.message || 'Đã xảy ra lỗi không xác định.').removeClass('alert-success').addClass('alert-danger').show();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("AJAX Error: ", textStatus, errorThrown, jqXHR.responseText);
+                messageDiv.text('Lỗi khi gửi yêu cầu. Vui lòng thử lại.').removeClass('alert-success').addClass('alert-danger').show();
+            },
+            complete: function() {
+                btnText.show();
+                btnLoading.hide();
+                withdrawBtn.prop('disabled', false);
+            }
+        });
     });
-    
-    // Responsive table
-    $('.table-responsive').css('overflow-x', 'auto');
 });
 </script>
-        </div>
-    </main>
-</div>
 
 <?php
 // Include footer

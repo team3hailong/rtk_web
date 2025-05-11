@@ -8,10 +8,8 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 $base_path = PUBLIC_URL; // Use PUBLIC_URL constant for links
 $project_root_path = PROJECT_ROOT_PATH;
 
-// --- Include Database class ---
-
-require_once $project_root_path . '/private/config/config.php'; // Thêm config.php trước
-require_once $project_root_path . '/private/classes/Database.php';
+// --- Include PurchaseService class ---
+require_once $project_root_path . '/private/classes/purchase/PurchaseService.php';
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -23,49 +21,16 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id']; // Get user ID
 $user_username = $_SESSION['username'] ?? 'Người dùng';
 
-// ===============================================
-// == KIỂM TRA USER ĐÃ CÓ ĐĂNG KÝ CHƯA ==
-// ===============================================
-$db = new Database();
-$conn = $db->connect();
-$user_has_registration = false;
-try {
-    // Chuẩn bị câu lệnh SQL để kiểm tra xem user_id có tồn tại trong bảng registration không
-    $stmt_check = $conn->prepare("SELECT 1 FROM registration WHERE user_id = :user_id LIMIT 1");
-    $stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_check->execute();
-    // Nếu tìm thấy bản ghi, đặt biến $user_has_registration thành true
-    if ($stmt_check->fetch()) {
-        $user_has_registration = true;
-    }
-} catch (PDOException $e) {
-    // Ghi lại lỗi nếu có vấn đề khi truy vấn cơ sở dữ liệu
-    error_log("Error checking user registration in packages.php: " . $e->getMessage());
-    // Có thể xử lý lỗi ở đây, ví dụ: hiển thị thông báo lỗi hoặc giả định người dùng chưa đăng ký
-}
-// Giữ kết nối mở để lấy danh sách các gói
-
-// ===============================================
-// == LẤY DỮ LIỆU CÁC GÓI TỪ DATABASE ==
-// ===============================================
-// $db và $conn đã được khởi tạo
-$all_packages = [];
-try {
-    // Lấy tất cả các gói đang hoạt động, sắp xếp theo thứ tự hiển thị
-    $stmt = $conn->prepare("SELECT package_id, name, price, duration_text, features_json, is_recommended, button_text, savings_text FROM package WHERE is_active = 1 ORDER BY display_order ASC");
-    $stmt->execute();
-    $all_packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Ghi lại lỗi nếu có vấn đề khi lấy danh sách gói
-    error_log("Error fetching packages in packages.php: " . $e->getMessage());
-}
-$db->close(); // Đóng kết nối sau khi đã lấy hết dữ liệu cần thiết
+// Initialize PurchaseService
+$service = new PurchaseService();
+$user_has_registration = $service->userHasRegistration($user_id);
+$all_packages = $service->getAllPackages();
 
 // --- Include Header ---
 include $project_root_path . '/private/includes/header.php';
 ?>
 
-<!-- Link to external CSS file -->
+<!-- Page-specific CSS -->
 <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/purchase/packages.css">
 
 <div class="dashboard-wrapper">
@@ -150,7 +115,7 @@ include $project_root_path . '/private/includes/header.php';
     </main>
 </div>
 
-<!-- Create external JS file and reference it here -->
+<!-- Page-specific JS -->
 <script src="<?php echo $base_path; ?>/assets/js/pages/purchase/packages.js"></script>
 
 <?php

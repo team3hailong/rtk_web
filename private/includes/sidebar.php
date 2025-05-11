@@ -19,7 +19,6 @@ $nav_items = [
     // Cài đặt section
     ['type' => 'section', 'label' => 'Cài đặt'],
     ['label' => 'Thông tin cá nhân', 'icon' => 'fa-user-circle', 'url' => '/pages/setting/profile.php', 'active_check' => 'profile.php'],
-    ['label' => 'Thông tin thanh toán', 'icon' => 'fa-credit-card', 'url' => '/pages/setting/payment.php', 'active_check' => 'payment.php'],
     ['label' => 'Thông tin xuất hóa đơn', 'icon' => 'fa-file-alt', 'url' => '/pages/setting/invoice.php', 'active_check' => 'invoice.php'],
 
     // Logout

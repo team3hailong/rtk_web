@@ -49,278 +49,221 @@ $page_title = "Quản lý giới thiệu";
 require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
 ?>
 
-<!-- Sử dụng CSS tự định nghĩa thay vì Bootstrap CDN -->
-
+<!-- Sử dụng CSS tương tự như trang quản lý tài khoản -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<style>    /* CSS dành riêng cho trang referral */
-    .referral-page {
-        /* Biến chỉ sử dụng trong scope này */
-        --primary-color: #007bff;
-        --secondary-color: #6c757d;
-        --success-color: #28a745;
-        --danger-color: #dc3545;
-        --warning-color: #ffc107;
-        --info-color: #17a2b8;
-        --light-color: #f8f9fa;
-        --dark-color: #343a40;
-        
-        /* Đảm bảo font chữ nhất quán */
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
+<style>
+    /* Variables CSS - Tương thích với trang tài khoản */
+    :root {
+        --blue-500: #2196F3;
+        --blue-600: #1976D2;
+        --green-500: #4CAF50;
+        --green-600: #388E3C;
+        --red-500: #F44336;
+        --orange-500: #FF9800;
+        --red-bg-light: #ffebee;
+        --red-text-dark: #c62828;
+        --orange-bg-light: #fff3e0;
+        --orange-text-dark: #ef6c00;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --rounded-md: 0.375rem;
+        --rounded-lg: 0.5rem;
+        --rounded-full: 9999px;
+        --font-size-xs: 0.75rem;
+        --font-size-sm: 0.875rem;
+        --font-size-lg: 1.125rem;
+        --font-medium: 500;
+        --font-semibold: 600;
+        --primary-500: #2196F3;
+        --primary-600: #1976D2;
+        --table-border-color: var(--gray-200);
+        --table-head-bg: var(--gray-100);
     }
-      /* Grid system - chỉ áp dụng trong trang referral */
-    .referral-page .container-fluid {
-        width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
-        margin-right: auto;
-        margin-left: auto;
-    }
-    
-    .referral-page .row {
+
+    /* Layout chung - giữ khoảng cách với sidebar như trang quản lý tài khoản */
+    .dashboard-wrapper {
         display: flex;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
+        min-height: 100vh;
     }
-    
-    .referral-page .col-md-4, 
-    .referral-page .col-md-6 {
-        position: relative;
-        width: 100%;
-        padding-right: 15px;
-        padding-left: 15px;
+
+    .content-wrapper {
+        flex: 1;
+        padding: 1.5rem;
+        background-color: #f5f7fa;
     }
-    
-    @media (min-width: 768px) {
-        .referral-page .col-md-4 {
-            flex: 0 0 33.333333%;
-            max-width: 33.333333%;
-        }
-        .referral-page .col-md-6 {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
+
+    /* Card styles - tương tự trang quản lý tài khoản */
+    .card {
+        background: white;
+        border-radius: var(--rounded-lg);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--gray-200);
     }
-      /* Typography - phạm vi trong referral-page */
-    .referral-page h1, 
-    .referral-page h2, 
-    .referral-page h3, 
-    .referral-page h4, 
-    .referral-page h5, 
-    .referral-page h6 {
+
+    .card-header {
+        padding: 1rem 1.25rem;
+        background-color: white;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    /* Typography điều chỉnh phù hợp */
+    h1, h2, h3, h4, h5, h6 {
         margin-top: 0;
         margin-bottom: 0.5rem;
-        font-weight: 500;
+        font-weight: var(--font-semibold);
         line-height: 1.2;
     }
+
+    h2.page-title {
+        font-size: 1.5rem;
+        color: var(--gray-800);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Tables - giống phong cách trang quản lý tài khoản */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 1rem;
+    }
     
-    /* Forms - phạm vi trong referral-page */
-    .referral-page .form-group {
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+        padding: 0.75rem 1rem;
+        vertical-align: middle;
+        border-top: 1px solid var(--table-border-color);
+        font-size: var(--font-size-sm);
+    }
+    
+    .table thead th {
+        background-color: var(--table-head-bg);
+        font-weight: var(--font-medium);
+        border-bottom: 2px solid var(--table-border-color);
+        color: var(--gray-700);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: var(--gray-100);
+    }
+
+    /* Form elements - nhất quán với trang quản lý tài khoản */
+    .form-group {
         margin-bottom: 1rem;
     }
     
-    .referral-page .form-control {
+    .form-control {
         display: block;
         width: 100%;
-        height: calc(1.5em + 0.75rem + 2px);
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        font-weight: 400;
+        padding: 0.5rem 0.75rem;
+        font-size: var(--font-size-sm);
         line-height: 1.5;
-        color: #495057;
+        color: var(--gray-700);
         background-color: #fff;
         background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--rounded-md);
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     }
-      /* Buttons - phạm vi trong referral-page */
-    .referral-page .btn {
+    
+    .form-control:focus {
+        border-color: var(--primary-500);
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(33,150,243,.2);
+    }
+
+    /* Buttons - nhất quán với trang quản lý tài khoản */
+    .btn {
         display: inline-block;
-        font-weight: 400;
-        color: #212529;
+        font-weight: var(--font-medium);
+        color: white;
         text-align: center;
         vertical-align: middle;
         cursor: pointer;
         user-select: none;
-        background-color: transparent;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: var(--font-size-sm);
         line-height: 1.5;
-        border-radius: 0.25rem;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        border-radius: var(--rounded-md);
+        transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     }
     
-    .referral-page .btn-primary {
-        color: #fff;
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
+    .btn-primary {
+        background-color: var(--primary-500);
+        border: 1px solid var(--primary-600);
     }
     
-    .referral-page .btn-outline-secondary {
-        color: var(--secondary-color);
-        border-color: var(--secondary-color);
+    .btn-primary:hover {
+        background-color: var(--primary-600);
     }
     
-    .referral-page .btn:hover {
-        opacity: 0.85;
+    .btn-outline-secondary {
+        color: var(--gray-600);
+        background-color: transparent;
+        border: 1px solid var(--gray-400);
     }
     
-    .referral-page .btn:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-    }
-      /* Tables - phạm vi trong referral-page */
-    .referral-page .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-        border-collapse: collapse;
+    .btn-outline-secondary:hover {
+        background-color: var(--gray-200);
     }
     
-    .referral-page .table th,
-    .referral-page .table td {
-        padding: 0.75rem;
-        vertical-align: top;
-        border-top: 1px solid #dee2e6;
-    }
-    
-    .referral-page .table thead th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
-    }
-    
-    .referral-page .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-    
-    .referral-page .table-responsive {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-      /* Alerts - phạm vi trong referral-page */
-    .referral-page .alert {
-        position: relative;
-        padding: 0.75rem 1.25rem;
-        margin-bottom: 1rem;
-        border: 1px solid transparent;
-        border-radius: 0.25rem;
-    }
-    
-    .referral-page .alert-info {
-        color: #0c5460;
-        background-color: #d1ecf1;
-        border-color: #bee5eb;
-    }
-    
-    .referral-page .alert-success {
-        color: #155724;
-        background-color: #d4edda;
-        border-color: #c3e6cb;
-    }
-    
-    .referral-page .alert-warning {
-        color: #856404;
-        background-color: #fff3cd;
-        border-color: #ffeeba;
-    }
-    
-    .referral-page .alert-danger {
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-    }
-      /* Badges - phạm vi trong referral-page */
-    .referral-page .badge {
-        display: inline-block;
-        padding: 0.25em 0.4em;
-        font-size: 75%;
-        font-weight: 700;
-        line-height: 1;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: 0.25rem;
-    }
-    
-    .referral-page .badge-primary {
-        color: #fff;
-        background-color: var(--primary-color);
-    }
-    
-    .referral-page .badge-secondary {
-        color: #fff;
-        background-color: var(--secondary-color);
-    }
-    
-    .referral-page .badge-success {
-        color: #fff;
-        background-color: var(--success-color);
-    }
-    
-    .referral-page .badge-warning {
-        color: #212529;
-        background-color: var(--warning-color);
-    }
-    
-    .referral-page .badge-danger {
-        color: #fff;
-        background-color: var(--danger-color);
-    }
-    
-    .referral-page .badge-info {
-        color: #fff;
-        background-color: var(--info-color);
-    }
-      /* Tabs - phạm vi trong referral-page */
-    .referral-page .nav {
+    /* Tab styles - phong cách tab đồng nhất */
+    .nav-tabs {
         display: flex;
         flex-wrap: wrap;
         padding-left: 0;
         margin-bottom: 0;
         list-style: none;
+        border-bottom: 1px solid var(--gray-200);
     }
     
-    .referral-page .nav-tabs {
-        border-bottom: 1px solid #dee2e6;
-    }
-    
-    .referral-page .nav-tabs .nav-item {
+    .nav-tabs .nav-item {
         margin-bottom: -1px;
     }
     
-    .referral-page .nav-tabs .nav-link {
+    .nav-tabs .nav-link {
         display: block;
-        padding: 0.5rem 1rem;
-        border: 1px solid transparent;
-        border-top-left-radius: 0.25rem;
-        border-top-right-radius: 0.25rem;
+        padding: 0.75rem 1rem;
+        border: none;
+        color: var(--gray-600);
+        font-weight: var(--font-medium);
         text-decoration: none;
     }
     
-    .referral-page .nav-tabs .nav-link.active {
-        color: #495057;
-        background-color: #fff;
-        border-color: #dee2e6 #dee2e6 #fff;
+    .nav-tabs .nav-link.active {
+        color: var(--primary-500);
+        font-weight: var(--font-semibold);
+        border-bottom: 3px solid var(--primary-500);
     }
     
-    .referral-page .tab-content > .tab-pane {
+    .tab-content > .tab-pane {
         display: none;
     }
     
-    .referral-page .tab-content > .active {
+    .tab-content > .active {
         display: block;
     }
-      /* Input group - phạm vi trong referral-page */
-    .referral-page .input-group {
+    
+    /* Input group - nhất quán với trang quản lý tài khoản */
+    .input-group {
         position: relative;
         display: flex;
         flex-wrap: wrap;
@@ -328,7 +271,7 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         width: 100%;
     }
     
-    .referral-page .input-group > .form-control {
+    .input-group > .form-control {
         position: relative;
         flex: 1 1 auto;
         width: 1%;
@@ -336,128 +279,142 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
         margin-bottom: 0;
     }
     
-    .referral-page .input-group-append {
+    .input-group-append {
         display: flex;
         margin-left: -1px;
     }
-      /* Utilities - phạm vi trong referral-page */
-    .referral-page .d-flex {
-        display: flex !important;
+    
+    /* Badge styles - đồng nhất với trang quản lý tài khoản */
+    .badge {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-semibold);
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
     }
     
-    .referral-page .justify-content-between {
-        justify-content: space-between !important;
-    }
+    .badge-primary { background-color: var(--blue-500); color: white; }
+    .badge-success { background-color: var(--green-500); color: white; }
+    .badge-warning { background-color: var(--orange-500); color: white; }
+    .badge-danger { background-color: var(--red-500); color: white; }
+    .badge-info { background-color: var(--blue-500); color: white; }
+    .badge-secondary { background-color: var(--gray-500); color: white; }
     
-    .referral-page .mb-0 {
-        margin-bottom: 0 !important;
-    }
-    
-    .referral-page .mb-3 {
-        margin-bottom: 1rem !important;
-    }
-    
-    .referral-page .mb-4 {
-        margin-bottom: 1.5rem !important;
-    }
-    
-    .referral-page .mt-4 {
-        margin-top: 1.5rem !important;
-    }
-    
-    .referral-page .p-3 {
-        padding: 1rem !important;
-    }
-    
-    .referral-page .text-danger {
-        color: var(--danger-color) !important;
-    }
-    
-    .referral-page .text-muted {
-        color: #6c757d !important;
-    }
-    
-    .referral-page .text-white {
-        color: #fff !important;
-    }
-    
-    .referral-page .bg-primary {
-        background-color: var(--primary-color) !important;
-    }
-    
-    .referral-page .bg-success {
-        background-color: var(--success-color) !important;
-    }
-    
-    .referral-page .bg-info {
-        background-color: var(--info-color) !important;
-    }
-    
-    .referral-page .bg-light {
-        background-color: var(--light-color) !important;
-    }
-    .card {
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-bottom: 25px;
-    }
-    .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #e3e6f0;
-    }
-    .tab-content {
-        padding: 20px 0;
-    }
-    .nav-tabs .nav-link {
-        border: none;
-        color: #6c757d;
-        font-weight: 500;
-    }
-    .nav-tabs .nav-link.active {
-        border-bottom: 3px solid #007bff;
-        color: #007bff;
-        font-weight: 600;
-    }
-    .table-responsive {
-        margin-top: 15px;
-    }
+    /* Alert styles */
     .alert {
-        margin-bottom: 20px;
-    }
-    .page-title {
-        margin-bottom: 25px;
-        color: #333;
-    }
-    .form-group {
-        margin-bottom: 20px;
-    }
-    .input-group {
-        margin-bottom: 15px;
-    }    .badge {
-        padding: 5px 10px;
-        font-size: 0.8rem;
-    }    /* Ensure Bootstrap plays nicely with our layout */
-    .container-fluid {
-        padding: 0;
-    }
-    
-    /* Make sure tabs don't overflow on mobile */
-    .nav-tabs {
-        flex-wrap: wrap;
-    }
-    
-    /* Ensure proper z-index for elements that need to be clickable */
-    .input-group-append button {
         position: relative;
-        z-index: 1;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: var(--rounded-md);
+    }
+    
+    .alert-info { background-color: #e1f5fe; border-color: #b3e5fc; color: #01579b; }
+    .alert-success { background-color: #e8f5e9; border-color: #c8e6c9; color: #1b5e20; }
+    .alert-warning { background-color: #fff8e1; border-color: #ffecb3; color: #ff6f00; }
+    .alert-danger { background-color: #ffebee; border-color: #ffcdd2; color: #b71c1c; }
+    
+    /* Grid system for layout */
+    .container-fluid { width: 100%; padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto; }
+    .row { display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
+    
+    .col-md-4, .col-md-6 {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    
+    @media (min-width: 768px) {
+        .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+        .col-md-6 { flex: 0 0 50%; max-width: 50%; }
+    }
+    
+    /* Utility classes */
+    .d-flex { display: flex !important; }
+    .justify-content-between { justify-content: space-between !important; }
+    .mb-0 { margin-bottom: 0 !important; }
+    .mb-3 { margin-bottom: 1rem !important; }
+    .mb-4 { margin-bottom: 1.5rem !important; }
+    .mt-4 { margin-top: 1.5rem !important; }
+    .p-3 { padding: 1rem !important; }
+    .text-danger { color: var(--red-500) !important; }
+    .text-muted { color: var(--gray-600) !important; }
+    .text-white { color: white !important; }
+    
+    /* Card styling for info boxes */
+    .card.bg-primary { background-color: var(--blue-500) !important; }
+    .card.bg-success { background-color: var(--green-500) !important; }
+    .card.bg-info { background-color: var(--blue-500) !important; }
+    .card.bg-light { background-color: var(--gray-100) !important; }
+      /* Responsive fixes - cải tiến để match với trang tài khoản */
+    @media (max-width: 767.98px) {
+        .input-group { flex-direction: column; }
+        .input-group > .form-control { width: 100%; margin-bottom: 0.5rem; }
+        .input-group-append { margin-left: 0; width: 100%; }
+        .input-group-append button { width: 100%; }
+        
+        .card-body { padding: 1rem 0.75rem; }
+        .row { margin-right: -10px; margin-left: -10px; }
+        .col-md-4, .col-md-6 { padding-right: 10px; padding-left: 10px; }
+        
+        /* Cải thiện bảng trên mobile */
+        .table, .table thead, .table tbody, .table th, .table td, .table tr { 
+            display: block; 
+        }
+        
+        .table thead tr { 
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        
+        .table-mobile-ready tr { border: 1px solid var(--gray-300); margin-bottom: 0.75rem; }
+        
+        .table-mobile-ready td { 
+            border: none;
+            border-bottom: 1px solid var(--gray-200); 
+            position: relative;
+            padding-left: 40% !important; 
+            text-align: right;
+        }
+        
+        .table-mobile-ready td:before { 
+            content: attr(data-label);
+            position: absolute;
+            left: 0.75rem;
+            width: 35%; 
+            white-space: nowrap;
+            font-weight: var(--font-medium);
+            text-align: left;
+            color: var(--gray-700);
+        }
+        
+        .table-mobile-ready td:last-child { border-bottom: none; }
+        
+        /* Nav tabs responsive */
+        .nav-tabs .nav-item { flex: 1 1 auto; text-align: center; }
+        .nav-tabs .nav-link { padding: 0.5rem 0.25rem; font-size: 0.85rem; }
+    }
+    
+    @media (max-width: 575.98px) {
+        .page-title { font-size: 1.25rem; margin-bottom: 1rem; }
+        h4 { font-size: 1.1rem; }
+        
+        /* Cải thiện card info trên mobile */
+        .card-body h2 { font-size: 1.25rem; }
+        .card-body h5.card-title { font-size: 0.9rem; }
     }
 </style>
 
 <div class="dashboard-wrapper">
-    <?php include PROJECT_ROOT_PATH . '/private/includes/sidebar.php'; ?>    <main class="content-wrapper referral-page">
-
-        <div class="container-fluid">
-            <h1 class="page-title">Quản Lý Giới Thiệu</h1>
+    <?php include PROJECT_ROOT_PATH . '/private/includes/sidebar.php'; ?>
+    <div class="content-wrapper referral-content-wrapper">        <div class="referral-wrapper">
+            <h2 class="page-title">Quản Lý Giới Thiệu</h2>
         
         <div class="card">
             <div class="card-header">
@@ -786,75 +743,134 @@ require_once PROJECT_ROOT_PATH . '/private/includes/header.php';
 <!-- Đã thay thế Popper.js và Bootstrap JS bằng JavaScript tự viết -->
 
 <script>
+// Cải thiện chức năng copy với thông báo tốt hơn
 function copyReferralCode() {
-    // Giới hạn phạm vi trong trang referral
-    var referralPage = document.querySelector('.referral-page');
-    if (!referralPage) return;
+    var copyText = document.getElementById("referral-code");
+    if (!copyText) return;
     
-    var copyText = referralPage.querySelector("#referral-code");
-    if (copyText) {
+    try {
         copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
         document.execCommand("copy");
-        if (confirm("Đã sao chép mã giới thiệu: " + copyText.value + "\nBạn có muốn chia sẻ ngay không?")) {
-            // Có thể mở popup chia sẻ nếu muốn
-        }
+        
+        // Hiển thị toast thay vì confirm
+        showToast("Đã sao chép mã giới thiệu: " + copyText.value);
+    } catch (err) {
+        alert("Không thể sao chép: " + err);
     }
 }
 
 function copyReferralLink() {
-    // Giới hạn phạm vi trong trang referral
-    var referralPage = document.querySelector('.referral-page');
-    if (!referralPage) return;
+    var copyText = document.getElementById("referral-link");
+    if (!copyText) return;
     
-    var copyText = referralPage.querySelector("#referral-link");
-    if (copyText) {
+    try {
         copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
         document.execCommand("copy");
-        if (confirm("Đã sao chép liên kết giới thiệu!\nBạn có muốn chia sẻ ngay không?")) {
-            // Có thể mở popup chia sẻ nếu muốn
-        }
+        
+        // Hiển thị toast thay vì confirm
+        showToast("Đã sao chép liên kết giới thiệu!");
+    } catch (err) {
+        alert("Không thể sao chép: " + err);
     }
 }
 
-// Script để xử lý các tab và hiệu ứng mà không cần Bootstrap JS
-$(document).ready(function() {    // Custom tab implementation - chỉ trong phạm vi referral-page
-    $('.referral-page #referralTabs a').on('click', function (e) {
+// Thêm chức năng toast message cho UX tốt hơn
+function showToast(message) {
+    // Kiểm tra nếu đã có toast container
+    var toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+    }
+    
+    // Tạo toast message
+    var toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.style.backgroundColor = 'rgba(33, 150, 243, 0.9)';
+    toast.style.color = 'white';
+    toast.style.padding = '12px 20px';
+    toast.style.borderRadius = '4px';
+    toast.style.marginTop = '10px';
+    toast.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    toast.style.minWidth = '250px';
+    toast.innerText = message;
+    
+    toastContainer.appendChild(toast);
+    
+    // Auto remove sau 3 giây
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.5s ease';
+        
+        // Xóa khỏi DOM sau khi hiệu ứng fade out hoàn thành
+        setTimeout(function() {
+            toastContainer.removeChild(toast);
+        }, 500);
+    }, 3000);
+}
+
+// Script cải tiến để xử lý các tab và hiệu ứng người dùng
+$(document).ready(function() {
+    // Cải tiến tab implementation - đảm bảo hoạt động trong mọi trường hợp
+    $('#referralTabs a').on('click', function (e) {
         e.preventDefault();
         
-        // Hide all tab panes trong phạm vi referral-page
-        $('.referral-page .tab-pane').removeClass('show active');
+        // Ẩn tất cả tab panes
+        $('.tab-pane').removeClass('show active');
         
-        // Remove active class from all tabs trong phạm vi referral-page
-        $('.referral-page #referralTabs a').removeClass('active');
+        // Loại bỏ active class từ tất cả tabs
+        $('#referralTabs a').removeClass('active');
         
-        // Add active class to current tab
+        // Thêm active class cho tab hiện tại
         $(this).addClass('active');
         
-        // Show the corresponding tab pane
-        $($(this).attr('href')).addClass('show active');
+        // Hiển thị tab pane tương ứng
+        var target = $(this).attr('href');
+        $(target).addClass('show active');
+        
+        // Lưu trạng thái tab vào localStorage
+        localStorage.setItem('activeReferralTab', target);
     });
     
-    // Auto-dismiss alerts after 5 seconds - chỉ trong phạm vi referral-page
+    // Khôi phục tab đã chọn từ localStorage
+    var activeTab = localStorage.getItem('activeReferralTab');
+    if (activeTab) {
+        $('#referralTabs a[href="' + activeTab + '"]').click();
+    }
+    
+    // Cải tiến auto-dismiss alerts với hiệu ứng mượt
     setTimeout(function() {
-        $('.referral-page .alert').fadeOut('slow');
+        $('.alert:not(#withdrawal-message)').fadeOut('slow');
     }, 5000);
-      // Form validation & loading - chỉ trong phạm vi referral-page
-    $('.referral-page #withdrawal-form').submit(function(event) {
+    
+    // Form validation & loading - được cải tiến với UX tốt hơn
+    $('#withdrawal-form').submit(function(event) {
         event.preventDefault();
         
         var form = $(this);
-        var withdrawBtn = $('.referral-page #withdraw-btn');
-        var btnText = $('.referral-page #withdraw-btn-text');
-        var btnLoading = $('.referral-page #withdraw-btn-loading');
-        var messageDiv = $('.referral-page #withdrawal-message');        var amount = parseFloat($('.referral-page #amount').val());
-        var bankName = $('.referral-page #bank_name').val().trim();
-        var accountNumber = $('.referral-page #account_number').val().trim();
-        var accountHolder = $('.referral-page #account_holder').val().trim();
+        var withdrawBtn = $('#withdraw-btn');
+        var btnText = $('#withdraw-btn-text');
+        var btnLoading = $('#withdraw-btn-loading');
+        var messageDiv = $('#withdrawal-message');
+        
+        var amount = parseFloat($('#amount').val());
+        var bankName = $('#bank_name').val().trim();
+        var accountNumber = $('#account_number').val().trim();
+        var accountHolder = $('#account_holder').val().trim();
         var available = parseFloat(<?php echo (float)$availableBalance; ?>);
         var minWithdrawal = 100000;
 
+        // Reset thông báo
         messageDiv.hide().removeClass('alert-success alert-danger');
 
+        // Kiểm tra form
         if (!amount || !bankName || !accountNumber || !accountHolder) {
             messageDiv.text('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.').addClass('alert-danger').show();
             return false;
@@ -872,10 +888,12 @@ $(document).ready(function() {    // Custom tab implementation - chỉ trong ph�
             return false;
         }
 
+        // Hiển thị trạng thái loading
         btnText.hide();
         btnLoading.show();
         withdrawBtn.prop('disabled', true);
 
+        // Gửi yêu cầu AJAX
         $.ajax({
             type: 'POST',
             url: '<?php echo BASE_URL; ?>/private/action/referral/process_withdrawal.php',
@@ -884,7 +902,27 @@ $(document).ready(function() {    // Custom tab implementation - chỉ trong ph�
             success: function(response) {
                 if (response.success) {
                     messageDiv.text(response.message).removeClass('alert-danger').addClass('alert-success').show();
-                    setTimeout(function(){ location.reload(); }, 2000);
+                    
+                    // Hiển thị spinner trên toàn trang khi reload
+                    var overlay = $('<div>').css({
+                        'position': 'fixed',
+                        'top': 0,
+                        'left': 0,
+                        'width': '100%',
+                        'height': '100%',
+                        'background-color': 'rgba(255,255,255,0.7)',
+                        'z-index': 9999,
+                        'display': 'flex',
+                        'justify-content': 'center',
+                        'align-items': 'center'
+                    });
+                    
+                    var spinner = $('<div>').html('<i class="fas fa-spinner fa-spin fa-3x" style="color:#2196F3"></i>');
+                    overlay.append(spinner);
+                    $('body').append(overlay);
+                    
+                    // Reload sau 1.5 giây
+                    setTimeout(function(){ location.reload(); }, 1500);
                 } else {
                     messageDiv.text(response.message || 'Đã xảy ra lỗi không xác định.').removeClass('alert-success').addClass('alert-danger').show();
                 }
@@ -897,8 +935,49 @@ $(document).ready(function() {    // Custom tab implementation - chỉ trong ph�
                 btnText.show();
                 btnLoading.hide();
                 withdrawBtn.prop('disabled', false);
-            }
-        });
+            }        });
+    });
+    
+    // Thêm các tính năng responsive cho bảng
+    function adjustTableResponsive() {
+        if (window.innerWidth < 768) {
+            $('.table-responsive').each(function() {
+                var table = $(this).find('table');
+                if (!table.hasClass('table-mobile-ready')) {
+                    table.addClass('table-mobile-ready');
+                    
+                    // Thêm data-label attribute cho mỗi cell dựa trên header
+                    // Đảm bảo bảng hiển thị tốt trên mobile
+                    table.find('thead th').each(function(index) {
+                        var headerText = $(this).text();
+                        table.find('tbody tr').each(function() {
+                            $(this).find('td:eq(' + index + ')').attr('data-label', headerText);
+                        });
+                    });
+                }
+            });
+        }
+    }
+    
+    // Gọi lần đầu và khi thay đổi kích thước màn hình
+    adjustTableResponsive();
+    $(window).on('resize', function() {
+        adjustTableResponsive();
+    });
+    
+    // Focus input khi click vào label để cải thiện UX
+    $('label').on('click', function() {
+        var forAttr = $(this).attr('for');
+        if (forAttr) {
+            $('#' + forAttr).focus();
+        }
+    });
+    
+    // Cải thiện UX cho form khi chuyển tab
+    $('#withdrawal-tab').on('click', function() {
+        setTimeout(function() {
+            $('#amount').focus();
+        }, 300);
     });
 });
 </script>

@@ -1,0 +1,144 @@
+
+    /* Re-use relevant styles from payment.php or base.css */
+    .content-wrapper {
+        max-width: 700px; /* Limit width for better focus */
+        margin: 2rem auto; /* Center the content */
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: var(--rounded-lg);
+        box-shadow: var(--shadow-md);
+    }
+    .upload-section {
+        margin-top: 1rem; /* Reduced top margin */
+        padding: 1.5rem;
+        background-color: var(--gray-50);
+        border: 1px dashed var(--gray-300);
+        border-radius: var(--rounded-md);
+        text-align: center;
+    }
+    .upload-section h3 { /* Changed from h4 for better hierarchy */
+        font-size: var(--font-size-lg); /* Slightly larger */
+        font-weight: var(--font-semibold);
+        color: var(--gray-700);
+        margin-bottom: 1rem;
+    }
+    .upload-section p {
+        font-size: var(--font-size-sm);
+        color: var(--gray-500);
+        margin-bottom: 1rem;
+    }
+    .upload-section input[type="file"] {
+        display: block;
+        margin: 1rem auto;
+        padding: 0.5rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--rounded-md);
+        max-width: 300px;
+        cursor: pointer;
+    }
+     .upload-section .btn-upload {
+        padding: 0.6rem 1.2rem;
+        background-color: var(--primary-600);
+        color: white;
+        border: none;
+        border-radius: var(--rounded-md);
+        font-weight: var(--font-medium);
+        cursor: pointer;
+        transition: background-color 0.2s;
+     }
+     .upload-section .btn-upload:hover {
+         background-color: var(--primary-700);
+     }
+     .upload-section .btn-upload:disabled {
+         background-color: var(--gray-400);
+         cursor: not-allowed;
+     }
+     #upload-status-js { /* Renamed from upload-status */
+         margin-top: 1rem;
+         font-size: var(--font-size-sm);
+         font-weight: var(--font-medium);
+     }
+     .status-success { color: var(--success-600); }
+     .status-error { color: var(--danger-600); }
+
+     /* === Style for existing proof image === */
+     .existing-proof-section {
+         margin-bottom: 1.5rem;
+         padding: 1rem;
+         background-color: var(--gray-100);
+         border: 1px solid var(--gray-200);
+         border-radius: var(--rounded-md);
+         text-align: center;
+     }
+     .existing-proof-section h4 {
+         font-size: var(--font-size-base);
+         font-weight: var(--font-semibold);
+         color: var(--gray-600);
+         margin-bottom: 0.75rem;
+     }
+     .existing-proof-section img {
+         max-width: 100%;
+         max-height: 300px; /* Limit height */
+         border-radius: var(--rounded-sm);
+         border: 1px solid var(--gray-300);
+         margin-top: 0.5rem;
+     }
+     /* === End Style === */
+
+     .back-link {
+         display: inline-block;
+         margin-bottom: 1.5rem;
+         font-size: var(--font-size-sm);
+         color: var(--primary-600);
+         text-decoration: none;
+     }
+     .back-link:hover {
+         text-decoration: underline;
+     }
+
+    /* Responsive styles for mobile devices */
+    @media (max-width: 768px) {
+        .content-wrapper {
+            margin: 1rem;
+            padding: 1rem;
+        }
+        
+        .existing-proof-section img {
+            max-height: 200px;
+        }
+        
+        .upload-section {
+            padding: 1rem;
+        }
+        
+        .upload-section h3 {
+            font-size: 1rem;
+        }
+        
+        .btn-upload {
+            width: 100%;
+            padding: 0.75rem 0;
+            display: block;
+            text-align: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .content-wrapper {
+            margin: 0.5rem;
+            padding: 0.75rem;
+            border-radius: var(--rounded-md);
+        }
+        
+        .upload-section {
+            padding: 0.5rem;
+        }
+        
+        .upload-section h3 {
+            font-size: 0.875rem;
+        }
+        
+        .btn-upload {
+            font-size: 0.875rem;
+        }
+    }

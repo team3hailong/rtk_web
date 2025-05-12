@@ -22,6 +22,7 @@ $base_url = rtrim($protocol . $domain . $base_project_dir, '/');
 // --- Include Required Files ---
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
+require_once $project_root_path . '/private/classes/purchase/PaymentProofService.php';
 
 // --- Constants ---
 // Define upload directory relative to the public folder
@@ -114,21 +115,13 @@ try {
     // Database Interaction
     $db = new Database();
     $conn = $db->getConnection();
-    $conn->beginTransaction(); // Start transaction
-
-    // Check if the registration belongs to the current user
-    $sql_check = "SELECT user_id, status FROM registration WHERE id = :registration_id";
-    $stmt_check = $conn->prepare($sql_check);
-    $stmt_check->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-    $stmt_check->execute();
-    $registration_data = $stmt_check->fetch(PDO::FETCH_ASSOC);
-
-    if (!$registration_data) {
-        throw new Exception('Registration not found.');
-    }
-    if ($registration_data['user_id'] != $user_id) {
+    $conn->beginTransaction(); // Start transaction    // Create PaymentProofService instance and check if registration belongs to the user
+    $paymentProofService = new PaymentProofService();
+    
+    // Check if registration belongs to the user
+    if (!$paymentProofService->registrationBelongsToUser($registration_id, $user_id)) {
         throw new Exception('Access denied. You do not own this registration.');
-    }    // Find and update the transaction history record instead of the payment table
+    }// Find and update the transaction history record instead of the payment table
     $sql_find_transaction = "SELECT id, voucher_id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
     $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);

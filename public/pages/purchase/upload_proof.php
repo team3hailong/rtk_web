@@ -13,6 +13,7 @@ $project_root_path = PROJECT_ROOT_PATH;
 require_once $project_root_path . '/private/utils/functions.php';
 require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
 require_once $project_root_path . '/private/classes/Database.php';
+require_once $project_root_path . '/private/classes/purchase/PaymentProofService.php';
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -20,13 +21,15 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Khởi tạo service
+$paymentProofService = new PaymentProofService();
+
 // --- Get Registration ID ---
-// Get from URL parameter first, fallback to session if needed (though URL is preferred here)
+// Get from URL parameter first, fallback to session if needed
 $registration_id = null;
 if (isset($_GET['reg_id']) && is_numeric($_GET['reg_id'])) {
     $registration_id = (int)$_GET['reg_id'];
 } elseif (isset($_SESSION['pending_registration_id'])) {
-    // Fallback, but ideally the link from payment.php provides it
     $registration_id = $_SESSION['pending_registration_id'];
 }
 
@@ -36,31 +39,10 @@ if (!$registration_id) {
     exit;
 }
 
-// --- Fetch Existing Payment Proof from transaction_history instead of payment table ---
-$existing_proof_image = null;
-$existing_proof_url = null;
-try {
-    $db = new Database();
-    $conn = $db->getConnection();
-    $sql_get_proof = "SELECT payment_image FROM transaction_history 
-                     WHERE registration_id = :registration_id 
-                     AND user_id = :user_id
-                     LIMIT 1";
-    $stmt_get_proof = $conn->prepare($sql_get_proof);
-    $stmt_get_proof->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-    $stmt_get_proof->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt_get_proof->execute();
-    $existing_proof_image = $stmt_get_proof->fetchColumn();    if ($existing_proof_image) {
-        // Construct the URL relative to the web root
-        $upload_dir_relative = '/uploads/payment_proofs/'; // Make sure this matches the definition in the action script
-        // Fix the image URL path construction - use only base_url with "/public" part
-        $existing_proof_url = $base_url . '/public' . $upload_dir_relative . htmlspecialchars($existing_proof_image);
-    }
-} catch (Exception $e) {
-    // Log error or handle gracefully
-    error_log("Error fetching existing payment proof: " . $e->getMessage());
-    // Optionally display an error message to the user
-}
+// --- Fetch Existing Payment Proof ---
+$proof_result = $paymentProofService->getPaymentProofByRegistrationId($registration_id, $_SESSION['user_id']);
+$existing_proof_image = $proof_result['data']['existing_proof_image'];
+$existing_proof_url = $proof_result['data']['existing_proof_url'];
 
 // --- User Info ---
 $user_username = $_SESSION['username'] ?? 'Người dùng';

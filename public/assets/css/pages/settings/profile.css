@@ -52,6 +52,7 @@
     padding: 10px;
     border: 1px solid var(--gray-300, #ccc);
     border-radius: var(--rounded-md, 5px);
+    background-color: #fff; /* Thêm màu nền trắng cho input */
     box-sizing: border-box;
     font-size: var(--font-size-base, 1rem);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;

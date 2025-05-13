@@ -1,0 +1,146 @@
+/* General Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px; /* Add some padding for smaller screens */
+}
+
+.profile-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-700, #2e7d32); /* Use CSS variable or fallback */
+    font-size: var(--font-size-xl, 1.8rem);
+    font-weight: var(--font-semibold, 600);
+}
+
+/* Form Section Styles */
+.form-section, .invoice-form {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid var(--gray-200, #e0e0e0);
+    border-radius: var(--rounded-lg, 8px);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
+}
+
+.form-section h3, .content-header h1 {
+    font-size: var(--font-size-lg, 1.25rem);
+    font-weight: var(--font-semibold, 600);
+    color: var(--gray-800, #333);
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-200, #eee);
+    text-align: left;
+}
+
+/* Form Group Styles */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: var(--font-medium, 500);
+    color: var(--gray-700, #555);
+    font-size: var(--font-size-sm, 0.9rem);
+}
+
+/* Form Control Styles */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--gray-300, #ccc);
+    background-color: #fff; /* Set input background to white */
+    border-radius: var(--rounded-md, 5px);
+    box-sizing: border-box;
+    font-size: var(--font-size-base, 1rem);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-500, #4caf50);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2); /* Adjust color if needed */
+}
+
+.form-control.readonly {
+    background-color: var(--gray-100, #f1f1f1);
+    cursor: not-allowed;
+    color: var(--gray-500, #777);
+}
+
+/* Form Actions (Button container) */
+.form-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: var(--rounded-md, 5px);
+    font-weight: var(--font-medium, 500);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--primary-500, #4caf50);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-600, #43a047);
+}
+
+/* Note Styles */
+.invoice-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--gray-50, #f9f9f9);
+    border-radius: var(--rounded-md, 4px);
+    font-size: var(--font-size-sm, 0.9rem);
+    color: var(--gray-600, #666);
+    border-left: 3px solid var(--primary-500, #4caf50);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--rounded-md, 4px);
+    font-size: var(--font-size-sm, 0.95rem);
+}
+
+.alert-success, .message.success-message {
+    color: var(--success-700, #0f5132);
+    background-color: var(--success-100, #d1e7dd);
+    border-color: var(--success-200, #badbcc);
+}
+
+.alert-danger, .message.error-message {
+    color: var(--error-700, #842029);
+    background-color: var(--error-100, #f8d7da);
+    border-color: var(--error-200, #f5c2c7);
+}
+
+#client-error {
+    margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container, .content-wrapper {
+        padding: 1rem;
+    }
+    
+    .form-section, .invoice-form {
+        padding: 15px;
+    }
+}

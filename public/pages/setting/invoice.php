@@ -30,50 +30,50 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 include $project_root_path . '/private/includes/header.php';
 ?>
 
-<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/invoice/invoice-settings.css">
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/settings/invoice.css">
 
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
-    <div class="content-wrapper">
-        <div class="content-header">
-            <h1>THÔNG TIN HÓA ĐƠN</h1>
-        </div>
-
-        <div class="invoice-form">
+    <main class="content-wrapper">
+        <div class="container">
+            <h2 class="profile-title">Thông tin Xuất Hóa Đơn</h2>
+            
             <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success"><?php echo $_SESSION['success']; ?></div>
+                <div class="message success-message"><?php echo $_SESSION['success']; ?></div>
                 <?php unset($_SESSION['success']); ?>
             <?php endif; ?>
             
             <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert alert-danger"><?php echo $_SESSION['error']; ?></div>
+                <div class="message error-message"><?php echo $_SESSION['error']; ?></div>
                 <?php unset($_SESSION['error']); ?>
-            <?php endif; ?>
+            <?php endif; ?>            <div class="alert alert-danger" id="client-error" style="display: none;"></div>
 
-            <div class="alert alert-danger" id="client-error" style="display: none;"></div>
-
-            <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_invoice_update" method="post" id="invoice-form">
-                <?php echo generate_csrf_input(); ?>
-                <div class="form-group">
-                    <label for="company_name">Tên công ty</label>
-                    <input type="text" id="company_name" name="company_name" class="form-control" value="<?php echo htmlspecialchars($user['company_name'] ?? ''); ?>">
-                </div>                <div class="form-group">
-                    <label for="tax_code">Mã số thuế</label>
-                    <input type="text" id="tax_code" name="tax_code" class="form-control" value="<?php echo htmlspecialchars($user['tax_code'] ?? ''); ?>">
+            <div class="form-section">
+                <h3>Thông tin Xuất Hóa Đơn</h3>
+                <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=setting&action=process_invoice_update" method="post" id="invoice-form">
+                    <?php echo generate_csrf_input(); ?>
+                    <div class="form-group">
+                        <label for="company_name">Tên công ty:</label>
+                        <input type="text" id="company_name" name="company_name" class="form-control" value="<?php echo htmlspecialchars($user['company_name'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_code">Mã số thuế:</label>
+                        <input type="text" id="tax_code" name="tax_code" class="form-control" value="<?php echo htmlspecialchars($user['tax_code'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="company_address">Địa chỉ công ty:</label>
+                        <input type="text" id="company_address" name="company_address" class="form-control" value="<?php echo htmlspecialchars($user['company_address'] ?? ''); ?>">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                    </div>
+                </form>
+                <div class="invoice-note">
+                    <p><strong>Lưu ý:</strong> Thông tin này sẽ được sử dụng khi xuất hóa đơn cho các giao dịch.</p>
                 </div>
-                <div class="form-group">
-                    <label for="company_address">Địa chỉ công ty</label>
-                    <input type="text" id="company_address" name="company_address" class="form-control" value="<?php echo htmlspecialchars($user['company_address'] ?? ''); ?>">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
-                </div>
-            </form>
-            <div class="invoice-note">
-                <p><strong>Lưu ý:</strong> Thông tin này sẽ được sử dụng khi xuất hóa đơn cho các giao dịch.</p>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <script>

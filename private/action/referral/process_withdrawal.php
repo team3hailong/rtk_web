@@ -1,15 +1,21 @@
 <?php
 session_start();
 require_once dirname(__DIR__, 3) . '/private/config/config.php';
-require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
-require_once PROJECT_ROOT_PATH . '/private/classes/Referral.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$base_path = PUBLIC_URL;
+$project_root_path = PROJECT_ROOT_PATH;
+
+require_once $project_root_path . '/private/classes/Database.php';
+require_once $project_root_path . '/private/classes/Referral.php';
 
 // Set content type to JSON for AJAX responses
 header('Content-Type: application/json');
 $response = ['success' => false, 'message' => 'Yêu cầu không hợp lệ.'];
 
 // Initialize error logging to a dedicated file for withdrawal requests
-$log_file = PROJECT_ROOT_PATH . '/private/logs/withdrawal_requests.log';
+$log_file = $project_root_path . '/private/logs/withdrawal_requests.log';
 ini_set('error_log', $log_file);
 
 error_log("--- New Withdrawal Request --- Method: " . $_SERVER['REQUEST_METHOD']);

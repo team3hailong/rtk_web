@@ -10,8 +10,14 @@
 
 // Include necessary files
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Referral.php';
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$base_path = PUBLIC_URL;
+$project_root_path = PROJECT_ROOT_PATH;
+
+require_once $project_root_path . '/private/classes/Database.php';
+require_once $project_root_path . '/private/classes/Referral.php';
 
 // Check for missing commission records for completed transactions
 function checkAndFixMissingCommissions() {

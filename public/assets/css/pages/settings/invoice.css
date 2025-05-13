@@ -98,6 +98,17 @@
     background-color: var(--primary-600, #43a047);
 }
 
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    font-weight: 500;
+    padding: 10px 20px;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
 /* Note Styles */
 .invoice-note {
     margin-top: 1.5rem;
@@ -122,6 +133,11 @@
     color: var(--success-700, #0f5132);
     background-color: var(--success-100, #d1e7dd);
     border-color: var(--success-200, #badbcc);
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    text-align: center;
 }
 
 .alert-danger, .message.error-message {

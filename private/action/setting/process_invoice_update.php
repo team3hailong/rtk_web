@@ -69,8 +69,7 @@ try {
     $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, created_at) 
                VALUES (:user_id, 'update_invoice_info', 'user', :entity_id, NOW())";
     $stmt_log = $conn->prepare($sql_log);
-    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);    $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
     $stmt_log->execute();
 
     $_SESSION['success'] = "Thông tin xuất hóa đơn đã được cập nhật thành công.";

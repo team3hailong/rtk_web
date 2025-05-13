@@ -63,9 +63,8 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="form-group">
                         <label for="company_address">Địa chỉ công ty:</label>
                         <input type="text" id="company_address" name="company_address" class="form-control" value="<?php echo htmlspecialchars($user['company_address'] ?? ''); ?>">
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                    </div>                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Cập nhật thông tin</button>
                     </div>
                 </form>
                 <div class="invoice-note">

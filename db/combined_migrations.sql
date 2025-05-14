@@ -14,7 +14,7 @@ ADD COLUMN IF NOT EXISTS `email_verify_token` VARCHAR(255) DEFAULT NULL COMMENT 
 -- ==========================================
 -- Step 1: Add new columns to transaction_history
 ALTER TABLE `transaction_history` 
-ADD COLUMN IF NOT EXISTS `payment_image` varchar(255) DEFAULT NULL COMMENT 'Ảnh chứng từ thanh toán',
+ADD COLUMN IF NOT EXISTS `payment_image` varchar(255) DEFAULT NULL COMMENT 'Ảnh minh chứng thanh toán',
 ADD COLUMN IF NOT EXISTS `export_invoice` tinyint(1) DEFAULT 0 COMMENT 'Yêu cầu xuất hóa đơn',
 ADD COLUMN IF NOT EXISTS `invoice_info` text DEFAULT NULL COMMENT 'Thông tin xuất hóa đơn',
 ADD COLUMN IF NOT EXISTS `payment_confirmed` tinyint(1) DEFAULT 0 COMMENT 'Xác nhận đã thanh toán',

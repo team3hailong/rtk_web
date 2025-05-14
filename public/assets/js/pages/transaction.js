@@ -10,6 +10,8 @@ const modalTxStatusBadge = document.getElementById('modal-tx-status-badge');
 const modalTitle = document.getElementById('modal-title');
 const rejectionReasonSection = document.getElementById('rejection-reason-section');
 const modalTxRejectionReason = document.getElementById('modal-tx-rejection-reason');
+const paymentProofSection = document.getElementById('payment-proof-section');
+const modalTxPaymentImageLink = document.getElementById('modal-tx-payment-image-link');
 
 function showTransactionDetails(txData) {
     if (!modalOverlay || !txData) return;
@@ -30,6 +32,15 @@ function showTransactionDetails(txData) {
     } else {
         rejectionReasonSection.style.display = 'none'; // Hide for other statuses or if no reason
     }
+
+    // Show payment proof image link if available
+    if (txData.payment_image) {
+        paymentProofSection.style.display = 'block';
+        modalTxPaymentImageLink.href = `/public/uploads/payment_proofs/${txData.payment_image}`;
+    } else {
+        paymentProofSection.style.display = 'none';
+    }
+    
     modalOverlay.classList.add('active');
 }
 

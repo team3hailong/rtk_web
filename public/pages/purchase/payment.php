@@ -292,7 +292,7 @@ include $project_root_path . '/private/includes/header.php';
 
                 <p class="payment-instructions">
                     <strong>Lưu ý:</strong> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản <code><?php echo htmlspecialchars($order_description); ?></code> để hệ thống tự động xử lý.
-                    Sau khi chuyển khoản thành công, tài khoản của bạn sẽ được kích hoạt (thường trong vòng vài phút). Bạn có thể kiểm tra trạng thái trong mục "Lịch sử giao dịch".
+                    Sau khi chuyển khoản thành công, tài khoản của bạn sẽ được kích hoạt (thường trong vòng vài phút). Bạn có thể kiểm tra trạng thái trong mục "Quản Lý Giao Dịch".
                 </p>
                  <p class="payment-instructions" style="margin-top: 0.5rem;">
                      Nếu gặp sự cố, vui lòng liên hệ bộ phận hỗ trợ.

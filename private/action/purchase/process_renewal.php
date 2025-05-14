@@ -123,14 +123,13 @@ try {
     if (isset($_SESSION['renewal']['voucher_id'])) {
         $voucher_id = $_SESSION['renewal']['voucher_id'];
     }
-    
-    if ($voucher_id) {
+      if ($voucher_id) {
         $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                                 VALUES (?, ?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
+                                 VALUES (?, ?, ?, 'renewal', ?, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())");
         $stmt_th->execute([$registration_id, $user_id, $voucher_id, $total_price]);
     } else {
         $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                                 VALUES (?, ?, 'renewal', ?, 'pending', NULL, NOW(), NOW())");
+                                 VALUES (?, ?, 'renewal', ?, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())");
         $stmt_th->execute([$registration_id, $user_id, $total_price]);
     }
     

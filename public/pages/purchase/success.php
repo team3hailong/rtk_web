@@ -85,7 +85,7 @@ if ((!isset($_SESSION['purchase_success']) || !isset($_SESSION['purchase_details
 
             <div class="button-group">
                 <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-primary">
-                    <i class="fas fa-history"></i> Lịch sử giao dịch
+                    <i class="fas fa-history"></i> Quản Lý Giao Dịch
                 </a>
                 <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-outline">
                     <i class="fas fa-user-circle"></i> Quản lý tài khoản

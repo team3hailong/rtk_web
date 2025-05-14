@@ -60,7 +60,7 @@ include $project_root_path . '/private/includes/header.php';
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <a href="<?php echo $base_url . $base_path; ?>/pages/transaction.php" class="back-link">&larr; Quay lại Lịch sử giao dịch</a>
+        <a href="<?php echo $base_url . $base_path; ?>/pages/transaction.php" class="back-link">&larr; Quay lại Quản Lý Giao Dịch</a>
 
         <h2 class="text-2xl font-semibold mb-4">Tải lên minh chứng thanh toán</h2>
         <p class="text-sm text-gray-600 mb-6">Đơn hàng: <strong>REG<?php echo htmlspecialchars($registration_id); ?></strong></p>

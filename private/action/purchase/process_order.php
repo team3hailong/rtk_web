@@ -145,10 +145,9 @@ try {
     if (isset($_SESSION['order']['voucher_id'])) {
         $voucher_id = $_SESSION['order']['voucher_id'];
     }
-    
-    if ($voucher_id) {
+      if ($voucher_id) {
         $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, :voucher_id, 'purchase', :amount, 'pending', NULL, NOW(), NOW())";
+                      VALUES (:registration_id, :user_id, :voucher_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())";
         $stmt_trans = $conn->prepare($sql_trans);
         $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
         $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -156,7 +155,7 @@ try {
         $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
     } else {
         $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, 'purchase', :amount, 'pending', NULL, NOW(), NOW())"; // Payment method set later or upon confirmation
+                      VALUES (:registration_id, :user_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())"; // Set default payment method
         $stmt_trans = $conn->prepare($sql_trans);
         $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
         $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);

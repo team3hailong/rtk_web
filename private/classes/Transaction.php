@@ -124,8 +124,7 @@ class Transaction {
                 $currentPage = $totalPages;
                 $offset = ($currentPage - 1) * $perPage;
             }
-            
-            // Now get the actual data with limit and offset
+              // Now get the actual data with limit and offset
             $dataSql = "SELECT
                     th.id,
                     th.registration_id,
@@ -134,6 +133,7 @@ class Transaction {
                     th.amount,
                     th.status,
                     th.payment_method,
+                    th.payment_image,
                     th.created_at,
                     th.updated_at,
                     r.rejection_reason

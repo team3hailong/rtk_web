@@ -68,7 +68,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper transactions-content-wrapper">
         <div class="transactions-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Lịch Sử Giao Dịch</h2>
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Giao Dịch</h2>
             <div class="filter-section">
                 <div class="filter-buttons-group">
                     <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
@@ -109,8 +109,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                     if (!empty($tx['registration_id'])) {
                                         $description .= ' (ĐK: ' . htmlspecialchars($tx['registration_id']) . ')';
                                     }
-                                    $display_id = 'GD' . str_pad($tx['id'], 5, '0', STR_PAD_LEFT);
-                                    $tx_details_for_modal = [
+                                    $display_id = 'GD' . str_pad($tx['id'], 5, '0', STR_PAD_LEFT);                                    $tx_details_for_modal = [
                                         'id' => $display_id,
                                         'raw_id' => $tx['id'],
                                         'time' => $tx['created_at'],
@@ -120,7 +119,8 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         'status_text' => $status_display['text'],
                                         'status_class' => $status_display['class'],
                                         'updated_at' => $tx['updated_at'],
-                                        'rejection_reason' => $tx['rejection_reason'] ?? null
+                                        'rejection_reason' => $tx['rejection_reason'] ?? null,
+                                        'payment_image' => $tx['payment_image'] ?? null
                                     ];
                                     $tx_details_json = htmlspecialchars(json_encode($tx_details_for_modal), ENT_QUOTES, 'UTF-8');
                                 ?>
@@ -268,8 +268,7 @@ if ($invoice_row) {
             <p><strong>Thời gian tạo:</strong> <span id="modal-tx-time"></span></p>
             <p><strong>Cập nhật lần cuối:</strong> <span id="modal-tx-updated"></span></p>
             <p><strong>Loại giao dịch:</strong> <span id="modal-tx-type"></span></p>
-            <p><strong>Số tiền:</strong> <span id="modal-tx-amount"></span></p>
-            <p><strong>Phương thức TT:</strong> <span id="modal-tx-method"></span></p>
+            <p><strong>Số tiền:</strong> <span id="modal-tx-amount"></span></p>            <p><strong>Phương thức TT:</strong> <span id="modal-tx-method"></span></p>
             <p><strong>Trạng thái:</strong>
                 <span id="modal-tx-status-badge" class="status-badge status-badge-modal">
                     <span id="modal-tx-status-text"></span>
@@ -280,6 +279,14 @@ if ($invoice_row) {
                     <i class="fas fa-exclamation-circle"></i> Lý do từ chối:
                 </p>
                 <p id="modal-tx-rejection-reason"></p>
+            </div>
+            <div id="payment-proof-section" style="display: none;">
+                <p><strong>Ảnh minh chứng thanh toán:</strong></p>
+                <div class="payment-proof-container">
+                    <a id="modal-tx-payment-image-link" href="#" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="fas fa-image"></i> Xem ảnh minh chứng
+                    </a>
+                </div>
             </div>
         </div>
     </div>

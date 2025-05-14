@@ -24,6 +24,44 @@
     justify-content: space-between;
   }
   
+  /* --- Export Invoice Section --- */
+  .export-invoice-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .btn-retail-invoice {
+    background: #3498db; 
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--rounded-md);
+    font-weight: var(--font-medium);
+    font-size: var(--font-size-sm);
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 180px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn-retail-invoice:hover:not(:disabled) {
+    background: #2980b9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  .btn-retail-invoice:disabled {
+    background: #a0cfee;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
   .filter-buttons-group {
     display: flex;
     flex-wrap: wrap;
@@ -113,14 +151,19 @@
     width: 100%; 
     border-collapse: collapse; 
   }
-  
-  .transactions-table th, 
+    .transactions-table th, 
   .transactions-table td { 
     padding: 0.9rem 1rem; 
     text-align: left; 
     border-bottom: 1px solid var(--table-border-color); 
     font-size: var(--font-size-sm); 
     vertical-align: middle; 
+  }
+  
+  /* "Chọn" column styling */
+  .transactions-table th:first-child {
+    color: var(--gray-700);
+    font-weight: var(--font-medium);
   }
   
   .transactions-table th { 
@@ -134,20 +177,38 @@
     max-width: 0; 
     white-space: normal; 
     word-wrap: break-word; 
+  }    /* Column widths */  
+  .transactions-table th:nth-child(1), 
+  .transactions-table td:nth-child(1) { 
+    width: 60px; 
+    text-align: center;
+    vertical-align: middle;
+    padding-left: 0;
+    padding-right: 0;
   }
   
-  /* Column widths */
-  .transactions-table th:nth-child(1), 
-  .transactions-table td:nth-child(1) { width: 120px; }
+  .checkbox-column {
+    text-align: center;
+    vertical-align: middle;
+  }
   
-  .transactions-table th:nth-child(2), 
-  .transactions-table td:nth-child(2) { width: 150px; }
+  .retail-invoice-checkbox {
+    margin: 0 auto;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+    .transactions-table th:nth-child(2), 
+  .transactions-table td:nth-child(2) { 
+    width: 130px;
+    padding-left: 0.5rem;
+  }
   
   .transactions-table th:nth-child(3), 
   .transactions-table td:nth-child(3) { width: 120px; }
   
   .transactions-table th:nth-child(4), 
-  .transactions-table td:nth-child(4) { width: 150px; }
+  .transactions-table td:nth-child(4) { width: 120px; }
   
   .transactions-table th:nth-child(5), 
   .transactions-table td:nth-child(5) { 
@@ -445,8 +506,7 @@
       width: 90px; 
     }
   }
-  
-  /* Mobile landscape */
+    /* Mobile landscape */
   @media (max-width: 768px) {
     /* Layout */
     .transactions-content-wrapper {
@@ -455,6 +515,12 @@
     
     .transactions-wrapper { 
       padding: 0 0.75rem 1rem 0.75rem; 
+    }
+    
+    /* Export invoice button */
+    .btn-retail-invoice {
+      min-width: 150px;
+      padding: 0.5rem 0.8rem;
     }
     
     /* Filter section */
@@ -549,8 +615,7 @@
       padding: 1.25rem;
     }
   }
-  
-  /* Mobile portrait */
+    /* Mobile portrait */
   @media (max-width: 576px) {
     /* Layout */
     .transactions-wrapper { 
@@ -561,6 +626,22 @@
       font-size: 1.25rem; 
       margin-bottom: 0.75rem;
       text-align: center;
+    }
+    
+    /* Export invoice button */
+    .export-invoice-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .btn-retail-invoice {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #retail-invoice-msg {
+      margin-left: 0;
+      margin-top: 5px;
     }
     
     /* Filter */
@@ -590,10 +671,12 @@
     /* Hide method column and status column */
     .transactions-table th:nth-child(4), 
     .transactions-table td:nth-child(4) { display: none; } /* Ẩn cột phương thức */
-    
-    /* Optimize columns */
+      /* Optimize columns */
     .transactions-table th:nth-child(1), 
-    .transactions-table td:nth-child(1) { width: 25%; } /* ID */
+    .transactions-table td:nth-child(1) { 
+      width: 15%; 
+      text-align: center;
+    } /* Chọn */
     
     .transactions-table th:nth-child(2), 
     .transactions-table td:nth-child(2) { 
@@ -602,7 +685,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 95px;
-    } /* Time */
+    } /* ID Giao dịch */
     
     .transactions-table th:nth-child(3), 
     .transactions-table td:nth-child(3) { width: 25%; } /* Amount */
@@ -661,18 +744,19 @@
       font-size: var(--font-size-xs);
     }
   }
-  
-  /* Extra small mobile */
+    /* Extra small mobile */
   @media (max-width: 360px) {
     .transactions-table th, 
     .transactions-table td {
       padding: 0.4rem 0.2rem; 
       font-size: 0.65rem;
     }
-    
-    .transactions-table th:nth-child(1), 
+      .transactions-table th:nth-child(1), 
     .transactions-table td:nth-child(1) { 
-      width: 22%; 
+      width: 10%; 
+      min-width: 35px;
+      padding: 0;
+      text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

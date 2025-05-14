@@ -1,25 +1,29 @@
 <?php
 session_start();
-// --- Base URL và Path (chuẩn như rtk_accountmanagement) ---
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http://";
-$domain = $_SERVER['HTTP_HOST'];
-$script_dir = dirname($_SERVER['PHP_SELF']); // /pages
-$base_project_dir = dirname($script_dir); // lùi 1 cấp
-$base_url = rtrim($protocol . $domain . ($base_project_dir === '/' || $base_project_dir === '\\' ? '' : $base_project_dir), '/');
-$project_root_path = dirname(dirname(__DIR__)); // lùi 2 cấp từ /pages -> project root
-require_once $project_root_path . '/private/config/database.php';
+
+// --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
+require_once dirname(dirname(__DIR__)) . '/private/config/config.php'; // Corrected path to project root
+
+// --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
+$base_url = BASE_URL;
+$base_path = PUBLIC_URL; // Added for consistency
+$project_root_path = PROJECT_ROOT_PATH;
+
+// --- Original requires from map_display.php (adjusted paths if needed, though project_root_path is the same) ---
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Map.php';
+
 $db = new Database();
 $pdo = $db->getConnection();
 $current_user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $stations = Map::getAllStations($pdo);
 $user_accessible_stations = Map::getUserAccessibleStations($pdo, $current_user_id);
+
 include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
-<link rel="stylesheet" href="<?php echo $base_url; ?>/assets/css/pages/map.css" />
+<link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/map.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
@@ -54,9 +58,10 @@ include $project_root_path . '/private/includes/header.php';
 <script>
 window.stationsData = <?php echo json_encode($stations); ?>;
 window.userAccessibleStationsData = <?php echo json_encode($user_accessible_stations); ?>;
-const baseUrl = '<?php echo $base_url; ?>';
+const baseUrl = '<?php echo $base_url . $base_path; ?>'; // Changed to provide full public path, similar to original behavior
+// const assetBasePath = '<?php echo $base_url . $base_path; ?>'; // This is now redundant if map.js uses baseUrl
 </script>
-<script src="<?php echo $base_url; ?>/assets/js/pages/map.js"></script>
+<script src="<?php echo $base_url . $base_path; ?>/assets/js/pages/map.js"></script>
 <?php
 if (isset($db)) $db->close();
 include $project_root_path . '/private/includes/footer.php';

@@ -58,3 +58,306 @@
 [12-May-2025 11:15:52 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
 [12-May-2025 11:15:52 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [12-May-2025 11:15:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[12-May-2025 13:58:19 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:19 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:19 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:20 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:21 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:21 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:21 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:27 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:29 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:29 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:29 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:30 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:30 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:30 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:32 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:32 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:32 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:33 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:33 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:33 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:34 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:35 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 13:58:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 13:58:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 13:58:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:44 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:44 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:44 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:55 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:55 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:55 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:56 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:56 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:07:58 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:00 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:00 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:00 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:03 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:03 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:34 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:41 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:43 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:44 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:45 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 21:08:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:34 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:35 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:40 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:40 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:40 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:41 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:41 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:41 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:42 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:42 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:43 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:40:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:40:43 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:40:43 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:12 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:13 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:13 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:33 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:33 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:33 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:35 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:45 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:54 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:43:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:44:00 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:44:00 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:44:00 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:45:42 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:45:42 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:45:42 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] Tracking referral: User ID 100 with code 'NICURPGO'
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] Found referrer ID: 90 for code 'NICURPGO'
+[12-May-2025 22:46:53 Asia/Ho_Chi_Minh] Referral tracking successful: User 100 was referred by user 90
+[12-May-2025 22:47:56 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:47:56 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:47:56 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:08 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:08 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:08 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:09 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:09 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:09 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:13 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:13 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:13 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:14 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:14 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:14 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:15 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:15 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:15 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:17 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:17 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:17 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:17 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:17 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:19 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:19 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:19 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:31 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:31 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:31 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:33 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:33 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:33 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:34 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:34 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:48:52 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:48:52 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:48:52 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:02 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:02 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:02 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:02 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:03 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:45 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:45 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:45 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:48 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:48 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:48 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:49 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:49 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:49 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:49:50 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:49:50 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:49:50 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:19 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:19 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:19 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:21 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:21 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:21 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:21 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:21 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:37 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:37 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:37 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:37 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:37 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:54 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:58 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:54:59 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:54:59 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:54:59 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:55:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:55:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:55:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:55:38 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:55:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:55:39 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:55:39 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:55:39 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 22:55:40 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 22:55:40 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 22:55:40 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 23:00:46 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 23:00:46 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 23:00:46 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 23:00:54 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 23:00:54 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 23:00:54 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 23:01:14 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 23:01:14 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 23:01:14 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 23:01:47 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 23:01:47 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 23:01:47 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.
+[12-May-2025 23:02:20 Asia/Ho_Chi_Minh] Database init: Using database 'sa3' on host '127.0.0.1'
+[12-May-2025 23:02:20 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[12-May-2025 23:02:20 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'sa3' successful.

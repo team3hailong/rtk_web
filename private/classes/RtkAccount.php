@@ -10,6 +10,7 @@ class RtkAccount {
 
     public function getAccountsByUserIdWithPagination($userId, $page = 1, $perPage = 10, $filter = 'all') {
         try {
+            $this->conn->exec("SET SESSION group_concat_max_len = 1000000;"); // Increase group_concat_max_len
             $start = ($page - 1) * $perPage;
             
             $statusCondition = "";
@@ -61,7 +62,7 @@ class RtkAccount {
                     DATEDIFF(r.end_time, r.start_time) as duration_days,
                     l.province,
                     GROUP_CONCAT(
-                        JSON_OBJECT(
+                        DISTINCT JSON_OBJECT(
                             'mountpoint', mp.mountpoint,
                             'ip', mp.ip,
                             'port', mp.port
@@ -175,6 +176,7 @@ class RtkAccount {
 
     public function getAccountsByUserId($userId) {
         try {
+            $this->conn->exec("SET SESSION group_concat_max_len = 1000000;"); // Increase group_concat_max_len
             $sql = "SELECT 
                     sa.id,
                     sa.username_acc,
@@ -201,7 +203,7 @@ class RtkAccount {
                     DATEDIFF(r.end_time, r.start_time) as duration_days,
                     l.province,
                     GROUP_CONCAT(
-                        JSON_OBJECT(
+                        DISTINCT JSON_OBJECT(
                             'mountpoint', mp.mountpoint,
                             'ip', mp.ip,
                             'port', mp.port

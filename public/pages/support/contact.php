@@ -106,10 +106,39 @@ include $project_root_path . '/private/includes/header.php';
                             </div>
                             
                             <div class="contact-details">
+                                <?php
+                                $addressesJson = $companyInfo['address'] ?? null;
+                                if ($addressesJson) {
+                                    $addresses = json_decode($addressesJson, true);
+                                    if (is_array($addresses) && !empty($addresses)) {
+                                        foreach ($addresses as $addressEntry) {
+                                            $typeText = '';
+                                            if (isset($addressEntry['type'])) {
+                                                if ($addressEntry['type'] === 'trụ sở') {
+                                                    $typeText = 'Trụ sở: ';
+                                                } elseif ($addressEntry['type'] === 'chi nhánh') {
+                                                    $typeText = 'Chi nhánh: ';
+                                                }
+                                            }
+                                            $locationText = isset($addressEntry['location']) ? htmlspecialchars($addressEntry['location']) : 'N/A';
+                                ?>
+                                <div class="contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong><?php echo $typeText; ?></strong><?php echo $locationText; ?></span>
+                                </div>
+                                <?php
+                                        }
+                                    } elseif (!is_array($addresses) && !empty($companyInfo['address'])) {
+                                        // Fallback for plain text address if not JSON or empty JSON
+                                ?>
                                 <div class="contact-item">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span><?php echo htmlspecialchars($companyInfo['address']); ?></span>
                                 </div>
+                                <?php
+                                    }
+                                }
+                                ?>
                                 
                                 <div class="contact-item">
                                     <i class="fas fa-phone"></i>

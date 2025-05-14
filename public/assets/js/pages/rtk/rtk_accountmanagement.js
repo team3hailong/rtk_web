@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedCountElement = document.getElementById('selected-count');
     const accountCheckboxes = document.querySelectorAll('.account-checkbox');
     const exportForm = document.getElementById('export-form');
+
+    // Renewal elements
+    const renewalBtn = document.getElementById('renewal-btn');
+    const renewalForm = document.getElementById('renewal-form');
     
     // Theo dõi trạng thái lọc và tìm kiếm hiện tại
     let currentFilter = paginationConfig.currentFilter || 'all';
@@ -39,10 +43,21 @@ document.addEventListener('DOMContentLoaded', function() {
             exportButton.disabled = count === 0;
         }
     }
+
+    // Function to update renewal button state
+    function updateRenewalButtonState() {
+        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
+        if (renewalBtn) {
+            renewalBtn.disabled = checkedBoxes.length === 0;
+        }
+    }
     
     // Thêm sự kiện cho từng checkbox
     accountCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateExportButtonState);
+        checkbox.addEventListener('change', () => {
+            updateExportButtonState();
+            updateRenewalButtonState();
+        });
     });
     
     // Xử lý nút chọn tất cả
@@ -58,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkbox.checked = !allChecked;
             });
             updateExportButtonState();
+            updateRenewalButtonState();
             // Cập nhật text của nút
             this.innerHTML = !allChecked ? 
                 '<i class="fas fa-times-square"></i> Bỏ chọn tất cả' : 
@@ -71,6 +87,33 @@ document.addEventListener('DOMContentLoaded', function() {
             if (document.querySelectorAll('.account-checkbox:checked').length > 0) {
                 exportForm.submit();
             }
+        });
+    }
+
+    // Handle renewal form submission
+    if (renewalForm) {
+        renewalForm.addEventListener('submit', function(e) {
+            // Clear previous hidden inputs for selected accounts to avoid duplicates
+            const existingInputs = renewalForm.querySelectorAll('input[type="hidden"][name="selected_accounts[]"]');
+            existingInputs.forEach(input => input.remove());
+
+            const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
+            
+            if (checkedBoxes.length === 0) {
+                // If no accounts are selected, prevent form submission.
+                // alert('Vui lòng chọn ít nhất một tài khoản để gia hạn.'); // Optional: display a message
+                e.preventDefault(); 
+                return; 
+            }
+
+            // Add hidden input for each selected account
+            checkedBoxes.forEach(cb => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selected_accounts[]';
+                input.value = cb.value;
+                renewalForm.appendChild(input);
+            });
         });
     }
     
@@ -224,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
         paginationInfo.textContent = `Hiển thị ${visibleCount} trên tổng số ${paginationConfig.totalRecords} tài khoản`;
     }
 
+    
+
     // Close Modal
     window.closeModal = function() {
         if (modalOverlay) {
@@ -347,4 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Khởi tạo trạng thái nút xuất khi tải trang
     updateExportButtonState();
+    // Initialize renewal button state on page load
+    updateRenewalButtonState();
 });
+

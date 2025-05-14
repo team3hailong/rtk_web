@@ -381,7 +381,6 @@ function getPaginationUrl($page, $perPage, $filter) {
     </div>
 </div>
 
-<!-- Add script to define base URL for JS -->
 <script>
     const baseUrl = '<?php echo $base_url; ?>';
     // Thêm biến cấu hình cho phân trang
@@ -393,45 +392,8 @@ function getPaginationUrl($page, $perPage, $filter) {
         currentFilter: '<?php echo $filter; ?>'
     };
 
-    // Bổ sung logic cho nút Gia hạn
-    const renewalBtn = document.getElementById('renewal-btn');
-    const renewalForm = document.getElementById('renewal-form');
-    function updateRenewalButtonState() {
-        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
-        if (renewalBtn) renewalBtn.disabled = checkedBoxes.length === 0;
-    }
-    // Khi chọn checkbox, cập nhật nút Gia hạn
-    document.querySelectorAll('.account-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateRenewalButtonState);
-    });
-    // Khi submit renewal, thêm selected_accounts vào renewal-form
-    if (renewalForm) {
-        renewalForm.addEventListener('submit', function(e) {
-            // Xóa input cũ
-            renewalForm.querySelectorAll('input[name="selected_accounts[]"]').forEach(i => i.remove());
-            // Thêm input cho các account đã chọn
-            document.querySelectorAll('.account-checkbox:checked').forEach(cb => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'selected_accounts[]';
-                input.value = cb.value;
-                renewalForm.appendChild(input);
-            });
-            if (renewalForm.querySelectorAll('input[name="selected_accounts[]"]').length === 0) {
-                e.preventDefault();
-            }
-        });
-    }
-    // Khi chọn checkbox, cập nhật luôn nút Export Excel như cũ
-    function updateExportAndRenewalButtons() {
-        updateExportButtonState();
-        updateRenewalButtonState();
-    }
-    document.querySelectorAll('.account-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateExportAndRenewalButtons);
-    });
-    // Khởi tạo trạng thái nút khi tải trang
-    updateExportAndRenewalButtons();
+    // All other JavaScript logic has been moved to rtk_accountmanagement.js
+    // This script block now only contains PHP-generated variables for the external JS file.
 </script>
 
 <?php

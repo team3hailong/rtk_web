@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const pos = [parseFloat(station.lat), parseFloat(station.long)];
             let circleColor = '#3cb043';
             let isUserAccessible = userAccessibleStations.includes(station.id);
-            if (station.status == 0) {
+            if (station.status != 1) {
                 circleColor = '#e74c3c';
             } else if (isUserAccessible) {
                 circleColor = '#3498db';
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).addTo(map);
             circles.push(circle);
             let popupContent = `<div><b>${station.mountpoint || station.station_name}</b><br>`;
-            popupContent += `Trạng thái: ${station.status == 1 ? 'Đang hoạt động' : (station.status == 0 ? 'Không hoạt động' : 'Không xác định')}<br>`;
+            popupContent += `Trạng thái: ${station.status == 1 ? 'Đang hoạt động' : 'Không hoạt động'}<br>`;
             popupContent += `${isUserAccessible ? '<span style=\"color:#3498db\">Bạn có quyền truy cập</span>' : ''}</div>`;
             circle.bindPopup(popupContent);
             const label = L.divIcon({

@@ -89,13 +89,20 @@
     border: 1px solid transparent;
 }
 
-.btn-primary {
+.btn.btn-primary {
     background-color: var(--primary-500, #4caf50);
     color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--rounded-md, 5px);
+    cursor: pointer;
+    font-size: var(--font-size-base, 1rem);
+    font-weight: var(--font-semibold, 600);
+    transition: background-color 0.2s ease;
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-600, #43a047);
+.btn.btn-primary:hover {
+    background-color: var(--primary-600, #388e3c);
 }
 
 .btn-success {

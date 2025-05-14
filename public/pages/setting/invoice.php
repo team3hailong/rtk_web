@@ -27,26 +27,27 @@ $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // --- Include Header ---
+// Moved CSS link before header include
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/settings/invoice.css">';
 include $project_root_path . '/private/includes/header.php';
 ?>
-
-<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/settings/invoice.css">
 
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
         <div class="container">
-            <h2 class="profile-title">Thông tin Xuất Hóa Đơn</h2>
+            <h2 class="profile-title">Cài đặt Thông tin Hóa Đơn</h2>
             
             <?php if (isset($_SESSION['success'])): ?>
-                <div class="message success-message"><?php echo $_SESSION['success']; ?></div>
+                <div class="message success-message"><?php echo htmlspecialchars($_SESSION['success']); ?></div>
                 <?php unset($_SESSION['success']); ?>
             <?php endif; ?>
             
             <?php if (isset($_SESSION['error'])): ?>
-                <div class="message error-message"><?php echo $_SESSION['error']; ?></div>
+                <div class="message error-message"><?php echo htmlspecialchars($_SESSION['error']); ?></div>
                 <?php unset($_SESSION['error']); ?>
-            <?php endif; ?>            <div class="alert alert-danger" id="client-error" style="display: none;"></div>
+            <?php endif; ?>            
+            <div class="alert alert-danger" id="client-error" style="display: none;"></div>
 
             <div class="form-section">
                 <h3>Thông tin Xuất Hóa Đơn</h3>
@@ -63,8 +64,9 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="form-group">
                         <label for="company_address">Địa chỉ công ty:</label>
                         <input type="text" id="company_address" name="company_address" class="form-control" value="<?php echo htmlspecialchars($user['company_address'] ?? ''); ?>">
-                    </div>                    <div class="form-actions">
-                        <button type="submit" class="btn btn-success">Cập nhật thông tin</button>
+                    </div>                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
                     </div>
                 </form>
                 <div class="invoice-note">

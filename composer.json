@@ -2,7 +2,8 @@
     "require": {
         "phpmailer/phpmailer": "^6.8",
         "vlucas/phpdotenv": "^5.6",
-        "phpoffice/phpspreadsheet": "^4.2"
+        "phpoffice/phpspreadsheet": "^4.2",
+        "mpdf/mpdf": "^8.2"
     },
     "config": {
         "optimize-autoloader": true,

@@ -186,4 +186,63 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchBox) {
         applyClientSideSearch();
     }
+
+    // Retail invoice export logic
+    const exportBtn = document.getElementById('export-retail-invoice-btn');
+    const checkboxes = document.querySelectorAll('.retail-invoice-checkbox');
+    const msg = document.getElementById('retail-invoice-msg');
+    function updateExportBtn() {
+        const checked = document.querySelectorAll('.retail-invoice-checkbox:checked');
+        exportBtn.disabled = checked.length === 0 || checked.length > 5;
+        if (checked.length > 5) {
+            msg.textContent = 'Chỉ chọn tối đa 5 giao dịch.';
+        } else {
+            msg.textContent = '';
+        }
+    }
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateExportBtn);
+    });
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function() {
+            const checked = Array.from(document.querySelectorAll('.retail-invoice-checkbox:checked'));
+            if (checked.length === 0 || checked.length > 5) return;
+            exportBtn.disabled = true;
+            msg.textContent = 'Đang xử lý...';
+            fetch('/public/handlers/export_retail_invoice.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transaction_ids: checked.map(cb => cb.value) })
+            })
+            .then(response => {
+                if (!response.ok) throw response;
+                return response.blob();
+            })
+            .then(blob => {
+                const contentType = blob.type;
+                let filename = 'hoa_don_ban_le.pdf';
+                if (contentType === 'application/zip') filename = 'hoa_don_ban_le.zip';
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                msg.textContent = '';
+            })
+            .catch(async err => {
+                let errorMsg = 'Lỗi khi xuất hóa đơn bán lẻ.';
+                if (err && err.json) {
+                    const data = await err.json();
+                    if (data && data.error) errorMsg = data.error;
+                }
+                msg.textContent = errorMsg;
+            })
+            .finally(() => {
+                exportBtn.disabled = false;
+            });
+        });
+    }
 });

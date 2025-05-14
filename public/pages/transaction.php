@@ -92,6 +92,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                 <table class="transactions-table">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>ID Giao dịch</th>
                             <th>Thời gian</th>
                             <th>Số tiền</th>
@@ -102,6 +103,14 @@ function getPaginationUrl($page, $perPage, $filter) {
                     </thead>
                     <tbody>
                         <?php if (!empty($transactions)): ?>
+                            <tr>
+                                <td colspan="7">
+                                    <button id="export-retail-invoice-btn" class="action-button btn-retail-invoice" disabled style="margin-bottom:10px;">
+                                        <i class="fas fa-file-invoice"></i> Xuất HĐ bán lẻ
+                                    </button>
+                                    <span id="retail-invoice-msg" style="color: #e74c3c; margin-left: 10px;"></span>
+                                </td>
+                            </tr>
                             <?php foreach ($transactions as $tx): ?>
                                 <?php $status_display = Transaction::getTransactionStatusDisplay($tx['status']); ?>
                                 <?php
@@ -125,6 +134,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                     $tx_details_json = htmlspecialchars(json_encode($tx_details_for_modal), ENT_QUOTES, 'UTF-8');
                                 ?>
                                 <tr data-status="<?php echo strtolower($tx['status']); ?>">
+                                    <td><input type="checkbox" class="retail-invoice-checkbox" value="<?php echo $tx['id']; ?>" /></td>
                                     <td><strong><?php echo htmlspecialchars($display_id); ?></strong></td>
                                     <td><?php echo htmlspecialchars($tx['created_at']); ?></td>
                                     <td class="amount"><?php echo number_format($tx['amount'], 0, ',', '.'); ?> đ</td>
@@ -181,7 +191,7 @@ if ($invoice_row) {
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                             <tr> <td colspan="6"> <div class="empty-state"> <i class="fas fa-receipt"></i> <p>Chưa có giao dịch nào.</p> </div> </td> </tr>
+                             <tr> <td colspan="7"> <div class="empty-state"> <i class="fas fa-receipt"></i> <p>Chưa có giao dịch nào.</p> </div> </td> </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

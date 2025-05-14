@@ -272,6 +272,22 @@ class Transaction {
         }
     }
 
+    /**
+     * Get a transaction by ID and user ID
+     * @param int $transactionId
+     * @param int $userId
+     * @return array|false
+     */
+    public function getTransactionByIdAndUser(int $transactionId, int $userId) {
+        $pdo = $this->db->getConnection();
+        $sql = "SELECT th.id, th.registration_id, th.user_id, th.transaction_type, th.amount, th.status, th.payment_method, th.created_at, th.updated_at FROM transaction_history th WHERE th.id = :id AND th.user_id = :user_id LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $transactionId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // --- Add other transaction-related methods as needed ---
     // Example: getTransactionById, createTransaction, updateTransactionStatus, etc.
 

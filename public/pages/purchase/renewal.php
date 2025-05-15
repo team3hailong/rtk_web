@@ -45,12 +45,22 @@ if (empty($packages)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gia hạn tài khoản RTK</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/base.css">
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/layouts/sidebar.css">
     <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/pages/purchase/renewal.css">
 </head>
 <body>
-<div class="container">
-    <h2>Gia hạn tài khoản RTK</h2>
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
+
+    <!-- Main Content -->
+    <main class="content-wrapper">
+        <div class="container">
+            <h2>Gia hạn tài khoản RTK</h2>
     
     <form method="post" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_renewal" id="renewal-form">
         <!-- inject CSRF token -->
@@ -116,17 +126,49 @@ if (empty($packages)) {
         <?php foreach ($accounts as $acc): ?>
             <input type="hidden" name="selected_accounts[]" value="<?php echo $acc['id']; ?>">
         <?php endforeach; ?>
-        
-        <div>
+          <div>
             <button type="submit" class="btn btn-primary" id="submit-button" disabled>Xác nhận gia hạn</button>
             <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
+        </div>
+    </main>
 </div>
+
+<!-- Overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <script>
 window.RENEWAL_PAGE_DATA = { accountCount: <?php echo count($accounts); ?> };
 </script>
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/renewal.js"></script>
+
+<!-- Sidebar Toggle Script -->
+<script>
+    // Basic Sidebar Toggle for Mobile
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+        // Optional: Hide hamburger when sidebar is open
+        if (hamburger) {
+            hamburger.style.visibility = sidebar.classList.contains('open') ? 'hidden' : 'visible';
+        }
+    }
+
+    // Close sidebar if window is resized from mobile to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            if (sidebar && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('open');
+                if (hamburger) hamburger.style.visibility = 'visible';
+            }
+        }
+    });
+</script>
 </body>
 </html>

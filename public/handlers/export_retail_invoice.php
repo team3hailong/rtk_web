@@ -164,16 +164,20 @@ $css = '
         color: #666;
         border-top: 1px solid #ddd;
         padding-top: 10px;
-    }
-    .signature-section {
-        display: flex;
-        justify-content: space-between;
+    }    .signature-section {
         margin-top: 50px;
         margin-bottom: 20px;
+        width: 100%;
     }
-    .signature-box {
-        width: 45%;
+    .signature-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .signature-table td {
+        width: 50%;
         text-align: center;
+        padding: 10px;
+        vertical-align: top;
     }
     .signature-title {
         font-weight: bold;
@@ -241,32 +245,9 @@ foreach ($retail_invoices as $invoice) {
         
         <div class="customer-info info-section">
             <h3>THÔNG TIN KHÁCH HÀNG</h3>';
-            
-    // Thêm thông tin khách hàng
+              // Thêm thông tin khách hàng
     if (!empty($invoice['user_info'])) {
-        if (!empty($invoice['user_info']['company_name'])) {
-            $html .= '
-            <div class="info-row">
-                <div class="info-label">Tên công ty/tổ chức:</div>
-                <div>' . htmlspecialchars((string)($invoice['user_info']['company_name'] ?? '')) . '</div>
-            </div>';
-        }
-        
-        if (!empty($invoice['user_info']['company_address'])) {
-            $html .= '
-            <div class="info-row">
-                <div class="info-label">Địa chỉ:</div>
-                <div>' . htmlspecialchars((string)($invoice['user_info']['company_address'] ?? '')) . '</div>
-            </div>';
-        }
-        
-        if (!empty($invoice['user_info']['tax_code'])) {
-            $html .= '
-            <div class="info-row">
-                <div class="info-label">Mã số thuế:</div>
-                <div>' . htmlspecialchars((string)($invoice['user_info']['tax_code'] ?? '')) . '</div>
-            </div>';
-        }
+        // Đã bỏ 3 trường: Tên công ty/tổ chức, Địa chỉ và Mã số thuế
         
         $html .= '
             <div class="info-row">
@@ -345,40 +326,24 @@ foreach ($retail_invoices as $invoice) {
             </table>
         </div>
         
-        <div class="payment-info info-section">
-            <h3>THÔNG TIN THANH TOÁN</h3>
-            <div class="info-row">
-                <div class="info-label">Mã giao dịch:</div>
-                <div>' . htmlspecialchars((string)($invoice['id'] ?? '')) . '</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Thời gian giao dịch:</div>
-                <div>' . $created_date . '</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Phương thức thanh toán:</div>
-                <div>' . htmlspecialchars((string)($invoice['method'] ?? '')) . '</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Loại giao dịch:</div>
-                <div>' . $transaction_type . '</div>
-            </div>
-        </div>
+        
         
         <div class="date-section">
             Hà Nội, ngày ' . date('d') . ' tháng ' . date('m') . ' năm ' . date('Y') . '
         </div>
-        
-        <div class="signature-section">
-            <div class="signature-box">
-                <div class="signature-title">Khách hàng</div>
-                <div>(Ký, ghi rõ họ tên)</div>
-            </div>
-            
-            <div class="signature-box">
-                <div class="signature-title">Đại diện công ty</div>
-                <div>(Ký, ghi rõ họ tên, đóng dấu)</div>
-            </div>
+          <div class="signature-section">
+            <table class="signature-table">
+                <tr>
+                    <td>
+                        <div class="signature-title">Khách hàng</div>
+                        <div>(Ký, ghi rõ họ tên)</div>
+                    </td>
+                    <td>
+                        <div class="signature-title">Đại diện công ty</div>
+                        <div>(Ký, ghi rõ họ tên, đóng dấu)</div>
+                    </td>
+                </tr>
+            </table>
         </div>
         
         <div class="footer">
@@ -392,7 +357,6 @@ foreach ($retail_invoices as $invoice) {
     $mpdf->WriteHTML($html);
     $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
     $pdf_files[] = $file_path;
-}
 
 if (count($pdf_files) === 1) {
     $file = $pdf_files[0];

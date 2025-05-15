@@ -86,13 +86,27 @@
   box-shadow: 0 1px 4px rgba(39,174,96,0.04); 
 }
 
+.guide-search-form > div {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Đặt nút tìm kiếm và reset trong container */
+.guide-search-form > button,
+.guide-search-form > .reset-button {
+  flex-grow: 0;
+  align-self: flex-end;
+}
+
 .guide-search-form input, 
 .guide-search-form select { 
   padding: 7px 12px; 
   border: 1px solid #b6e3c6; 
   border-radius: 5px; 
   font-size: 1em; 
-  background: #fff; 
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .guide-search-form label { 
@@ -101,16 +115,26 @@
   color: var(--main-green-dark); 
 }
 
-.guide-search-form button { 
+.guide-search-form button,
+.reset-button { 
   padding: 8px 22px; 
+  border-radius: 5px; 
+  font-weight: 600; 
+  font-size: 1em;
+  min-width: 120px;
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex-shrink: 0; /* Ngăn nút bị co lại */
+}
+
+.guide-search-form button { 
   background: linear-gradient(90deg,var(--main-green) 60%,var(--main-green-dark) 100%); 
   color: #fff; 
   border: none; 
-  border-radius: 5px; 
-  font-weight: 600; 
-  font-size: 1em; 
   box-shadow: 0 2px 8px rgba(39,174,96,0.08); 
-  transition: background 0.2s; 
+  transition: background 0.2s;
 }
 
 .guide-search-form button:hover { 
@@ -118,13 +142,9 @@
 }
 
 .reset-button {
-  padding: 8px 22px;
   background: #eee;
   color: #111;
-  border-radius: 5px;
-  font-weight: 600;
   text-decoration: none;
-  margin-left: 8px;
   border: 1px solid #ccc;
 }
 
@@ -153,6 +173,20 @@
   }
   .guide-search-form { 
     flex-direction: column; 
-    gap: 10px; 
+    gap: 12px; 
+    align-items: stretch;
+  }
+  .guide-search-form > div {
+    width: 100%;
+  }
+  .guide-search-form label {
+    display: block;
+    margin-bottom: 6px;
+  }
+  .guide-search-form button,
+  .reset-button {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 5px;
   }
 }

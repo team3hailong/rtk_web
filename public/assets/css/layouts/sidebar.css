@@ -12,7 +12,7 @@ html{
 /* Các biến chính được định nghĩa trong style.css hoặc base.css `:root` */
 /* Có thể ghi đè hoặc thêm biến chỉ dành cho sidebar ở đây nếu muốn */
 :root {
-    --sidebar-width-min: 220px; /* Minimum width */
+  
     --sidebar-width-max: 300px; /* Maximum width */
     --sidebar-bg: white;
     --sidebar-border-color: var(--gray-200, #e5e7eb);

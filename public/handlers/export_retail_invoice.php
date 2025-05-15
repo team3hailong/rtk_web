@@ -3,7 +3,7 @@
 session_start();
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
 require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
-require_once PROJECT_ROOT_PATH . '/private/classes/Transaction.php';
+require_once PROJECT_ROOT_PATH . '/private/classes/invoice/RetailInvoiceService.php';
 
 // Use mPDF for PDF generation
 require_once PROJECT_ROOT_PATH . '/vendor/autoload.php';
@@ -36,45 +36,10 @@ if (!is_array($tx_ids) || count($tx_ids) === 0 || count($tx_ids) > 5) {
     exit;
 }
 
-$db = new Database();
-$pdo = $db->getConnection();
-$transactionHandler = new Transaction($db);
-$retail_invoices = [];
+// Sử dụng service để lấy dữ liệu hóa đơn
+$retailInvoiceService = new RetailInvoiceService();
+$retail_invoices = $retailInvoiceService->getRetailInvoicesData($tx_ids, $user_id);
 
-// Lấy thông tin người dùng/công ty
-$user_info = [];
-$user_stmt = $pdo->prepare("SELECT username, email, phone, is_company, company_name, tax_code, company_address FROM user WHERE id = :user_id");
-$user_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$user_stmt->execute();
-$user_info = $user_stmt->fetch(PDO::FETCH_ASSOC);
-
-foreach ($tx_ids as $tx_id) {
-    $tx = $transactionHandler->getTransactionByIdAndUser($tx_id, $user_id);
-    if (!$tx) continue;
-      // Lấy thêm thông tin chi tiết từ bảng registration nếu có
-    $registration_details = null;
-    if (!empty($tx['registration_id'])) {
-        $reg_stmt = $pdo->prepare("SELECT r.*, p.name as package_name, p.duration_text as duration, l.province 
-                                   FROM registration r 
-                                   LEFT JOIN package p ON r.package_id = p.id
-                                   LEFT JOIN location l ON r.location_id = l.id
-                                   WHERE r.id = :reg_id");
-        $reg_stmt->bindParam(':reg_id', $tx['registration_id'], PDO::PARAM_INT);
-        $reg_stmt->execute();
-        $registration_details = $reg_stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    
-    // Prepare invoice data (enhanced retail invoice)
-    $retail_invoices[] = [
-        'id' => $tx['id'],
-        'created_at' => $tx['created_at'],
-        'amount' => $tx['amount'],
-        'type' => $tx['transaction_type'],
-        'method' => $tx['payment_method'],
-        'user_info' => $user_info,
-        'registration_details' => $registration_details
-    ];
-}
 if (empty($retail_invoices)) {
     http_response_code(404);
     echo json_encode(['error' => 'Không tìm thấy giao dịch hợp lệ']);

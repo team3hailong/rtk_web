@@ -143,14 +143,13 @@ require_once $project_root_path . '/private/includes/header.php';
                                             <th>Email</th>
                                             <th>Ngày đăng ký</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                    </thead>                                    <tbody>
                                         <?php foreach ($referredUsers as $index => $user): ?>
                                             <tr>
-                                                <td><?php echo $index + 1; ?></td>
-                                                <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                <td><?php echo date('d/m/Y H:i', strtotime($user['referred_date'])); ?></td>
+                                                <td data-label="STT"><?php echo $index + 1; ?></td>
+                                                <td data-label="Tên người dùng"><?php echo htmlspecialchars($user['username']); ?></td>
+                                                <td data-label="Email"><?php echo htmlspecialchars($user['email']); ?></td>
+                                                <td data-label="Ngày đăng ký"><?php echo date('d/m/Y H:i', strtotime($user['referred_date'])); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -218,14 +217,13 @@ require_once $project_root_path . '/private/includes/header.php';
                                             <th>Ngày</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php foreach ($commissionTransactions as $index => $transaction): ?>
+                                    <tbody>                                        <?php foreach ($commissionTransactions as $index => $transaction): ?>
                                             <tr>
-                                                <td><?php echo $index + 1; ?></td>
-                                                <td><?php echo htmlspecialchars($transaction['referred_username']); ?></td>
-                                                <td><?php echo number_format($transaction['transaction_amount'], 0, ',', '.'); ?> VNĐ</td>
-                                                <td><?php echo number_format($transaction['commission_amount'], 0, ',', '.'); ?> VNĐ</td>
-                                                <td>
+                                                <td data-label="STT"><?php echo $index + 1; ?></td>
+                                                <td data-label="Người được giới thiệu"><?php echo htmlspecialchars($transaction['referred_username']); ?></td>
+                                                <td data-label="Số tiền giao dịch"><?php echo number_format($transaction['transaction_amount'], 0, ',', '.'); ?> VNĐ</td>
+                                                <td data-label="Hoa hồng (5%)"><?php echo number_format($transaction['commission_amount'], 0, ',', '.'); ?> VNĐ</td>
+                                                <td data-label="Trạng thái giao dịch">
                                                     <?php
                                                     // Trạng thái giao dịch
                                                     if (
@@ -237,8 +235,7 @@ require_once $project_root_path . '/private/includes/header.php';
                                                         echo '<span class="badge badge-warning">Đang chờ</span>';
                                                     }
                                                     ?>
-                                                </td>
-                                                <td>
+                                                </td>                                                <td data-label="Trạng thái hoa hồng">
                                                     <?php
                                                     // Trạng thái hoa hồng
                                                     if (
@@ -251,7 +248,7 @@ require_once $project_root_path . '/private/includes/header.php';
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
+                                                <td data-label="Ngày"><?php echo date('d/m/Y H:i', strtotime($transaction['created_at'])); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -340,11 +337,10 @@ require_once $project_root_path . '/private/includes/header.php';
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($withdrawalHistory as $withdrawal): ?>
-                                                    <tr>
-                                                        <td><?php echo date('d/m/Y', strtotime($withdrawal['created_at'])); ?></td>
-                                                        <td><?php echo number_format($withdrawal['amount'], 0, ',', '.'); ?> VNĐ</td>
-                                                        <td>
+                                                <?php foreach ($withdrawalHistory as $withdrawal): ?>                                                    <tr>
+                                                        <td data-label="Ngày yêu cầu"><?php echo date('d/m/Y', strtotime($withdrawal['created_at'])); ?></td>
+                                                        <td data-label="Số tiền"><?php echo number_format($withdrawal['amount'], 0, ',', '.'); ?> VNĐ</td>
+                                                        <td data-label="Trạng thái">
                                                             <?php 
                                                             $status_class = '';
                                                             $status_text = '';

@@ -145,9 +145,7 @@
     /* Form Elements - Consistent Styling */
     .form-group {
         margin-bottom: 1.25rem;
-    }
-
-    .form-control {
+    }    .form-control {
         display: block;
         width: 100%;
         padding: 0.6rem 0.75rem;
@@ -160,6 +158,8 @@
         border: 1px solid var(--border-color);
         border-radius: var(--rounded-md);
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+        max-width: 100%; /* Đảm bảo không vượt quá chiều rộng của container */
     }
 
     .form-control:focus {
@@ -396,9 +396,7 @@
     .text-muted { color: var(--text-muted-color) !important; }
     .d-flex { display: flex !important; }
     .justify-content-between { justify-content: space-between !important; }
-    .align-items-center { align-items: center !important; }
-
-    /* Responsive Table (from existing, good to keep) */
+    .align-items-center { align-items: center !important; }    /* Responsive Table (from existing, good to keep) */
     @media (max-width: 767.98px) {
         .content-wrapper { padding: 1rem; }
         h2.text-2xl.font-semibold.mb-4 { font-size: 1.25rem; margin-bottom: 1rem; }
@@ -407,6 +405,20 @@
         .nav-tabs .nav-link { padding: 0.6rem 0.5rem; font-size: 0.8rem;}
         .nav-tabs { justify-content: space-around; } /* Better for mobile */
         .nav-tabs .nav-item { flex-grow: 1; text-align: center; }
+        
+        /* Fix cho form và card trên mobile */
+        .card-body {
+            padding: 0.75rem;
+        }
+        
+        .form-group {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .form-control {
+            font-size: 16px; /* Ngăn zoom trên iPhone khi focus vào input */
+        }
 
 
         .table-responsive { border: none; box-shadow: none; }
@@ -423,8 +435,7 @@
             margin-bottom: 0.75rem; 
             border-radius: var(--rounded-md);
             background-color: var(--white-color);
-        }
-        .table td { 
+        }        .table td { 
             border: none;
             border-bottom: 1px solid var(--gray-200); 
             position: relative;
@@ -434,26 +445,64 @@
             justify-content: space-between; /* Align label and value */
             align-items: center;
             min-height: 38px; /* Ensure consistent height */
+            word-break: break-word; /* Cho phép từ dài xuống dòng */
+            overflow-wrap: break-word;
+            padding-right: 10px; /* Thêm padding bên phải */
         }
         .table td:before { 
             content: attr(data-label);
             position: absolute;
             left: 0.75rem;
             width: 40%; 
-            white-space: nowrap;
             font-weight: var(--font-semibold);
             text-align: left;
             color: var(--gray-700);
+            white-space: normal; /* Cho phép nhãn dài xuống dòng */
+            overflow-wrap: break-word;
         }
-        .table td:last-child { border-bottom: none; }
-
-        .input-group { flex-direction: column; }
-        .input-group > .form-control { width: 100%; margin-bottom: 0.5rem; border-radius: var(--rounded-md) !important; }
+        .table td:last-child { border-bottom: none; }        .input-group { flex-direction: column; }
+        .input-group > .form-control { 
+            width: 100%; 
+            margin-bottom: 0.5rem; 
+            border-radius: var(--rounded-md) !important;
+            max-width: 100%; /* Đảm bảo không vượt quá chiều rộng của container */
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+            overflow-x: hidden; /* Ngăn chặn cuộn ngang */
+            white-space: normal; /* Cho phép dòng text ngắt khi quá dài */
+        }
         .input-group-append { margin-left: 0; width: 100%; }
         .input-group-append .btn { width: 100%; border-radius: var(--rounded-md) !important;}
-
-        .row { margin-right: -5px; margin-left: -5px; }
+        
+        /* Styles đặc biệt cho form yêu cầu rút tiền */
+        #withdrawal-form .form-control {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }        .row { margin-right: -5px; margin-left: -5px; }
         .col-md-4, .col-md-6, .col-md-8, .col-md-12 { padding-right: 5px; padding-left: 5px; margin-bottom: 1rem; }
+        
+        /* Tùy chỉnh cho trang rút tiền */
+        #withdrawal-form {
+            width: 100%;
+            padding-right: 0;
+            padding-left: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Đảm bảo input trong withdrawal form không tràn ra ngoài */
+        #withdrawal-form input[type="text"], 
+        #withdrawal-form input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem 0.5rem;
+        }
+        
+        /* Fix cho card và div general */
+        .card, .alert, .d-flex {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
     }
 
     /* Toast Message Styling (from existing, good to keep) */

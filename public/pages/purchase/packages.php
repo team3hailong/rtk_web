@@ -24,6 +24,7 @@ $user_username = $_SESSION['username'] ?? 'Người dùng';
 // Initialize PurchaseService
 $service = new PurchaseService();
 $user_has_registration = $service->userHasRegistration($user_id);
+$survey_account_count = $service->getUserSurveyAccountCount($user_id);
 $all_packages = $service->getAllPackages();
 
 // --- Include Header ---
@@ -49,11 +50,11 @@ include $project_root_path . '/private/includes/header.php';
                 <p class="text-center text-gray-500 col-span-full">Hiện tại không có gói dịch vụ nào.</p>
             <?php else: ?>
                 <?php foreach ($all_packages as $package): ?>
-                    <?php
-                        // --- BỎ LOGIC ẨN GÓI DÙNG THỬ TẠM THỜI ---
-                        // if ($package['package_id'] === 'trial_7d' && $user_has_registration) {
-                        //     continue;
-                        // }
+                    <?php                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
+                        // Chỉ hiển thị gói trial_7d nếu người dùng chưa có tài khoản survey_account
+                        if ($package['package_id'] === 'trial_7d' && $survey_account_count > 0) {
+                            continue; // Bỏ qua gói dùng thử nếu đã có tài khoản
+                        }
                         // --- KẾT THÚC LOGIC ẨN ---
 
                         // Decode features JSON

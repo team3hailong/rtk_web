@@ -56,4 +56,19 @@ class PurchaseService {
         $loc->closeConnection();
         return $provinces;
     }
+
+    /**
+     * Count how many survey accounts a user has
+     * @param int $user_id
+     * @return int
+     */
+    public function getUserSurveyAccountCount(int $user_id): int {
+        $stmt = $this->conn->prepare('
+            SELECT COUNT(*) FROM survey_account sa
+            JOIN registration r ON sa.registration_id = r.id
+            WHERE r.user_id = ? AND sa.deleted_at IS NULL
+        ');
+        $stmt->execute([$user_id]);
+        return (int) $stmt->fetchColumn();
+    }
 }

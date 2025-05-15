@@ -244,8 +244,7 @@ include $project_root_path . '/private/includes/header.php';
             <!-- Cột Xác nhận Dùng thử -->
             <section class="payment-qr-section" style="text-align: center;">
                 <h3>Kích hoạt gói dùng thử</h3>
-                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>
-                <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>                <form id="trialActivationForm" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
                     <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
                     <!-- CSRF Protection Token -->
                     <?php echo generate_csrf_input(); ?>
@@ -331,6 +330,14 @@ include $project_root_path . '/private/includes/header.php';
     const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? htmlspecialchars(VIETQR_IMAGE_TEMPLATE, ENT_QUOTES, 'UTF-8') : 'compact'; ?>";
     const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? htmlspecialchars(VIETQR_ACCOUNT_NAME, ENT_QUOTES, 'UTF-8') : ''; ?>";
 </script>
+
+<!-- Script cho quá trình kích hoạt gói dùng thử -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Không cần xử lý modal kích hoạt trial nữa
+    });
+</script>
+
 
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_data.js"></script>
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_voucher.js"></script>

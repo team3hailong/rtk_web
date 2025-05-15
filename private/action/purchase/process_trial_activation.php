@@ -90,13 +90,14 @@ try {
         "casterIds" => [],
         "regionIds" => [],
         "mountIds" => $mountIds
-    ];
-
-    $api_result = createRtkAccount($accountData);
+    ];    $api_result = createRtkAccount($accountData);
     if (empty($api_result['success'])) throw new Exception('Không thể tạo tài khoản RTK: ' . ($api_result['error'] ?? 'Lỗi không xác định'));
-
+    
+    // Lấy ID từ response API
+    if (empty($api_result['data']['id'])) throw new Exception('Không tìm thấy ID tài khoản RTK trong response API');
+    
     // 8. Lưu vào survey_account
-    $account_id = 'RTK_' . $registration_id . '_' . time();
+    $account_id = $api_result['data']['id'];
     $stmt = $conn->prepare("INSERT INTO survey_account (id, registration_id, username_acc, password_acc, concurrent_user, enabled, customerBizType, start_time, end_time, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
     $ok = $stmt->execute([$account_id, $registration_id, $username, $password, $reg['num_account'], 1, 1, $start, $end]);
     if (!$ok) throw new Exception('Lỗi khi lưu tài khoản vào survey_account.');

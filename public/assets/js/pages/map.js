@@ -111,18 +111,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const z = map.getZoom();
         labels.forEach(l => { l.getElement().style.display = (z >= MIN_ZOOM_LABELS && z <= MAX_ZOOM_LABELS) ? 'block' : 'none'; });
     }
-    map.on('zoomend', updateLabelsVisibility);
-    const stations = window.stationsData;
+    map.on('zoomend', updateLabelsVisibility);    const stations = window.stationsData;
     const userAccessibleStations = window.userAccessibleStationsData;
     (stations.length ? stations : [{lat: initialCenter[0], long: initialCenter[1], mountpoint: 'HN', status: 1}]).forEach((station, index) => {
-        if (station.lat && station.long && station.status != -1) {
+        // Skip stations with status 0 (Bị tắt)
+        if (station.lat && station.long && station.status != 0 && station.status != -1) {
             const pos = [parseFloat(station.lat), parseFloat(station.long)];
-            let circleColor = '#3cb043';
+            let circleColor = '#3cb043'; // Default: Green for Status 1 (Hoạt động)
             let isUserAccessible = userAccessibleStations.includes(station.id);
-            if (station.status != 1) {
-                circleColor = '#e74c3c';
+            if (station.status == 3) {
+                circleColor = '#e74c3c'; // Red for Status 3 (Không hoạt động)
             } else if (isUserAccessible) {
-                circleColor = '#3498db';
+                circleColor = '#3498db'; // Blue for stations user has access to
             }
             stationInfo.set(circles.length, {color: circleColor, isUserAccessible, status: station.status});
             const circle = L.circle(pos, {
@@ -132,9 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 fillOpacity: 0.3, 
                 weight: 1
             }).addTo(map);
-            circles.push(circle);
-            let popupContent = `<div><b>${station.mountpoint || station.station_name}</b><br>`;
-            popupContent += `Trạng thái: ${station.status == 1 ? 'Đang hoạt động' : 'Không hoạt động'}<br>`;
+            circles.push(circle);            let popupContent = `<div><b>${station.mountpoint || station.station_name}</b><br>`;
+            popupContent += `Trạng thái: ${station.status == 1 ? 'Đang hoạt động' : (station.status == 3 ? 'Không hoạt động' : 'Không xác định')}<br>`;
             popupContent += `${isUserAccessible ? '<span style=\"color:#3498db\">Bạn có quyền truy cập</span>' : ''}</div>`;
             circle.bindPopup(popupContent);
             const label = L.divIcon({

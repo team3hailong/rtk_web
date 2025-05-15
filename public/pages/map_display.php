@@ -34,12 +34,11 @@ include $project_root_path . '/private/includes/header.php';
             <div class="map-controls">
                 <button id="toggleMapType" class="map-type-btn active">Bản đồ vệ tinh</button>
                 <button id="getCurrentLocation" class="map-type-btn">Vị trí của tôi</button>
-            </div>
-            <div class="map-legend">
+            </div>            <div class="map-legend">
                 <div class="legend-title">Chú thích:</div>
                 <div class="legend-item">
                     <div class="legend-color green-station"></div>
-                    <div>Trạm đang hoạt động</div>
+                    <div>Trạm đang hoạt động (Status 1)</div>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color blue-station"></div>
@@ -47,7 +46,11 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <div class="legend-item">
                     <div class="legend-color red-station"></div>
-                    <div>Trạm không hoạt động</div>
+                    <div>Trạm không hoạt động (Status 3)</div>
+                </div>
+                <div class="legend-item">
+                    <div style="height: 20px;"></div>
+                    <div>Trạm bị tắt (Status 0) - Không hiển thị</div>
                 </div>
             </div>
         </div>

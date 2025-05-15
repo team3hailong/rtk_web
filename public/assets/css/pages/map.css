@@ -24,7 +24,16 @@
     text-align: center;
 }
 .map-type-btn.active {background: var(--primary-color);  border-color: var(--primary-color);}
-.station-label div {padding: 3px 5px; border-radius: 3px; font-size: 12px; white-space: nowrap; color: black; text-shadow: 1px 1px 2px white; background: none;}
+.station-label div {
+    padding: 3px 5px; 
+    border-radius: 3px; 
+    font-size: 13px; 
+    font-weight: 700; 
+    white-space: nowrap; 
+    color: #000000; 
+    text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white; 
+    background: rgba(255, 255, 255, 0.6);
+}
 .map-legend {
     position: absolute;
     bottom: 20px;

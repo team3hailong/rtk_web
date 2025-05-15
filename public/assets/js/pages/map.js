@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialCenter = [16.0, 106.0];
     const initialZoom = 6;
     const radiusKm = 15;
-    const MIN_ZOOM_LABELS = 7, MAX_ZOOM_LABELS = 12;
+    const MIN_ZOOM_LABELS = 10, MAX_ZOOM_LABELS = 15;
     let labels = [], circles = [];
     const map = L.map('map').setView(initialCenter, initialZoom);
     const normalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'});

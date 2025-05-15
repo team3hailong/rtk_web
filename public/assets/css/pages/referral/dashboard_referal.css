@@ -188,6 +188,8 @@
         flex-wrap: wrap;
         align-items: stretch;
         width: 100%;
+        box-sizing: border-box;
+        overflow: hidden; /* Ngăn không bị tràn ra ngoài */
     }
 
     .input-group > .form-control {
@@ -196,6 +198,9 @@
         width: 1%;
         min-width: 0;
         margin-bottom: 0;
+        overflow-x: hidden; /* Ngăn text overflow */
+        text-overflow: ellipsis; /* Hiển thị dấu ... khi quá dài */
+        box-sizing: border-box;
     }
 
     .input-group > .form-control:not(:last-child) {
@@ -210,6 +215,7 @@
     .input-group-append {
         display: flex;
         margin-left: -1px;
+        white-space: nowrap; /* Giữ nội dung của nút không xuống dòng */
     }
 
     .input-group-append .btn {
@@ -217,6 +223,7 @@
         z-index: 2;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        white-space: nowrap;
     }
 
     /* Button Styling */

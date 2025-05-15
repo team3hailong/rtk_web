@@ -72,10 +72,9 @@ function log_activity($conn, $user_id, $action, $entity_type, $entity_id, $old_v
     try {
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
         $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-        
-        // Convert arrays to JSON for storage
-        $old_values_json = $old_values ? json_encode($old_values) : null;
-        $new_values_json = $new_values ? json_encode($new_values) : null;
+          // Convert arrays to JSON for storage with proper Unicode support for Vietnamese characters
+        $old_values_json = $old_values ? json_encode($old_values, JSON_UNESCAPED_UNICODE) : null;
+        $new_values_json = $new_values ? json_encode($new_values, JSON_UNESCAPED_UNICODE) : null;
         
         $sql = "INSERT INTO activity_logs 
                 (user_id, action, entity_type, entity_id, old_values, new_values, ip_address, user_agent, created_at) 

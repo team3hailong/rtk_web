@@ -164,9 +164,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                 // Initialize Referral service with PDO connection
                 $db = new Database();
                 $referralService = new Referral($db);
+                  // Track the referral
+                $referralResult = $referralService->trackReferral($user_id, $referral_code);
                 
-                // Track the referral
-                $referralService->trackReferral($user_id, $referral_code);
+                // If referral tracking was successful, log the referral activity
+                if ($referralResult) {
+                    // Get referrer information
+                    $stmt = $conn->prepare("SELECT r.user_id as referrer_id, u.username as referrer_name 
+                                           FROM referral r 
+                                           JOIN user u ON r.user_id = u.id 
+                                           WHERE r.referral_code = ?");
+                    $stmt->bind_param("s", $referral_code);
+                    $stmt->execute();
+                    $referrer = $stmt->get_result()->fetch_assoc();
+                    $stmt->close();
+                    
+                    if ($referrer) {                        // Log referral activity (the function will handle JSON encoding with proper settings)
+                        $log_data = [
+                            'referrer_id' => $referrer['referrer_id'],
+                            'referrer_name' => $referrer['referrer_name'],
+                            'referred_user_id' => $user_id,
+                            'referred_username' => $username,
+                            'referred_email' => $email,
+                            'referral_code' => $referral_code,
+                            'referral_time' => date('Y-m-d H:i:s')
+                        ];
+                        
+                        log_activity($conn, $referrer['referrer_id'], 'referral', 'user', $user_id, null, $log_data);
+                    }
+                }
             }
             
             // Xóa dữ liệu form khỏi session và đặt thông báo thành công

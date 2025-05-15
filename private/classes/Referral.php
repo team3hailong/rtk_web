@@ -126,21 +126,33 @@ class Referral {
                 error_log("Referral tracking skipped: User $referredUserId has already been referred");
                 return false; // User has already been referred
             }
-              // Record the referral
-            $stmt = $this->conn->prepare("INSERT INTO referred_user (referrer_id, referred_user_id) VALUES (:referrer_id, :referred_id)");
-            $stmt->bindParam(':referrer_id', $referrerId, PDO::PARAM_INT);
-            $stmt->bindParam(':referred_id', $referredUserId, PDO::PARAM_INT);
             
-            $result = $stmt->execute();
-            
-            if ($result) {
-                error_log("Referral tracking successful: User $referredUserId was referred by user $referrerId");
-            } else {
-                error_log("Referral tracking database insert failed for user $referredUserId");
+            // Begin transaction to ensure data consistency
+            $this->conn->beginTransaction();
+              
+            try {
+                // Record the referral
+                $stmt = $this->conn->prepare("INSERT INTO referred_user (referrer_id, referred_user_id) VALUES (:referrer_id, :referred_id)");
+                $stmt->bindParam(':referrer_id', $referrerId, PDO::PARAM_INT);
+                $stmt->bindParam(':referred_id', $referredUserId, PDO::PARAM_INT);
+                
+                $result = $stmt->execute();
+                
+                if ($result) {
+                    error_log("Referral tracking successful: User $referredUserId was referred by user $referrerId");
+                    
+                    // The main activity logging will be handled in process_register.php
+                    // This is just a debug log for the referral system itself
+                    $this->conn->commit();
+                } else {
+                    error_log("Referral tracking database insert failed for user $referredUserId");
+                    $this->conn->rollBack();
+                }
+                  return $result;            } catch (PDOException $e) {
+                $this->conn->rollBack();
+                error_log("Error in referral transaction: " . $e->getMessage());
+                return false;
             }
-            
-            return $result;
-            
         } catch (PDOException $e) {
             error_log("Error tracking referral: " . $e->getMessage());
             return false;

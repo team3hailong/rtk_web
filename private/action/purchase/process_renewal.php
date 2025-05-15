@@ -4,6 +4,7 @@ $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php';
+require_once $project_root_path . '/private/classes/Location.php'; // Thêm Location class để lấy tên tỉnh/thành phố
 require_once $project_root_path . '/private/classes/Voucher.php';
 require_once $project_root_path . '/private/utils/functions.php';
 require_once $project_root_path . '/private/api/rtk_system/account_api.php';
@@ -151,16 +152,25 @@ try {
         'timestamp' => time(),
         'package_name' => $package['name']
     ];
-    
-    // Log renewal request
+      // Log renewal request với đầy đủ thông tin
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
     $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
+    
+    // Lấy thông tin tỉnh/thành phố từ location_id
+    $location_obj = new Location();
+    $location_details = $location_obj->getLocationById($location_id);
+    $province_name = $location_details ? $location_details['province'] : '';
+    $location_obj->closeConnection();
+    
+    // Tạo log data với đầy đủ thông tin và đảm bảo không lỗi font tiếng Việt
     $log_data = json_encode([
         'registration_id' => $registration_id,
         'selected_accounts' => $selected_accounts,
         'total_price' => $total_price,
-        'package' => $package['name']
-    ]);
+        'package' => $package['name'],
+        'location' => $province_name // Thêm thông tin tỉnh/thành phố
+    ], JSON_UNESCAPED_UNICODE); // Sử dụng JSON_UNESCAPED_UNICODE để tránh lỗi font tiếng Việt
+    
     $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
                               VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, NOW())");
     $stmt_log->execute([$user_id, $registration_id, $ip, $ua, $log_data]);

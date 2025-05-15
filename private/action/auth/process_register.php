@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../utils/email_helper.php';
+require_once __DIR__ . '/../../utils/error_handler.php';
 
 $errors = [];
 $formData = [];
@@ -145,7 +146,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                 // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
                 error_log("Failed to send verification email to: $email");
             }            // Commit transaction nếu mọi thứ thành công
-            $conn->commit();            // Process referral if a code was provided
+            $conn->commit();
+            
+            // Log successful registration
+            log_activity($conn, $user_id, 'register', 'user', $user_id, null, [
+                'email' => $email,
+                'username' => $username,
+                'registration_time' => date('Y-m-d H:i:s'),
+                'is_company' => $is_company
+            ]);
+            
+            // Process referral if a code was provided
             if (!empty($referral_code)) {
                 require_once __DIR__ . '/../../classes/Referral.php';
                 require_once __DIR__ . '/../../classes/Database.php';
@@ -165,16 +176,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
             // Chuyển hướng về trang đăng ký để hiển thị thông báo thành công
             // JavaScript sẽ đếm ngược 7 giây trước khi chuyển hướng đến trang đăng nhập
             header("Location: ../../../public/pages/auth/register.php");
-            exit();
-
-        } catch (Exception $e) {
+            exit();        } catch (Exception $e) {
             // Rollback transaction nếu có lỗi
             $conn->rollback();
-            // Log the detailed error
-            error_log("Registration Error: " . $e->getMessage() . "\nStack Trace:\n" . $e->getTraceAsString());
+            
+            // Log the detailed error to both file and database
+            log_error($conn, 'auth', "Registration Error: " . $e->getMessage(), $e->getTraceAsString(), null);
+            
             // Set a generic error message for the user
             $errors[] = "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.";
-             // Lưu lỗi vào session và chuyển hướng lại form
+            
+            // Lưu lỗi vào session và chuyển hướng lại form
             $_SESSION['errors'] = $errors;
             header("Location: ../../../public/pages/auth/register.php");
             exit();

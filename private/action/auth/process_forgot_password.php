@@ -3,6 +3,7 @@
 session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../utils/email_helper.php';
+require_once __DIR__ . '/../../utils/error_handler.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email'] ?? '');
@@ -71,33 +72,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             }
                             
                             $_SESSION['reset_message'] = 'Liên kết đặt lại mật khẩu đã được gửi đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến của bạn.';
-                            $_SESSION['reset_message_type'] = 'success';
-                        } else {
+                            $_SESSION['reset_message_type'] = 'success';                        } else {
                             $conn->rollback();
                             $_SESSION['reset_message'] = 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.';
                             $_SESSION['reset_message_type'] = 'error';
+                            
+                            // Log error
+                            log_error($conn, 'auth', "Failed to send password reset email to: $email", null, $user_id);
                         }
                     } else {
                         $conn->rollback();
                         $_SESSION['reset_message'] = 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
                         $_SESSION['reset_message_type'] = 'error';
                         
-                        // Log lỗi
-                        error_log("Password reset token insert failed: " . $stmt_insert->error);
+                        // Log error
+                        log_error($conn, 'auth', "Password reset token insert failed: " . $stmt_insert->error, null, $user_id);
                     }
                     
-                    $stmt_insert->close();
-                } catch (Exception $e) {
+                    $stmt_insert->close();                } catch (Exception $e) {
                     $conn->rollback();
                     $_SESSION['reset_message'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
                     $_SESSION['reset_message_type'] = 'error';
                     
-                    // Log lỗi
-                    error_log("Password reset error: " . $e->getMessage());
-                    
-                    // Log lỗi vào database
-                    $sql = "INSERT INTO error_logs (error_type, error_message, stack_trace, ip_address) VALUES (?, ?, ?, ?)";
-                    $stmt_error = $conn->prepare($sql);
+                    // Log error using our utility function
+                    log_error($conn, 'auth', "Password reset error: " . $e->getMessage(), $e->getTraceAsString(), $user_id);
                     if ($stmt_error) {
                         $error_type = 'password_reset_request';
                         // Log an abbreviated version of the error to the DB

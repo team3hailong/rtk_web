@@ -4,6 +4,22 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Include necessary files
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../utils/error_handler.php';
+
+// Log logout activity if user is logged in
+if (isset($_SESSION['user_id'])) {
+    try {
+        $user_id = $_SESSION['user_id'];
+        log_activity($conn, $user_id, 'logout', 'user', $user_id, null, [
+            'logout_time' => date('Y-m-d H:i:s'),
+        ]);
+    } catch (Exception $e) {
+        log_error($conn, 'auth', "Error logging logout: " . $e->getMessage(), $e->getTraceAsString(), $_SESSION['user_id'] ?? null);
+    }
+}
+
 // Unset all session variables
 $_SESSION = array();
 

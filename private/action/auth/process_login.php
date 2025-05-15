@@ -3,23 +3,8 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once __DIR__ . '/../../config/database.php'; 
-
-// Hàm ghi log hoạt động
-function log_activity($conn, $user_id, $action, $entity_type, $entity_id) {
-    $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
-    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
-    $stmt = $conn->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param("isssss", $user_id, $action, $entity_type, $entity_id, $ip_address, $user_agent);
-        $stmt->execute();
-        $stmt->close();
-    } else {
-        // Xử lý lỗi nếu không chuẩn bị được câu lệnh (ví dụ: ghi vào file log lỗi)
-        error_log("Failed to prepare statement for activity log: " . $conn->error);
-    }
-}
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../utils/error_handler.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -39,11 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // --- Nếu không có lỗi validation cơ bản ---
     if ($login_error === null) {
         // Chuẩn bị câu lệnh để lấy thông tin user dựa trên email
-        $sql = "SELECT id, username, password, email_verified FROM user WHERE email = ? AND deleted_at IS NULL";
-        $stmt = $conn->prepare($sql);
+        $sql = "SELECT id, username, password, email_verified FROM user WHERE email = ? AND deleted_at IS NULL";        $stmt = $conn->prepare($sql);
 
         if ($stmt === false) {
-            error_log("Login prepare statement failed: " . $conn->error);
+            log_error($conn, 'auth', "Login prepare statement failed: " . $conn->error, null, null);
             $login_error = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.";
         } else {
             $stmt->bind_param("s", $email);
@@ -65,8 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];
 
-                        // Ghi log hoạt động đăng nhập
-                        log_activity($conn, $user['id'], 'login', 'user', $user['id']);
+                        // Ghi log hoạt động đăng nhập                        // Log successful login
+                        log_activity($conn, $user['id'], 'login', 'user', $user['id'], null, [
+                            'login_time' => date('Y-m-d H:i:s'),
+                            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
+                        ]);
 
                         // Đóng statement và kết nối
                         $stmt->close();

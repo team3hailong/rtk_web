@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../utils/error_handler.php';
+
 
 $token = $_GET['token'] ?? '';
 $message = '';

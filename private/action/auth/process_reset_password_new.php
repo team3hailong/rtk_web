@@ -62,7 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $delete->bind_param("i", $user_id);
                         $delete->execute();
                         $delete->close();
-                          // Log hoạt động using our utility function
+                        
+                        // Log hoạt động using our utility function
                         log_activity($conn, $user_id, 'password_reset', 'user', $user_id, null, [
                             'email' => $email,
                             'timestamp' => date('Y-m-d H:i:s')
@@ -73,7 +74,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Thông báo thành công và chuyển hướng người dùng đến trang đăng nhập
                         $_SESSION['login_error'] = 'Mật khẩu của bạn đã được đặt lại thành công. Vui lòng đăng nhập bằng mật khẩu mới.';
                         header("Location: ../../../public/pages/auth/login.php");
-                        exit();                    } else {
+                        exit();
+                    } else {
                         throw new Exception("Không thể cập nhật mật khẩu.");
                     }
                     $update->close();
@@ -82,42 +84,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     
                     // Log error using our utility function
                     log_error($conn, 'auth', "Password reset failed: " . $e->getMessage(), $e->getTraceAsString(), $user_id);
-                    if ($stmt_error) {
-                        $error_type = 'password_reset_failed';
-                        // Log một phiên bản tóm tắt lỗi vào DB
-                        $error_message_db = "Failed to reset password for user ID: " . $user_id;
-                        $stack_trace_db = "Error details in server log"; // Tránh ghi đầy đủ stack trace
-                        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-                        $stmt_error->bind_param("ssss", $error_type, $error_message_db, $stack_trace_db, $ip);
-                        $stmt_error->execute();
-                        $stmt_error->close();
-                    }
                     
                     $_SESSION['reset_error'] = 'Đã xảy ra lỗi khi đặt lại mật khẩu. Vui lòng thử lại.';
                     header("Location: ../../../public/pages/auth/reset_password.php?token=" . urlencode($token));
                     exit();
                 }
             } else {
+                // Log invalid token attempt
+                log_error($conn, 'auth', "Invalid or expired password reset token attempt", null, null);
+                
                 $_SESSION['reset_error'] = 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu liên kết đặt lại mật khẩu mới.';
                 header("Location: ../../../public/pages/auth/forgot_password.php");
                 exit();
             }
             $stmt->close();
         } catch (Exception $e) {
-            error_log("Password reset system error: " . $e->getMessage());
-            
-            // Log lỗi hệ thống - Log thông điệp chung vào DB
-            $sql = "INSERT INTO error_logs (error_type, error_message, stack_trace, ip_address) VALUES (?, ?, ?, ?)";
-            $stmt_error = $conn->prepare($sql);
-            if ($stmt_error) {
-                $error_type = 'password_reset_system';
-                $error_message_db = "System error during password reset for token starting with: " . substr($token, 0, 10);
-                $stack_trace_db = "Details in server error log."; // Generic trace for DB
-                $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-                $stmt_error->bind_param("ssss", $error_type, $error_message_db, $stack_trace_db, $ip);
-                $stmt_error->execute();
-                $stmt_error->close();
-            }
+            // Log system error
+            log_error($conn, 'auth', "Password reset system error: " . $e->getMessage(), $e->getTraceAsString(), null);
             
             $_SESSION['reset_error'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
             header("Location: ../../../public/pages/auth/forgot_password.php");

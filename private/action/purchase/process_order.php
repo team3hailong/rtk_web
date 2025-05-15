@@ -20,6 +20,7 @@ $base_url = rtrim($protocol . $domain . $base_project_dir, '/');
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php'; // Need Package class to verify price/duration
+require_once $project_root_path . '/private/classes/Location.php'; // Add Location class for province name
 require_once $project_root_path . '/private/utils/functions.php'; // For helper functions if any
 require_once $project_root_path . '/private/classes/Voucher.php'; // Add Voucher class
 
@@ -168,17 +169,33 @@ try {
     }
 
     // Commit Transaction
-    $conn->commit();
-
-    // Log user purchase action
+    $conn->commit();    // Log user purchase action with detailed information similar to renewal process
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, created_at) VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, NOW())";
+    
+    // Get location details to include province name instead of just ID
+    $location_obj = new Location();
+    $location_details = $location_obj->getLocationById($location_id);
+    $province_name = $location_details ? $location_details['province'] : '';
+    $location_obj->closeConnection();
+    
+    // Create detailed log data similar to renewal process
+    $log_data = json_encode([
+        'registration_id' => $registration_id,
+        'selected_accounts' => [$quantity], // For new purchase, it's the quantity
+        'total_price' => $final_total_price,
+        'package' => $package['name'],
+        'location' => $province_name // Include province name for better readability
+    ], JSON_UNESCAPED_UNICODE); // Ensure proper Vietnamese character encoding
+    
+    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
+                VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, :new_values, NOW())";
     $stmt_log = $conn->prepare($sql_log);
     $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_log->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_log->bindParam(':ip_address', $ip_address);
     $stmt_log->bindParam(':user_agent', $user_agent);
+    $stmt_log->bindParam(':new_values', $log_data);
     $stmt_log->execute();
 
     // Store registration ID, total price, and trial status in session for payment page

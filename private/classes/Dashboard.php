@@ -20,17 +20,22 @@ class Dashboard {
         $stmt->execute(['user_id' => $this->user_id]);
         return (int)$stmt->fetchColumn();
     }
+    
+    // 3. Đếm số người đã giới thiệu (cho user hiện tại)
+    public function getReferredUserCount() {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM referred_user WHERE referrer_id = :user_id");
+        $stmt->execute(['user_id' => $this->user_id]);
+        return (int)$stmt->fetchColumn();
+    }
 
-    // 3. Đếm số cộng tác viên đã duyệt (toàn hệ thống)
+    // 4. Đếm số cộng tác viên đã duyệt (toàn hệ thống) - Kept for backward compatibility
     public function getApprovedCollaborators() {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM collaborator WHERE status = 'approved'");
         $stmt->execute();
         return (int)$stmt->fetchColumn();
-    }
-
-    // 4. Lấy hoạt động gần đây (loại trừ auth, dịch tiếng Việt, parse new_values)
+    }    // 5. Lấy hoạt động gần đây (loại trừ auth, dịch tiếng Việt, parse new_values)
     public function getRecentActivities($limit = 5) {
-        $stmt = $this->pdo->prepare("SELECT action, entity_type, entity_id, new_values, notify_content, created_at FROM activity_logs WHERE user_id = :user_id AND NOT (entity_type = 'user' AND (action = 'login' OR action = 'logout')) ORDER BY created_at DESC LIMIT :limit");
+        $stmt = $this->pdo->prepare("SELECT action, entity_type, entity_id, new_values, notify_content, created_at, has_read FROM activity_logs WHERE user_id = :user_id AND NOT (entity_type = 'user' AND (action = 'login' OR action = 'logout')) ORDER BY created_at DESC LIMIT :limit");
         $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -46,6 +51,43 @@ class Dashboard {
             $result[] = $row;
         }
         return $result;
+    }
+
+    // 6. Lấy các giao dịch gần đây
+    public function getRecentTransactions($limit = 5) {
+        $stmt = $this->pdo->prepare("
+            SELECT 
+                th.id, 
+                th.transaction_type, 
+                th.amount, 
+                th.status, 
+                th.payment_method,
+                th.created_at
+            FROM 
+                transaction_history th
+            WHERE 
+                th.user_id = :user_id
+            ORDER BY 
+                th.created_at DESC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 7. Lấy số lượng thông báo chưa đọc
+    public function getUnreadNotificationsCount() {
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*) 
+            FROM activity_logs 
+            WHERE user_id = :user_id 
+            AND has_read = 0 
+            AND NOT (entity_type = 'user' AND (action = 'login' OR action = 'logout'))
+        ");
+        $stmt->execute(['user_id' => $this->user_id]);
+        return (int)$stmt->fetchColumn();
     }
 
     // Helper: Dịch và mô tả hoạt động

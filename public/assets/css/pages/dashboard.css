@@ -56,6 +56,162 @@ body {
     line-height: 1.2;
 }
 
+/* Dashboard Container for Activities and Transactions */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-box {
+    background: white;
+    border-radius: var(--rounded-lg, 8px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid var(--gray-200, #e5e7eb);
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.box-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800, #1f2937);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+}
+
+/* Activity List Styles */
+.activity-list {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.activity-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item.unread {
+    background-color: var(--blue-50, #eff6ff);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin: 0.25rem 0;
+}
+
+.activity-content p {
+    margin: 0 0 0.25rem 0;
+    color: var(--gray-700, #374151);
+}
+
+.activity-time {
+    color: var(--gray-500, #6b7280);
+    font-size: 0.75rem;
+}
+
+/* Transaction List Styles */
+.transaction-list {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.transaction-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.transaction-type {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge.purchase {
+    background-color: var(--blue-100, #e1f5fe);
+    color: var(--blue-800, #0277bd);
+}
+
+.badge.renewal {
+    background-color: var(--green-100, #e8f5e9);
+    color: var(--green-800, #2e7d32);
+}
+
+.badge.withdrawal {
+    background-color: var(--purple-100, #f3e5f5);
+    color: var(--purple-800, #6a1b9a);
+}
+
+.badge.other {
+    background-color: var(--gray-100, #f3f4f6);
+    color: var(--gray-800, #1f2937);
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge.completed {
+    background-color: var(--green-100, #e8f5e9);
+    color: var(--green-800, #2e7d32);
+}
+
+.status-badge.pending {
+    background-color: var(--yellow-100, #fff8e1);
+    color: var(--yellow-800, #f57f17);
+}
+
+.status-badge.failed {
+    background-color: var(--red-100, #ffebee);
+    color: var(--red-800, #c62828);
+}
+
+.transaction-amount {
+    font-weight: 600;
+    color: var(--gray-800, #1f2937);
+}
+
+.transaction-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--gray-500, #6b7280);
+}
+
+.empty-message {
+    color: var(--gray-500, #6b7280);
+    text-align: center;
+    padding: 2rem 0;
+    font-style: italic;
+}
+
 /* Recent Activity */
 .recent-activity {
     display: none;
@@ -106,49 +262,133 @@ body {
     background-color: #0056b3;
 }
 
+/* Notification Bell and Dropdown */
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    display: none;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--red-500, #ef4444);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid var(--gray-200, #e5e7eb);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    max-width: 90vw;
+    z-index: 100;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-dropdown.open {
+    display: block;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-200, #e5e7eb);
+}
+
+.notification-title {
+    font-weight: 600;
+    color: var(--gray-800, #1f2937);
+}
+
+.mark-all-read {
+    font-size: 0.875rem;
+    color: var(--blue-600, #2563eb);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.notification-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--gray-100, #f3f4f6);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: var(--gray-50, #f9fafb);
+}
+
+.notification-item.unread {
+    background-color: var(--blue-50, #eff6ff);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-content p {
+    margin: 0 0 0.25rem 0;
+    color: var(--gray-700, #374151);
+}
+
+.notification-time {
+    color: var(--gray-500, #6b7280);
+    font-size: 0.75rem;
+}
+
 /* Responsive Layout Adjustments */
 @media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+    
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    .recent-activity {
+
+    .dashboard-box.activities-box {
         display: none;
     }
+    
     .notification-bell {
-        display: block;
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 100;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        width: 44px;
-        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 3rem;
+        height: 3rem;
+        background-color: var(--primary-500, #10b981);
+        color: white;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 100;
     }
+    
     .notification-dropdown {
-        display: none;
-        position: absolute;
-        top: 3.5rem;
+        position: fixed;
+        bottom: 5rem;
         right: 1rem;
-        background: white;
-        border: 1px solid #eee;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        width: 320px;
-        max-width: 90vw;
-        z-index: 200;
-    }
-    .notification-dropdown.open {
-        display: block;
-    }
-}
-@media (min-width: 769px) {
-    .notification-bell {
-        display: none;
+        max-height: 70vh;
     }
 }

@@ -308,3 +308,19 @@ Stack Trace: #0 C:\laragon\www\rtk_web\private\utils\email_helper.php(172): mysq
 [16-May-2025 16:46:35 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
 [16-May-2025 16:46:35 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
 [16-May-2025 16:46:35 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[16-May-2025 17:06:34 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[16-May-2025 17:06:34 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[16-May-2025 17:06:34 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[16-May-2025 17:06:36 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[16-May-2025 17:06:36 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[16-May-2025 17:06:36 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[16-May-2025 17:06:36 Asia/Ho_Chi_Minh] Uncaught Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'has_read' in 'field list'
+#0 C:\laragon\www\rtk_web\private\classes\Dashboard.php(38): PDO->prepare('SELECT action, ...')
+#1 C:\laragon\www\rtk_web\public\pages\dashboard.php(33): Dashboard->getRecentActivities(5)
+#2 {main}
+[16-May-2025 17:07:38 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[16-May-2025 17:07:38 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[16-May-2025 17:07:38 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.
+[16-May-2025 17:07:40 Asia/Ho_Chi_Minh] Database init: Using database 'new2' on host '127.0.0.1'
+[16-May-2025 17:07:40 Asia/Ho_Chi_Minh] [Database GetConnection] No active connection found. Attempting to connect...
+[16-May-2025 17:07:40 Asia/Ho_Chi_Minh] [Database Connect] Connection to database 'new2' successful.

@@ -4,27 +4,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Popup details functionality if needed
     setupDetailsPopup();
+    
+    // Add padding to main content on mobile to avoid header overlap
+    adjustContentPadding();
+    
+    // Listen for window resize events
+    window.addEventListener('resize', function() {
+        adjustContentPadding();
+    });
 });
 
-function setupNotificationBell() {
-    // First, check if we need to create the notification bell for mobile
-    if (window.innerWidth <= 768) {
-        createNotificationBell();
+function adjustContentPadding() {
+    const contentWrapper = document.querySelector('.content-wrapper');
+    if (contentWrapper && window.innerWidth <= 768) {
+        contentWrapper.style.paddingTop = '60px';
+    } else if (contentWrapper) {
+        contentWrapper.style.paddingTop = '0';
     }
-    
-    // Listen for window resize events to add/remove notification bell
-    window.addEventListener('resize', function() {
-        if (window.innerWidth <= 768) {
-            if (!document.querySelector('.notification-bell')) {
-                createNotificationBell();
-            }
-        } else {
-            const bell = document.querySelector('.notification-bell');
-            if (bell) {
-                bell.remove();
-            }
-        }
-    });
+}
+
+function setupNotificationBell() {
+    // Create notification bell - always visible on all devices
+    createNotificationBell();
 }
 
 function createNotificationBell() {
@@ -58,20 +59,55 @@ function createNotificationBell() {
     `;
     dropdown.appendChild(header);
     
-    // Clone activities from the activities box
-    const activitiesBox = document.querySelector('.activities-box .activity-list');
-    if (activitiesBox) {
-        const clonedActivities = activitiesBox.cloneNode(true);
-        clonedActivities.querySelectorAll('.activity-item').forEach(item => {
-            item.classList.add('notification-item');
+    // Get activities data and append to the dropdown
+    // Instead of cloning from activity-list which might be hidden on mobile
+    // We'll create a new list manually with the recent activities data
+    const notificationsList = document.createElement('div');
+    notificationsList.className = 'activity-list';
+    
+    if (window.dashboardData && window.dashboardData.recentActivities && window.dashboardData.recentActivities.length > 0) {
+        window.dashboardData.recentActivities.forEach(activity => {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'activity-item notification-item';
+            if (activity.has_read === 0) {
+                notificationItem.classList.add('unread');
+            }
+            
+            const content = document.createElement('div');
+            content.className = 'activity-content';
+            
+            const description = document.createElement('p');
+            description.innerHTML = activity.description;
+            
+            const time = document.createElement('small');
+            time.className = 'activity-time';
+            
+            // Format date: DD/MM/YYYY HH:MM
+            const date = new Date(activity.created_at);
+            const formattedDate = date.toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            
+            time.textContent = formattedDate;
+            
+            content.appendChild(description);
+            content.appendChild(time);
+            notificationItem.appendChild(content);
+            notificationsList.appendChild(notificationItem);
         });
-        dropdown.appendChild(clonedActivities);
     } else {
         const emptyMessage = document.createElement('p');
         emptyMessage.className = 'empty-message';
         emptyMessage.textContent = 'Không có thông báo nào.';
-        dropdown.appendChild(emptyMessage);
+        notificationsList.appendChild(emptyMessage);
     }
+    
+    dropdown.appendChild(notificationsList);
     
     // Add event listeners
     bell.addEventListener('click', function(e) {
@@ -103,11 +139,41 @@ function createNotificationBell() {
         
         // Here you would also make an AJAX call to mark notifications as read in the database
         markNotificationsAsRead();
-    });
+    });    // Add to the document - position in the header next to hamburger menu
+    const headerRight = document.querySelector('.header-right');
+    if (headerRight) {
+        // Insert bell into header-right (mobile view)
+        headerRight.appendChild(bell);
+    } else {
+        // Fallback if header-right doesn't exist
+        document.body.appendChild(bell);
+    }
     
-    // Add to the document
-    document.body.appendChild(bell);
+    // Append dropdown to the body for proper z-index behavior
     document.body.appendChild(dropdown);
+    
+    // Position dropdown relative to the bell
+    const updateDropdownPosition = () => {
+        const bellRect = bell.getBoundingClientRect();
+        
+        if (window.innerWidth <= 768) {
+            // Mobile positioning
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = (bellRect.bottom + 10) + 'px';
+            dropdown.style.right = '1rem';
+        } else {
+            // Desktop positioning
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = (bellRect.bottom + 10) + 'px';
+            dropdown.style.right = '2rem';
+        }
+    };
+    
+    // Update position on window resize
+    window.addEventListener('resize', updateDropdownPosition);
+    
+    // Initial position update
+    updateDropdownPosition();
 }
 
 function markNotificationsAsRead() {

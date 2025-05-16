@@ -43,9 +43,13 @@ $user_username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['user
 ?>
 
 <!-- Hamburger button for mobile -->
-<button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
-    <i class="fas fa-bars"></i>
-</button>
+<div class="header-mobile">
+    <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Header right area - will be populated with notification bell via JS -->
+    <div class="header-right"></div>
+</div>
 
 <aside class="sidebar" id="sidebar">
     <!-- Logo & Toggle -->

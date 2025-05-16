@@ -40,7 +40,6 @@ $user_display_name = $_SESSION['username'] ?? 'Người dùng';
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
         <h2 class="text-2xl font-semibold mb-4">Tổng quan tài khoản</h2>
-        <p class="text-gray-600 mb-4">Các số liệu và hoạt động mới nhất của bạn</p>
         <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -175,7 +174,8 @@ include $project_root_path . '/private/includes/footer.php';
 <script>
 // Pass PHP variables to JavaScript
 window.dashboardData = {
-    unreadNotificationsCount: <?php echo $unread_notifications_count; ?>
+    unreadNotificationsCount: <?php echo $unread_notifications_count; ?>,
+    recentActivities: <?php echo json_encode($recent_activities); ?>
 };
 </script>
 <script src="<?php echo $base_path; ?>/assets/js/pages/dashboard.js"></script>

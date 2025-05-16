@@ -94,9 +94,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $conn->rollback();
                     $_SESSION['reset_message'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
                     $_SESSION['reset_message_type'] = 'error';
-                    
-                    // Log error using our utility function
+                      // Log error using our utility function
                     log_error($conn, 'auth', "Password reset error: " . $e->getMessage(), $e->getTraceAsString(), $user_id);
+                    
+                    // Khởi tạo $stmt_error để tránh lỗi undefined variable
+                    $stmt_error = $conn->prepare("INSERT INTO error_logs (error_type, error_message, stack_trace, ip_address) VALUES (?, ?, ?, ?)");
                     if ($stmt_error) {
                         $error_type = 'password_reset_request';
                         // Log an abbreviated version of the error to the DB

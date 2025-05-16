@@ -149,12 +149,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
             $conn->commit();
             
             // Log successful registration
+            $notify_content = 'Đăng ký tài khoản mới: ' . $username . ' (' . $email . ')';
             log_activity($conn, $user_id, 'register', 'user', $user_id, null, [
                 'email' => $email,
                 'username' => $username,
                 'registration_time' => date('Y-m-d H:i:s'),
                 'is_company' => $is_company
-            ]);
+            ], $notify_content);
             
             // Process referral if a code was provided
             if (!empty($referral_code)) {
@@ -190,7 +191,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                             'referral_time' => date('Y-m-d H:i:s')
                         ];
                         
-                        log_activity($conn, $referrer['referrer_id'], 'referral', 'user', $user_id, null, $log_data);
+                        $notify_content = 'Người dùng ' . $username . ' (' . $email . ') đã đăng ký theo link giới thiệu của bạn';
+                        log_activity($conn, $referrer['referrer_id'], 'referral', 'user', $user_id, null, $log_data, $notify_content);
                     }
                 }
             }

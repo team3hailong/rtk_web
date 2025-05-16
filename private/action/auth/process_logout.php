@@ -12,9 +12,11 @@ require_once __DIR__ . '/../../utils/error_handler.php';
 if (isset($_SESSION['user_id'])) {
     try {
         $user_id = $_SESSION['user_id'];
+        $username = $_SESSION['username'] ?? 'Người dùng';
+        $notify_content = $username . ' đã đăng xuất khỏi hệ thống';
         log_activity($conn, $user_id, 'logout', 'user', $user_id, null, [
             'logout_time' => date('Y-m-d H:i:s'),
-        ]);
+        ], $notify_content);
     } catch (Exception $e) {
         log_error($conn, 'auth', "Error logging logout: " . $e->getMessage(), $e->getTraceAsString(), $_SESSION['user_id'] ?? null);
     }

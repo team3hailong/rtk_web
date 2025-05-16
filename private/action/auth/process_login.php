@@ -49,11 +49,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];
 
-                        // Ghi log hoạt động đăng nhập                        // Log successful login
+                        // Ghi log hoạt động đăng nhập
+                        // Log successful login
+                        $notify_content = 'Người dùng ' . $user['username'] . ' đã đăng nhập vào hệ thống';
                         log_activity($conn, $user['id'], 'login', 'user', $user['id'], null, [
                             'login_time' => date('Y-m-d H:i:s'),
                             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null
-                        ]);
+                        ], $notify_content);
 
                         // Đóng statement và kết nối
                         $stmt->close();

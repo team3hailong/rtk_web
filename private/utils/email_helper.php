@@ -162,12 +162,10 @@ HTML;
             . "Nếu bạn không yêu cầu đặt lại mật khẩu, bạn có thể bỏ qua email này. Tài khoản của bạn vẫn an toàn.";
 
         // Gửi email
-        $mail->send();
-
-        // Log thành công vào activity_logs
+        $mail->send();        // Log thành công vào activity_logs
         $notify_content = 'Đã gửi email đặt lại mật khẩu cho: ' . $userEmail;
         $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values, notify_content) 
-                SELECT id, 'password_reset_email_sent', 'user', id, ?, ?, ?, ? 
+                SELECT id, 'password_reset_email_sent', 'user', id, ?, ?, ? 
                 FROM user WHERE email = ?";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
@@ -177,7 +175,7 @@ HTML;
                 'reset_token' => substr($resetToken, 0, 10) . '...',
                 'timestamp' => date('Y-m-d H:i:s')
             ]);
-            $stmt->bind_param("sssss", $ip, $log_data, $notify_content, $userEmail);
+            $stmt->bind_param("ssss", $ip, $log_data, $notify_content, $userEmail);
             $stmt->execute();
             $stmt->close();
         }

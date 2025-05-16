@@ -51,10 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
             renewalBtn.disabled = checkedBoxes.length === 0;
         }
     }
-    
-    // Thêm sự kiện cho từng checkbox
+      // Thêm sự kiện cho từng checkbox
     accountCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
+            // Check if this is a package_id = 7 account and show warning if it's selected
+            if (checkbox.checked && checkbox.dataset.packageId === "7") {
+                alert('Tài khoản này sử dụng gói dùng thử và không thể gia hạn.');
+            }
+            
             updateExportButtonState();
             updateRenewalButtonState();
         });
@@ -88,9 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 exportForm.submit();
             }
         });
-    }
-
-    // Handle renewal form submission
+    }    // Handle renewal form submission
     if (renewalForm) {
         renewalForm.addEventListener('submit', function(e) {
             // Clear previous hidden inputs for selected accounts to avoid duplicates
@@ -104,6 +106,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // alert('Vui lòng chọn ít nhất một tài khoản để gia hạn.'); // Optional: display a message
                 e.preventDefault(); 
                 return; 
+            }
+            
+            // Check if any selected account has package_id = 7
+            let hasPackage7 = false;
+            checkedBoxes.forEach(cb => {
+                if (cb.dataset.packageId === "7") {
+                    hasPackage7 = true;
+                }
+            });
+            
+            if (hasPackage7) {
+                alert('Một hoặc nhiều tài khoản được chọn không thể gia hạn vì đang sử dụng gói dùng thử.');
+                e.preventDefault();
+                return;
             }
 
             // Add hidden input for each selected account

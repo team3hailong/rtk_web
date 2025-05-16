@@ -210,8 +210,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         }
                                         $search_terms = array_filter($search_terms); 
                                         $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
-                                        
-                                        // JSON data cho modal và export
+                                          // JSON data cho modal và export
                                         $account_details = [
                                             'id' => $account['id'],
                                             'username' => $account['username_acc'],
@@ -221,13 +220,13 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             'status' => $status_text,
                                             'status_class' => $status_class,
                                             'province' => $account['province'] ?? 'N/A',
-                                            'mountpoints' => $account['mountpoints'] ?? []
+                                            'mountpoints' => $account['mountpoints'] ?? [],
+                                            'package_id' => $account['package_id'] ?? 0
                                         ];
                                         $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
-                                    ?>
-                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
+                                    ?>                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
                                         <td class="select-column">
-                                            <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox">
+                                            <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox" data-package-id="<?php echo $account['package_id']; ?>">
                                         </td>
                                         <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                         <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>

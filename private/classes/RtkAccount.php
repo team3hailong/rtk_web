@@ -8,6 +8,7 @@ class RtkAccount {
         $this->conn = $db->getConnection();
     }
 
+    // Get all accounts for a user with pagination
     public function getAccountsByUserIdWithPagination($userId, $page = 1, $perPage = 10, $filter = 'all') {
         try {
             $this->conn->exec("SET SESSION group_concat_max_len = 1000000;"); // Increase group_concat_max_len
@@ -57,6 +58,7 @@ class RtkAccount {
                     r.start_time,
                     r.end_time,
                     r.status as reg_status,
+                    r.package_id,
                     p.name as package_name,
                     p.duration_text,
                     DATEDIFF(r.end_time, r.start_time) as duration_days,
@@ -81,7 +83,7 @@ class RtkAccount {
                 AND sa.deleted_at IS NULL
                 $statusCondition
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
-                         r.start_time, r.end_time, r.status, p.name, 
+                         r.start_time, r.end_time, r.status, r.package_id, p.name, 
                          p.duration_text, l.province, th.payment_confirmed_at, r.location_id
                 ORDER BY sa.created_at DESC
                 LIMIT :start, :per_page";

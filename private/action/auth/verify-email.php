@@ -25,8 +25,9 @@ if (empty($token)) {
                 $message = 'Email này đã được xác thực trước đó.';
                 
                 // Log trường hợp token đã được sử dụng
-                $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, old_values) 
-                        VALUES (?, 'email_verification_attempted', 'user', ?, ?, ?)";
+                $notify_content = 'Email đã được xác thực trước đó: ' . $user['email'];
+                $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, old_values, notify_content) 
+                        VALUES (?, 'email_verification_attempted', 'user', ?, ?, ?, ?)";
                 $stmt_log = $conn->prepare($sql);
                 if ($stmt_log) {
                     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -35,7 +36,7 @@ if (empty($token)) {
                         'email' => $user['email'],
                         'timestamp' => date('Y-m-d H:i:s')
                     ]);
-                    $stmt_log->bind_param("iiss", $user['id'], $user['id'], $ip, $log_data);
+                    $stmt_log->bind_param("iisss", $user['id'], $user['id'], $ip, $log_data, $notify_content);
                     $stmt_log->execute();
                     $stmt_log->close();
                 }
@@ -49,8 +50,9 @@ if (empty($token)) {
                     $message = 'Xác thực email thành công! Bạn có thể đăng nhập ngay bây giờ.';
                     
                     // Log xác thực thành công
-                    $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values) 
-                            VALUES (?, 'email_verified', 'user', ?, ?, ?)";
+                    $notify_content = 'Xác thực email thành công cho: ' . $user['email'];
+                    $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values, notify_content) 
+                            VALUES (?, 'email_verified', 'user', ?, ?, ?, ?)";
                     $stmt_log = $conn->prepare($sql);
                     if ($stmt_log) {
                         $ip = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -59,7 +61,7 @@ if (empty($token)) {
                             'email' => $user['email'],
                             'timestamp' => date('Y-m-d H:i:s')
                         ]);
-                        $stmt_log->bind_param("iiss", $user['id'], $user['id'], $ip, $log_data);
+                        $stmt_log->bind_param("iisss", $user['id'], $user['id'], $ip, $log_data, $notify_content);
                         $stmt_log->execute();
                         $stmt_log->close();
                     }

@@ -133,8 +133,9 @@ try {
     // 11. Ghi log hoạt động
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
     $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, created_at) VALUES (?, 'trial_activation', 'registration', ?, ?, ?, NOW())");
-    $stmt->execute([$user_id, $registration_id, $ip, $ua]);
+    $notify_content = 'Kích hoạt tài khoản dùng thử cho đăng ký #' . $registration_id;
+    $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, notify_content, created_at) VALUES (?, 'trial_activation', 'registration', ?, ?, ?, ?, NOW())");
+    $stmt->execute([$user_id, $registration_id, $ip, $ua, $notify_content]);
 
     $conn->commit();
     log_trial('Kích hoạt thành công', $user_id, $registration_id, 'success', ['username' => $username, 'start' => $start, 'end' => $end]);

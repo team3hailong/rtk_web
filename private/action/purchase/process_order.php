@@ -188,14 +188,16 @@ try {
         'location' => $province_name // Include province name for better readability
     ], JSON_UNESCAPED_UNICODE); // Ensure proper Vietnamese character encoding
     
-    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
-                VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, :new_values, NOW())";
+    $notify_content = 'Mua gói dịch vụ: ' . $package['name'] . ' - Số lượng: ' . $quantity;
+    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
     $stmt_log = $conn->prepare($sql_log);
     $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_log->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_log->bindParam(':ip_address', $ip_address);
     $stmt_log->bindParam(':user_agent', $user_agent);
     $stmt_log->bindParam(':new_values', $log_data);
+    $stmt_log->bindParam(':notify_content', $notify_content);
     $stmt_log->execute();
 
     // Store registration ID, total price, and trial status in session for payment page

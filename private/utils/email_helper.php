@@ -62,8 +62,9 @@ HTML;
         $mail->send();
 
         // Log thành công vào activity_logs
-        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values) 
-                SELECT id, 'verification_email_sent', 'user', id, ?, ? 
+        $notify_content = 'Đã gửi email xác thực cho: ' . $userEmail;
+        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values, notify_content) 
+                SELECT id, 'verification_email_sent', 'user', id, ?, ?, ? 
                 FROM user WHERE email = ?";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
@@ -73,7 +74,7 @@ HTML;
                 'verification_token' => substr($verificationToken, 0, 10) . '...',
                 'timestamp' => date('Y-m-d H:i:s')
             ]);
-            $stmt->bind_param("sss", $ip, $log_data, $userEmail);
+            $stmt->bind_param("ssss", $ip, $log_data, $notify_content, $userEmail);
             $stmt->execute();
             $stmt->close();
         }
@@ -164,8 +165,9 @@ HTML;
         $mail->send();
 
         // Log thành công vào activity_logs
-        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values) 
-                SELECT id, 'password_reset_email_sent', 'user', id, ?, ? 
+        $notify_content = 'Đã gửi email đặt lại mật khẩu cho: ' . $userEmail;
+        $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values, notify_content) 
+                SELECT id, 'password_reset_email_sent', 'user', id, ?, ?, ?, ? 
                 FROM user WHERE email = ?";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
@@ -175,7 +177,7 @@ HTML;
                 'reset_token' => substr($resetToken, 0, 10) . '...',
                 'timestamp' => date('Y-m-d H:i:s')
             ]);
-            $stmt->bind_param("sss", $ip, $log_data, $userEmail);
+            $stmt->bind_param("sssss", $ip, $log_data, $notify_content, $userEmail);
             $stmt->execute();
             $stmt->close();
         }

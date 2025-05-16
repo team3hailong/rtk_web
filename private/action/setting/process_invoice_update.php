@@ -66,10 +66,13 @@ try {
     $stmt->execute();
 
     // Log activity (nếu cần)
-    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, created_at) 
-               VALUES (:user_id, 'update_invoice_info', 'user', :entity_id, NOW())";
+    $notify_content = 'Cập nhật thông tin xuất hóa đơn';
+    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, notify_content, created_at) 
+               VALUES (:user_id, 'update_invoice_info', 'user', :entity_id, :notify_content, NOW())";
     $stmt_log = $conn->prepare($sql_log);
-    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);    $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':notify_content', $notify_content, PDO::PARAM_STR);
     $stmt_log->execute();
 
     $_SESSION['success'] = "Thông tin xuất hóa đơn đã được cập nhật thành công.";

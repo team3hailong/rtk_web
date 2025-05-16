@@ -57,8 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $conn->commit();
                             
                             // Log thành công vào activity_logs
-                            $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values) 
-                                    VALUES (?, 'password_reset_requested', 'user', ?, ?, ?)";
+                            $notify_content = 'Yêu cầu đặt lại mật khẩu cho email: ' . $email;
+                            $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, new_values, notify_content) 
+                                    VALUES (?, 'password_reset_requested', 'user', ?, ?, ?, ?)";
                             $stmt_log = $conn->prepare($sql);
                             if ($stmt_log) {
                                 $ip = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -66,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     'email' => $email,
                                     'timestamp' => date('Y-m-d H:i:s')
                                 ]);
-                                $stmt_log->bind_param("iiss", $user_id, $user_id, $ip, $log_data);
+                                $stmt_log->bind_param("iisss", $user_id, $user_id, $ip, $log_data, $notify_content);
                                 $stmt_log->execute();
                                 $stmt_log->close();
                             }
@@ -111,7 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['reset_message'] = 'Nếu địa chỉ email này tồn tại trong hệ thống, bạn sẽ nhận được email hướng dẫn đặt lại mật khẩu.';
                 $_SESSION['reset_message_type'] = 'info';
                   // Log việc có người thử reset password cho email không tồn tại
-                $sql = "INSERT INTO activity_logs (action, entity_type, entity_id, ip_address, new_values) VALUES (?, ?, ?, ?, ?)";
+                $notify_content = 'Yêu cầu đặt lại mật khẩu cho email không tồn tại: ' . $email;
+                $sql = "INSERT INTO activity_logs (action, entity_type, entity_id, ip_address, new_values, notify_content) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt_log = $conn->prepare($sql);
                 if ($stmt_log) {
                     $action = 'password_reset_nonexistent_email';
@@ -122,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'email' => $email,
                         'timestamp' => date('Y-m-d H:i:s')
                     ]);
-                    $stmt_log->bind_param("ssiss", $action, $entity_type, $entity_id, $ip, $log_data);
+                    $stmt_log->bind_param("ssisss", $action, $entity_type, $entity_id, $ip, $log_data, $notify_content);
                     $stmt_log->execute();
                     $stmt_log->close();
                 }

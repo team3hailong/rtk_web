@@ -30,14 +30,19 @@ class Dashboard {
 
     // 4. Lấy hoạt động gần đây (loại trừ auth, dịch tiếng Việt, parse new_values)
     public function getRecentActivities($limit = 5) {
-        $stmt = $this->pdo->prepare("SELECT action, entity_type, entity_id, new_values, created_at FROM activity_logs WHERE user_id = :user_id AND NOT (entity_type = 'user' AND (action = 'login' OR action = 'logout')) ORDER BY created_at DESC LIMIT :limit");
+        $stmt = $this->pdo->prepare("SELECT action, entity_type, entity_id, new_values, notify_content, created_at FROM activity_logs WHERE user_id = :user_id AND NOT (entity_type = 'user' AND (action = 'login' OR action = 'logout')) ORDER BY created_at DESC LIMIT :limit");
         $stmt->bindValue(':user_id', $this->user_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $result = [];
         foreach ($rows as $row) {
-            $row['description'] = $this->buildActivityDescription($row);
+            // Nếu có notify_content thì sử dụng, nếu không thì tạo mô tả như cũ
+            if (!empty($row['notify_content'])) {
+                $row['description'] = $row['notify_content'];
+            } else {
+                $row['description'] = $this->buildActivityDescription($row);
+            }
             $result[] = $row;
         }
         return $result;

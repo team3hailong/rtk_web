@@ -100,14 +100,31 @@ class SupportRequest {
      */
     private function logSupportActivity($userId, $action, $entityType, $entityId) {
         try {
-            $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, created_at)
-                    VALUES (:user_id, :action, :entity_type, :entity_id, NOW())";
+            // Tạo nội dung thông báo dựa theo action
+            $notify_content = '';
+            switch ($action) {
+                case 'create_support_request':
+                    $notify_content = 'Tạo yêu cầu hỗ trợ mới #' . $entityId;
+                    break;
+                case 'update_support_request':
+                    $notify_content = 'Cập nhật yêu cầu hỗ trợ #' . $entityId;
+                    break;
+                case 'add_support_response':
+                    $notify_content = 'Thêm phản hồi cho yêu cầu hỗ trợ #' . $entityId;
+                    break;
+                default:
+                    $notify_content = 'Hoạt động liên quan đến hỗ trợ #' . $entityId;
+            }
+            
+            $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, notify_content, created_at)
+                    VALUES (:user_id, :action, :entity_type, :entity_id, :notify_content, NOW())";
             
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':action', $action, PDO::PARAM_STR);
             $stmt->bindParam(':entity_type', $entityType, PDO::PARAM_STR);
             $stmt->bindParam(':entity_id', $entityId, PDO::PARAM_STR);
+            $stmt->bindParam(':notify_content', $notify_content, PDO::PARAM_STR);
             
             $stmt->execute();
         } catch (PDOException $e) {

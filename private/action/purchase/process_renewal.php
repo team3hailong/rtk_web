@@ -170,10 +170,10 @@ try {
         'package' => $package['name'],
         'location' => $province_name // Thêm thông tin tỉnh/thành phố
     ], JSON_UNESCAPED_UNICODE); // Sử dụng JSON_UNESCAPED_UNICODE để tránh lỗi font tiếng Việt
-    
-    $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, created_at) 
-                              VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, NOW())");
-    $stmt_log->execute([$user_id, $registration_id, $ip, $ua, $log_data]);
+    $notify_content = 'Yêu cầu gia hạn gói dịch vụ cho đăng ký #' . $registration_id . ' - Gói: ' . $package['name'];
+    $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                              VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, ?, NOW())");
+    $stmt_log->execute([$user_id, $registration_id, $ip, $ua, $log_data, $notify_content]);
     
     header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
     exit;

@@ -170,6 +170,22 @@ if (isset($_SESSION['pending_registration_id'])) {
 // Increment voucher usage counter
 $voucherService->incrementUsage($voucher['id']);
 
+// Ghi log vào activity_logs
+if ($userId && $voucherCode) {
+    $conn = $db->getConnection();
+    $notify_content = 'Áp dụng mã giảm giá: ' . $voucherCode . ' cho đơn hàng. Giá trị giảm: ' . $applicationResult['discount_value'];
+    $log_data = json_encode([
+        'voucher_code' => $voucherCode,
+        'discount_value' => $applicationResult['discount_value'],
+        'new_amount' => $applicationResult['new_amount'],
+        'original_amount' => $orderAmount
+    ], JSON_UNESCAPED_UNICODE);
+    $sql = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, new_values, notify_content, created_at) VALUES (?, 'apply_voucher', 'voucher', ?, ?, ?, NOW())";
+    $stmt = $conn->prepare($sql);
+    $entity_id = $voucher['id'];
+    $stmt->execute([$userId, $entity_id, $log_data, $notify_content]);
+}
+
 // Prepare response
 $response = [
     'status' => true,

@@ -132,14 +132,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         // Execute the update
-        $stmt->execute();        // Log activity
-        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details, created_at) 
-                   VALUES (:user_id, 'update', 'user', :entity_id, :details, NOW())";
+        $stmt->execute();
+        
+        // Log activity
+        $notify_content = 'Cập nhật thông tin hồ sơ người dùng: ' . $username;
+        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details, notify_content, created_at) 
+                   VALUES (:user_id, 'update', 'user', :entity_id, :details, :notify_content, NOW())";
         $stmt_log = $pdo->prepare($sql_log);
         $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
         $details = "Cập nhật thông tin hồ sơ: username, email, phone";
-        $stmt_log->bindParam(':details', $details, PDO::PARAM_STR);
+        $stmt_log->bindParam(':notify_content', $notify_content, PDO::PARAM_STR);
         $stmt_log->execute();
 
         // After successful update, fetch fresh user data

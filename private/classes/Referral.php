@@ -372,7 +372,29 @@ class Referral {
             $stmt->bindParam(':account_number', $accountNumber, PDO::PARAM_STR);
             $stmt->bindParam(':account_holder', $accountHolder, PDO::PARAM_STR);
             $stmt->execute();
-            
+
+            // --- Ghi log vào activity_logs ---
+            $withdrawal_id = $this->conn->lastInsertId();
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+            $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+            $new_values = json_encode([
+                'amount' => $amount,
+                'bank_name' => $bankName,
+                'account_number' => $accountNumber,
+                'account_holder' => $accountHolder
+            ], JSON_UNESCAPED_UNICODE);
+            $notify_content = 'Yêu cầu rút tiền: ' . number_format($amount, 0, ',', '.') . ' VND về ngân hàng ' . $bankName . ' (' . $accountNumber . ')';
+            $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                        VALUES (:user_id, 'withdrawal_request', 'withdrawal_request', :entity_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
+            $stmt_log = $this->conn->prepare($sql_log);
+            $stmt_log->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt_log->bindParam(':entity_id', $withdrawal_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':ip_address', $ip_address);
+            $stmt_log->bindParam(':user_agent', $user_agent);
+            $stmt_log->bindParam(':new_values', $new_values);
+            $stmt_log->bindParam(':notify_content', $notify_content);
+            $stmt_log->execute();
+
             return [
                 'success' => true,
                 'message' => 'Yêu cầu rút tiền đã được gửi thành công và đang chờ xử lý.'

@@ -86,5 +86,29 @@ class InvoiceService {
     public function createInvoice(int $tx_id): void {
         $stmt = $this->conn->prepare('INSERT INTO invoice (transaction_history_id, status, created_at) VALUES (?, "pending", NOW())');
         $stmt->execute([$tx_id]);
+        $invoice_id = $this->conn->lastInsertId();
+        // --- Ghi log vào activity_logs ---
+        try {
+            if (session_status() === PHP_SESSION_NONE) session_start();
+            $user_id = $_SESSION['user_id'] ?? null;
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+            $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+            $new_values = json_encode([
+                'transaction_history_id' => $tx_id
+            ], JSON_UNESCAPED_UNICODE);
+            $notify_content = 'Yêu cầu xuất hóa đơn cho giao dịch #' . $tx_id;
+            $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at)
+                        VALUES (:user_id, 'request_invoice', 'invoice', :entity_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
+            $stmt_log = $this->conn->prepare($sql_log);
+            $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':entity_id', $invoice_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':ip_address', $ip_address);
+            $stmt_log->bindParam(':user_agent', $user_agent);
+            $stmt_log->bindParam(':new_values', $new_values);
+            $stmt_log->bindParam(':notify_content', $notify_content);
+            $stmt_log->execute();
+        } catch (Exception $e) {
+            error_log('Lỗi ghi activity_logs khi xuất hóa đơn: ' . $e->getMessage());
+        }
     }
 }

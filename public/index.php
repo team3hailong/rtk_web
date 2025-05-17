@@ -13,9 +13,8 @@ if (isset($_SESSION['user_id'])) {
     // If logged in, redirect to dashboard
     header("Location: " . $base_url . "/public/pages/dashboard.php");
     exit();
-} else {
-    // If not logged in, redirect to login page
-    header("Location: " . $base_url . "/public/pages/auth/login.php");
+} else {    // If not logged in, redirect to homepage
+    header("Location: " . $base_url . "/public/pages/homepage.php");
     exit();
 }
 ?>

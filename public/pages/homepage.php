@@ -66,7 +66,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <header class="site-header">
         <div class="container">
             <div class="logo-container">
-                <a href="<?php echo $base_path; ?>/pages/homepage.php" class="logo">
+                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
                     <img src="<?php echo $base_path; ?>/assets/images/logo.png" alt="Đo đạc RTK Logo">
                 </a>
             </div>
@@ -76,11 +76,11 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 </button>
                 
                 <ul class="nav-links">
-                    <li><a href="<?php echo $base_path; ?>/pages/homepage.php" class="active">Trang chủ</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/map_display.php">Map hiển thị</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/purchase/packages.php">Mua tài khoản</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/support/guide.php">Hướng dẫn</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/support/contact.php">Hỗ trợ</a></li>
+                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php" class="active">Trang chủ</a></li>
+                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Map hiển thị</a></li>
+                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Mua tài khoản</a></li>
+                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn</a></li>
+                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hỗ trợ</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <li><a href="<?php echo $base_path; ?>/pages/dashboard.php">Dashboard</a></li>
                     <?php else: ?>
@@ -97,14 +97,14 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 <h1>Dịch vụ tài khoản đo đạc RTK</h1>
                 <p class="subtitle">Cung cấp dịch vụ đo đạc RTK chính xác, ổn định và đáng tin cậy cho các công trình xây dựng, đo đạc địa chính và khảo sát địa hình.</p>
                 <div class="hero-cta">
-                    <a href="<?php echo $base_path; ?>/pages/purchase/packages.php" class="btn btn-primary">Xem các gói dịch vụ</a>
-                    <a href="<?php echo $base_path; ?>/pages/map_display.php" class="btn btn-secondary">Xem bản đồ trạm</a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-primary">Xem các gói dịch vụ</a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-secondary">Xem bản đồ trạm</a>
                 </div>
             </div>            <div class="hero-map-container">
                 <h3>Bản đồ trạm RTK</h3>
                 <div id="hero-map" class="hero-map"></div>
                 <div class="view-all-stations">
-                    <a href="<?php echo $base_path; ?>/pages/map_display.php" class="btn-view-all-stations">Xem chi tiết bản đồ <i class="fas fa-arrow-right"></i></a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn-view-all-stations">Xem chi tiết bản đồ <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     </div>
                     <h3>Map hiển thị trạm</h3>
                     <p>Theo dõi trạng thái hoạt động của các trạm base RTK trên toàn quốc thông qua bản đồ trực quan, cập nhật theo thời gian thực.</p>
-                    <a href="<?php echo $base_path; ?>/pages/map_display.php" class="feature-link">Xem bản đồ <i class="fas fa-chevron-right"></i></a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Xem bản đồ <i class="fas fa-chevron-right"></i></a>
                 </div>
                 
                 <div class="feature-card">
@@ -131,8 +131,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         <i class="fas fa-tags"></i>
                     </div>
                     <h3>Đa dạng gói dịch vụ</h3>
-                    <p>Nhiều lựa chọn gói dịch vụ phù hợp với nhu cầu sử dụng, từ các gói ngắn hạn đến dài hạn, đáp ứng mọi quy mô dự án.</p>
-                    <a href="<?php echo $base_path; ?>/pages/purchase/packages.php" class="feature-link">Xem các gói <i class="fas fa-chevron-right"></i></a>
+                    <p>Nhiều lựa chọn gói dịch vụ phù hợp với nhu cầu sử dụng, từ các gói ngắn hạn đến dài hạn, đáp ứng nhu cầu của người dùng</p>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Xem các gói <i class="fas fa-chevron-right"></i></a>
                 </div>
                 
                 <div class="feature-card">
@@ -140,8 +140,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         <i class="fas fa-book-open"></i>
                     </div>
                     <h3>Tài liệu hướng dẫn</h3>
-                    <p>Cung cấp đầy đủ tài liệu hướng dẫn sử dụng dịch vụ, cài đặt và thiết lập kết nối đến các trạm RTK.</p>
-                    <a href="<?php echo $base_path; ?>/pages/support/guide.php" class="feature-link">Xem hướng dẫn <i class="fas fa-chevron-right"></i></a>
+                    <p>Cung cấp đầy đủ tài liệu hướng dẫn sử dụng dịch vụ, cài đặt và thiết lập kết nối đến các trạm base.</p>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Xem hướng dẫn <i class="fas fa-chevron-right"></i></a>
                 </div>
                 
                 <div class="feature-card">
@@ -150,7 +150,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     </div>
                     <h3>Hỗ trợ 24/7</h3>
                     <p>Đội ngũ kỹ thuật hỗ trợ 24/7, giải đáp mọi thắc mắc và xử lý sự cố nhanh chóng, đảm bảo dịch vụ liên tục.</p>
-                    <a href="<?php echo $base_path; ?>/pages/support/contact.php" class="feature-link">Liên hệ hỗ trợ <i class="fas fa-chevron-right"></i></a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Liên hệ hỗ trợ <i class="fas fa-chevron-right"></i></a>
                 </div>
             </div>
         </div>
@@ -200,14 +200,14 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                             <?php endforeach; ?>
                         </ul>
 
-                        <a href="<?php echo $base_path; ?>/pages/purchase/details.php?package=<?php echo htmlspecialchars($package['package_id'] ?? ''); ?>" class="btn btn-package">Xem chi tiết</a>
+                        <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-package">Xem chi tiết</a>
                     </div>
                 <?php endforeach; ?>
                 <?php endif; ?>
             </div>
             
             <div class="packages-cta">
-                <a href="<?php echo $base_path; ?>/pages/purchase/packages.php" class="btn btn-view-all">Xem tất cả các gói</a>
+                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-view-all">Xem tất cả các gói</a>
             </div>
         </div>
     </section>
@@ -220,7 +220,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 <p>Đăng ký tài khoản, mua gói dịch vụ và trải nghiệm các dịch vụ đo đạc RTK chất lượng cao</p>
                 <div class="cta-buttons">
                     <a href="<?php echo $base_path; ?>/pages/auth/register.php" class="btn btn-primary">Đăng ký ngay</a>
-                    <a href="<?php echo $base_path; ?>/pages/support/contact.php" class="btn btn-outline">Liên hệ tư vấn</a>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-outline">Liên hệ tư vấn</a>
                 </div>
             </div>
         </div>
@@ -335,18 +335,18 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     <div class="footer-column">
                         <h4>Dịch vụ</h4>
                         <ul>
-                            <li><a href="<?php echo $base_path; ?>/pages/purchase/packages.php">Các gói dịch vụ</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/map_display.php">Bản đồ trạm</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/support/guide.php">Hướng dẫn sử dụng</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Các gói dịch vụ</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Bản đồ trạm</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn sử dụng</a></li>
                         </ul>
                     </div>
                     
                     <div class="footer-column">
                         <h4>Hỗ trợ</h4>
                         <ul>
-                            <li><a href="<?php echo $base_path; ?>/pages/support/contact.php">Liên hệ</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/support/guide.php">Hướng dẫn cài đặt</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/support/contact.php">Yêu cầu hỗ trợ</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Liên hệ</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn cài đặt</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Yêu cầu hỗ trợ</a></li>
                         </ul>
                     </div>
                     
@@ -355,7 +355,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         <ul>
                             <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Đăng nhập</a></li>
                             <li><a href="<?php echo $base_path; ?>/pages/auth/register.php">Đăng ký</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/referral/dashboard_referal.php">Chương trình giới thiệu</a></li>
+                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Chương trình giới thiệu</a></li>
                         </ul>
                     </div>
                 </div>

@@ -50,9 +50,10 @@ error_log("[Process Withdrawal] Authenticated User ID: $user_id");
 
 // Input Sanitization and Validation
 $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
-$bankName = filter_input(INPUT_POST, 'bank_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+// Use htmlspecialchars_decode to prevent double-encoding and preserve Vietnamese characters
+$bankName = isset($_POST['bank_name']) ? htmlspecialchars_decode(trim($_POST['bank_name']), ENT_QUOTES) : '';
 $accountNumber = filter_input(INPUT_POST, 'account_number', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$accountHolder = filter_input(INPUT_POST, 'account_holder', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$accountHolder = isset($_POST['account_holder']) ? htmlspecialchars_decode(trim($_POST['account_holder']), ENT_QUOTES) : '';
 
 error_log("[Process Withdrawal] Input Data - User ID: $user_id, Amount: '$amount', BankName: '$bankName', AccountNumber: '$accountNumber', AccountHolder: '$accountHolder'");
 

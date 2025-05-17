@@ -397,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Nhúng file JavaScript đã tách -->
 <script src="<?php echo $base_url . $base_path; ?>/assets/js/pages/referral/dashboard_referal.js"></script>
+<script src="<?php echo $base_url . $base_path; ?>/assets/js/pages/referral/bank-selector.js"></script>
 
 <?php
 // Include footer

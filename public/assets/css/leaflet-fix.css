@@ -1,0 +1,28 @@
+/* Fix for Leaflet map appearing above fixed elements */
+.leaflet-map-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-pane,
+.leaflet-overlay-pane,
+.leaflet-shadow-pane,
+.leaflet-marker-pane,
+.leaflet-popup-pane,
+.leaflet-tooltip-pane,
+.leaflet-control {
+    z-index: 1 !important;
+}
+
+.leaflet-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-top, 
+.leaflet-bottom {
+    z-index: 10 !important;
+}
+
+/* Ensure site-header remains on top */
+.site-header {
+    z-index: 1000 !important;
+}

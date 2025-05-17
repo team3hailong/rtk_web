@@ -23,6 +23,7 @@ include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+<link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/leaflet-fix.css">
 <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/map.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>

@@ -194,20 +194,27 @@ img {
     color: var(--primary);
     background-color: transparent;
     border: 1px solid var(--primary);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
 .btn-login:hover {
-    color: white;
-    background-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
 }
 
 .btn-register {
-    color: white;
+    color: white !important;
     background-color: var(--primary);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
 .btn-register:hover {
-    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
 }
 
 .btn-view-all {
@@ -221,7 +228,7 @@ img {
     top: 0;
     background-color: white;
     box-shadow: var(--shadow);
-    z-index: 100;
+    z-index: 1000;  /* Increased from 100 to be above Leaflet elements */
     padding: var(--spacing-4) 0;
 }
 
@@ -259,7 +266,7 @@ img {
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--primary);
+
 }
 
 .mobile-menu-toggle {
@@ -376,6 +383,7 @@ img {
     border-radius: var(--rounded-md);
     overflow: hidden;
     position: relative;
+    z-index: 1; /* Add explicit z-index to ensure it stays below the header */
 }
 
 .view-all-stations {

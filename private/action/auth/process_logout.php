@@ -38,7 +38,7 @@ session_destroy();
 // Define the base path for redirection (adjust if necessary)
 $base_path = '/public'; // Or determine dynamically if needed
 
-// Redirect to the login page
-header("Location: " . $base_path . "/pages/auth/login.php");
+// Redirect to the homepage instead of login
+header("Location: " . $base_path . "/pages/homepage.php");
 exit();
 ?>

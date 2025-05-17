@@ -53,6 +53,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     
     <!-- Leaflet for map display -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <!-- Leaflet z-index fix -->
+    <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/leaflet-fix.css">
     
     <!-- Custom favicon -->
     <link rel="icon" href="<?php echo $base_path; ?>/assets/images/favicon.ico" type="image/x-icon">
@@ -101,7 +103,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-secondary">Xem bản đồ trạm</a>
                 </div>
             </div>            <div class="hero-map-container">
-                <h3>Bản đồ trạm RTK</h3>
+                <h3>Bản đồ trạm base</h3>
                 <div id="hero-map" class="hero-map"></div>
                 <div class="view-all-stations">
                     <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn-view-all-stations">Xem chi tiết bản đồ <i class="fas fa-arrow-right"></i></a>
@@ -480,7 +482,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         color: circleColor,
                         fillColor: circleColor,
                         fillOpacity: 0.3,
-                        weight: 1
+                        weight: 1,
+                        className: 'map-circle' // Add a class for styling
                     }).addTo(map);
                 }
             });

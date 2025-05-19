@@ -89,8 +89,15 @@ function buildPaginationUrl(options = {}) {
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.filter-button');
     const transactionRows = document.querySelectorAll('.transactions-table tbody tr');
-    const searchBox = document.querySelector('.search-box');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const resetButton = document.getElementById('reset-button');
     const perPageSelect = document.getElementById('per-page');
+    const amountFilter = document.getElementById('amount-filter');
+    const timeFilter = document.getElementById('time-filter');
+    const dateFrom = document.getElementById('date-from');
+    const dateTo = document.getElementById('date-to');
+    const customTimeFilters = document.querySelectorAll('.time-custom-filter');
     
     // Handle filter buttons (redirect with the selected filter)
     filterButtons.forEach(button => {
@@ -119,14 +126,84 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Handle client-side search (doesn't affect pagination)
-    if (searchBox) {
-        searchBox.addEventListener('input', function() {
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
             applyClientSideSearch();
         });
     }
     
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            applyClientSideSearch();
+        });
+    }
+    
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            // Reset all filters
+            if (searchInput) searchInput.value = '';
+            if (amountFilter) amountFilter.value = 'all';
+            if (timeFilter) timeFilter.value = 'all';
+            if (dateFrom) dateFrom.value = '';
+            if (dateTo) dateTo.value = '';
+            
+            // Hide custom date inputs
+            customTimeFilters.forEach(filter => {
+                filter.style.display = 'none';
+            });
+            
+            // Apply the reset filters
+            applyClientSideSearch();
+        });
+    }
+    
+    // Handle amount filter
+    if (amountFilter) {
+        amountFilter.addEventListener('change', function() {
+            applyClientSideSearch();
+        });
+    }
+    
+    // Handle time filter
+    if (timeFilter) {
+        timeFilter.addEventListener('change', function() {
+            const selectedValue = this.value;
+            
+            // Show/hide custom date inputs based on selection
+            if (selectedValue === 'custom') {
+                customTimeFilters.forEach(filter => {
+                    filter.style.display = 'flex';
+                });
+            } else {
+                customTimeFilters.forEach(filter => {
+                    filter.style.display = 'none';
+                });
+            }
+            
+            applyClientSideSearch();
+        });
+    }
+    
+    // Handle date inputs
+    if (dateFrom) {
+        dateFrom.addEventListener('change', function() {
+            applyClientSideSearch();
+        });
+    }
+    
+    if (dateTo) {
+        dateTo.addEventListener('change', function() {
+            applyClientSideSearch();
+        });
+    }
+
+    // Define the applyClientSideSearch function with new filter functionality
     function applyClientSideSearch() {
-        const searchTerm = searchBox.value.toLowerCase().trim();
+        const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const selectedAmountFilter = amountFilter ? amountFilter.value : 'all';
+        const selectedTimeFilter = timeFilter ? timeFilter.value : 'all';
+        const fromDate = dateFrom && dateFrom.value ? new Date(dateFrom.value) : null;
+        const toDate = dateTo && dateTo.value ? new Date(dateTo.value) : null;
         
         transactionRows.forEach(row => {
             if (row.querySelector('.empty-state')) {
@@ -134,12 +211,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            const idCell = row.cells[0]?.textContent.toLowerCase() || '';
-            const timeCell = row.cells[1]?.textContent.toLowerCase() || '';
-            const amountCell = row.cells[2]?.textContent.toLowerCase() || '';
-            const methodCell = row.cells[3]?.textContent.toLowerCase() || '';
-            const statusCell = row.cells[4]?.textContent.toLowerCase() || '';
+            const idCell = row.cells[1]?.textContent.toLowerCase() || '';
+            const timeCell = row.cells[2]?.textContent.toLowerCase() || '';
+            const amountCell = row.cells[3]?.textContent.toLowerCase() || '';
+            const amountValue = parseFloat(amountCell.replace(/[^\d]/g, ''));
+            const methodCell = row.cells[4]?.textContent.toLowerCase() || '';
+            const statusCell = row.cells[5]?.textContent.toLowerCase() || '';
+            const rowDate = row.cells[2]?.textContent ? new Date(row.cells[2].textContent) : null;
             
+            // Text search match
             const searchMatch = (searchTerm === '' || 
                                 idCell.includes(searchTerm) || 
                                 timeCell.includes(searchTerm) || 
@@ -147,7 +227,60 @@ document.addEventListener('DOMContentLoaded', function() {
                                 methodCell.includes(searchTerm) ||
                                 statusCell.includes(searchTerm));
             
-            if (searchMatch) {
+            // Amount filter match
+            let amountMatch = true;
+            if (selectedAmountFilter !== 'all') {
+                if (selectedAmountFilter === 'less-than-500k' && amountValue >= 500000) {
+                    amountMatch = false;
+                } else if (selectedAmountFilter === '500k-to-1m' && (amountValue < 500000 || amountValue > 1000000)) {
+                    amountMatch = false;
+                } else if (selectedAmountFilter === '1m-to-5m' && (amountValue < 1000000 || amountValue > 5000000)) {
+                    amountMatch = false;
+                } else if (selectedAmountFilter === 'more-than-5m' && amountValue <= 5000000) {
+                    amountMatch = false;
+                }
+            }
+            
+            // Date/time filter match
+            let timeMatch = true;
+            if (selectedTimeFilter !== 'all' && rowDate) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const lastWeekStart = new Date(today);
+                lastWeekStart.setDate(today.getDate() - 7);
+                
+                const lastMonthStart = new Date(today);
+                lastMonthStart.setMonth(today.getMonth() - 1);
+                
+                if (selectedTimeFilter === 'today') {
+                    const dateOnly = new Date(rowDate);
+                    dateOnly.setHours(0, 0, 0, 0);
+                    timeMatch = dateOnly.getTime() === today.getTime();
+                } else if (selectedTimeFilter === 'last-week') {
+                    timeMatch = rowDate >= lastWeekStart && rowDate <= today;
+                } else if (selectedTimeFilter === 'last-month') {
+                    timeMatch = rowDate >= lastMonthStart && rowDate <= today;
+                } else if (selectedTimeFilter === 'custom') {
+                    if (fromDate && toDate) {
+                        // Adjust toDate to the end of the day for inclusive comparison
+                        const adjustedToDate = new Date(toDate);
+                        adjustedToDate.setHours(23, 59, 59, 999);
+                        
+                        timeMatch = rowDate >= fromDate && rowDate <= adjustedToDate;
+                    } else if (fromDate) {
+                        timeMatch = rowDate >= fromDate;
+                    } else if (toDate) {
+                        // Adjust toDate to the end of the day for inclusive comparison
+                        const adjustedToDate = new Date(toDate);
+                        adjustedToDate.setHours(23, 59, 59, 999);
+                        
+                        timeMatch = rowDate <= adjustedToDate;
+                    }
+                }
+            }
+            
+            if (searchMatch && amountMatch && timeMatch) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
@@ -183,10 +316,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initialize search
-    if (searchBox) {
-        applyClientSideSearch();
-    }
-
+    applyClientSideSearch();
+    
     // Retail invoice export logic
     const exportBtn = document.getElementById('export-retail-invoice-btn');
     const checkboxes = document.querySelectorAll('.retail-invoice-checkbox');

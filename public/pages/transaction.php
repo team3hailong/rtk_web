@@ -67,27 +67,98 @@ function getPaginationUrl($page, $perPage, $filter) {
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper transactions-content-wrapper">
-        <div class="transactions-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Giao Dịch</h2>
-            <div class="filter-section">
-                <div class="filter-buttons-group">
-                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
-                    <button class="filter-button <?php echo $filter === 'completed' ? 'active' : ''; ?>" data-filter="completed">Hoàn thành</button>
-                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Chờ xử lý</button>
-                    <button class="filter-button <?php echo $filter === 'failed' ? 'active' : ''; ?>" data-filter="failed">Thất bại</button>
+        <div class="transactions-wrapper">            <h2 class="text-2xl font-semibold mb-5">Quản Lý Giao Dịch</h2>
+            <div class="filter-container">
+                <div class="filter-group-header">
+                    <span class="filter-group-title">Bộ lọc</span>
                 </div>
-                <div class="search-and-per-page">
-                    <div class="per-page-selector">
-                        <label for="per-page">Hiển thị:</label>
-                        <select id="per-page" class="per-page-select">
-                            <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
-                            <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
-                            <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
-                        </select>
+                <div class="filter-group-content">
+                    <div class="filter-row">
+                        <!-- Lọc theo trạng thái -->
+                        <div class="filter-group-item">
+                            <div class="filter-label">Trạng thái:</div>
+                            <div class="filter-buttons-group">
+                                <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
+                                <button class="filter-button <?php echo $filter === 'completed' ? 'active' : ''; ?>" data-filter="completed">Hoàn thành</button>
+                                <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Chờ xử lý</button>
+                                <button class="filter-button <?php echo $filter === 'failed' ? 'active' : ''; ?>" data-filter="failed">Thất bại</button>
+                            </div>
+                        </div>
+
+                        <!-- Lọc theo số tiền -->
+                        <div class="filter-group-item">
+                            <div class="filter-label">Số tiền:</div>
+                            <div class="filter-dropdown-group">
+                                <select id="amount-filter" class="filter-select">
+                                    <option value="all">Tất cả</option>
+                                    <option value="less-than-500k">Dưới 500.000 đ</option>
+                                    <option value="500k-to-1m">500.000 đ - 1.000.000 đ</option>
+                                    <option value="1m-to-5m">1.000.000 đ - 5.000.000 đ</option>
+                                    <option value="more-than-5m">Trên 5.000.000 đ</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <input type="text" class="search-box" placeholder="Tìm theo ID, Loại GD...">
+
+                    <div class="filter-row">
+                        <!-- Lọc theo thời gian -->
+                        <div class="filter-group-item">
+                            <div class="filter-label">Thời gian:</div>
+                            <div class="filter-dropdown-group">
+                                <select id="time-filter" class="filter-select">
+                                    <option value="all">Tất cả</option>
+                                    <option value="today">Hôm nay</option>
+                                    <option value="last-week">Tuần trước</option>
+                                    <option value="last-month">Tháng trước</option>
+                                    <option value="custom">Tùy chỉnh</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Tùy chỉnh thời gian (hiển thị khi chọn tùy chỉnh) -->
+                        <div class="filter-group-item time-custom-filter" style="display: none;">
+                            <div class="filter-label">Từ ngày:</div>
+                            <div class="filter-input-group">
+                                <input type="date" id="date-from" class="filter-date-input">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group-item time-custom-filter" style="display: none;">
+                            <div class="filter-label">Đến ngày:</div>
+                            <div class="filter-input-group">
+                                <input type="date" id="date-to" class="filter-date-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-row">
+                        <!-- Tìm kiếm -->
+                        <div class="filter-group-item search-container">
+                            <div class="filter-label">Tìm kiếm:</div>
+                            <div class="search-group">
+                                <input type="text" class="search-box" id="search-input" placeholder="Tìm theo ID, Loại GD...">
+                                <button type="button" id="search-button" class="search-button">
+                                    <i class="fas fa-search"></i> <span>Tìm kiếm</span>
+                                </button>
+                                <button type="button" id="reset-button" class="reset-button">
+                                    <i class="fas fa-redo"></i> <span>Đặt lại</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group-item" style="margin-left: auto;">
+                            <div class="filter-label">Hiển thị:</div>
+                            <div class="per-page-selector">
+                                <select id="per-page" class="filter-select">
+                                    <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
+                                    <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
+                                    <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>            <div class="export-invoice-section">
+            </div><div class="export-invoice-section">
                 <button id="export-retail-invoice-btn" class="btn-retail-invoice" disabled>
                     <i class="fas fa-file-invoice"></i> Xuất HĐ bán lẻ
                 </button>

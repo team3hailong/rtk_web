@@ -59,11 +59,11 @@ function getPaginationUrl($page, $perPage, $filter) {
     $params['per_page'] = $perPage;
     if ($filter !== 'all') {
         $params['filter'] = $filter;
-    }
-    return '?' . http_build_query($params);
+    }    return '?' . http_build_query($params);
 }
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/transaction/transaction.css" />
+<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/transaction/time-display.css" />
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <div class="content-wrapper transactions-content-wrapper">
@@ -164,12 +164,11 @@ function getPaginationUrl($page, $perPage, $filter) {
                 </button>
                 <span id="retail-invoice-msg" style="color: #e74c3c; margin-left: 10px;"></span>
             </div>
-            <div class="transactions-table-wrapper">
-                <table class="transactions-table">                    <thead>
+            <div class="transactions-table-wrapper">                <table class="transactions-table">                    <thead>
                         <tr>
                             <th>Chọn</th>
                             <th>ID Giao dịch</th>
-                            <th>Thời gian</th>
+                            <th>Thời gian xử lý</th>
                             <th>Số tiền</th>
                             <th>Phương thức</th>
                             <th>Trạng thái</th>
@@ -182,10 +181,10 @@ function getPaginationUrl($page, $perPage, $filter) {
                                 <?php $status_display = Transaction::getTransactionStatusDisplay($tx['status']); ?>
                                 <?php
                                     $description = ucfirst($tx['transaction_type']);
-                                    if (!empty($tx['registration_id'])) {
-                                        $description .= ' (ĐK: ' . htmlspecialchars($tx['registration_id']) . ')';
+                                    if (!empty($tx['registration_id'])) {                                        $description .= ' (ĐK: ' . htmlspecialchars($tx['registration_id']) . ')';
                                     }
-                                    $display_id = 'GD' . str_pad($tx['id'], 5, '0', STR_PAD_LEFT);                                    $tx_details_for_modal = [
+                                    $display_id = 'GD' . str_pad($tx['id'], 5, '0', STR_PAD_LEFT);
+                                    $tx_details_for_modal = [
                                         'id' => $display_id,
                                         'raw_id' => $tx['id'],
                                         'time' => $tx['created_at'],
@@ -193,16 +192,19 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         'amount' => number_format($tx['amount'], 0, ',', '.') . ' đ',
                                         'method' => $tx['payment_method'] ?? 'N/A',
                                         'status_text' => $status_display['text'],
-                                        'status_class' => $status_display['class'],
-                                        'updated_at' => $tx['updated_at'],
+                                        'status_class' => $status_display['class'],                                        'updated_at' => $tx['updated_at'],
                                         'rejection_reason' => $tx['rejection_reason'] ?? null,
                                         'payment_image' => $tx['payment_image'] ?? null
                                     ];
                                     $tx_details_json = htmlspecialchars(json_encode($tx_details_for_modal), ENT_QUOTES, 'UTF-8');
-                                ?>                                <tr data-status="<?php echo strtolower($tx['status']); ?>">
+                                ?>
+                                <tr data-status="<?php echo strtolower($tx['status']); ?>" data-transaction-time="<?php echo htmlspecialchars($tx['updated_at']); ?>">
                                     <td class="checkbox-column"><input type="checkbox" class="retail-invoice-checkbox" value="<?php echo $tx['id']; ?>" /></td>
                                     <td><strong><?php echo htmlspecialchars($display_id); ?></strong></td>
-                                    <td><?php echo htmlspecialchars($tx['created_at']); ?></td>
+                                    <td>
+                                        <div>Tạo: <?php echo htmlspecialchars($tx['created_at']); ?></div>
+                                        <div class="text-secondary">Xử lý: <?php echo htmlspecialchars($tx['updated_at']); ?></div>
+                                    </td>
                                     <td class="amount"><?php echo number_format($tx['amount'], 0, ',', '.'); ?> đ</td>
                                     <td><?php echo htmlspecialchars($tx['payment_method'] ?? 'N/A'); ?></td>
                                     <td class="status">

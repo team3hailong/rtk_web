@@ -1,0 +1,14 @@
+/* Transaction time display */
+.text-secondary {
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.transactions-table td {
+    vertical-align: middle;
+}
+
+/* Time cells with both creation and processing time */
+.transactions-table td div {
+    line-height: 1.4;
+}

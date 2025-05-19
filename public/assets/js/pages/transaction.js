@@ -217,7 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const amountValue = parseFloat(amountCell.replace(/[^\d]/g, ''));
             const methodCell = row.cells[4]?.textContent.toLowerCase() || '';
             const statusCell = row.cells[5]?.textContent.toLowerCase() || '';
-            const rowDate = row.cells[2]?.textContent ? new Date(row.cells[2].textContent) : null;
+              // Get the transaction time using our helper function
+            const rowDate = getRowDate(row);
             
             // Text search match
             const searchMatch = (searchTerm === '' || 
@@ -375,5 +376,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 exportBtn.disabled = false;
             });
         });
+    }
+      // Add an information note about time filtering
+    const timeFilterLabels = document.querySelectorAll('.filter-group-item .filter-label');
+    timeFilterLabels.forEach(label => {
+        if (label.textContent.includes('Thời gian:')) {
+            const infoIcon = document.createElement('i');
+            infoIcon.className = 'fas fa-info-circle time-tooltip';
+            infoIcon.style.marginLeft = '5px';
+            infoIcon.title = 'Lọc theo thời gian xử lý (updated_at), không phải thời gian tạo (created_at)';
+            label.appendChild(infoIcon);
+        }
+    });
+    
+    // Update row date filters to ensure we're using the processing time (updated_at)
+    function getRowDate(row) {
+        // First try to get from data-transaction-time attribute
+        if (row.getAttribute('data-transaction-time')) {
+            return new Date(row.getAttribute('data-transaction-time'));
+        } 
+        
+        // Then try to get from the hidden span
+        const updatedTimeElement = row.querySelector('.transaction-updated-time');
+        if (updatedTimeElement && updatedTimeElement.textContent) {
+            return new Date(updatedTimeElement.textContent.trim());
+        }
+        
+        // Look for "Xử lý:" in the time cell as a fallback
+        const timeCell = row.cells[2]?.innerHTML || '';
+        const updatedTimeMatch = timeCell.match(/Xử lý: ([^<]+)/);
+        if (updatedTimeMatch && updatedTimeMatch[1]) {
+            return new Date(updatedTimeMatch[1].trim());
+        }
+        
+        // Last fallback to visible time (should be handled by one of the above methods)
+        return row.cells[2]?.textContent ? new Date(row.cells[2].textContent) : null;
+    }
+
+    // Update the table header to make it clear which time is used for filtering
+    const timeHeader = document.querySelector('.transactions-table thead th:nth-child(3)');
+    if (timeHeader) {
+        // Update the header text to clarify that filtering is based on processing time
+        timeHeader.innerHTML = 'Thời gian <i class="fas fa-info-circle" title="Bộ lọc thời gian sử dụng thời gian xử lý"></i>';
     }
 });

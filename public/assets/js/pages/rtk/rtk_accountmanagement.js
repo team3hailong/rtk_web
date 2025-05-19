@@ -23,11 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Renewal elements
     const renewalBtn = document.getElementById('renewal-btn');
     const renewalForm = document.getElementById('renewal-form');
-    
-    // Theo dõi trạng thái lọc và tìm kiếm hiện tại
+      // Theo dõi trạng thái lọc và tìm kiếm hiện tại
     let currentFilter = paginationConfig.currentFilter || 'all';
     let currentSearchTerm = '';
-    
+    let currentRemainingTimeFilter = 'all';
     // Xử lý chọn tài khoản và cập nhật trạng thái nút xuất Excel
     function updateExportButtonState() {
         const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
@@ -197,21 +196,72 @@ document.addEventListener('DOMContentLoaded', function() {
         // Trả về URL với các tham số mới
         const queryString = newParams.toString();
         return queryString ? `?${queryString}` : window.location.pathname;
+    }    // Search functionality
+    const searchBox = document.querySelector('.search-box');
+    const searchButton = document.getElementById('search-button');
+    const resetButton = document.getElementById('reset-button');
+    
+    // Search button click handler
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            if (searchBox) {
+                currentSearchTerm = searchBox.value.toLowerCase().trim();
+                applyFilters();
+            }
+        });
+    }
+    
+    // Reset button click handler
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            if (searchBox) {
+                searchBox.value = '';
+                currentSearchTerm = '';
+            }
+            
+            if (remainingTimeFilter) {
+                remainingTimeFilter.value = 'all';
+                currentRemainingTimeFilter = 'all';
+            }
+            
+            // Reset status buttons if not server-side filters
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                if (button.dataset.filter === 'all') {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            currentFilter = 'all';
+            
+            // Apply the filters after reset
+            applyFilters();
+        });
+    }
+    
+    // Also keep input event for real-time filtering if preferred
+    if (searchBox) {
+        searchBox.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                currentSearchTerm = this.value.toLowerCase().trim();
+                applyFilters();
+                e.preventDefault();
+            }
+        });
     }
 
-    // Search functionality
-    const searchBox = document.querySelector('.search-box');
-    if (searchBox) {
-        searchBox.addEventListener('input', function() {
-            // Lấy giá trị tìm kiếm
-            currentSearchTerm = this.value.toLowerCase().trim();
+    // Remaining time filter functionality
+    const remainingTimeFilter = document.getElementById('remaining-time-filter');
+    if (remainingTimeFilter) {
+        remainingTimeFilter.addEventListener('change', function() {
+            // Lấy giá trị filter thời hạn còn lại
+            currentRemainingTimeFilter = this.value;
             
             // Áp dụng lọc và tìm kiếm
             applyFilters();
         });
-    }
-
-    // Tập hợp tất cả các bộ lọc và áp dụng vào danh sách tài khoản
+    }// Tập hợp tất cả các bộ lọc và áp dụng vào danh sách tài khoản
     function applyFilters() {
         const accounts = document.querySelectorAll('.accounts-table tbody tr:not(.empty-state-row)');
         let visibleCount = 0;
@@ -231,8 +281,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 matchesFilter = (currentFilter === accountStatus);
             }
             
+            // Kiểm tra điều kiện lọc theo thời hạn còn lại
+            let matchesRemainingTime = true;
+            if (currentRemainingTimeFilter !== 'all') {
+                const remainingDays = parseInt(account.dataset.remainingDays, 10);
+                
+                switch(currentRemainingTimeFilter) {
+                    case 'less-than-7':
+                        matchesRemainingTime = (remainingDays >= 0 && remainingDays < 7);
+                        break;
+                    case '7-to-30':
+                        matchesRemainingTime = (remainingDays >= 7 && remainingDays <= 30);
+                        break;
+                    case '30-to-90':
+                        matchesRemainingTime = (remainingDays > 30 && remainingDays <= 90);
+                        break;
+                    case 'more-than-90':
+                        matchesRemainingTime = (remainingDays > 90);
+                        break;
+                }
+            }
+            
             // Hiển thị/ẩn dựa trên kết quả lọc
-            const shouldDisplay = matchesSearch && matchesFilter;
+            const shouldDisplay = matchesSearch && matchesFilter && matchesRemainingTime;
             account.style.display = shouldDisplay ? '' : 'none';
             if (shouldDisplay) visibleCount++;
         });

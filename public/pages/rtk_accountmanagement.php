@@ -24,7 +24,9 @@ require_once $project_root_path . '/private/classes/RtkAccount.php';
 
 // Chỉ include file CSS/JS tối ưu (đã gộp, không include file cũ)
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css">';
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/time-remaining.css">';
 echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>';
+echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_filter_extension.js"></script>';
 
 // --- Xử lý tham số từ URL cho phân trang ---
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -107,25 +109,52 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>
-            
-            <div class="filter-section">
-                <div class="filter-buttons-group">
-                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
-                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
-                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
-                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <div class="filter-container">
+                <div class="filter-group-header">
+                    <span class="filter-group-title">Bộ lọc</span>
                 </div>
-                <div class="search-and-per-page">
-                    <div class="per-page-selector">
-                        <label for="per-page">Hiển thị:</label>
-                        <select id="per-page" class="per-page-select">
-                            <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
-                            <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
-                            <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
-                        </select>
+                <div class="filter-group-content">
+                    <div class="filter-row">
+                        <!-- Lọc theo trạng thái -->
+                        <div class="filter-group-item">
+                            <div class="filter-label">Trạng thái:</div>
+                            <div class="filter-buttons-group">
+                                <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
+                                <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
+                                <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
+                                <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
+                            </div>
+                        </div>
+
+                        <!-- Lọc theo thời hạn còn lại -->
+                        <div class="filter-group-item">
+                            <div class="filter-label">Thời hạn còn lại:</div>
+                            <div class="filter-dropdown-group">
+                                <select id="remaining-time-filter" class="filter-select">
+                                    <option value="all">Tất cả</option>
+                                    <option value="less-than-7">Dưới 7 ngày</option>
+                                    <option value="7-to-30">7 - 30 ngày</option>
+                                    <option value="30-to-90">30 - 90 ngày</option>
+                                    <option value="more-than-90">Trên 90 ngày</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <input type="text" class="search-box" placeholder="Tìm kiếm theo ID, Tên TK, Tên trạm...">
+
+                    <div class="filter-row">
+                        <!-- Tìm kiếm -->
+                        <div class="filter-group-item search-container">
+                            <div class="filter-label">Tìm kiếm:</div>
+                            <div class="search-group">
+                                <input type="text" class="search-box" id="search-input" placeholder="Tên TK, Tỉnh, Trạm...">                                <button type="button" id="search-button" class="search-button">
+                                    <i class="fas fa-search"></i> <span>Tìm kiếm</span>
+                                </button>
+                                <button type="button" id="reset-button" class="reset-button">
+                                    <i class="fas fa-redo"></i> <span>Đặt lại</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -197,12 +226,16 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             $status_text = 'Không xác định';
                                         }
                                         
-                                        // Chuỗi search terms
-                                        $search_terms = [];
+                                        // Chuỗi search terms                                        $search_terms = [];
                                         $search_terms[] = $account['id'] ?? '';
                                         $search_terms[] = $account['username_acc'] ?? '';
                                         $search_terms[] = $account['province'] ?? '';
                                         $search_terms[] = $status_text ?? '';  // Thêm status text vào search terms
+                                        
+                                        // Thêm thời hạn còn lại vào search terms
+                                        $days_diff_data = calculate_days_diff($account['effective_end_time']);
+                                        $remaining_days = $days_diff_data['remaining'] !== null ? $days_diff_data['remaining'] : 0;
+                                        
                                         if (!empty($account['mountpoints'])) {
                                             foreach ($account['mountpoints'] as $mp) {
                                                 $search_terms[] = $mp['mountpoint'] ?? '';
@@ -210,7 +243,8 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         }
                                         $search_terms = array_filter($search_terms); 
                                         $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
-                                          // JSON data cho modal và export
+                                        
+                                        // JSON data cho modal và export
                                         $account_details = [
                                             'id' => $account['id'],
                                             'username' => $account['username_acc'],
@@ -222,17 +256,22 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             'province' => $account['province'] ?? 'N/A',
                                             'mountpoints' => $account['mountpoints'] ?? [],
                                             'package_id' => $account['package_id'] ?? 0
-                                        ];
-                                        $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
-                                    ?>                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>">
+                                        ];                                        $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
+                                    ?>                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>" data-remaining-days="<?php echo $remaining_days; ?>">
                                         <td class="select-column">
                                             <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox" data-package-id="<?php echo $account['package_id']; ?>">
                                         </td>
                                         <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                         <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
-                                        <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
-                                        <td><?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?></td>
+                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>                                        <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
+                                        <td>
+                                            <?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?>
+                                            <?php if ($account['status'] === 'active'): ?>
+                                                <span class="time-remaining">(Còn <?php echo $days_diff_data['remaining']; ?> ngày)</span>
+                                            <?php elseif ($account['status'] === 'expired'): ?>
+                                                <span class="time-expired">(Quá hạn <?php echo $days_diff_data['expired']; ?> ngày)</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="status">
                                             <span class="status-badge <?php echo $status_class; ?>">
                                                 <?php echo htmlspecialchars($status_text); ?>
@@ -252,69 +291,80 @@ function getPaginationUrl($page, $perPage, $filter) {
                 </div>
             </form>
             
-            <!-- Pagination controls -->
-            <?php if ($pagination['total_pages'] > 1): ?>
-            <div class="pagination-controls">
-                <div class="pagination-info">
-                    Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
-                    đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 
-                    trong tổng số <?php echo $pagination['total']; ?> tài khoản
+            <!-- Pagination controls -->            <?php if ($pagination['total_pages'] > 1 || true): ?>
+            <div class="pagination-footer">
+                <div class="per-page-container">
+                    <label for="per-page">Hiển thị:</label>
+                    <select id="per-page" class="per-page-select">
+                        <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
+                        <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                    </select>
+                    <span>bản ghi / trang</span>
                 </div>
-                <div class="pagination-buttons">
-                    <?php if ($pagination['current_page'] > 1): ?>
-                        <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
-                            <i class="fas fa-angle-double-left"></i>
-                        </a>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
-                            <i class="fas fa-angle-left"></i>
-                        </a>
-                    <?php else: ?>
-                        <span class="pagination-button disabled">
-                            <i class="fas fa-angle-double-left"></i>
-                        </span>
-                        <span class="pagination-button disabled">
-                            <i class="fas fa-angle-left"></i>
-                        </span>
-                    <?php endif; ?>
-                    
-                    <?php
-                    // Display pagination numbers with ellipsis for large page counts
-                    $start = max(1, $pagination['current_page'] - 2);
-                    $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
-                    
-                    if ($start > 1) {
-                        echo '<span class="pagination-ellipsis">...</span>';
-                    }
-                    
-                    for ($i = $start; $i <= $end; $i++):
-                    ?>
-                        <?php if ($i == $pagination['current_page']): ?>
-                            <span class="pagination-button active"><?php echo $i; ?></span>
+                
+                <div class="pagination-controls">
+                    <div class="pagination-info">
+                        Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
+                        đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 
+                        trong tổng số <?php echo $pagination['total']; ?> tài khoản
+                    </div>
+                    <div class="pagination-buttons">
+                        <?php if ($pagination['current_page'] > 1): ?>
+                            <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                            <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
                         <?php else: ?>
-                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
+                            <span class="pagination-button disabled">
+                                <i class="fas fa-angle-double-left"></i>
+                            </span>
+                            <span class="pagination-button disabled">
+                                <i class="fas fa-angle-left"></i>
+                            </span>
                         <?php endif; ?>
-                    <?php endfor; 
-                    
-                    if ($end < $pagination['total_pages']) {
-                        echo '<span class="pagination-ellipsis">...</span>';
-                    }
-                    ?>
-                    
-                    <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                        <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
-                            <i class="fas fa-angle-right"></i>
-                        </a>
-                        <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
-                            <i class="fas fa-angle-double-right"></i>
-                        </a>
-                    <?php else: ?>
-                        <span class="pagination-button disabled">
-                            <i class="fas fa-angle-right"></i>
-                        </span>
-                        <span class="pagination-button disabled">
-                            <i class="fas fa-angle-double-right"></i>
-                        </span>
-                    <?php endif; ?>
+                        
+                        <?php
+                        // Display pagination numbers with ellipsis for large page counts
+                        $start = max(1, $pagination['current_page'] - 2);
+                        $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
+                        
+                        if ($start > 1) {
+                            echo '<span class="pagination-ellipsis">...</span>';
+                        }
+                        
+                        for ($i = $start; $i <= $end; $i++):
+                        ?>
+                            <?php if ($i == $pagination['current_page']): ?>
+                                <span class="pagination-button active"><?php echo $i; ?></span>
+                            <?php else: ?>
+                                <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
+                            <?php endif; ?>
+                        <?php endfor; 
+                        
+                        if ($end < $pagination['total_pages']) {
+                            echo '<span class="pagination-ellipsis">...</span>';
+                        }
+                        ?>
+                        
+                        <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                            <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                            <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="pagination-button disabled">
+                                <i class="fas fa-angle-right"></i>
+                            </span>
+                            <span class="pagination-button disabled">
+                                <i class="fas fa-angle-double-right"></i>
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
             <?php endif; ?>

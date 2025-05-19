@@ -1,0 +1,14 @@
+/* Time remaining/expired display */
+.time-remaining, .time-expired {
+    display: block;
+    font-size: var(--font-size-xs);
+    margin-top: 0.25rem;
+}
+
+.time-remaining {
+    color: var(--green-600);
+}
+
+.time-expired {
+    color: var(--red-text-dark);
+}

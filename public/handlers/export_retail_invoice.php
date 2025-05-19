@@ -157,6 +157,36 @@ $css = '
 ';
 
 foreach ($retail_invoices as $invoice) {
+    // Lấy thông tin công ty
+    $db_company = new Database();
+    $pdo_company = $db_company->getConnection();
+    $stmt_company = $pdo_company->prepare("SELECT * FROM company_info ORDER BY id ASC LIMIT 1");
+    $stmt_company->execute();
+    $company = $stmt_company->fetch(PDO::FETCH_ASSOC) ?: [];
+    $companyName = $company['name'] ?? '';
+    $companyTax = $company['tax_code'] ?? '';
+    $companyPhone = $company['phone'] ?? '';
+    $companyEmail = $company['email'] ?? '';
+    $companyWebsite = $company['website'] ?? '';
+    $addresses = json_decode($company['address'] ?? '[]', true);
+    $headOffice = '';
+    foreach ($addresses as $addr) {
+        if (($addr['type'] ?? '') === 'trụ sở') {
+            $headOffice = $addr['location'];
+            break;
+        }
+    }
+    // Build dynamic company info HTML
+    $company_info_html = '<div class="company-info info-section">'
+        . '<h3>THÔNG TIN CÔNG TY</h3>'
+        . '<div class="info-row"><div class="info-label">Tên công ty:</div><div>' . htmlspecialchars($companyName) . '</div></div>'
+        . '<div class="info-row"><div class="info-label">Địa chỉ:</div><div>' . htmlspecialchars($headOffice) . '</div></div>'
+        . '<div class="info-row"><div class="info-label">Mã số thuế:</div><div>' . htmlspecialchars($companyTax) . '</div></div>'
+        . '<div class="info-row"><div class="info-label">Điện thoại:</div><div>' . htmlspecialchars($companyPhone) . '</div></div>'
+        . '<div class="info-row"><div class="info-label">Email:</div><div>' . htmlspecialchars($companyEmail) . '</div></div>'
+        . '<div class="info-row"><div class="info-label">Website:</div><div>' . htmlspecialchars($companyWebsite) . '</div></div>'
+        . '</div>';
+
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4',
@@ -187,27 +217,7 @@ foreach ($retail_invoices as $invoice) {
             <h1 class="invoice-title">HÓA ĐƠN BÁN LẺ</h1>
             <div class="invoice-number">Số: ' . $invoice_number . '</div>
         </div>
-        
-        <div class="company-info info-section">
-            <h3>THÔNG TIN CÔNG TY</h3>
-            <div class="info-row">
-                <div class="info-label">Tên công ty:</div>
-                <div>CÔNG TY CỔ PHẦN CÔNG NGHỆ RTK</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Địa chỉ:</div>
-                <div>Số 20, Đường Nguyễn Trãi, Phường Thanh Xuân, Hà Nội</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Mã số thuế:</div>
-                <div>0123456789</div>
-            </div>
-            <div class="info-row">
-                <div class="info-label">Điện thoại:</div>
-                <div>(024) 1234 5678</div>
-            </div>
-        </div>
-        
+' . $company_info_html . '
         <div class="customer-info info-section">
             <h3>THÔNG TIN KHÁCH HÀNG</h3>';
               // Thêm thông tin khách hàng
@@ -274,7 +284,7 @@ foreach ($retail_invoices as $invoice) {
             $html .= '
                     <tr>
                         <td></td>
-                        <td colspan="4">Số lượng tài khoản: ' . htmlspecialchars((string)$invoice['registration_details']['num_account']) . '</td>
+                        <td colspan="4">Số lượng: ' . htmlspecialchars((string)$invoice['registration_details']['num_account']) . '</td>
                     </tr>';
         }
     }

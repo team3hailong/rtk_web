@@ -29,17 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-$tx_ids_input = $data['transaction_ids'] ?? [];
-if (!is_array($tx_ids_input) || count($tx_ids_input) === 0 || count($tx_ids_input) > 5) {
+$tx_ids = $data['transaction_ids'] ?? [];
+if (!is_array($tx_ids) || count($tx_ids) === 0 || count($tx_ids) > 5) {
     http_response_code(400);
     echo json_encode(['error' => 'Chọn tối đa 5 giao dịch']);
     exit;
 }
 
-// Always process only the last transaction from the selection
-$tx_ids = [end($tx_ids_input)];
-
-// Sử dụng service để lấy dữ liệu hóa đơn
+// Sử dụng service để lấy dữ liệu hóa đơn - xử lý tất cả giao dịch được chọn
 $retailInvoiceService = new RetailInvoiceService();
 $retail_invoices = $retailInvoiceService->getRetailInvoicesData($tx_ids, $user_id);
 
@@ -47,11 +44,6 @@ if (empty($retail_invoices)) {
     http_response_code(404);
     echo json_encode(['error' => 'Không tìm thấy giao dịch hợp lệ']);
     exit;
-}
-
-// Always take only the last transaction when multiple are selected
-if (count($retail_invoices) > 1) {
-    $retail_invoices = [end($retail_invoices)];
 }
 
 $tmp_dir = sys_get_temp_dir();
@@ -278,8 +270,8 @@ foreach ($retail_invoices as $invoice) {
                         <td>1</td>
                         <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
                     </tr>';
-    
-    // Thêm thông tin chi tiết về gói dịch vụ nếu có    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {
+      // Thêm thông tin chi tiết về gói dịch vụ nếu có
+    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {
         if (!empty($invoice['registration_details']['province'])) {
             $html .= '
                     <tr>
@@ -335,36 +327,76 @@ foreach ($retail_invoices as $invoice) {
         </div>
     </div>
     ';
+      // Định dạng ngày giờ cho tên file
+    $now = new \DateTime();
+    $dateFormat = $now->format('Y_m_d_H_i_s');
     
-    $file_path = $tmp_dir . '/retail_invoice_' . $invoice['id'] . '_' . uniqid() . '.pdf';
-    $mpdf->WriteHTML($html);
+    // Tạo file PDF với tên có ID giao dịch và ngày giờ
+    $file_path = $tmp_dir . '/hoadonbanle_' . $invoice['id'] . '_' . $dateFormat . '.pdf';    $mpdf->WriteHTML($html);
     $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
     $pdf_files[] = $file_path;
+}
 
 if (count($pdf_files) === 1) {
     $file = $pdf_files[0];
+    
+    // Lấy transaction ID từ tên file
+    $txId = '';
+    if (preg_match('/hoadonbanle_(\d+)_/', basename($file), $matches)) {
+        $txId = $matches[1];
+    }
+    
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="hoa_don_ban_le_' . basename($file) . '"');
-    readfile($file);
-    unlink($file);
+    header('Content-Disposition: attachment; filename="hoadonbanle_' . $txId . '_' . date('Y_m_d_H_i_s') . '.pdf"');
+    readfile($file);    unlink($file);
     exit;
 } else {
-    $zip_path = $tmp_dir . '/retail_invoices_' . uniqid() . '.zip';
+    $zip_path = $tmp_dir . '/hoadonbanle_' . date('Y_m_d_H_i_s') . '.zip';
+    
+    // Kiểm tra xem ZipArchive có khả dụng không
+    if (!class_exists('ZipArchive')) {
+        error_log('PHP ZipArchive extension is not available');
+        http_response_code(500);
+        echo json_encode(['error' => 'Không thể tạo file zip (ZipArchive không khả dụng)']);
+        exit;
+    }
+    
     $zip = new ZipArchive();
-    if ($zip->open($zip_path, ZipArchive::CREATE) === TRUE) {
+    $result = $zip->open($zip_path, ZipArchive::CREATE);
+    if ($result === TRUE) {
         foreach ($pdf_files as $file) {
-            $zip->addFile($file, basename($file));
+            if (file_exists($file)) {
+                // Lấy tên file không có đường dẫn
+                $filename = basename($file);
+                $zip->addFile($file, $filename);
+            } else {
+                error_log('PDF file does not exist: ' . $file);
+            }
         }
         $zip->close();
-        foreach ($pdf_files as $file) unlink($file);
-        header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="hoa_don_ban_le.zip"');
-        readfile($zip_path);
-        unlink($zip_path);
-        exit;
+        
+        // Xóa các file PDF đã được thêm vào ZIP
+        foreach ($pdf_files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+        
+        if (file_exists($zip_path)) {
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="hoadonbanle_' . date('Y_m_d_H_i_s') . '.zip"');
+            readfile($zip_path);
+            unlink($zip_path);
+            exit;
+        } else {
+            http_response_code(500);
+            echo json_encode(['error' => 'Không thể tạo file zip (file không tồn tại)']);
+            exit;
+        }
     } else {
+        error_log('Failed to create ZIP file. Error code: ' . $result);
         http_response_code(500);
-        echo json_encode(['error' => 'Không thể tạo file zip']);
+        echo json_encode(['error' => 'Không thể tạo file zip (mã lỗi: ' . $result . ')']);
         exit;
     }
 }

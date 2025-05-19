@@ -361,12 +361,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     String(now.getSeconds()).padStart(2, '0');
                 let filename;
                 
-                // Get the transaction IDs - always use the last selected transaction for the filename
+                // Get the transaction IDs
                 const txIds = checked.map(cb => cb.value);
-                const lastTxId = txIds[txIds.length - 1]; // Get the last transaction ID
                 
-                // Always create a PDF file named after the last transaction ID, regardless of how many were selected
-                filename = `hoadonbanle_${lastTxId}_${formattedDate}.pdf`;
+                if (contentType === 'application/zip') {
+                    // For multiple files, create a ZIP with proper date format
+                    filename = `hoadonbanle_${formattedDate}.zip`;
+                } else {
+                    // For a single file, include the transaction ID
+                    filename = `hoadonbanle_${txIds[0]}_${formattedDate}.pdf`;
+                }
                 
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');

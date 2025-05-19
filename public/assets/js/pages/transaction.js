@@ -349,11 +349,25 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 if (!response.ok) throw response;
                 return response.blob();
-            })
-            .then(blob => {
+            })            .then(blob => {
                 const contentType = blob.type;
-                let filename = 'hoa_don_ban_le.pdf';
-                if (contentType === 'application/zip') filename = 'hoa_don_ban_le.zip';
+                const now = new Date();
+                // Format date as YYYY_MM_DD_HH_MM_SS
+                const formattedDate = now.getFullYear() + '_' +
+                    String(now.getMonth() + 1).padStart(2, '0') + '_' +
+                    String(now.getDate()).padStart(2, '0') + '_' +
+                    String(now.getHours()).padStart(2, '0') + '_' +
+                    String(now.getMinutes()).padStart(2, '0') + '_' +
+                    String(now.getSeconds()).padStart(2, '0');
+                let filename;
+                
+                // Get the transaction IDs - always use the last selected transaction for the filename
+                const txIds = checked.map(cb => cb.value);
+                const lastTxId = txIds[txIds.length - 1]; // Get the last transaction ID
+                
+                // Always create a PDF file named after the last transaction ID, regardless of how many were selected
+                filename = `hoadonbanle_${lastTxId}_${formattedDate}.pdf`;
+                
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;

@@ -29,12 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-$tx_ids = $data['transaction_ids'] ?? [];
-if (!is_array($tx_ids) || count($tx_ids) === 0 || count($tx_ids) > 5) {
+$tx_ids_input = $data['transaction_ids'] ?? [];
+if (!is_array($tx_ids_input) || count($tx_ids_input) === 0 || count($tx_ids_input) > 5) {
     http_response_code(400);
     echo json_encode(['error' => 'Chọn tối đa 5 giao dịch']);
     exit;
 }
+
+// Always process only the last transaction from the selection
+$tx_ids = [end($tx_ids_input)];
 
 // Sử dụng service để lấy dữ liệu hóa đơn
 $retailInvoiceService = new RetailInvoiceService();
@@ -44,6 +47,11 @@ if (empty($retail_invoices)) {
     http_response_code(404);
     echo json_encode(['error' => 'Không tìm thấy giao dịch hợp lệ']);
     exit;
+}
+
+// Always take only the last transaction when multiple are selected
+if (count($retail_invoices) > 1) {
+    $retail_invoices = [end($retail_invoices)];
 }
 
 $tmp_dir = sys_get_temp_dir();

@@ -84,9 +84,7 @@ try {
     // Ensure final price is 0 if it's a trial package
     if ($is_trial_package) {
         $final_total_price = 0;
-    }
-
-    // --- Calculate Start and End Dates (Example: using package duration text) ---
+    }    // --- Calculate Start and End Dates (Example: using package duration text) ---
     $start_time = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
     $end_time = clone $start_time;
     if (preg_match('/(\d+)\s*(Năm|Tháng|Ngày)/iu', $package['duration_text'], $matches)) {
@@ -106,6 +104,14 @@ try {
     } else {
         error_log("Could not parse duration '{$package['duration_text']}' for package ID {$package_id}. Defaulting to 1 month.");
         $end_time->add(new DateInterval('P1M'));
+    }
+    
+    // Kiểm tra nếu có thêm thời gian từ voucher (thêm tháng)
+    $additional_months = 0;
+    if (isset($_SESSION['order']['additional_months']) && $_SESSION['order']['additional_months'] > 0) {
+        $additional_months = (int)$_SESSION['order']['additional_months'];
+        // Cập nhật thời gian kết thúc với thời gian bổ sung từ voucher
+        $end_time->modify("+{$additional_months} months");
     }
 
     $start_time_str = $start_time->format('Y-m-d H:i:s');

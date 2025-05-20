@@ -82,12 +82,21 @@ try {
             'start_time' => $start_time->format('Y-m-d H:i:s')
         ];
     }
-    
-    // Tính thời gian kết thúc dựa trên gói đã chọn (sử dụng thời gian bắt đầu từ tài khoản đầu tiên)
+      // Tính thời gian kết thúc dựa trên gói đã chọn (sử dụng thời gian bắt đầu từ tài khoản đầu tiên)
     $first_acc = reset($account_data);
     $end_time = calculateEndTime($first_acc['start_time'], $package['duration_text']);
     if (!$end_time) {
         throw new Exception('Không thể tính toán thời gian kết thúc.');
+    }
+    
+    // Kiểm tra nếu có thêm thời gian từ voucher
+    $additional_months = 0;
+    if (isset($_SESSION['renewal']['additional_months']) && $_SESSION['renewal']['additional_months'] > 0) {
+        $additional_months = (int)$_SESSION['renewal']['additional_months'];
+        // Cập nhật thời gian kết thúc với thời gian bổ sung từ voucher
+        $end_date = new DateTime($end_time, new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $end_date->modify("+{$additional_months} months");
+        $end_time = $end_date->format('Y-m-d H:i:s');
     }
     
     // Tính tổng giá trị cho toàn bộ giao dịch

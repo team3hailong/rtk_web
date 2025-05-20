@@ -515,17 +515,50 @@ class Referral {
     }
 
     /**
-     * Get monthly top ranking users based on commission in the current month
+     * Get user's referral link
      * 
-     * @param int $limit Maximum number of users to return, default 10
-     * @return array List of top users with their monthly commission
+     * @param int $userId User ID to get the referral link for
+     * @return string Referral link URL
      */
-    public function getMonthlyRanking($limit = 10) {
+    public function getUserReferralLink($userId) {
         try {
-            $query = "
+            // Base URL of the referral link
+            $baseUrl = "https://example.com/register"; // Change to your actual registration URL
+            
+            // Get the user's referral code
+            $stmt = $this->conn->prepare("SELECT referral_code FROM referral WHERE user_id = :user_id");
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result && !empty($result['referral_code'])) {
+                // Append the referral code as a query parameter
+                return $baseUrl . "?referral_code=" . $result['referral_code'];
+            }
+            
+            return $baseUrl; // Return base URL if no referral code found
+            
+        } catch (PDOException $e) {
+            error_log("Error generating referral link: " . $e->getMessage());
+            return "#"; // Return a default or error URL
+        }
+    }
+
+    /**
+     * Get top users by monthly commission
+     * 
+     * @param int $limit Number of top users to return
+     * @return array Array of top users by monthly commission
+     */
+    public function getMonthlyRankings($limit = 10) {
+        try {
+            $stmt = $this->conn->prepare("
                 SELECT 
                     ur.user_id,
                     u.username,
+                    u.email,
+                    ur.referral_count,
                     ur.monthly_commission
                 FROM 
                     user_ranking ur
@@ -536,71 +569,32 @@ class Referral {
                 ORDER BY 
                     ur.monthly_commission DESC
                 LIMIT :limit
-            ";
-            
-            $stmt = $this->conn->prepare($query);
+            ");
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
         } catch (PDOException $e) {
-            error_log("Error getting monthly ranking: " . $e->getMessage());
+            error_log("Error fetching monthly rankings: " . $e->getMessage());
             return [];
         }
     }
-    
+
     /**
-     * Get yearly top ranking users based on commission in the current year
+     * Get top users by total commission
      * 
-     * @param int $limit Maximum number of users to return, default 10
-     * @return array List of top users with their yearly commission
+     * @param int $limit Number of top users to return
+     * @return array Array of top users by total commission
      */
-    public function getYearlyRanking($limit = 10) {
+    public function getTotalRankings($limit = 10) {
         try {
-            $query = "
-                SELECT 
-                    r.user_id,
-                    u.username,
-                    SUM(rc.commission_amount) AS yearly_commission
-                FROM 
-                    referral r
-                JOIN 
-                    user u ON r.user_id = u.id
-                LEFT JOIN 
-                    referral_commission rc ON r.user_id = rc.referrer_id
-                WHERE 
-                    rc.status IN ('approved', 'paid')
-                    AND YEAR(rc.created_at) = YEAR(CURRENT_DATE())
-                GROUP BY 
-                    r.user_id, u.username
-                ORDER BY 
-                    yearly_commission DESC
-                LIMIT :limit
-            ";
-            
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Error getting yearly ranking: " . $e->getMessage());
-            return [];
-        }
-    }
-    
-    /**
-     * Get total top ranking users based on all-time commission
-     * 
-     * @param int $limit Maximum number of users to return, default 10
-     * @return array List of top users with their total commission
-     */
-    public function getTotalRanking($limit = 10) {
-        try {
-            $query = "
+            $stmt = $this->conn->prepare("
                 SELECT 
                     ur.user_id,
                     u.username,
+                    u.email,
+                    ur.referral_count,
                     ur.total_commission
                 FROM 
                     user_ranking ur
@@ -611,16 +605,71 @@ class Referral {
                 ORDER BY 
                     ur.total_commission DESC
                 LIMIT :limit
-            ";
-            
-            $stmt = $this->conn->prepare($query);
+            ");
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
         } catch (PDOException $e) {
-            error_log("Error getting total ranking: " . $e->getMessage());
+            error_log("Error fetching total rankings: " . $e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * Get user's rank in the monthly and total rankings
+     * 
+     * @param int $userId User ID to get the rank for
+     * @return array User's rank in monthly and total rankings
+     */
+    public function getUserRankings($userId) {
+        try {
+            // Get user's monthly rank
+            $monthlyStmt = $this->conn->prepare("
+                SELECT 
+                    COUNT(*) + 1 as rank
+                FROM 
+                    user_ranking
+                WHERE 
+                    monthly_commission > (
+                        SELECT monthly_commission 
+                        FROM user_ranking 
+                        WHERE user_id = :user_id
+                    )
+            ");
+            $monthlyStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $monthlyStmt->execute();
+            $monthlyRank = $monthlyStmt->fetchColumn();
+            
+            // Get user's total rank
+            $totalStmt = $this->conn->prepare("
+                SELECT 
+                    COUNT(*) + 1 as rank
+                FROM 
+                    user_ranking
+                WHERE 
+                    total_commission > (
+                        SELECT total_commission 
+                        FROM user_ranking 
+                        WHERE user_id = :user_id
+                    )
+            ");
+            $totalStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $totalStmt->execute();
+            $totalRank = $totalStmt->fetchColumn();
+            
+            return [
+                'monthly_rank' => $monthlyRank,
+                'total_rank' => $totalRank
+            ];
+            
+        } catch (PDOException $e) {
+            error_log("Error fetching user rankings: " . $e->getMessage());
+            return [
+                'monthly_rank' => 'N/A',
+                'total_rank' => 'N/A'
+            ];
         }
     }
 }

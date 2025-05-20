@@ -1,4 +1,3 @@
-
 // Biến toàn cục để lưu trữ các tham số từ PHP
 let availableBalance;
 let minWithdrawalAmount = 100000; // Giá trị mặc định, sẽ được cập nhật từ PHP
@@ -247,5 +246,52 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#amount').focus();
         }, 300);
+    });
+    
+    // Xử lý tab rankings (tab trong tab)
+    $('#ranking-tabs a').on('click', function (e) {
+        e.preventDefault();
+        
+        // Ẩn tất cả tab panes trong ranking tabs
+        $('#ranking-tabs-content .tab-pane').removeClass('show active');
+        
+        // Loại bỏ active class từ tất cả tabs
+        $('#ranking-tabs a').removeClass('active');
+        
+        // Thêm active class cho tab hiện tại
+        $(this).addClass('active');
+        
+        // Hiển thị tab pane tương ứng
+        let tabId = $(this).attr('href');
+        $(tabId).addClass('show active');
+    });    // Animate the rows in the ranking tables when they appear
+    $('#ranking-tab').on('click', function() {
+        setTimeout(function() {
+            $('.table-ranking tbody tr').each(function(index) {
+                $(this).css({
+                    'opacity': 0,
+                    'transform': 'translateY(20px)'
+                });
+                
+                setTimeout(function(row) {
+                    $(row).css({
+                        'opacity': 1,
+                        'transform': 'translateY(0)',
+                        'transition': 'all 0.3s ease'
+                    });
+                }, index * 100, this);
+            });
+        }, 100);
+    });
+    
+    // Hiệu ứng highlight cho top 3 người dùng
+    $('#ranking-tab').on('click', function() {
+        setTimeout(function() {
+            $('.trophy-1').parent().parent().addClass('top-rank');
+            $('.trophy-2').parent().parent().addClass('top-rank');
+            $('.trophy-3').parent().parent().addClass('top-rank');
+            
+            $('.trophy-1').html('<i class="fas fa-crown"></i>');
+        }, 200);
     });
 });

@@ -1,3 +1,31 @@
 [20-May-2025 09:59:55 Asia/Ho_Chi_Minh] Error fetching top monthly referrers: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ru.referred_date' in 'on clause'
 [20-May-2025 09:59:55 Asia/Ho_Chi_Minh] PHP Error [8192]: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\rtk_web\public\pages\referral\dashboard_referal.php on line 296
 [20-May-2025 09:59:55 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\laragon\www\rtk_web\private\includes\sidebar.php:89) in C:\laragon\www\rtk_web\private\config\config.php on line 42
+[20-May-2025 21:53:27 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:55:37 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:56:35 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:56:41 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:57:29 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:57:46 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[20-May-2025 21:57:47 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

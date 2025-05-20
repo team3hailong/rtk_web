@@ -31,6 +31,11 @@
         --font-size-lg: 1.125rem;
         --font-semibold: 600;
         --font-bold: 700;
+        
+        /* Thêm màu mới cho ranking */
+        --gold-color: #FFD700;
+        --silver-color: #C0C0C0;
+        --bronze-color: #CD7F32;
     }
 
     /* General Layout - from rtk_accountmanagement.css */
@@ -523,83 +528,144 @@
     }
 
     /* Ranking Tab Styles */
-    .ranking-card {
-        margin-bottom: 20px;
+    .ranking-tabs {
+        margin-bottom: 2rem;
+    }
+
+    .ranking-tabs .nav-pills .nav-link {
+        color: var(--gray-700);
+        background-color: var(--light-gray-color);
         border-radius: var(--rounded-md);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        height: 100%;
+        padding: 0.5rem 1.5rem;
+        margin-right: 0.5rem;
+        font-weight: var(--font-semibold);
+        transition: all 0.3s ease;
     }
 
-    .ranking-card .card-header {
-        font-weight: 600;
-        padding: 10px 15px;
-        border-top-left-radius: var(--rounded-md);
-        border-top-right-radius: var(--rounded-md);
+    .ranking-tabs .nav-pills .nav-link.active,
+    .ranking-tabs .nav-pills .nav-link:hover {
+        color: var(--white-color);
+        background-color: var(--primary-color);
     }
 
-    .ranking-card .table {
-        margin-bottom: 0;
+    .table-ranking {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: var(--rounded-md);
     }
 
-    .ranking-card .table th {
-        background-color: rgba(0, 0, 0, 0.05);
-        border-top: none;
-        font-size: var(--font-size-sm);
-        font-weight: 600;
+    .table-ranking th {
+        background-color: var(--gray-100);
+        font-weight: var(--font-semibold);
+        border-bottom: 2px solid var(--gray-300);
     }
 
-    .ranking-card .table tbody tr.rank-top-1 {
-        background-color: rgba(255, 215, 0, 0.15);
+    .table-ranking .table-primary {
+        background-color: rgba(33, 150, 243, 0.1);
     }
 
-    .ranking-card .table tbody tr.rank-top-2 {
-        background-color: rgba(192, 192, 192, 0.15);
+    .trophy-icon {
+        margin-left: 0.5rem;
     }
 
-    .ranking-card .table tbody tr.rank-top-3 {
-        background-color: rgba(205, 127, 50, 0.15);
+    .trophy-1 {
+        color: var(--gold-color);
+        font-size: 1.2em;
     }
 
-    .ranking-card .table td {
-        vertical-align: middle;
-        font-size: var(--font-size-sm);
+    .trophy-2 {
+        color: var(--silver-color);
     }
 
-    @media (max-width: 767px) {
-        .ranking-card {
-            margin-bottom: 30px;
+    .trophy-3 {
+        color: var(--bronze-color);
+    }
+
+    .ranking-number {
+        font-weight: var(--font-bold);
+        font-size: 1.1rem;
+    }
+
+    /* Top rank styling */
+    .top-rank {
+        animation: pulse 2s ease-in-out 1;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
         }
-        
-        .ranking-card .table {
+        50% {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Style the first place specially */
+    .table-ranking tbody tr:first-child {
+        background-color: rgba(255, 215, 0, 0.1);
+        font-weight: var(--font-bold);
+    }
+
+    /* Style the second place */
+    .table-ranking tbody tr:nth-child(2) {
+        background-color: rgba(192, 192, 192, 0.1);
+    }
+
+    /* Style the third place */
+    .table-ranking tbody tr:nth-child(3) {
+        background-color: rgba(205, 127, 50, 0.1);
+    }
+
+    /* Responsive styles for ranking tables */
+    @media (max-width: 767.98px) {
+        .table-ranking {
             border: 0;
         }
         
-        .ranking-card .table thead {
-            display: none;
+        .table-ranking thead {
+            border: none;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
         }
         
-        .ranking-card .table tbody tr {
-            margin-bottom: 10px;
+        .table-ranking tr {
             display: block;
-            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 0.625rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--rounded-md);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
-        .ranking-card .table td {
+        .table-ranking td {
             display: block;
             text-align: right;
-            border-bottom: 1px dotted var(--border-color);
-            position: relative;
-            padding-left: 50%;
+            font-size: var(--font-size-sm);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0.75rem 1rem;
         }
         
-        .ranking-card .table td:before {
+        .table-ranking td:last-child {
+            border-bottom: 0;
+        }
+        
+        .table-ranking td::before {
             content: attr(data-label);
-            position: absolute;
-            left: 0;
-            width: 45%;
-            padding-left: 15px;
-            font-weight: 600;
-            text-align: left;
+            float: left;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: var(--font-size-xs);
+        }
+        
+        .table-ranking .ranking-number {
+            font-size: 1rem;
         }
     }
 

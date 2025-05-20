@@ -255,10 +255,10 @@ foreach ($retail_invoices as $invoice) {
             <table class="transaction-table">
                 <thead>
                     <tr>
-                        <th width="5%">STT</th>
-                        <th width="50%">Tên dịch vụ/sản phẩm</th>
+                        <th width="10%">STT</th>
+                        <th width="40%">Tên dịch vụ/sản phẩm</th>
                         <th width="15%">Đơn giá</th>
-                        <th width="10%">Số lượng</th>
+                        <th width="15%">Số lượng tài khoản</th>
                         <th width="20%">Thành tiền</th>
                     </tr>
                 </thead>
@@ -267,7 +267,7 @@ foreach ($retail_invoices as $invoice) {
                         <td>1</td>
                         <td>' . $product_name . '</td>
                         <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
-                        <td>1</td>
+                        <td> '. htmlspecialchars((string)$invoice['registration_details']['num_account']) .'</td>
                         <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
                     </tr>';
       // Thêm thông tin chi tiết về gói dịch vụ nếu có
@@ -280,13 +280,7 @@ foreach ($retail_invoices as $invoice) {
                     </tr>';
         }
         
-        if (isset($invoice['registration_details']['num_account'])) {
-            $html .= '
-                    <tr>
-                        <td></td>
-                        <td colspan="4">Số lượng: ' . htmlspecialchars((string)$invoice['registration_details']['num_account']) . '</td>
-                    </tr>';
-        }
+        
     }
     
     // Tổng thanh toán

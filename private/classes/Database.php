@@ -41,11 +41,7 @@ class Database {
             $this->host = DB_SERVER;
             $this->db_name = DB_NAME;
             $this->username = DB_USERNAME;
-            $this->password = DB_PASSWORD;
-        }
-        
-        // Log để debug
-        error_log("Database init: Using database '{$this->db_name}' on host '{$this->host}'");
+            $this->password = DB_PASSWORD;        }
     }
 
     /**
@@ -66,16 +62,10 @@ class Database {
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Throw exceptions on error
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Fetch results as associative arrays by default
                 PDO::ATTR_EMULATE_PREPARES   => false,                  // Use native prepared statements
-            ];
-
-            $this->conn = new PDO($dsn, $this->username, $this->password, $options);
-
-            // Log success
-            error_log($logPrefix . "Connection to database '" . $this->db_name . "' successful.");
+            ];            $this->conn = new PDO($dsn, $this->username, $this->password, $options);
 
         } catch(PDOException $e) {
             // Log the error instead of echoing it in production
-            // Log failure
             error_log($logPrefix . 'Connection Error: ' . $e->getMessage()); // Use the prefix
             // Optionally, you could throw the exception again or return null/false
             // throw $e; // Re-throw if you want calling code to handle it
@@ -96,19 +86,9 @@ class Database {
      * Returns the current PDO connection object.
      *
      * @return PDO|null The active PDO connection or null if not connected.
-     */
-    public function getConnection() {
+     */    public function getConnection() {
         if ($this->conn === null) {
-            // Log attempt to connect if not already connected
-            error_log("[Database GetConnection] No active connection found. Attempting to connect...");
             $this->connect();
-        } else {
-             // Log if connection already exists (optional, can be verbose)
-             // error_log("[Database GetConnection] Returning existing connection.");
-        }
-        // Log if connection failed after attempt
-        if ($this->conn === null) {
-             error_log("[Database GetConnection] Failed to establish connection.");
         }
         return $this->conn;
     }

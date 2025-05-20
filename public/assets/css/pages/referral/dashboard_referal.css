@@ -1,5 +1,4 @@
-
-    /* Variables CSS - Giữ nguyên và có thể bổ sung nếu cần */
+/* Variables CSS - Giữ nguyên và có thể bổ sung nếu cần */
     :root {
         --primary-color: #28a745; /* Green for primary actions */
         --primary-hover-color: #218838;
@@ -521,5 +520,86 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         min-width: 250px;
         font-size: var(--font-size-sm);
+    }
+
+    /* Ranking Tab Styles */
+    .ranking-card {
+        margin-bottom: 20px;
+        border-radius: var(--rounded-md);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        height: 100%;
+    }
+
+    .ranking-card .card-header {
+        font-weight: 600;
+        padding: 10px 15px;
+        border-top-left-radius: var(--rounded-md);
+        border-top-right-radius: var(--rounded-md);
+    }
+
+    .ranking-card .table {
+        margin-bottom: 0;
+    }
+
+    .ranking-card .table th {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-top: none;
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+    }
+
+    .ranking-card .table tbody tr.rank-top-1 {
+        background-color: rgba(255, 215, 0, 0.15);
+    }
+
+    .ranking-card .table tbody tr.rank-top-2 {
+        background-color: rgba(192, 192, 192, 0.15);
+    }
+
+    .ranking-card .table tbody tr.rank-top-3 {
+        background-color: rgba(205, 127, 50, 0.15);
+    }
+
+    .ranking-card .table td {
+        vertical-align: middle;
+        font-size: var(--font-size-sm);
+    }
+
+    @media (max-width: 767px) {
+        .ranking-card {
+            margin-bottom: 30px;
+        }
+        
+        .ranking-card .table {
+            border: 0;
+        }
+        
+        .ranking-card .table thead {
+            display: none;
+        }
+        
+        .ranking-card .table tbody tr {
+            margin-bottom: 10px;
+            display: block;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .ranking-card .table td {
+            display: block;
+            text-align: right;
+            border-bottom: 1px dotted var(--border-color);
+            position: relative;
+            padding-left: 50%;
+        }
+        
+        .ranking-card .table td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 45%;
+            padding-left: 15px;
+            font-weight: 600;
+            text-align: left;
+        }
     }
 

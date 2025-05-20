@@ -73,9 +73,11 @@ require_once $project_root_path . '/private/includes/header.php';
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="commission-tab" data-toggle="tab" href="#commission" role="tab">Hoa hồng nhận được</a>
+                    </li>                    <li class="nav-item">
+                        <a class="nav-link" id="withdrawal-tab" data-toggle="tab" href="#withdrawal" role="tab">Yêu cầu rút tiền</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="withdrawal-tab" data-toggle="tab" href="#withdrawal" role="tab">Yêu cầu rút tiền</a>
+                        <a class="nav-link" id="ranking-tab" data-toggle="tab" href="#ranking" role="tab">Bảng xếp hạng</a>
                     </li>
                 </ul>
             </div>
@@ -371,7 +373,283 @@ require_once $project_root_path . '/private/includes/header.php';
                                         Bạn chưa có yêu cầu rút tiền nào.
                                     </div>
                                 <?php endif; ?>
+                            </div>                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 5: Ranking -->
+                <div class="tab-pane fade" id="ranking" role="tabpanel">
+                    <h4 class="mb-4">Bảng xếp hạng người giới thiệu</h4>
+                    
+                    <div class="row">
+                        <!-- Xếp hạng tháng -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Top tháng này</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng theo tháng từ bảng user_ranking
+                                                $monthlyRanking = $referralService->getMonthlyRanking();
+                                                if (!empty($monthlyRanking)) {
+                                                    foreach ($monthlyRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Hoa hồng">' . number_format($user['monthly_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        
+                        <!-- Xếp hạng năm -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">Top năm nay</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng theo năm
+                                                $yearlyRanking = $referralService->getYearlyRanking();
+                                                if (!empty($yearlyRanking)) {
+                                                    foreach ($yearlyRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Hoa hồng">' . number_format($user['yearly_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Xếp hạng tổng -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Top tổng thời gian</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Tổng hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng tổng
+                                                $totalRanking = $referralService->getTotalRanking();
+                                                if (!empty($totalRanking)) {
+                                                    foreach ($totalRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Tổng hoa hồng">' . number_format($user['total_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h5>Thông tin bảng xếp hạng:</h5>
+                            <ul>
+                                <li>Bảng xếp hạng được cập nhật theo thời gian thực</li>
+                                <li>Top tháng: Xếp hạng dựa trên hoa hồng nhận được trong tháng hiện tại</li>
+                                <li>Top năm: Xếp hạng dựa trên tổng hoa hồng nhận được trong năm hiện tại</li>
+                                <li>Top tổng: Xếp hạng dựa trên tổng hoa hồng nhận được từ trước đến nay</li>
+                            </ul>
+                        </div>                    </div>
+                </div>
+                
+                <!-- Tab 5: Ranking -->
+                <div class="tab-pane fade" id="ranking" role="tabpanel">
+                    <h4 class="mb-4">Bảng xếp hạng người giới thiệu</h4>
+                    
+                    <div class="row">
+                        <!-- Xếp hạng tháng -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">Top tháng này</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng theo tháng từ bảng user_ranking
+                                                $monthlyRanking = $referralService->getMonthlyRanking();
+                                                if (!empty($monthlyRanking)) {
+                                                    foreach ($monthlyRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Hoa hồng">' . number_format($user['monthly_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Xếp hạng năm -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">Top năm nay</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng theo năm
+                                                $yearlyRanking = $referralService->getYearlyRanking();
+                                                if (!empty($yearlyRanking)) {
+                                                    foreach ($yearlyRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Hoa hồng">' . number_format($user['yearly_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Xếp hạng tổng -->
+                        <div class="col-md-4">
+                            <div class="card ranking-card">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Top tổng thời gian</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hạng</th>
+                                                    <th>Người dùng</th>
+                                                    <th>Tổng hoa hồng</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Lấy dữ liệu xếp hạng tổng
+                                                $totalRanking = $referralService->getTotalRanking();
+                                                if (!empty($totalRanking)) {
+                                                    foreach ($totalRanking as $index => $user) {
+                                                        $rankClass = ($index < 3) ? 'rank-top-' . ($index + 1) : '';
+                                                        echo '<tr class="' . $rankClass . '">';
+                                                        echo '<td data-label="Hạng">' . ($index + 1) . '</td>';
+                                                        echo '<td data-label="Người dùng">' . htmlspecialchars($user['username']) . '</td>';
+                                                        echo '<td data-label="Tổng hoa hồng">' . number_format($user['total_commission'], 0, ',', '.') . ' VNĐ</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3" class="text-center">Chưa có dữ liệu</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h5>Thông tin bảng xếp hạng:</h5>
+                            <ul>
+                                <li>Bảng xếp hạng được cập nhật theo thời gian thực</li>
+                                <li>Top tháng: Xếp hạng dựa trên hoa hồng nhận được trong tháng hiện tại</li>
+                                <li>Top năm: Xếp hạng dựa trên tổng hoa hồng nhận được trong năm hiện tại</li>
+                                <li>Top tổng: Xếp hạng dựa trên tổng hoa hồng nhận được từ trước đến nay</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -291,7 +291,62 @@ $(document).ready(function() {
             $('.trophy-2').parent().parent().addClass('top-rank');
             $('.trophy-3').parent().parent().addClass('top-rank');
             
-            $('.trophy-1').html('<i class="fas fa-crown"></i>');
+            
         }, 200);
+    });
+    
+    // Ranking tab functionality
+    $('.rank-tab-btn').on('click', function() {
+        // Remove active class from all buttons
+        $('.rank-tab-btn').removeClass('active');
+        // Add active class to clicked button
+        $(this).addClass('active');
+        
+        // Hide all tab contents
+        $('.rank-tab-content').removeClass('active');
+        
+        // Show the target tab content
+        var targetId = $(this).data('target');
+        $(targetId).addClass('active');
+        
+        // Store the active tab in localStorage
+        localStorage.setItem('activeRankingTab', targetId);
+        
+        // Apply animation to the tables
+        animateRankingRows(targetId);
+    });
+    
+    // Function to animate ranking rows
+    function animateRankingRows(targetId) {
+        $(targetId + ' tbody tr').each(function(index) {
+            $(this).css({
+                'opacity': 0,
+                'transform': 'translateY(10px)'
+            });
+            
+            setTimeout(function(row) {
+                $(row).css({
+                    'opacity': 1,
+                    'transform': 'translateY(0)',
+                    'transition': 'all 0.3s ease'
+                });
+            }, index * 50, this); // Faster animation with shorter delay
+        });
+        
+        // Highlight top 3 ranks
+        setTimeout(function() {
+            $(targetId + ' .trophy-1').parent().parent().addClass('top-rank');
+            $(targetId + ' .trophy-2').parent().parent().addClass('top-rank');
+            $(targetId + ' .trophy-3').parent().parent().addClass('top-rank');
+            
+            $(targetId + ' .trophy-1').html('<i class="fas fa-crown"></i>');
+        }, 100);
+    }
+    
+    // Initialize by animating the default active tab
+    $('#ranking-tab').on('click', function() {
+        setTimeout(function() {
+            animateRankingRows('#monthly-ranking');
+        }, 100);
     });
 });

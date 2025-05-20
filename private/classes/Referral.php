@@ -615,9 +615,7 @@ class Referral {
             error_log("Error fetching total rankings: " . $e->getMessage());
             return [];
         }
-    }
-
-    /**
+    }    /**
      * Get user's rank in the monthly and total rankings
      * 
      * @param int $userId User ID to get the rank for
@@ -625,6 +623,19 @@ class Referral {
      */
     public function getUserRankings($userId) {
         try {
+            // Check if user exists in user_ranking table
+            $checkStmt = $this->conn->prepare("SELECT COUNT(*) FROM user_ranking WHERE user_id = :user_id");
+            $checkStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $checkStmt->execute();
+            $userExists = $checkStmt->fetchColumn() > 0;
+            
+            if (!$userExists) {
+                return [
+                    'monthly_rank' => 'Vô hạng',
+                    'total_rank' => 'Vô hạng'
+                ];
+            }
+            
             // Get user's monthly rank
             $monthlyStmt = $this->conn->prepare("
                 SELECT 
@@ -641,6 +652,15 @@ class Referral {
             $monthlyStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $monthlyStmt->execute();
             $monthlyRank = $monthlyStmt->fetchColumn();
+            
+            // If monthly commission is 0, display as "Vô hạng"
+            $checkMonthlyStmt = $this->conn->prepare("SELECT monthly_commission FROM user_ranking WHERE user_id = :user_id");
+            $checkMonthlyStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $checkMonthlyStmt->execute();
+            $monthlyCommission = $checkMonthlyStmt->fetchColumn();
+            if ($monthlyCommission <= 0) {
+                $monthlyRank = 'Vô hạng';
+            }
             
             // Get user's total rank
             $totalStmt = $this->conn->prepare("
@@ -659,6 +679,15 @@ class Referral {
             $totalStmt->execute();
             $totalRank = $totalStmt->fetchColumn();
             
+            // If total commission is 0, display as "Vô hạng"
+            $checkTotalStmt = $this->conn->prepare("SELECT total_commission FROM user_ranking WHERE user_id = :user_id");
+            $checkTotalStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $checkTotalStmt->execute();
+            $totalCommission = $checkTotalStmt->fetchColumn();
+            if ($totalCommission <= 0) {
+                $totalRank = 'Vô hạng';
+            }
+            
             return [
                 'monthly_rank' => $monthlyRank,
                 'total_rank' => $totalRank
@@ -667,8 +696,8 @@ class Referral {
         } catch (PDOException $e) {
             error_log("Error fetching user rankings: " . $e->getMessage());
             return [
-                'monthly_rank' => 'N/A',
-                'total_rank' => 'N/A'
+                'monthly_rank' => 'Vô hạng',
+                'total_rank' => 'Vô hạng'
             ];
         }
     }

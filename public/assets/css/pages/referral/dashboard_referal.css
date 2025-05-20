@@ -669,3 +669,108 @@
         }
     }
 
+    /* Ranking Tab Styles - Updated for compact design */
+.ranking-tabs {
+    margin-bottom: 1.5rem;
+}
+
+/* Compact rank cards styling */
+.rank-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rank-card {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-radius: var(--rounded-md);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.rank-label {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+    font-weight: var(--font-semibold);
+}
+
+.rank-value {
+    font-size: 1.2rem;
+    font-weight: var(--font-bold);
+    color: var(--gray-800);
+}
+
+/* Horizontal rank tab buttons */
+.rank-tab-buttons {
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.rank-tab-btn {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    font-weight: var(--font-semibold);
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.rank-tab-btn:hover {
+    color: var(--primary-color);
+}
+
+.rank-tab-btn.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.rank-tab-content {
+    display: none;
+}
+
+.rank-tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Mobile responsive styles for ranking */
+@media (max-width: 767.98px) {
+    .rank-summary-row {
+        flex-direction: column;
+    }
+    
+    .rank-card {
+        margin-bottom: 8px;
+        width: 100%;
+    }
+    
+    .rank-tab-buttons {
+        justify-content: space-between;
+    }
+    
+    .rank-tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 10px;
+        font-size: 0.75rem;
+    }
+}
+

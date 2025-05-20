@@ -380,54 +380,36 @@ require_once $project_root_path . '/private/includes/header.php';
                                 <?php endif; ?>
                             </div>                        </div>                    </div>
                     
-                    <!-- Tab 5: Ranking -->
-                    <div class="tab-pane fade" id="ranking" role="tabpanel">
+                    <!-- Tab 5: Ranking -->                    <div class="tab-pane fade" id="ranking" role="tabpanel">
                         <h4 class="mb-4">Bảng xếp hạng người giới thiệu</h4>
                         
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="card bg-success text-white">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Hạng của bạn (Tháng)</h5>
-                                        <h2><?php echo $userRankings['monthly_rank']; ?></h2>
-                                    </div>
-                                </div>
+                        <div class="rank-summary-row">
+                            <div class="rank-card">
+                                <div class="rank-label">Hạng của bạn (Tháng)</div>
+                                <div class="rank-value"><?php echo is_numeric($userRankings['monthly_rank']) ? $userRankings['monthly_rank'] : 'Vô hạng'; ?></div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="card bg-primary text-white">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Hạng của bạn (Tổng)</h5>
-                                        <h2><?php echo $userRankings['total_rank']; ?></h2>
-                                    </div>
-                                </div>
+                            <div class="rank-card">
+                                <div class="rank-label">Hạng của bạn (Tổng)</div>
+                                <div class="rank-value"><?php echo is_numeric($userRankings['total_rank']) ? $userRankings['total_rank'] : 'Vô hạng'; ?></div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="card bg-info text-white">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Tổng người giới thiệu</h5>
-                                        <h2><?php echo count($referredUsers); ?> người</h2>
-                                    </div>
-                                </div>
+                            <div class="rank-card">
+                                <div class="rank-label">Tổng người giới thiệu</div>
+                                <div class="rank-value"><?php echo count($referredUsers); ?> người</div>
                             </div>
                         </div>
                         
-                        <div class="ranking-tabs mt-4">
-                            <ul class="nav nav-pills mb-3" id="ranking-tabs" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="monthly-ranking-tab" data-toggle="pill" href="#monthly-ranking" role="tab">
-                                        Bảng xếp hạng tháng
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="total-ranking-tab" data-toggle="pill" href="#total-ranking" role="tab">
-                                        Bảng xếp hạng tổng
-                                    </a>
-                                </li>
-                            </ul>
-                            
-                            <div class="tab-content" id="ranking-tabs-content">
+                        <div class="ranking-tabs mt-3">
+                            <div class="rank-tab-buttons">
+                                <button class="rank-tab-btn active" id="monthly-ranking-btn" data-target="#monthly-ranking">
+                                    Bảng xếp hạng tháng
+                                </button>
+                                <button class="rank-tab-btn" id="total-ranking-btn" data-target="#total-ranking">
+                                    Bảng xếp hạng tổng
+                                </button>
+                            </div>
+                              <div class="rank-tab-content-wrapper">
                                 <!-- Monthly Ranking -->
-                                <div class="tab-pane fade show active" id="monthly-ranking" role="tabpanel">
+                                <div class="rank-tab-content active" id="monthly-ranking">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-ranking">
                                             <thead class="thead-light">
@@ -464,7 +446,7 @@ require_once $project_root_path . '/private/includes/header.php';
                                 </div>
                                 
                                 <!-- Total Ranking -->
-                                <div class="tab-pane fade" id="total-ranking" role="tabpanel">
+                                <div class="rank-tab-content" id="total-ranking">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-ranking">
                                             <thead class="thead-light">

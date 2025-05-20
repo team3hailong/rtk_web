@@ -1,4 +1,5 @@
 /* ===================== RTK Account Management - Tối ưu hóa ===================== */
+/* !important flags added to ensure styles are applied on hosting environment */
 :root {
   --blue-500: #2196F3;
   --blue-600: #1976D2;
@@ -35,8 +36,21 @@
 /* --- Filter và Search --- */
 .filter-section { margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; }
 .filter-buttons-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.filter-button { padding: 0.4rem 0.9rem; border: 1px solid var(--gray-300); border-radius: var(--rounded-full); background: white; cursor: pointer; transition: all 0.2s; font-size: var(--font-size-sm); color: var(--gray-700); }
-.filter-button.active { background: var(--primary-500); color: white; border-color: var(--primary-500); }
+.accounts-content-wrapper .filter-button { 
+    padding: 0.4rem 0.9rem; 
+    border: 1px solid var(--gray-300); 
+    border-radius: var(--rounded-full); 
+    background: white; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    font-size: var(--font-size-sm); 
+    color: var(--gray-700);
+}
+.accounts-content-wrapper .filter-button.active { 
+    background: var(--primary-500); 
+    color: white; 
+    border-color: var(--primary-500); 
+}
 .search-box { padding: 0.5rem 0.8rem; border: 1px solid var(--gray-300); border-radius: var(--rounded-md); width: 250px; max-width: 100%; font-size: var(--font-size-sm); }
 .search-box:focus { outline: none; border-color: var(--primary-500); }
 
@@ -46,45 +60,50 @@
 .per-page-select:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 2px rgba(33,150,243,0.2); }
 
 /* --- Nhóm bộ lọc mới --- */
-.filter-container {
+.accounts-content-wrapper .filter-container {
     margin-bottom: 1rem;
     background-color: white;
     border-radius: var(--rounded-lg);
     border: 1px solid var(--gray-200);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     overflow: hidden;
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
+    display: block; /* Đảm bảo hiển thị dạng block */
 }
 
-.filter-group-header {
+.accounts-content-wrapper .filter-group-header {
     padding: 0.5rem 1rem;
     background-color: var(--gray-100);
     border-bottom: 1px solid var(--gray-200);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
 }
 
-.filter-group-title {
+.accounts-content-wrapper .filter-group-title {
     font-weight: var(--font-semibold);
     color: var(--gray-700);
     font-size: var(--font-size-sm);
 }
 
-.filter-group-content {
+.accounts-content-wrapper .filter-group-content {
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
 }
 
-.filter-row {
+.accounts-content-wrapper .filter-row {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-start;
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
 }
 
-.filter-group-item {
+.accounts-content-wrapper .filter-group-item {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -98,17 +117,17 @@
     min-width: 100px;
 }
 
-.filter-dropdown-group {
+.accounts-content-wrapper .filter-dropdown-group {
     min-width: 180px;
 }
 
-.filter-buttons-group {
+.accounts-content-wrapper .filter-buttons-group {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
 }
 
-.filter-select {
+.accounts-content-wrapper .filter-select {
     padding: 0.35rem 0.6rem;
     border: 1px solid var(--gray-300);
     border-radius: var(--rounded-md);
@@ -125,30 +144,35 @@
     padding-right: 2.5rem;
 }
 
-.filter-select:focus {
+.accounts-content-wrapper .filter-select:focus {
     outline: none;
     border-color: var(--primary-500);
     box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
 }
 
 /* Search container with buttons */
-.search-container {
+.accounts-content-wrapper .search-container {
     flex-grow: 1;
+    min-width: 300px; /* Đảm bảo width tối thiểu */
 }
 
-.search-group {
+.accounts-content-wrapper .search-group {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Thay đổi từ wrap sang nowrap để tránh các nút xuống dòng */
     flex-grow: 1;
+    width: 100%; /* Đảm bảo chiều rộng đầy đủ */
+    align-items: center; /* Căn chỉnh các phần tử theo chiều dọc */
 }
 
-.search-box {
+.accounts-content-wrapper .search-box {
     flex: 1;
     min-width: 180px;
+    max-width: 60%; /* Giới hạn chiều rộng của ô tìm kiếm */
 }
 
-.search-button, .reset-button {
+.accounts-content-wrapper .search-button, 
+.accounts-content-wrapper .reset-button {
     padding: 0.35rem 0.8rem;
     border-radius: var(--rounded-md);
     font-size: var(--font-size-sm);
@@ -158,23 +182,25 @@
     gap: 0.25rem;
     border: none;
     transition: all 0.2s;
+    white-space: nowrap; /* Ngăn chặn text xuống dòng */
+    flex-shrink: 0; /* Ngăn nút co lại */
 }
 
-.search-button {
+.accounts-content-wrapper .search-button {
     background-color: var(--primary-500);
     color: white;
 }
 
-.search-button:hover {
+.accounts-content-wrapper .search-button:hover {
     background-color: var(--primary-600);
 }
 
-.reset-button {
+.accounts-content-wrapper .reset-button {
     background-color: var(--gray-200);
     color: var(--gray-700);
 }
 
-.reset-button:hover {
+.accounts-content-wrapper .reset-button:hover {
     background-color: var(--gray-300);
 }
 

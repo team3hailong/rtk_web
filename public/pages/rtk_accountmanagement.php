@@ -23,10 +23,10 @@ require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/RtkAccount.php';
 
 // Chỉ include file CSS/JS tối ưu (đã gộp, không include file cũ)
-echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css">';
-echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/time-remaining.css">';
-echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js"></script>';
-echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_filter_extension.js"></script>';
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css?v=' . time() . '">';
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/time-remaining.css?v=' . time() . '">';
+echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js?v=' . time() . '"></script>';
+echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_filter_extension.js?v=' . time() . '"></script>';
 
 // --- Xử lý tham số từ URL cho phân trang ---
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -109,7 +109,54 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <div class="filter-container">
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->
+            <style>
+            .filter-container {
+                margin-bottom: 1rem !important;
+                background-color: white !important;
+                border-radius: 0.5rem !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                overflow: hidden !important;
+                width: 100% !important;
+                display: block !important;
+            }
+            .filter-group-header {
+                padding: 0.5rem 1rem !important;
+                background-color: #f3f4f6 !important;
+                border-bottom: 1px solid #e5e7eb !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+            .filter-group-title {
+                font-weight: 600 !important;
+                color: #374151 !important;
+                font-size: 0.875rem !important;
+            }
+            .filter-group-content {
+                padding: 0.75rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+                width: 100% !important;
+            }
+            .filter-row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 1rem !important;
+                align-items: flex-start !important;
+                width: 100% !important;
+            }
+            .filter-group-item {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+                align-items: center !important;
+            }
+            </style>
+            <div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>
                 </div>
@@ -143,10 +190,10 @@ function getPaginationUrl($page, $perPage, $filter) {
 
                     <div class="filter-row">
                         <!-- Tìm kiếm -->
-                        <div class="filter-group-item search-container">
-                            <div class="filter-label">Tìm kiếm:</div>
+                        <div class="filter-group-item search-container">                            <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">
-                                <input type="text" class="search-box" id="search-input" placeholder="Tên TK, Tỉnh, Trạm...">                                <button type="button" id="search-button" class="search-button">
+                                <input type="text" class="search-box" id="search-input" placeholder="Tên TK, Tỉnh, Trạm...">
+                                <button type="button" id="search-button" class="search-button">
                                     <i class="fas fa-search"></i> <span>Tìm kiếm</span>
                                 </button>
                                 <button type="button" id="reset-button" class="reset-button">

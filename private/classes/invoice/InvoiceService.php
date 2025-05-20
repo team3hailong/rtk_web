@@ -6,7 +6,7 @@
 require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
 
 class InvoiceService {
-    private $conn;
+    public $conn; // Changed to public to allow direct access
 
     public function __construct() {
         $db = new Database();
@@ -54,9 +54,7 @@ class InvoiceService {
         $stmt = $this->conn->prepare('SELECT COUNT(*) FROM transaction_history WHERE id = ? AND user_id = ?');
         $stmt->execute([$tx_id, $user_id]);
         return $stmt->fetchColumn() > 0;
-    }
-
-    /**
+    }    /**
      * Get company info for a user
      * @param int $user_id
      * @return array|false
@@ -65,6 +63,18 @@ class InvoiceService {
         $stmt = $this->conn->prepare('SELECT company_name, tax_code FROM user WHERE id = ?');
         $stmt->execute([$user_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Check if a transaction has the status 'completed'
+     * @param int $tx_id
+     * @return bool
+     */
+    public function isTransactionCompleted(int $tx_id): bool {
+        $stmt = $this->conn->prepare('SELECT status FROM transaction_history WHERE id = ?');
+        $stmt->execute([$tx_id]);
+        $status = $stmt->fetchColumn();
+        return strtolower($status) === 'completed';
     }
 
     /**

@@ -14,9 +14,7 @@ class RetailInvoiceService {
         $this->db = new Database();
         $this->pdo = $this->db->getConnection();
         $this->transactionHandler = new Transaction($this->db);
-    }
-
-    /**
+    }    /**
      * Get retail invoice data for transactions
      * @param array $tx_ids Array of transaction IDs
      * @param int $user_id User ID
@@ -30,7 +28,8 @@ class RetailInvoiceService {
 
         foreach ($tx_ids as $tx_id) {
             $tx = $this->transactionHandler->getTransactionByIdAndUser($tx_id, $user_id);
-            if (!$tx) continue;
+            // Chỉ xử lý các giao dịch đã hoàn thành (có status là 'completed')
+            if (!$tx || strtolower($tx['status']) !== 'completed') continue;
             
             // Lấy thêm thông tin chi tiết từ bảng registration nếu có
             $registration_details = $this->getRegistrationDetails($tx['registration_id'] ?? null);

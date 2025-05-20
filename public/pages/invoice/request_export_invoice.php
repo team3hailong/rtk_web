@@ -37,13 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(400);
         exit('Thiếu hoặc sai tham số.');
     }
-    $service = new InvoiceService();
-    // Check ownership
+    $service = new InvoiceService();    // Check ownership
     if (!$service->checkOwnership($tx_id, $_SESSION['user_id'])) {
         log_invoice_error($_SESSION['user_id'], $tx_id, 'Unauthorized access to transaction');
         header('Location: ' . $base_url . '/public/pages/transaction.php?error=unauthorized');
         exit;
     }
+      // Check transaction status is completed
+    if (!$service->isTransactionCompleted($tx_id)) {
+        log_invoice_error($_SESSION['user_id'], $tx_id, 'Transaction is not completed');
+        $_SESSION['invoice_error'] = 'Chỉ có thể xuất hóa đơn với các giao dịch đã hoàn thành.';
+        header('Location: ' . $base_url . '/public/pages/transaction.php?error=not_completed');
+        exit;
+    }
+    
     // Check user company info
     $user_info = $service->getUserInfo($_SESSION['user_id']);
     if (empty($user_info['company_name']) || empty($user_info['tax_code'])) {
@@ -72,12 +79,15 @@ if (!$service->checkOwnership($tx_id, $_SESSION['user_id'])) {
     error_log("Security Warning: User {$_SESSION['user_id']} attempted to access transaction {$tx_id} that doesn't belong to them");
     header('Location: ' . $base_url . '/public/pages/transaction.php?error=unauthorized');
     exit;
-}
-
-// Fetch transaction info
+}    // Fetch transaction info
 $info = $service->getTransactionInfo($tx_id);
 if (!$info) {
     die('Không tìm thấy giao dịch.');
+}
+
+// Kiểm tra xem giao dịch có trạng thái hoàn thành không
+if (!$service->isTransactionCompleted($tx_id)) {
+    die('Chỉ có thể xuất hóa đơn với các giao dịch đã hoàn thành.');
 }
 
 // Kiểm tra xem thông tin xuất hóa đơn có đầy đủ không
@@ -146,10 +156,11 @@ include $project_root_path . '/private/includes/header.php';
                     Yêu cầu xuất hóa đơn
                 </button>
                 <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-cancel">Hủy</a>
-            </form>
-            <div class="invoice-note">
+            </form>            <div class="invoice-note">
                 <?php if ($missing_invoice_info): ?>
                 <p><strong>Lưu ý:</strong> Không thể yêu cầu xuất hóa đơn khi thông tin công ty hoặc mã số thuế còn trống. Vui lòng cập nhật thông tin trước khi tiếp tục.</p>
+                <?php else: ?>
+                <p><strong>Lưu ý:</strong> Chỉ có thể xuất hóa đơn bán lẻ với những giao dịch đã hoàn thành.</p>
                 <?php endif; ?>
             </div>
         </div>

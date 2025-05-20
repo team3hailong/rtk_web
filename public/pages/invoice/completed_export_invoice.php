@@ -27,6 +27,12 @@ $info = $service->getTransactionInfo($tx_id);
 if (!$info) {
     die('Không tìm thấy giao dịch.');
 }
+
+// Kiểm tra xem giao dịch có trạng thái hoàn thành không
+if (!$service->isTransactionCompleted($tx_id)) {
+    die('Chỉ có thể xuất hóa đơn với các giao dịch đã hoàn thành.');
+}
+
 $invoice = $service->getInvoice($tx_id);
 if (!$invoice) {
     die('Không tìm thấy yêu cầu xuất hóa đơn cho giao dịch này.');

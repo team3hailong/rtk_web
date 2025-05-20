@@ -132,8 +132,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                     </div>
 
                     <div class="filter-row">
-                        <!-- Tìm kiếm -->
-                        <div class="filter-group-item search-container">
+                        <!-- Tìm kiếm -->                        <div class="filter-group-item search-container">
                             <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">
                                 <input type="text" class="search-box" id="search-input" placeholder="Tìm theo ID, Loại GD...">
@@ -143,17 +142,6 @@ function getPaginationUrl($page, $perPage, $filter) {
                                 <button type="button" id="reset-button" class="reset-button">
                                     <i class="fas fa-redo"></i> <span>Đặt lại</span>
                                 </button>
-                            </div>
-                        </div>
-                        
-                        <div class="filter-group-item" style="margin-left: auto;">
-                            <div class="filter-label">Hiển thị:</div>
-                            <div class="per-page-selector">
-                                <select id="per-page" class="filter-select">
-                                    <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
-                                    <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
-                                    <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -264,10 +252,17 @@ if ($invoice_row) {
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Pagination controls -->
+              <!-- Pagination controls -->
             <?php if ($pagination['total_pages'] > 1): ?>
             <div class="pagination-controls">
+                <div class="per-page-selector">
+                    <label for="per-page">Hiển thị:</label>
+                    <select id="per-page" class="filter-select">
+                        <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
+                        <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
+                        <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                    </select>
+                </div>
                 <div class="pagination-info">
                     Hiển thị <?php echo (($pagination['current_page'] - 1) * $pagination['per_page'] + 1); ?> 
                     đến <?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total']); ?> 

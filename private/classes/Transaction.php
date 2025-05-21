@@ -251,12 +251,18 @@ class Transaction {
             $updateStmt->bindParam(':status', $status, PDO::PARAM_STR);
             $updateStmt->bindParam(':id', $transactionId, PDO::PARAM_INT);
             $updated = $updateStmt->execute();
-            
-            // If transaction is completed and has a voucher, increase voucher usage count
+              // If transaction is completed and has a voucher, increase voucher usage count
             if ($status == 'completed' && $updateVoucher && !empty($transaction['voucher_id'])) {
                 require_once dirname(__FILE__) . '/Voucher.php';
                 $voucher = new Voucher($this->db);
                 $voucher->incrementUsage($transaction['voucher_id']);
+            }
+            
+            // When status is completed, calculate referral commission
+            if ($status == 'completed') {
+                require_once dirname(__FILE__) . '/Referral.php';
+                $referral = new Referral($this->db);
+                $referral->calculateCommission($transactionId);
             }
             
             // Commit transaction

@@ -113,16 +113,20 @@ try {
     $stmt->execute([$registration_id]);
     $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if ($transaction) {
-        // Cập nhật transaction_history
+    if ($transaction) {        // Cập nhật transaction_history
         $stmt = $conn->prepare("UPDATE transaction_history SET status = 'completed', payment_confirmed = 1, payment_confirmed_at = NOW(), updated_at = NOW() WHERE id = ?");
         $stmt->execute([$transaction['id']]);
+        
+        // Tính toán hoa hồng giới thiệu khi transaction hoàn thành
+        require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Referral.php';
+        require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
+        $db = new Database();
+        $referralService = new Referral($db);
+        $referralService->calculateCommission($transaction['id']);
         
         // Nếu có voucher_id, tăng số lần sử dụng voucher
         if (!empty($transaction['voucher_id'])) {
             require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Voucher.php';
-            require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
-            $db = new Database();
             $voucherService = new Voucher($db);
             $voucherService->incrementUsage($transaction['voucher_id']);
         }

@@ -181,11 +181,11 @@ class Referral {
                 error_log("Commission calculation failed: Transaction ID $transactionId not found");
                 $this->conn->rollBack();
                 return false; // Transaction not found
-            }              // Check if status is 'completed' and payment confirmed
-            if (strtolower($transaction['status']) !== 'completed' || !isset($transaction['payment_confirmed']) || $transaction['payment_confirmed'] != 1) {
-                error_log("Commission calculation skipped: Transaction ID $transactionId has status '{$transaction['status']}' or payment not confirmed");
+            }            // Only check if status is 'completed', no longer checking payment_confirmed
+            if (strtolower($transaction['status']) !== 'completed') {
+                error_log("Commission calculation skipped: Transaction ID $transactionId has status '{$transaction['status']}'");
                 $this->conn->rollBack();
-                return false; // Transaction not completed or payment not confirmed
+                return false; // Transaction not completed
             }
             
             // Double check that we're not creating a duplicate commission

@@ -6,9 +6,9 @@
    - Cập nhật ENUM trong cấu trúc bảng từ `('pending', 'paid', 'cancelled')` thành `('pending', 'approved', 'paid', 'cancelled')`
    - Tạo migration file để cập nhật cơ sở dữ liệu
 
-2. Tự động duyệt hoa hồng khi giao dịch hoàn tất và thanh toán được xác nhận
+2. Tự động duyệt hoa hồng khi giao dịch hoàn tất
    - Sửa đổi phương thức `calculateCommission` để tự động đặt status='approved' khi thêm bản ghi mới
-   - Cập nhật logic kiểm tra để chỉ tính hoa hồng khi cả `status='completed'` và `payment_confirmed=1`
+   - Cập nhật logic kiểm tra để tính hoa hồng khi `status='completed'` (không cần kiểm tra `payment_confirmed`)
 
 3. Cập nhật phương thức `getCommissionTransactions` để trả về dữ liệu chính xác
    - Sử dụng COALESCE để ưu tiên giá trị từ bảng referral_commission nếu có
@@ -32,7 +32,7 @@
 
 1. Người dùng đăng ký qua liên kết giới thiệu
 2. Khi người dùng được giới thiệu thanh toán:
-   - Nếu giao dịch `status='completed'` và `payment_confirmed=1`
+   - Nếu giao dịch có `status='completed'` (không cần kiểm tra `payment_confirmed`)
    - Hệ thống tự động tính hoa hồng 5% dựa trên giá trị giao dịch
    - Hoa hồng được thêm vào bảng `referral_commission` với trạng thái `status='approved'`
    - Hoa hồng được đưa vào số dư khả dụng của người giới thiệu
@@ -46,7 +46,7 @@
 
 ## Quy trình duyệt tự động:
 1. Hệ thống nhận thông tin khi giao dịch được cập nhật trạng thái
-2. Kiểm tra nếu giao dịch là `status='completed'` và `payment_confirmed=1`
+2. Kiểm tra nếu giao dịch có `status='completed'` (không cần kiểm tra `payment_confirmed`)
 3. Kiểm tra xem đã có bản ghi hoa hồng chưa:
    - Nếu chưa, tính toán hoa hồng mới dựa trên giá trị giao dịch (5%)
    - Nếu có, kiểm tra và cập nhật trạng thái thành `approved` nếu cần

@@ -199,15 +199,13 @@ require_once $project_root_path . '/private/includes/header.php';
                                 </div>
                             </div>
                         </div>                          <?php if (!empty($commissionTransactions)): ?>
-                            <h5>Chi tiết giao dịch người được giới thiệu</h5>
-                              <div class="alert alert-info mb-3">
+                            <h5>Chi tiết giao dịch người được giới thiệu</h5>                              <div class="alert alert-info mb-3">
                                 <p><strong>Thông tin trạng thái hoa hồng:</strong></p>
                                 <ul class="mb-0">
-                                    <li><span class="badge badge-success">Đã duyệt</span> - Hoa hồng đã được tự động duyệt và sẵn sàng để rút</li>
-                                    <li><span class="badge badge-info">Đang duyệt</span> - Hệ thống đang xử lý hoa hồng cho giao dịch thành công</li>
-                                    <li><span class="badge badge-warning">Đang xử lý</span> - Giao dịch đang xử lý, hoa hồng sẽ được duyệt sau khi hoàn tất</li>
+                                    <li><span class="badge badge-success">Đã duyệt</span> - Hoa hồng đã được tự động duyệt khi giao dịch hoàn tất và sẵn sàng để rút</li>
+                                    <li><span class="badge badge-warning">Đang chờ</span> - Giao dịch đang xử lý, hoa hồng sẽ được duyệt sau khi giao dịch hoàn tất</li>
                                     <li><span class="badge badge-primary">Đã thanh toán</span> - Hoa hồng đã được thanh toán vào tài khoản của bạn</li>
-                                    <li><span class="badge badge-secondary">Chưa đủ điều kiện</span> - Giao dịch không thành công hoặc chưa được xác nhận</li>
+                                    <li><span class="badge badge-secondary">Chưa đủ điều kiện</span> - Giao dịch không thành công hoặc đã bị hủy</li>
                                 </ul>
                             </div>
                             
@@ -229,14 +227,10 @@ require_once $project_root_path . '/private/includes/header.php';
                                                 <td data-label="STT"><?php echo $index + 1; ?></td>
                                                 <td data-label="Người được giới thiệu"><?php echo htmlspecialchars($transaction['referred_username']); ?></td>
                                                 <td data-label="Số tiền giao dịch"><?php echo number_format($transaction['transaction_amount'], 0, ',', '.'); ?> VNĐ</td>
-                                                <td data-label="Hoa hồng (5%)"><?php echo number_format($transaction['commission_amount'], 0, ',', '.'); ?> VNĐ</td>
-                                                <td data-label="Trạng thái giao dịch">
+                                                <td data-label="Hoa hồng (5%)"><?php echo number_format($transaction['commission_amount'], 0, ',', '.'); ?> VNĐ</td>                                                <td data-label="Trạng thái giao dịch">
                                                     <?php
-                                                    // Trạng thái giao dịch
-                                                    if (
-                                                        strtolower($transaction['transaction_status']) === 'completed' &&
-                                                        isset($transaction['payment_confirmed']) && $transaction['payment_confirmed'] == 1
-                                                    ) {
+                                                    // Trạng thái giao dịch - Chỉ kiểm tra transaction_status mà không cần kiểm tra payment_confirmed
+                                                    if (strtolower($transaction['transaction_status']) === 'completed') {
                                                         echo '<span class="badge badge-success">Thành công</span>';
                                                     } else {
                                                         echo '<span class="badge badge-warning">Đang chờ</span>';
@@ -244,11 +238,8 @@ require_once $project_root_path . '/private/includes/header.php';
                                                     ?>
                                                 </td>                                                <td data-label="Trạng thái hoa hồng">
                                                     <?php
-                                                    // Trạng thái hoa hồng
-                                                    if (
-                                                        strtolower($transaction['transaction_status']) === 'completed' &&
-                                                        isset($transaction['payment_confirmed']) && $transaction['payment_confirmed'] == 1
-                                                    ) {
+                                                    // Trạng thái hoa hồng - Chỉ kiểm tra transaction_status mà không cần kiểm tra payment_confirmed
+                                                    if (strtolower($transaction['transaction_status']) === 'completed') {
                                                         echo '<span class="badge badge-success">Đã duyệt</span>';
                                                     } else {
                                                         echo '<span class="badge badge-warning">Đang chờ</span>';
@@ -279,11 +270,10 @@ require_once $project_root_path . '/private/includes/header.php';
                                         <h5><?php echo number_format($availableBalance, 0, ',', '.'); ?> VNĐ</h5>
                                     </div>
                                 </div>
-                                
-                                <div class="alert alert-info mb-4">
+                                  <div class="alert alert-info mb-4">
                                     <p><strong>Hệ thống hoa hồng tự động:</strong></p>
                                     <ul class="mb-0">
-                                        <li>Khi người được bạn giới thiệu thanh toán thành công, hệ thống tự động duyệt hoa hồng 5%</li>
+                                        <li>Khi giao dịch của người được bạn giới thiệu hoàn tất, hệ thống tự động duyệt hoa hồng 5%</li>
                                         <li>Hoa hồng được duyệt sẽ được cộng vào số dư khả dụng của bạn</li>
                                         <li>Bạn có thể yêu cầu rút tiền khi số dư từ 100,000 VNĐ trở lên</li>
                                         <li>Yêu cầu rút tiền sẽ được xử lý trong vòng 1-3 ngày làm việc</li>

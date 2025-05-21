@@ -25,8 +25,8 @@ function checkAndFixMissingCommissions() {
         $db = new Database();
         $referralService = new Referral($db);
         $conn = $db->getConnection();
-        
-        // Find transactions that should have commissions but don't
+          // Find transactions that should have commissions but don't
+        // No longer checking for payment_confirmed
         $sql = "
             SELECT 
                 th.id, th.user_id, th.amount
@@ -40,7 +40,6 @@ function checkAndFixMissingCommissions() {
                 referral_commission rc ON rc.transaction_id = th.id
             WHERE 
                 th.status = 'completed' 
-                AND th.payment_confirmed = 1
                 AND rc.id IS NULL
         ";
         

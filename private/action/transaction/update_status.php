@@ -63,16 +63,9 @@ try {
             $stmt->execute();
         }
           // Process referral commission if this is a completed transaction with confirmed payment
-        try {
-            // Get payment_confirmed status
-            $payment_confirmed = false;
+        try {            // Only calculate commission if status is completed
+            // We no longer check if payment is confirmed - transaction_history status being 'completed' is sufficient
             if ($new_status === 'completed') {
-                $stmt = $pdo->prepare("SELECT payment_confirmed FROM transaction_history WHERE id = :id");
-                $stmt->bindParam(':id', $transaction_id, PDO::PARAM_INT);
-                $stmt->execute();
-                $payment_confirmed = (bool)$stmt->fetchColumn();
-            }            // Only calculate commission if status is completed and payment is confirmed
-            if ($new_status === 'completed' && $payment_confirmed) {
                 $referralService = new Referral($db);
                 
                 // Check if commission record already exists

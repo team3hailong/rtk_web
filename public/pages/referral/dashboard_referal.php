@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeReferralSystem({
         availableBalance: <?php echo (float)$availableBalance; ?>,
         minWithdrawalAmount: 100000,
-        processWithdrawalUrl: '<?php echo $base_url; ?>/private/action/referral/process_withdrawal.php'
+        processWithdrawalUrl: '<?php echo $base_url . $base_path; ?>/handlers/referral_action.php'
     });
 });
 </script>

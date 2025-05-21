@@ -339,7 +339,6 @@ $(document).ready(function() {
             $(targetId + ' .trophy-2').parent().parent().addClass('top-rank');
             $(targetId + ' .trophy-3').parent().parent().addClass('top-rank');
             
-            $(targetId + ' .trophy-1').html('<i class="fas fa-crown"></i>');
         }, 100);
     }
     

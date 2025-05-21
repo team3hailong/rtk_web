@@ -67,9 +67,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <!-- Header and Navigation -->
     <header class="site-header">
         <div class="container">
-            <div class="logo-container">
-                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
-                    <img src="<?php echo $base_path; ?>/assets/images/logo.png" alt="Đo đạc RTK Logo">
+            <div class="logo-container">                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
+                    <img src="<?php echo $base_path; ?>/assets/img/logo_geotek.png" alt="Đo đạc RTK Logo">
                 </a>
             </div>
               <nav class="main-nav">
@@ -327,9 +326,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="<?php echo $base_path; ?>/assets/images/logo.png" alt="Đo đạc RTK Logo">
+            <div class="footer-content">                <div class="footer-logo">
+                    <img src="<?php echo $base_path; ?>/assets/img/logo_geotek.png" alt="Đo đạc RTK Logo">
                     <p>Dịch vụ tài khoản đo đạc RTK chất lượng cao</p>
                 </div>
                 

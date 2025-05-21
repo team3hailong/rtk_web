@@ -100,12 +100,26 @@ if (!$is_trial) {
         } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
             $base_price = $_SESSION[$session_key]['total_price'];
         }
-    }
-    $vat_amount = $base_price * ($vat_value / 100);
+    }    $vat_amount = $base_price * ($vat_value / 100);
     $final_price = $base_price + $vat_amount;
     $qr = $paymentService->generateVietQR($final_price, $order_description); // <-- Số tiền QR là tổng thanh toán
     $final_qr_payload = $qr['payload'];
     $vietqr_image_url = $qr['image_url'];
+      // Cập nhật giá trị tổng thanh toán vào transaction_history (bao gồm VAT)
+    if ($is_renewal) {
+        // For renewal, update transaction_history for primary registration_id
+        // System should have already created appropriate transaction records for each registration
+        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price);
+        if ($update_result) {
+            error_log("Payment Page: Updated renewal transaction_history amount to {$final_price} for registration ID {$registration_id}");
+        }
+    } else {
+        // For single purchase
+        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price);
+        if ($update_result) {
+            error_log("Payment Page: Updated purchase transaction_history amount to {$final_price} for registration ID {$registration_id}");
+        }
+    }
 }
 
 // --- User Info ---

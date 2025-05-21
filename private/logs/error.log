@@ -49,3 +49,6 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[21-May-2025 18:18:53 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 108000 for registration ID 283
+[21-May-2025 18:19:14 Asia/Ho_Chi_Minh] Payment Page: Updated renewal transaction_history amount to 1944000 for registration ID 284
+[21-May-2025 18:19:35 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 4860000 for registration ID 285

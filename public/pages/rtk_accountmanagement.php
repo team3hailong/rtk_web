@@ -115,15 +115,18 @@ function getPaginationUrl($page, $perPage, $filter) {
                     <span class="filter-group-title">Bộ lọc</span>
                 </div>
                 <div class="filter-group-content">
-                    <div class="filter-row">
-                        <!-- Lọc theo trạng thái -->
+                    <div class="filter-row">                        <!-- Lọc theo trạng thái -->
                         <div class="filter-group-item">
                             <div class="filter-label">Trạng thái:</div>
-                            <div class="filter-buttons-group">
-                                <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
-                                <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
-                                <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
-                                <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
+                            <div class="filter-buttons-group status-filter-group">
+                                <div class="status-buttons-row">
+                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
+                                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
+                                </div>
+                                <div class="status-buttons-row">
+                                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
+                                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
+                                </div>
                             </div>
                         </div>
 
@@ -142,17 +145,19 @@ function getPaginationUrl($page, $perPage, $filter) {
                         </div>
                     </div>
 
-                    <div class="filter-row">
-                        <!-- Tìm kiếm -->
-                        <div class="filter-group-item search-container">                            <div class="filter-label">Tìm kiếm:</div>
+                    <div class="filter-row">                        <!-- Tìm kiếm -->
+                        <div class="filter-group-item search-container">
+                            <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">
                                 <input type="text" class="search-box" id="search-input" placeholder="Tên TK, Tỉnh, Trạm...">
-                                <button type="button" id="search-button" class="search-button">
-                                    <i class="fas fa-search"></i> <span>Tìm kiếm</span>
-                                </button>
-                                <button type="button" id="reset-button" class="reset-button">
-                                    <i class="fas fa-redo"></i> <span>Đặt lại</span>
-                                </button>
+                                <div class="search-buttons-container">
+                                    <button type="button" id="search-button" class="search-button">
+                                        <i class="fas fa-search"></i> <span>Tìm kiếm</span>
+                                    </button>
+                                    <button type="button" id="reset-button" class="reset-button">
+                                        <i class="fas fa-redo"></i> <span>Đặt lại</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

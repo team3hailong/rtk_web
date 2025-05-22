@@ -131,6 +131,26 @@
     gap: 0.25rem;
 }
 
+/* Định dạng cho nhóm nút lọc trạng thái */
+.status-filter-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.status-buttons-row {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.status-buttons-row .filter-button {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+}
+
 .accounts-content-wrapper .filter-select {
     padding: 0.35rem 0.6rem;
     border: 1px solid var(--gray-300);
@@ -162,17 +182,22 @@
 
 .accounts-content-wrapper .search-group {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
-    flex-wrap: nowrap; /* Thay đổi từ wrap sang nowrap để tránh các nút xuống dòng */
     flex-grow: 1;
     width: 100%; /* Đảm bảo chiều rộng đầy đủ */
-    align-items: center; /* Căn chỉnh các phần tử theo chiều dọc */
 }
 
 .accounts-content-wrapper .search-box {
-    flex: 1;
-    min-width: 180px;
-    max-width: 60%; /* Giới hạn chiều rộng của ô tìm kiếm */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.accounts-content-wrapper .search-buttons-container {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
 }
 
 .accounts-content-wrapper .search-button, 
@@ -183,11 +208,12 @@
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.25rem;
     border: none;
     transition: all 0.2s;
     white-space: nowrap; /* Ngăn chặn text xuống dòng */
-    flex-shrink: 0; /* Ngăn nút co lại */
+    flex: 1; /* Đảm bảo các nút có cùng chiều rộng */
 }
 
 .accounts-content-wrapper .search-button {

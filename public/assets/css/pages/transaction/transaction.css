@@ -6,12 +6,15 @@
     --table-head-bg: var(--gray-50);
     --action-btn-width: 100px;
     --mobile-action-btn-size: 36px;
+
 }
+
 
 /* --- Layout chung --- */
 .transactions-content-wrapper {
   padding-top: 1rem;
 }
+
 
 /* --- Export Invoice Section --- */
 .export-invoice-section {
@@ -424,6 +427,7 @@
 }
 
 /* --- Nhóm bộ lọc mới --- */
+
 .filter-container {
   margin-bottom: 1.25rem;
   background-color: white;
@@ -573,6 +577,7 @@
   gap: 0.4rem;
 }
 
+
 .filter-button {
   padding: 0.5rem 1rem;
   border: 1px solid #e2e8f0;
@@ -604,6 +609,7 @@
   margin-right: 0.2rem;
   opacity: 0.8;
 }
+
 
 .filter-select {
   width: 100%;

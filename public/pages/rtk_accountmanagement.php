@@ -109,53 +109,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->
-            <style>
-            .filter-container {
-                margin-bottom: 1rem !important;
-                background-color: white !important;
-                border-radius: 0.5rem !important;
-                border: 1px solid #e5e7eb !important;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
-                overflow: hidden !important;
-                width: 100% !important;
-                display: block !important;
-            }
-            .filter-group-header {
-                padding: 0.5rem 1rem !important;
-                background-color: #f3f4f6 !important;
-                border-bottom: 1px solid #e5e7eb !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-                width: 100% !important;
-            }
-            .filter-group-title {
-                font-weight: 600 !important;
-                color: #374151 !important;
-                font-size: 0.875rem !important;
-            }
-            .filter-group-content {
-                padding: 0.75rem !important;
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 0.75rem !important;
-                width: 100% !important;
-            }
-            .filter-row {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 1rem !important;
-                align-items: flex-start !important;
-                width: 100% !important;
-            }
-            .filter-group-item {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 0.5rem !important;
-                align-items: center !important;
-            }
-            </style>
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán -->
             <div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>

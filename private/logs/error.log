@@ -157,3 +157,7 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[22-May-2025 10:30:51 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

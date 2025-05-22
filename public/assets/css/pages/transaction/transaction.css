@@ -125,16 +125,35 @@
     padding: 0.5rem 0.8rem; 
     border: 1px solid var(--gray-300); 
     border-radius: var(--rounded-md); 
-    width: 250px; 
+    width: 100%; 
     max-width: 100%; 
     font-size: var(--font-size-sm); 
-    margin-left: auto; 
     box-sizing: border-box;
   }
   
   .search-box:focus { 
     outline: none; 
     border-color: var(--primary-500); 
+  }
+  
+  /* Search container with buttons */
+  .search-container {
+    flex-grow: 1;
+    min-width: 300px;
+  }
+  
+  .search-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    width: 100%;
+  }
+  
+  .search-buttons-container {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
   }
   
   /* --- Table Styles --- */
@@ -543,23 +562,61 @@
       padding: 0.5rem 0.8rem;
     }
     
-    /* Filter section */
-    .filter-section {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+    /* Responsive styles for filter-container */
+    .filter-container {
       margin-bottom: 1rem;
+      width: 100%;
+      box-sizing: border-box;
     }
     
-    .filter-buttons-group {
-      margin-bottom: 0.5rem;
+    .filter-row {
+      flex-direction: column;
+      gap: 0.75rem;
       width: 100%;
+    }
+    
+    .filter-group-item {
+      width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .filter-label {
+      margin-bottom: 0.25rem;
+      min-width: auto;
+      width: 100%;
+    }
+    
+    .filter-buttons-group,
+    .filter-dropdown-group,
+    .status-filter-group {
+      width: 100%;
+    }
+    
+    .status-buttons-row .filter-button {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+    
+    .filter-select {
+      width: 100%;
+    }
+    
+    .search-container {
+      width: 100%;
+    }
+    
+    .search-group {
+      width: 100%;
+      flex-wrap: wrap;
     }
     
     .search-box { 
       width: 100%;
+      max-width: 100%;
       margin-left: 0;
-      margin-top: 0.5rem;
+      margin-top: 0;
     }
     
     /* Table */
@@ -852,6 +909,9 @@
   border: 1px solid var(--gray-200);
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   overflow: hidden;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
 }
 
 .filter-group-header {
@@ -861,6 +921,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filter-group-title {
@@ -874,6 +936,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filter-row {
@@ -881,6 +945,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   align-items: flex-start;
+  width: 100%;
 }
 
 .filter-group-item {
@@ -888,6 +953,7 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .filter-label {
@@ -898,7 +964,28 @@
 }
 
 .filter-dropdown-group {
+  min-width: 180px;
+}
+
+/* Định dạng cho nhóm nút lọc trạng thái */
+.status-filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.status-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.status-buttons-row .filter-button {
   flex: 1;
+  text-align: center;
+  justify-content: center;
+}
   min-width: 200px;
 }
 
@@ -943,22 +1030,28 @@
 
 .search-group {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+  flex-grow: 1;
+  width: 100%;
   align-items: center;
   width: 100%;
   max-width: 600px;
 }
 
 .search-button, .reset-button {
-  padding: 0.4rem 0.8rem;
-  border: none;
+  padding: 0.35rem 0.8rem;
   border-radius: var(--rounded-md);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  transition: all 0.2s ease;
+  justify-content: center;
+  gap: 0.25rem;
+  border: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex: 1;
 }
 
 .search-button {
@@ -977,4 +1070,80 @@
 
 .reset-button:hover {
   background-color: var(--gray-300);
+}
+
+/* Định dạng cho nhóm nút lọc trạng thái */
+.status-filter-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.status-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.status-buttons-row .filter-button {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Định dạng cho nút tìm kiếm */
+.search-buttons-container {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+/* Responsive styles for filter container */
+@media (max-width: 768px) {
+  .filter-group-item {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .filter-label {
+    margin-bottom: 0.25rem;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .filter-dropdown-group, 
+  .search-box,
+  .filter-buttons-group,
+  .status-filter-group {
+    width: 100%;
+  }
+  
+  .search-group {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    margin-bottom: 0.5rem;
+  }
+  
+  .search-button, 
+  .reset-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-button span, 
+  .reset-button span {
+    display: none;
+  }
+  
+  .search-button i, 
+  .reset-button i {
+    margin: 0;
+    font-size: 1.1rem;
+  }
 }

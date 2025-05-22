@@ -251,13 +251,13 @@
   
   /* Status badges */
   .status-badge { 
-    padding: 0.3rem 0.8rem; 
+    padding: 0.25rem 0.65rem;   /* reduced vertical/horizontal padding */
     border-radius: var(--rounded-full); 
-    font-size: 0.8rem; 
+    font-size: 0.8rem;      /* slightly smaller text */
     display: inline-block; 
     font-weight: var(--font-medium); 
     text-align: center; 
-    min-width: 80px;
+    min-width: 75px;         /* shorter minimum width */
     margin-left: 0; /* Ensure proper alignment with the Status column header */
   }
   
@@ -772,7 +772,10 @@
     .transactions-table td:nth-child(3) { width: 25%; } /* Amount */
     
     .transactions-table th:nth-child(6), 
-    .transactions-table td:nth-child(6) { width: 20%; } /* Actions */
+    .transactions-table td:nth-child(6) { 
+      width: 100%; 
+      min-width: 80px; /* Ensure the "Trạng thái" column never shrinks below the badge width */
+    } /* Actions */
     
     .transactions-table th:nth-child(6) {
       text-align: center;
@@ -986,9 +989,6 @@
   text-align: center;
   justify-content: center;
 }
-  min-width: 200px;
-}
-
 .filter-select {
   width: 100%;
   padding: 0.4rem 0.6rem;

@@ -673,6 +673,7 @@
   font-size: 0.875rem;
   color: #334155;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .search-box:focus {

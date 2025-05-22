@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('search-button');
     const resetButton = document.getElementById('reset-button');
     const searchBox = document.getElementById('search-input');
+    const filterToggleBtn = document.querySelector('.filter-toggle-btn');
+    const filterGroupContent = document.querySelector('.filter-group-content');
 
     // Current filter state
     let currentRemainingTimeFilter = 'all';
@@ -133,14 +135,28 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof applyFilters === 'function') applyFilters();
         });
     }
-    
-    // Add keypress event for search box
+      // Add keypress event for search box
     if (searchBox) {
         searchBox.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 window.currentSearchTerm = this.value.toLowerCase().trim();
                 if (typeof applyFilters === 'function') applyFilters();
                 e.preventDefault();
+            }
+        });
+    }
+    
+    // Add toggle functionality for filter container
+    if (filterToggleBtn && filterGroupContent) {
+        filterToggleBtn.addEventListener('click', function() {
+            // Toggle the visibility of filter content
+            const isVisible = filterGroupContent.style.display !== 'none';
+            filterGroupContent.style.display = isVisible ? 'none' : '';
+            
+            // Update the icon
+            const icon = filterToggleBtn.querySelector('i');
+            if (icon) {
+                icon.className = isVisible ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
             }
         });
     }

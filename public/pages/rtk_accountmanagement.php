@@ -109,23 +109,34 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán -->
-            <div class="filter-container">
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán -->            <div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>
+                    <button type="button" class="filter-toggle-btn" aria-label="Toggle filters">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
                 <div class="filter-group-content">
-                    <div class="filter-row">                        <!-- Lọc theo trạng thái -->
-                        <div class="filter-group-item">
+                    <div class="filter-row">
+                        <!-- Lọc theo trạng thái -->
+                        <div class="filter-group-item filter-status-group">
                             <div class="filter-label">Trạng thái:</div>
-                            <div class="filter-buttons-group status-filter-group">
+                            <div class="status-filter-group">
                                 <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
-                                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">Hoạt động</button>
+                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">
+                                        <i class="fas fa-list-ul"></i> Tất cả
+                                    </button>
+                                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">
+                                        <i class="fas fa-check-circle"></i> Hoạt động
+                                    </button>
                                 </div>
                                 <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">Hết hạn</button>
-                                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">Đã khóa</button>
+                                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">
+                                        <i class="fas fa-calendar-times"></i> Hết hạn
+                                    </button>
+                                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">
+                                        <i class="fas fa-lock"></i> Đã khóa
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +156,8 @@ function getPaginationUrl($page, $perPage, $filter) {
                         </div>
                     </div>
 
-                    <div class="filter-row">                        <!-- Tìm kiếm -->
+                    <div class="filter-row">
+                        <!-- Tìm kiếm -->
                         <div class="filter-group-item search-container">
                             <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">

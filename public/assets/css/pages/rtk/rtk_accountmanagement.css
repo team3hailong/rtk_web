@@ -39,13 +39,21 @@
 .accounts-content-wrapper .filter-button { 
     padding: 0.4rem 0.9rem; 
     border: 1px solid var(--gray-300); 
-    border-radius: var(--rounded-full); 
+    border-radius: var(--rounded-md); 
     background: white; 
     cursor: pointer; 
     transition: all 0.2s; 
     font-size: var(--font-size-sm); 
     color: var(--gray-700);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 }
+
+.accounts-content-wrapper .filter-button i {
+    font-size: 1rem;
+}
+
 .accounts-content-wrapper .filter-button.active { 
     background: var(--primary-500); 
     color: white; 
@@ -60,7 +68,7 @@
 .per-page-select:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 2px rgba(33,150,243,0.2); }
 
 /* --- Nhóm bộ lọc mới --- */
-.accounts-content-wrapper .filter-container {
+.filter-container {
     margin-bottom: 1rem;
     background-color: white;
     border-radius: var(--rounded-lg);
@@ -72,8 +80,8 @@
     box-sizing: border-box; /* Quan trọng: bao gồm padding và border trong width */
 }
 
-.accounts-content-wrapper .filter-group-header {
-    padding: 0.5rem 1rem;
+.filter-group-header {
+    padding: 0.75rem 1.25rem;
     background-color: var(--gray-100);
     border-bottom: 1px solid var(--gray-200);
     display: flex;
@@ -83,14 +91,44 @@
     box-sizing: border-box;
 }
 
-.accounts-content-wrapper .filter-group-title {
+.filter-group-title {
     font-weight: var(--font-semibold);
     color: var(--gray-700);
     font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.accounts-content-wrapper .filter-group-content {
-    padding: 0.75rem;
+.filter-group-title i {
+    margin-right: 0.3rem;
+    color: var(--gray-600);
+}
+
+.filter-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--gray-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    transition: all 0.2s;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.filter-toggle-btn i {
+    font-size: 1.1rem;
+}
+
+.filter-toggle-btn:hover {
+    background-color: var(--gray-200);
+}
+
+.filter-group-content {
+    padding: 0.75rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -98,7 +136,7 @@
     box-sizing: border-box;
 }
 
-.accounts-content-wrapper .filter-row {
+.filter-row {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -106,12 +144,17 @@
     width: 100%; /* Đảm bảo chiều rộng đầy đủ */
 }
 
-.accounts-content-wrapper .filter-group-item {
+.filter-group-item {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
     margin-bottom: 0.5rem;
+}
+
+.filter-status-group {
+    flex: 1;
+    min-width: 280px;
 }
 
 .filter-label {
@@ -121,11 +164,21 @@
     min-width: 100px;
 }
 
-.accounts-content-wrapper .filter-dropdown-group {
+.filter-dropdown-group {
     min-width: 180px;
 }
 
-.accounts-content-wrapper .filter-buttons-group {
+.filter-select {
+    width: 100%;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--rounded-md);
+    border: 1px solid var(--gray-300);
+    background-color: white;
+    font-size: var(--font-size-sm);
+    color: var(--gray-800);
+}
+
+.filter-buttons-group {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
@@ -149,7 +202,36 @@
     flex: 1;
     text-align: center;
     justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: var(--font-medium);
 }
+
+.filter-button {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-md);
+    background-color: white;
+    transition: all 0.3s;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.filter-button.active {
+    background-color: var(--primary-500);
+    color: white;
+    border-color: var(--primary-500);
+}
+
+.filter-button:hover:not(.active) {
+    background-color: var(--gray-100);
+}
+
 
 .accounts-content-wrapper .filter-select {
     padding: 0.35rem 0.6rem;
@@ -189,6 +271,7 @@
 }
 
 .accounts-content-wrapper .search-box {
+    background-color: white;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -202,7 +285,7 @@
 
 .accounts-content-wrapper .search-button, 
 .accounts-content-wrapper .reset-button {
-    padding: 0.35rem 0.8rem;
+    padding: 0.5rem 1rem;
     border-radius: var(--rounded-md);
     font-size: var(--font-size-sm);
     cursor: pointer;
@@ -219,6 +302,12 @@
 .accounts-content-wrapper .search-button {
     background-color: var(--primary-500);
     color: white;
+    min-width: 120px;
+}
+
+.accounts-content-wrapper .search-button i {
+    font-size: 1rem;
+    margin-right: 0.3rem;
 }
 
 .accounts-content-wrapper .search-button:hover {
@@ -228,10 +317,12 @@
 .accounts-content-wrapper .reset-button {
     background-color: var(--gray-200);
     color: var(--gray-700);
+    min-width: 120px;
 }
 
-.accounts-content-wrapper .reset-button:hover {
-    background-color: var(--gray-300);
+.accounts-content-wrapper .reset-button i {
+    font-size: 1rem;
+    margin-right: 0.3rem;
 }
 
 .accounts-content-wrapper .reset-button:hover {

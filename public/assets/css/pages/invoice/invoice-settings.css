@@ -30,12 +30,12 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .form-control:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
     outline: none;
 }
 

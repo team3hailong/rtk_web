@@ -12,7 +12,22 @@ const rejectionReasonSection = document.getElementById('rejection-reason-section
 const modalTxRejectionReason = document.getElementById('modal-tx-rejection-reason');
 const paymentProofSection = document.getElementById('payment-proof-section');
 const modalTxPaymentImageLink = document.getElementById('modal-tx-payment-image-link');
-
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter toggle functionality for mobile
+    const filterHeader = document.querySelector('.filter-group-header');
+    const filterContainer = document.querySelector('.filter-container');
+    
+    if (filterHeader && filterContainer) {
+        filterHeader.addEventListener('click', function() {
+            filterContainer.classList.toggle('collapsed');
+        });
+        
+        // Auto-collapse on mobile by default
+        if (window.innerWidth < 768) {
+            filterContainer.classList.add('collapsed');
+        }
+    }
+});
 function showTransactionDetails(txData) {
     if (!modalOverlay || !txData) return;
     modalTitle.textContent = `Chi Tiết Giao Dịch #${txData.id}`;

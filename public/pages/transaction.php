@@ -71,25 +71,37 @@ function getPaginationUrl($page, $perPage, $filter) {
             <div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>
+                    <button type="button" class="filter-toggle-btn" aria-label="Toggle filters">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
                 <div class="filter-group-content">
-                    <div class="filter-row">                        <!-- Lọc theo trạng thái -->
-                        <div class="filter-group-item">
+                    <div class="filter-row">
+                        <!-- Lọc theo trạng thái -->
+                        <div class="filter-group-item filter-status-group">
                             <div class="filter-label">Trạng thái:</div>
                             <div class="status-filter-group">
                                 <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">Tất cả</button>
-                                    <button class="filter-button <?php echo $filter === 'completed' ? 'active' : ''; ?>" data-filter="completed">Hoàn thành</button>
+                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">
+                                        <i class="fas fa-list-ul"></i> Tất cả
+                                    </button>
+                                    <button class="filter-button <?php echo $filter === 'completed' ? 'active' : ''; ?>" data-filter="completed">
+                                        <i class="fas fa-check-circle"></i> Hoàn thành
+                                    </button>
                                 </div>
                                 <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">Chờ xử lý</button>
-                                    <button class="filter-button <?php echo $filter === 'failed' ? 'active' : ''; ?>" data-filter="failed">Thất bại</button>
+                                    <button class="filter-button <?php echo $filter === 'pending' ? 'active' : ''; ?>" data-filter="pending">
+                                        <i class="fas fa-clock"></i> Chờ xử lý
+                                    </button>
+                                    <button class="filter-button <?php echo $filter === 'failed' ? 'active' : ''; ?>" data-filter="failed">
+                                        <i class="fas fa-times-circle"></i> Thất bại
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Lọc theo số tiền -->
-                        <div class="filter-group-item">
+                        <div class="filter-group-item filter-amount-group">
                             <div class="filter-label">Số tiền:</div>
                             <div class="filter-dropdown-group">
                                 <select id="amount-filter" class="filter-select">
@@ -103,9 +115,9 @@ function getPaginationUrl($page, $perPage, $filter) {
                         </div>
                     </div>
 
-                    <div class="filter-row">
+                    <div class="filter-row time-filter-row">
                         <!-- Lọc theo thời gian -->
-                        <div class="filter-group-item">
+                        <div class="filter-group-item filter-time-group">
                             <div class="filter-label">Thời gian:</div>
                             <div class="filter-dropdown-group">
                                 <select id="time-filter" class="filter-select">
@@ -119,22 +131,26 @@ function getPaginationUrl($page, $perPage, $filter) {
                         </div>
                         
                         <!-- Tùy chỉnh thời gian (hiển thị khi chọn tùy chỉnh) -->
-                        <div class="filter-group-item time-custom-filter" style="display: none;">
-                            <div class="filter-label">Từ ngày:</div>
-                            <div class="filter-input-group">
-                                <input type="date" id="date-from" class="filter-date-input">
+                        <div class="filter-date-container">
+                            <div class="filter-group-item time-custom-filter" style="display: none;">
+                                <div class="filter-label">Từ ngày:</div>
+                                <div class="filter-input-group">
+                                    <input type="date" id="date-from" class="filter-date-input">
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="filter-group-item time-custom-filter" style="display: none;">
-                            <div class="filter-label">Đến ngày:</div>
-                            <div class="filter-input-group">
-                                <input type="date" id="date-to" class="filter-date-input">
+                            
+                            <div class="filter-group-item time-custom-filter" style="display: none;">
+                                <div class="filter-label">Đến ngày:</div>
+                                <div class="filter-input-group">
+                                    <input type="date" id="date-to" class="filter-date-input">
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="filter-row">                        <!-- Tìm kiếm -->                        <div class="filter-group-item search-container">
+                    <div class="filter-row">
+                        <!-- Tìm kiếm -->
+                        <div class="filter-group-item search-container">
                             <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">
                                 <input type="text" class="search-box" id="search-input" placeholder="Tìm theo ID, Loại GD...">

@@ -11,12 +11,13 @@
  * Gọi hàm này thay thế cho session_start() ở các trang
  */
 function init_session() {
-    // Cấu hình thời gian session (2 giờ = 7200 giây)
-    ini_set('session.gc_maxlifetime', 7200);
-    session_set_cookie_params(7200);
-    
-    // Khởi tạo session nếu chưa được khởi tạo
+    // Chỉ đặt cấu hình session khi chưa được khởi tạo
     if (session_status() === PHP_SESSION_NONE) {
+        // Cấu hình thời gian session (2 giờ = 7200 giây)
+        ini_set('session.gc_maxlifetime', 7200);
+        session_set_cookie_params(7200);
+        
+        // Khởi tạo session
         session_start();
     }
     

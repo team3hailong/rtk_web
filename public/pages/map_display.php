@@ -29,14 +29,15 @@ include $project_root_path . '/private/includes/header.php';
 <div class="dashboard-wrapper">
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-4">Bản đồ trạm base</h2>
+        <h2 class="text-2xl font-semibold mb-4">Bản đồ trạm đo đạc</h2>
         <p class="text-gray-600 mb-4">Trạng thái trạm sẽ được cập nhật liên tục mỗi 5 phút</p>
         <div id="map-container">
             <div id="map"><p>Đang tải bản đồ...</p></div>
             <div class="map-controls">
                 <button id="toggleMapType" class="map-type-btn active">Bản đồ vệ tinh</button>
                 <button id="getCurrentLocation" class="map-type-btn">Vị trí của tôi</button>
-            </div>            <div class="map-legend">
+            </div> 
+                <div class="map-legend">
                 <div class="legend-title">Chú thích:</div>
                 <div class="legend-item">
                     <div class="legend-color green-station"></div>

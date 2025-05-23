@@ -17,7 +17,7 @@ require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include C
 require_once $project_root_path . '/private/classes/purchase/PaymentService.php';
 
 // --- VAT Rate ---
-$vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 8; // Lấy từ .env hoặc mặc định 8%
+$vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10; // Lấy từ .env hoặc mặc định 10%
 
 // --- Authentication & Pending Order Check ---
 if (!isset($_SESSION['user_id'])) {

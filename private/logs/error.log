@@ -165,3 +165,14 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[23-May-2025 09:44:46 Asia/Ho_Chi_Minh] Could not parse duration '' for package ID 2. Defaulting to 1 month.
+[23-May-2025 09:44:46 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 8640000 for registration ID 288
+[23-May-2025 09:46:22 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 2160000 for registration ID 289
+[23-May-2025 09:46:50 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 09:51:23 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

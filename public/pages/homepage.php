@@ -102,7 +102,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-secondary">Xem bản đồ trạm</a>
                 </div>
             </div>            <div class="hero-map-container">
-                <h3>Bản đồ trạm base</h3>
+                <h3>Bản đồ trạm đo đạc</h3>
                 <div id="hero-map" class="hero-map"></div>
                 <div class="view-all-stations">
                     <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn-view-all-stations">Xem chi tiết bản đồ <i class="fas fa-arrow-right"></i></a>
@@ -114,8 +114,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="container">
-            <h2 class="section-title">Các tính năng ưu việt</h2>
-            <p class="section-description">Chúng tôi cung cấp giải pháp đo đạc RTK toàn diện với nhiều tính năng hàng đầu</p>
+            <h2 class="section-title">Các tính năng nổi bật</h2>
+            <p class="section-description">Chúng tôi cung cấp dịch vụ tài khoản đo đạc toàn diện nâng cao trải nghiệm dịch vụ</p>
             
             <div class="features-grid">
                 <div class="feature-card">
@@ -141,7 +141,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         <i class="fas fa-book-open"></i>
                     </div>
                     <h3>Tài liệu hướng dẫn</h3>
-                    <p>Cung cấp đầy đủ tài liệu hướng dẫn sử dụng dịch vụ, cài đặt và thiết lập kết nối đến các trạm base.</p>
+                    <p>Cung cấp đầy đủ tài liệu hướng dẫn sử dụng dịch vụ, cài đặt và thiết lập kết nối đến các trạm đo đạc.</p>
                     <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Xem hướng dẫn <i class="fas fa-chevron-right"></i></a>
                 </div>
                 

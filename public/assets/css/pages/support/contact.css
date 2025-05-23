@@ -33,6 +33,20 @@
     background-color: #fff; /* Added to make input background white */
 }
 
+/* Character counter styles */
+.char-counter {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.25rem;
+}
+
+.char-limit-warning {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
 textarea.form-control {
     resize: vertical;
 }

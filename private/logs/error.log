@@ -194,3 +194,19 @@
                 W' at line 2
 [23-May-2025 10:25:33 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $conn in C:\laragon\www\rtk_web\private\action\purchase\upload_payment_proof.php on line 168
 [23-May-2025 10:27:15 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 864000 for registration ID 291
+[23-May-2025 10:29:06 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:31:04 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:32:22 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:40:48 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

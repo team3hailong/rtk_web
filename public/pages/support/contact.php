@@ -69,7 +69,8 @@ include $project_root_path . '/private/includes/header.php';
                         ?>
                         <div class="form-group">
                             <label for="subject">Tiêu đề:</label>
-                            <input type="text" id="subject" name="subject" required class="form-control">
+                            <input type="text" id="subject" name="subject" required class="form-control" maxlength="100">
+                            <small class="char-counter" id="subject-counter">0/100 ký tự</small>
                         </div>
                         
                         <div class="form-group">
@@ -84,7 +85,8 @@ include $project_root_path . '/private/includes/header.php';
                         
                         <div class="form-group">
                             <label for="message">Nội dung:</label>
-                            <textarea id="message" name="message" rows="6" required class="form-control"></textarea>
+                            <textarea id="message" name="message" rows="6" required class="form-control" maxlength="1000"></textarea>
+                            <small class="char-counter" id="message-counter">0/1000 ký tự</small>
                         </div>
                         
                         <div class="form-actions">
@@ -318,6 +320,40 @@ include $project_root_path . '/private/includes/header.php';
 <!-- Add JavaScript for Modal Functionality -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Character counter functionality
+    const subjectInput = document.getElementById('subject');
+    const messageTextarea = document.getElementById('message');
+    const subjectCounter = document.getElementById('subject-counter');
+    const messageCounter = document.getElementById('message-counter');
+    
+    // Update character counter for subject
+    subjectInput.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = this.getAttribute('maxlength');
+        subjectCounter.textContent = currentLength + '/' + maxLength + ' ký tự';
+        
+        // Add visual feedback when approaching character limit
+        if (currentLength >= maxLength * 0.9) {
+            subjectCounter.classList.add('char-limit-warning');
+        } else {
+            subjectCounter.classList.remove('char-limit-warning');
+        }
+    });
+    
+    // Update character counter for message
+    messageTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = this.getAttribute('maxlength');
+        messageCounter.textContent = currentLength + '/' + maxLength + ' ký tự';
+        
+        // Add visual feedback when approaching character limit
+        if (currentLength >= maxLength * 0.9) {
+            messageCounter.classList.add('char-limit-warning');
+        } else {
+            messageCounter.classList.remove('char-limit-warning');
+        }
+    });
+    
     // Modal functionality
     const modal = document.getElementById('request-modal');
     const closeBtn = modal.querySelector('.modal-close-btn');

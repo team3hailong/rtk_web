@@ -304,8 +304,8 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
 
                 <p class="payment-instructions">
-                    <strong>Lưu ý:</strong> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản <code><?php echo htmlspecialchars($order_description); ?></code> để hệ thống tự động xử lý.
-                    Sau khi chuyển khoản thành công, tài khoản của bạn sẽ được kích hoạt (thường trong vòng vài phút). Bạn có thể kiểm tra trạng thái trong mục "Quản Lý Giao Dịch".
+                    <strong>Lưu ý:</strong> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản <code><?php echo htmlspecialchars($order_description); ?></code>.
+                    Lưu lại ảnh minh chứng chuyển khoản thành công để đội ngũ chúng tôi nhận thông tin và duyệt tạo tài khoản đo đạc cho bạn. 
                 </p>
                  <p class="payment-instructions" style="margin-top: 0.5rem;">
                      Nếu gặp sự cố, vui lòng liên hệ bộ phận hỗ trợ.
@@ -315,7 +315,7 @@ include $project_root_path . '/private/includes/header.php';
                         Tôi đã thanh toán - Tải lên minh chứng
                     </button>
                     <p style="font-size: var(--font-size-sm); color: var(--gray-500); margin-top: 0.8rem;">
-                        (Bạn có thể tải lên minh chứng sau nếu muốn)
+                        (Bạn hãy tải lên minh chứng sau khi chuyển khoản thành công)
                     </p>
                 </div>
                  <!-- === Kết thúc Nút xác nhận === -->

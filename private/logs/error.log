@@ -176,3 +176,21 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[23-May-2025 10:05:51 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:06:04 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1728000 for registration ID 290
+[23-May-2025 10:09:41 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1758240 for registration ID 290
+[23-May-2025 10:10:38 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1758240 for registration ID 290
+[23-May-2025 10:11:37 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1758240 for registration ID 290
+[23-May-2025 10:18:25 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:18:33 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-May-2025 10:25:33 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $conn in C:\laragon\www\rtk_web\private\action\purchase\upload_payment_proof.php on line 168
+[23-May-2025 10:27:15 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 864000 for registration ID 291

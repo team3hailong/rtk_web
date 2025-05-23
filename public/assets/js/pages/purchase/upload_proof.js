@@ -158,8 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             handleError(error.message);
         }
     }
-    
-    // --- Xử lý thành công chung ---
+      // --- Xử lý thành công chung ---
     function handleSuccess() {
         uploadStatusJs.textContent = 'Tải lên thành công! Đang chuyển hướng...';
         uploadStatusJs.classList.remove('status-error');
@@ -169,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadDetails.style.display = 'none'; // Hide details
 
         setTimeout(function() {
-            window.location.href = transactionUrl + '?upload=success';
+            // Chuyển hướng đến trang success.php thay vì transaction.php
+            window.location.href = SUCCESS_URL;
         }, 1000);
     }
     

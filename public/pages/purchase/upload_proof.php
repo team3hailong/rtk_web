@@ -77,7 +77,7 @@ include $project_root_path . '/private/includes/header.php';
         <!-- === Phần Tải Lên Minh Chứng === -->
         <div class="upload-section">
             <h3><?php echo $existing_proof_image ? 'Thay thế minh chứng thanh toán' : 'Tải lên ảnh chụp màn hình giao dịch'; ?></h3>
-            <p>Vui lòng tải lên ảnh chụp màn hình hoặc biên lai giao dịch thành công để chúng tôi xác nhận nhanh hơn.</p>
+            <p>Trong một số trường hợp, ảnh minh chứng có thể tải lên lâu hơn bình thường. Hãy chờ đợi nhé❤️</p>
             
             <!-- Form thông thường (không dùng AJAX) sẽ được sử dụng nếu JavaScript bị tắt -->
             <form action="<?php echo $base_url . $base_path; ?>/handlers/action_handler.php?module=purchase&action=upload_payment_proof" 
@@ -110,6 +110,7 @@ include $project_root_path . '/private/includes/header.php';
 <script>
 // Định nghĩa các biến cần thiết cho file JS bên ngoài
 const TRANSACTION_URL = '<?php echo $base_url . $base_path; ?>/pages/transaction.php';
+const SUCCESS_URL = '<?php echo $base_url . $base_path; ?>/pages/purchase/success.php?upload=success';
 </script>
 <!-- Nhúng file JS đã tách -->
 <script src="<?php echo $base_url . $base_path; ?>/assets/js/pages/purchase/upload_proof.js"></script>

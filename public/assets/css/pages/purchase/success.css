@@ -44,6 +44,12 @@
     border-radius: var(--rounded-md);
     text-decoration: none;
     font-weight: var(--font-medium);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.success-container .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Animation for the checkmark */
@@ -128,20 +134,38 @@
 
 .btn-primary {
     background-color: var(--primary-600);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
 }
 
 .btn-secondary {
     background-color: var(--gray-600);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    
 }
 
 .btn-outline {
     background-color: transparent;
     border: 1px solid var(--primary-600);
     color: var(--primary-600);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-outline:hover {
-    background-color: var(--primary-50);
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-600);
+    border: 1px solid var(--primary-600); /* Giữ viền */
 }
 
 /* Responsive adjustments for mobile */
@@ -177,6 +201,14 @@
         display: block;
         width: 100%;
         text-align: center;
+    }
+    
+    /* Vẫn giữ hiệu ứng phóng to khi hover trên thiết bị di động */
+    .success-container .btn:hover,
+    .btn-primary:hover,
+    .btn-outline:hover,
+    .btn-secondary:hover {
+        transform: scale(1.03); /* Giảm tỷ lệ phóng to trên mobile */
     }
 }
 

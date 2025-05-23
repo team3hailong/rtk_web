@@ -34,15 +34,18 @@ if ((!isset($_SESSION['purchase_success']) || !isset($_SESSION['purchase_details
 <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/purchase/success.css">
 
 <div class="dashboard-wrapper">
-    <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
-
-    <div class="content-wrapper">
+    <?php include $project_root_path . '/private/includes/sidebar.php'; ?>    <div class="content-wrapper">
         <div class="success-container">
             <div class="success-checkmark">
                 <i class="fas fa-check"></i>
             </div>
-            <h2>Đăng ký thành công!</h2>
-            <p>Cảm ơn bạn đã hoàn thành đăng ký! Chúng tôi đã ghi nhận thông tin của bạn và sẽ xử lý trong thời gian sớm nhất.</p>
+            <?php if(isset($_GET['upload']) && $_GET['upload'] == 'success'): ?>
+                <h2>Upload minh chứng thành công!</h2>
+                <p>Cảm ơn bạn đã tải lên minh chứng thanh toán! Chúng tôi đã ghi nhận thông tin và sẽ xác nhận giao dịch của bạn trong thời gian sớm nhất.</p>
+            <?php else: ?>
+                <h2>Đăng ký thành công!</h2>
+                <p>Cảm ơn bạn đã hoàn thành đăng ký! Chúng tôi đã ghi nhận thông tin của bạn và sẽ xử lý trong thời gian sớm nhất.</p>
+            <?php endif; ?>
 
             <?php 
             // Nếu có thông tin đơn hàng từ session, hiển thị chi tiết
@@ -81,15 +84,15 @@ if ((!isset($_SESSION['purchase_success']) || !isset($_SESSION['purchase_details
                 // Don't clear session data after displaying
                 // Users may need to refresh the page
             }
-            ?>
-
-            <div class="button-group">
+            ?>            <div class="button-group">
                 <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-primary">
                     <i class="fas fa-history"></i> Quản Lý Giao Dịch
                 </a>
+                <?php if(!isset($_GET['upload'])): ?>
                 <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-outline">
                     <i class="fas fa-user-circle"></i> Quản lý tài khoản
                 </a>
+                <?php endif; ?>
             </div>        </div>
     </div>
 </div>

@@ -5,6 +5,8 @@ require_once __DIR__ . '/env_loader.php';
 // Load tiện ích xử lý đường dẫn
 require_once dirname(__DIR__) . '/utils/path_helpers/bootstrap.php';
 
+// Load session middleware
+require_once dirname(__DIR__) . '/utils/session_middleware.php';
 
 // Thiết lập múi giờ mặc định là +7 (Asia/Ho_Chi_Minh)
 date_default_timezone_set('Asia/Ho_Chi_Minh');

@@ -1,8 +1,9 @@
 <?php
-session_start();
-
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+// Sử dụng middleware session thay vì session_start thông thường
+init_session();
 
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;

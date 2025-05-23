@@ -112,3 +112,14 @@ body {
     font-size: 0.9rem;
     text-align: center;
 }
+
+.info-message {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #90caf9;
+    font-size: 0.9rem;
+    text-align: center;
+}

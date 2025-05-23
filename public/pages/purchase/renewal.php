@@ -1,9 +1,10 @@
 <?php
-session_start();
+
 $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/purchase/RenewalService.php';
 
+init_session();
 $base_url = BASE_URL;
 
 // Kiểm tra đăng nhập

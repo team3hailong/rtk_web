@@ -22,7 +22,10 @@
                      if (hamburger) hamburger.style.visibility = 'visible';
                 }
             }
-        });
-    </script>
+        });    </script>
+      <?php if (isset($_SESSION['user_id'])): ?>
+    <!-- Session Activity Tracker - Chỉ tải khi người dùng đã đăng nhập -->
+    <script src="<?php echo $base_url ?? ''; ?>/public/assets/js/session_tracker.js"></script>
+    <?php endif; ?>
 </body>
 </html>

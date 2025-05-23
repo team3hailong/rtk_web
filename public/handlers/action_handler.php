@@ -45,7 +45,8 @@ $public_actions = [
     'auth/process_register',
     'auth/verify-email',
     'auth/process_forgot_password',
-    'auth/process_reset_password'
+    'auth/process_reset_password',
+    'auth/process_logout'  // Thêm process_logout vào danh sách public actions
 ];
 
 // Check if the current action requires authentication

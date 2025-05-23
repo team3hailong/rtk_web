@@ -1,8 +1,8 @@
 <?php
 // Start session and include configuration
-session_start();
-require_once dirname(__DIR__, 3) . '/private/config/config.php';
 
+require_once dirname(__DIR__, 3) . '/private/config/config.php';
+init_session();
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $base_path = PUBLIC_URL;

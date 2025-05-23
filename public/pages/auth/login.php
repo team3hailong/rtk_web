@@ -1,10 +1,16 @@
 <?php
 // filepath: e:\Application\laragon\www\surveying_account\public\pages\auth\login.php
-session_start();
+// Require config để có thể sử dụng middleware session
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+init_session();
 
 // Hiển thị thông báo lỗi nếu có từ process_login.php
 $error_message = $_SESSION['login_error'] ?? null;
+// Hiển thị thông báo khi session hết hạn và tự động đăng xuất
+$login_message = $_SESSION['login_message'] ?? null;
+
 unset($_SESSION['login_error']); // Xóa thông báo lỗi sau khi hiển thị
+unset($_SESSION['login_message']); // Xóa thông báo session sau khi hiển thị
 
 // Nếu người dùng đã đăng nhập, chuyển hướng họ đi
 if (isset($_SESSION['user_id'])) {
@@ -27,10 +33,12 @@ $base_url = BASE_URL;
 </head>
 <body>
     <div class="login-container">
-        <h2>Đăng Nhập</h2>
-
-        <?php if ($error_message): ?>
+        <h2>Đăng Nhập</h2>        <?php if ($error_message): ?>
             <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
+        <?php endif; ?>
+        
+        <?php if ($login_message): ?>
+            <div class="info-message"><?php echo htmlspecialchars($login_message); ?></div>
         <?php endif; ?>
 
         <!-- Cập nhật form action để sử dụng file trung gian thay vì trực tiếp truy cập file private -->

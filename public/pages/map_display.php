@@ -1,9 +1,10 @@
 <?php
-session_start();
+
 
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php'; // Corrected path to project root
 
+init_session();
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $base_path = PUBLIC_URL; // Added for consistency

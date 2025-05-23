@@ -210,3 +210,6 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[23-May-2025 17:23:53 Asia/Ho_Chi_Minh] DeviceTracker isDeviceOrIPRegistered error: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'new3.user_devices' doesn't exist
+[23-May-2025 17:26:09 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

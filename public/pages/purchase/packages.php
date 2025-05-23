@@ -9,8 +9,9 @@ init_session();
 $base_path = PUBLIC_URL; // Use PUBLIC_URL constant for links
 $project_root_path = PROJECT_ROOT_PATH;
 
-// --- Include PurchaseService class ---
+// --- Include required classes ---
 require_once $project_root_path . '/private/classes/purchase/PurchaseService.php';
+require_once $project_root_path . '/private/classes/DeviceTracker.php';
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
@@ -26,6 +27,36 @@ $user_username = $_SESSION['username'] ?? 'Người dùng';
 $service = new PurchaseService();
 $user_has_registration = $service->userHasRegistration($user_id);
 $survey_account_count = $service->getUserSurveyAccountCount($user_id);
+
+// Kiểm tra thiết bị và IP đã được sử dụng trước đây hay chưa
+$show_trial_package = true;
+try {
+    // Lấy thông tin vân tay thiết bị và IP từ session hoặc từ request
+    $device_fingerprint = $_SESSION['device_fingerprint'] ?? $_POST['device_fingerprint'] ?? '';
+    $ip_address = $_SESSION['ip_address'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
+    
+    if (!empty($device_fingerprint) || !empty($ip_address)) {
+        // Kết nối database để kiểm tra thiết bị
+        $dsn = "mysql:host=".DB_SERVER.";dbname=".DB_NAME.";charset=utf8mb4";
+        $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        // Khởi tạo DeviceTracker và kiểm tra
+        $deviceTracker = new DeviceTracker($pdo);
+        $device_registered = $deviceTracker->isDeviceOrIPRegistered($device_fingerprint, $ip_address);
+        
+        // Nếu thiết bị hoặc IP đã tồn tại, ẩn gói trial
+        if ($device_registered) {
+            $show_trial_package = false;
+        }
+    }
+} catch (Exception $e) {
+    error_log("Error checking device fingerprint: " . $e->getMessage());
+    // Để an toàn, vẫn hiển thị gói trial nếu có lỗi
+    $show_trial_package = true;
+}
+
+// Lấy tất cả các gói dịch vụ
 $all_packages = $service->getAllPackages();
 
 // --- Include Header ---
@@ -50,11 +81,12 @@ include $project_root_path . '/private/includes/header.php';
             <?php if (empty($all_packages)): ?>
                 <p class="text-center text-gray-500 col-span-full">Hiện tại không có gói dịch vụ nào.</p>
             <?php else: ?>
-                <?php foreach ($all_packages as $package): ?>
-                    <?php                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
-                        // Chỉ hiển thị gói trial_7d nếu người dùng chưa có tài khoản survey_account
-                        if ($package['package_id'] === 'trial_7d' && $survey_account_count > 0) {
-                            continue; // Bỏ qua gói dùng thử nếu đã có tài khoản
+                <?php foreach ($all_packages as $package): ?>                    <?php                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
+                        // Ẩn gói trial trong các trường hợp:
+                        // 1. Người dùng đã có tài khoản survey_account
+                        // 2. Thiết bị hoặc IP đã được sử dụng trước đó (đã đăng ký)
+                        if ($package['package_id'] === 'trial_7d' && ($survey_account_count > 0 || !$show_trial_package)) {
+                            continue; // Bỏ qua gói dùng thử
                         }
                         // --- KẾT THÚC LOGIC ẨN ---
 

@@ -3,14 +3,14 @@ session_start();
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../utils/email_helper.php';
 require_once __DIR__ . '/../../utils/error_handler.php';
+require_once __DIR__ . '/../../classes/DeviceTracker.php';
 
 $errors = [];
 $formData = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ liệu
     $username = trim($_POST['username'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');    $phone = trim($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     $is_company = isset($_POST['is_company']) ? 1 : 0;
@@ -18,6 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
     $tax_code = $is_company ? trim($_POST['tax_code'] ?? '') : null;
     $tax_registered = ($is_company && isset($_POST['tax_registered'])) ? 1 : null;
     $referral_code = trim($_POST['referral_code'] ?? '');
+    $device_fingerprint = $_POST['device_fingerprint'] ?? '';
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
     // Lưu dữ liệu form vào session để hiển thị lại nếu có lỗi
     $formData = $_POST;
@@ -147,6 +150,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                 error_log("Failed to send verification email to: $email");
             }            // Commit transaction nếu mọi thứ thành công
             $conn->commit();
+            
+            // Lưu thông tin thiết bị và IP
+            try {
+                // Tạo kết nối PDO để sử dụng DeviceTracker
+                $dsn = "mysql:host=".DB_SERVER.";dbname=".DB_NAME.";charset=utf8mb4";
+                $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                
+                // Khởi tạo DeviceTracker và lưu thông tin thiết bị
+                $deviceTracker = new DeviceTracker($pdo);
+                $deviceTracker->trackUserDevice($user_id, $device_fingerprint, $ip_address, $user_agent);
+                
+                // Lưu thông tin vào session để sử dụng sau này
+                $_SESSION['device_fingerprint'] = $device_fingerprint;
+                $_SESSION['ip_address'] = $ip_address;
+            } catch (Exception $e) {
+                error_log("Error tracking device during registration: " . $e->getMessage());
+                // Không throw exception vì đăng ký vẫn thành công
+            }
             
             // Log successful registration
             $notify_content = 'Đăng ký tài khoản mới: ' . $username . ' (' . $email . ')';

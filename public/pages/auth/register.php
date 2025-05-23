@@ -24,11 +24,12 @@ $base_url = BASE_URL;
 ?>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký Tài Khoản</title>
     <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/auth/register.css">
+    <!-- Script thu thập vân tay thiết bị -->
+    <script src="<?php echo $base_url; ?>/public/assets/js/device_fingerprint.js"></script>
 </head>
 <body>
     <div class="register-container">

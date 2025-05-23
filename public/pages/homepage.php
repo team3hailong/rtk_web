@@ -15,6 +15,7 @@ require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/Package.php';
 require_once $project_root_path . '/private/classes/SupportRequest.php';
 require_once $project_root_path . '/private/classes/Map.php';
+require_once $project_root_path . '/private/classes/DeviceTracker.php';
 
 // Fetch packages for display
 $db = new Database();
@@ -51,11 +52,13 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
       <!-- CSS styles -->
     <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/home.css">
-    
-    <!-- Leaflet for map display -->
+      <!-- Leaflet for map display -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <!-- Leaflet z-index fix -->
     <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/leaflet-fix.css">
+    
+    <!-- Script thu thập vân tay thiết bị -->
+    <script src="<?php echo $base_path; ?>/assets/js/device_fingerprint.js"></script>
     
     <!-- Custom favicon -->
     <link rel="icon" href="<?php echo $base_path; ?>/assets/images/favicon.ico" type="image/x-icon">

@@ -23,6 +23,8 @@ if (!isset($_SESSION['user_id'])) {
 // --- Initialize PurchaseService and fetch package details ---
 $service = new PurchaseService();
 $selected_package_varchar_id = $_GET['package'] ?? null;
+$purchase_type = $_GET['purchase_type'] ?? 'individual'; // Lấy purchase_type từ URL, mặc định là individual
+
 $selected_package = $service->getPackageByVarcharId($selected_package_varchar_id);
 
 // --- Validate Selected Package ---
@@ -46,6 +48,14 @@ if ($is_contact_package) {
 }
 
 $base_price = $selected_package['price']; // Get price from DB
+
+// Tính toán giá dựa trên purchase_type
+$display_price = $base_price;
+$vat_text = '';
+if ($purchase_type === 'company') {
+    $display_price = $base_price * 1.1; // Cộng 10% VAT
+    $vat_text = ' (Đã bao gồm 10% VAT)';
+}
 
 // --- Fetch locations via service ---
 $provinces = $service->getAllProvinces();
@@ -85,8 +95,9 @@ include $project_root_path . '/private/includes/header.php';
             <input type="hidden" name="package_name" value="<?php echo htmlspecialchars($selected_package['name']); ?>">
             <input type="hidden" name="package_varchar_id" value="<?php echo htmlspecialchars($selected_package_varchar_id); ?>"> <!-- Add this line -->
             <input type="hidden" name="base_price" id="base_price" value="<?php echo $base_price; ?>"> <!-- Giá gốc để JS tính toán -->
+            <input type="hidden" name="purchase_type" value="<?php echo htmlspecialchars($purchase_type); ?>"> <!-- Thêm input ẩn cho purchase_type -->
             <!-- Giá tổng, sẽ được JS cập nhật hoặc giữ nguyên nếu là trial -->
-            <input type="hidden" name="total_price" id="total_price_hidden" value="<?php echo $base_price; ?>">
+            <input type="hidden" name="total_price" id="total_price_hidden" value="<?php echo $display_price; ?>">
 
             <?php if (!$is_trial_7d_package): // Only show quantity input if NOT the trial_7d package ?>
             <!-- Số lượng tài khoản -->
@@ -117,7 +128,7 @@ include $project_root_path . '/private/includes/header.php';
             <?php if (!$is_trial_7d_package): // Only show total price display if NOT the trial_7d package ?>
              <!-- Hiển thị tổng tiền (cập nhật bằng JS) -->
             <div class="total-price-display">
-                Tổng cộng: <span id="total-price-view"><?php echo number_format($base_price, 0, ',', '.'); ?>đ</span>
+                Tổng cộng: <span id="total-price-view"><?php echo number_format($display_price, 0, ',', '.'); ?>đ</span><span id="vat-text"><?php echo $vat_text; ?></span>
             </div>
             <?php endif; ?>
 
@@ -132,6 +143,38 @@ include $project_root_path . '/private/includes/header.php';
 
 <!-- Page-specific JS -->
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/details.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('quantity');
+    const basePriceInput = document.getElementById('base_price');
+    const totalPriceView = document.getElementById('total-price-view');
+    const totalPriceHidden = document.getElementById('total_price_hidden');
+    const vatTextSpan = document.getElementById('vat-text');
+    const purchaseType = '<?php echo $purchase_type; ?>';
+    const isTrial = <?php echo $is_trial_7d_package ? 'true' : 'false'; ?>;
+
+    if (quantityInput && basePriceInput && totalPriceView && totalPriceHidden && !isTrial) {
+        quantityInput.addEventListener('input', function() {
+            let quantity = parseInt(this.value) || 1;
+            if (quantity < 1) quantity = 1;
+            const basePrice = parseFloat(basePriceInput.value);
+            let newTotalPrice = basePrice * quantity;
+            let currentVatText = '';
+
+            if (purchaseType === 'company') {
+                newTotalPrice = newTotalPrice * 1.1;
+                currentVatText = ' (Đã bao gồm 10% VAT)';
+            }
+
+            totalPriceView.textContent = newTotalPrice.toLocaleString('vi-VN') + 'đ';
+            totalPriceHidden.value = newTotalPrice;
+            if (vatTextSpan) {
+                vatTextSpan.textContent = currentVatText;
+            }
+        });
+    }
+});
+</script>
 
 <?php
 // --- Include Footer ---

@@ -94,32 +94,33 @@ $order_description = "REG{$registration_id} MUA GOI"; // Keep it short
 $final_qr_payload = null;
 $vietqr_image_url = null;
 if (!$is_trial) {
-    $base_price = $verified_total_price;
+    $base_price_for_qr_and_display = $verified_total_price; // Giá này đã bao gồm VAT nếu có từ process_order.php
     $session_key = $is_renewal ? 'renewal' : 'order';
-    if (isset($_SESSION[$session_key]['voucher_id']) && isset($_SESSION[$session_key]['voucher_discount'])) {
-        if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
-            $base_price = $_SESSION[$session_key]['amount'];
-        } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
-            $base_price = $_SESSION[$session_key]['total_price'];
-        }
-    }    $vat_amount = $base_price * ($vat_value / 100);
-    $final_price = $base_price + $vat_amount;
-    $qr = $paymentService->generateVietQR($final_price, $order_description); // <-- Số tiền QR là tổng thanh toán
+
+    // Nếu có voucher, giá trị $verified_total_price từ session đã được điều chỉnh (nếu voucher giảm tiền)
+    // $verified_total_price lúc này là giá cuối cùng *trước* khi xem xét VAT ở trang payment (nếu có)
+    // Tuy nhiên, VAT đã được tính ở process_order.php và lưu vào DB, $session_total_price cũng phản ánh điều đó.
+    // Do đó, $verified_total_price (đã được payment_helper xác minh với DB) là giá cuối cùng cần thanh toán.
+
+    $final_price_for_qr = $verified_total_price; // Sử dụng trực tiếp giá đã xác minh, vì nó đã bao gồm VAT nếu có.
+
+    // Logic cập nhật transaction_history amount nên sử dụng $final_price_for_qr
+    // vì đây là số tiền người dùng thực sự cần thanh toán.
+    $qr = $paymentService->generateVietQR($final_price_for_qr, $order_description);
     $final_qr_payload = $qr['payload'];
     $vietqr_image_url = $qr['image_url'];
-      // Cập nhật giá trị tổng thanh toán vào transaction_history (bao gồm VAT)
+
+    // Cập nhật giá trị tổng thanh toán vào transaction_history
+    // $final_price_for_qr đã là giá cuối cùng (đã có VAT nếu purchase_type là company)
     if ($is_renewal) {
-        // For renewal, update transaction_history for primary registration_id
-        // System should have already created appropriate transaction records for each registration
-        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price);
+        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price_for_qr);
         if ($update_result) {
-            error_log("Payment Page: Updated renewal transaction_history amount to {$final_price} for registration ID {$registration_id}");
+            error_log("Payment Page: Updated renewal transaction_history amount to {$final_price_for_qr} for registration ID {$registration_id}");
         }
     } else {
-        // For single purchase
-        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price);
+        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price_for_qr);
         if ($update_result) {
-            error_log("Payment Page: Updated purchase transaction_history amount to {$final_price} for registration ID {$registration_id}");
+            error_log("Payment Page: Updated purchase transaction_history amount to {$final_price_for_qr} for registration ID {$registration_id}");
         }
     }
 }
@@ -188,15 +189,15 @@ include $project_root_path . '/private/includes/header.php';
                 <?php endif; ?>
                   <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
-                    <span>Thuế VAT (<?php echo $vat_value; ?>%):</span>
-                    <strong><?php echo number_format($verified_total_price * ($vat_value / 100), 0, ',', '.'); ?> đ</strong>
+                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
+                    <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item summary-total" style="margin-top: 1.5rem;">
                     <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format($verified_total_price + ($verified_total_price * ($vat_value / 100)), 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
                 </div>
                 
                 <?php else: ?>
@@ -243,15 +244,15 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <?php endif; ?>                <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
-                    <span>Thuế VAT (<?php echo $vat_value; ?>%):</span>
-                    <strong><?php echo number_format($verified_total_price * ($vat_value / 100), 0, ',', '.'); ?> đ</strong>
+                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
+                    <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item summary-total">
                     <span>Tổng thanh toán:</span>
-                    <strong id="total-price-display"><?php echo number_format($verified_total_price + ($verified_total_price * ($vat_value / 100)), 0, ',', '.'); ?> đ</strong>
+                    <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <?php endif; ?>
             </section>
@@ -289,18 +290,8 @@ include $project_root_path . '/private/includes/header.php';
                     <p>Chủ tài khoản: <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong></p>
                     <p>Số tiền: <strong id="payment-amount">
                         <?php 
-                        // Hiển thị tổng thanh toán (đã bao gồm VAT)
-                        $display_price = $verified_total_price;
-                        $session_key = $is_renewal ? 'renewal' : 'order';
-                        if (isset($_SESSION[$session_key]['voucher_id'])) {
-                            if ($is_renewal && isset($_SESSION[$session_key]['amount'])) {
-                                $display_price = $_SESSION[$session_key]['amount'];
-                            } elseif (!$is_renewal && isset($_SESSION[$session_key]['total_price'])) {
-                                $display_price = $_SESSION[$session_key]['total_price'];
-                            }
-                        }
-                        $display_price_with_vat = $display_price + ($display_price * ($vat_value / 100));
-                        echo number_format($display_price_with_vat, 0, ',', '.'); 
+                        // Hiển thị tổng thanh toán (đã bao gồm VAT từ $verified_total_price)
+                        echo number_format($verified_total_price, 0, ',', '.'); 
                         ?> đ</strong> <code title="Sao chép số tiền" data-copy-target="#payment-amount">Copy</code></p>
                     <p>Nội dung: <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong> <code title="Sao chép nội dung" data-copy-target="#payment-description">Copy</code></p>
                 </div>
@@ -335,9 +326,9 @@ include $project_root_path . '/private/includes/header.php';
     // Define variables needed by payment_data.js and payment_voucher.js
     const JS_IS_TRIAL = <?php echo $is_trial ? 'true' : 'false'; ?>;
     const JS_IS_RENEWAL = <?php echo $is_renewal ? 'true' : 'false'; ?>;
-    const JS_BASE_PRICE = <?php echo $verified_total_price; ?>;
-    const JS_VAT_VALUE = <?php echo $vat_value; ?>;
-    const JS_CURRENT_PRICE = <?php echo $verified_total_price + ($verified_total_price * ($vat_value / 100)); ?>;
+    const JS_BASE_PRICE = <?php echo $payment_data['base_price_from_registration']; ?>; // Sử dụng base_price từ registration
+    const JS_VAT_VALUE = <?php echo $payment_data['vat_percent_from_registration']; ?>; // Sử dụng vat_percent từ registration
+    const JS_CURRENT_PRICE = <?php echo $verified_total_price; ?>; // Đây là tổng cuối cùng đã có VAT nếu áp dụng
     const JS_ORDER_DESCRIPTION = "<?php echo htmlspecialchars($order_description, ENT_QUOTES, 'UTF-8'); ?>";
     const JS_BASE_URL = "<?php echo htmlspecialchars($base_url, ENT_QUOTES, 'UTF-8'); ?>";
     const JS_CSRF_TOKEN = "<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>";

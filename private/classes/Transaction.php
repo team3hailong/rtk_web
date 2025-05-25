@@ -136,7 +136,8 @@ class Transaction {
                     th.payment_image,
                     th.created_at,
                     th.updated_at,
-                    r.rejection_reason
+                    r.rejection_reason,
+                    r.invoice_allowed
                 " . $baseSql . "
                 ORDER BY
                     th.created_at DESC

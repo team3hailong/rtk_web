@@ -77,12 +77,24 @@ if ($tx_id <= 0) {
 
 // Initialize InvoiceService and fetch info
 $service = new InvoiceService();
+
+// Check ownership first
 if (!$service->checkOwnership($tx_id, $_SESSION['user_id'])) {
     // Ghi log cố gắng truy cập trái phép
     error_log("Security Warning: User {$_SESSION['user_id']} attempted to access transaction {$tx_id} that doesn't belong to them");
     header('Location: ' . $base_url . '/public/pages/transaction.php?error=unauthorized');
     exit;
-}    // Fetch transaction info
+}
+
+// THEN, check if invoice is allowed for this transaction's registration
+if (!$service->isInvoiceAllowedForTransaction($tx_id)) {
+    log_invoice_error($_SESSION['user_id'], $tx_id, 'Invoice not allowed for this purchase type');
+    $_SESSION['invoice_error'] = 'Không thể xuất hóa đơn cho loại đăng ký này.';
+    header('Location: ' . $base_url . '/public/pages/transaction.php?error=invoice_not_allowed');
+    exit;
+}
+
+// Fetch transaction info
 $info = $service->getTransactionInfo($tx_id);
 if (!$info) {
     die('Không tìm thấy giao dịch.');

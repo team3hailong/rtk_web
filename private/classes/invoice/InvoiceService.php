@@ -89,6 +89,23 @@ class InvoiceService {
     }
 
     /**
+     * Check if invoice is allowed for the registration associated with a transaction
+     * @param int $tx_id
+     * @return bool
+     */
+    public function isInvoiceAllowedForTransaction(int $tx_id): bool {
+        $stmt = $this->conn->prepare(
+            'SELECT r.invoice_allowed
+             FROM transaction_history th
+             JOIN registration r ON th.registration_id = r.id
+             WHERE th.id = ?'
+        );
+        $stmt->execute([$tx_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result && $result['invoice_allowed'] == 1;
+    }
+
+    /**
      * Create a new pending invoice for a transaction
      * @param int $tx_id
      * @return void

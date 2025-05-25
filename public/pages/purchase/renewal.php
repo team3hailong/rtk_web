@@ -14,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 }
 $user_id = $_SESSION['user_id'];
 
+// Get VAT percentage from environment or default to 10
+$vat_percentage_for_js = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10;
+
 // Nhận danh sách tài khoản được chọn từ POST
 $selected_accounts = $_POST['selected_accounts'] ?? [];
 if (empty($selected_accounts) || !is_array($selected_accounts)) {
@@ -52,6 +55,12 @@ if (empty($packages)) {
     <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/base.css">
     <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/layouts/sidebar.css">
     <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/css/pages/purchase/renewal.css">
+    <script>
+      window.RENEWAL_PAGE_DATA = {
+        accountCount: <?php echo count($accounts); ?>,
+        vatPercent: <?php echo $vat_percentage_for_js; ?>
+      };
+    </script>
 </head>
 <body>
 <div class="dashboard-wrapper">
@@ -82,6 +91,21 @@ if (empty($packages)) {
             </div>
         </div>
         
+        <!-- Purchase Type Selection -->
+        <div class="purchase-type-selection section-spacing">
+            <h4>Chọn loại hình thanh toán</h4>
+            <div class="radio-group">
+                <label for="purchase_type_individual">
+                    <input type="radio" id="purchase_type_individual" name="purchase_type" value="individual" checked>
+                    Cá nhân (Không VAT)
+                </label>
+                <label for="purchase_type_company">
+                    <input type="radio" id="purchase_type_company" name="purchase_type" value="company">
+                    Công ty (+<?php echo $vat_percentage_for_js; ?>% VAT) - Xuất hóa đơn
+                </label>
+            </div>
+        </div>
+
         <!-- Bảng tài khoản -->
         <h3>Danh sách tài khoản được chọn</h3>
         <table class="accounts-table">
@@ -139,9 +163,6 @@ if (empty($packages)) {
 <!-- Overlay for mobile -->
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-<script>
-window.RENEWAL_PAGE_DATA = { accountCount: <?php echo count($accounts); ?> };
-</script>
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : $base_url; ?>/assets/js/pages/purchase/renewal.js"></script>
 
 <!-- Sidebar Toggle Script -->

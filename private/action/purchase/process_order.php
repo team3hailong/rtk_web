@@ -41,11 +41,12 @@ $user_id = $_SESSION['user_id'];
 $package_id = filter_input(INPUT_POST, 'package_id', FILTER_VALIDATE_INT);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
 $location_id = filter_input(INPUT_POST, 'location_id', FILTER_VALIDATE_INT);
+$purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_DEFAULT); // Lấy purchase_type, replaced FILTER_SANITIZE_STRING
 
 // --- Validate Input ---
-if (!$package_id || !$quantity || $quantity < 1 || !$location_id) {
+if (!$package_id || !$quantity || $quantity < 1 || !$location_id || !in_array($purchase_type, ['individual', 'company'])) { // Validate purchase_type
      // Log the specific missing fields if needed
-     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}");
+     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}, PurchaseType: {$purchase_type}");
      header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=missing_data');
      exit;
 }
@@ -75,11 +76,20 @@ try {
         $quantity = 1;
         $base_price = 0; // Ensure price is 0 for trial
     }
-    $calculated_total_price = $base_price * $quantity;
-    // Optional: Add VAT calculation here if needed
-    $vat_percent = 0; // Example: Get from config or package details
-    $vat_amount = $calculated_total_price * ($vat_percent / 100);
-    $final_total_price = $calculated_total_price + $vat_amount;
+    $calculated_subtotal = $base_price * $quantity;
+
+    // VAT Calculation based on purchase_type
+    $vat_percent = 0;
+    $vat_amount = 0;
+    $invoice_allowed = 0; // Mặc định không cho phép xuất hóa đơn
+
+    if ($purchase_type === 'company' && !$is_trial_package) {
+        $vat_percent = 10; // 10% VAT for company
+        $vat_amount = round($calculated_subtotal * ($vat_percent / 100), 2);
+        $invoice_allowed = 1; // Cho phép xuất hóa đơn cho công ty
+    }
+
+    $final_total_price = $calculated_subtotal + $vat_amount;
 
     // Ensure final price is 0 if it's a trial package
     if ($is_trial_package) {
@@ -128,8 +138,8 @@ try {
     $conn->beginTransaction();
 
     // 1. Insert into Registration
-    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, created_at, updated_at)
-                VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', NOW(), NOW())";
+    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at)
+                VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
     $stmt_reg = $conn->prepare($sql_reg);
     $stmt_reg->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_reg->bindParam(':package_id', $package_id, PDO::PARAM_INT);
@@ -141,6 +151,8 @@ try {
     $stmt_reg->bindParam(':vat_percent', $vat_percent);
     $stmt_reg->bindParam(':vat_amount', $vat_amount);
     $stmt_reg->bindParam(':total_price', $final_total_price); // Use the potentially adjusted final price
+    $stmt_reg->bindParam(':purchase_type', $purchase_type, PDO::PARAM_STR); // Bind purchase_type
+    $stmt_reg->bindParam(':invoice_allowed', $invoice_allowed, PDO::PARAM_INT); // Bind invoice_allowed
     $stmt_reg->execute();
 
     $registration_id = $conn->lastInsertId();

@@ -25,9 +25,70 @@ class PaymentService {
         // Gọi lại logic từ getPaymentPageDetails helper nếu có, hoặc chuyển logic vào đây
         // Ví dụ: kiểm tra trạng thái đơn hàng, lấy thông tin gói, số lượng, tỉnh thành, ...
         // Trả về mảng ['success' => true, 'data' => [...]] hoặc ['success' => false, 'error' => '...']
-        // ...
-        // (Bạn có thể copy logic từ payment_helper.php vào đây nếu muốn gom về service)
-        return getPaymentPageDetails($registration_id, $user_id, $session_total_price);
+        
+        // Chuyển logic từ payment_helper.php vào đây
+        try {
+            // --- Fetch Registration Details ---
+            $stmt = $this->conn->prepare("SELECT id, package_id, location_id, num_account, total_price, base_price, vat_percent, vat_amount FROM registration WHERE id = :id AND user_id = :user_id AND status = 'pending'");
+            $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $registration_details = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$registration_details) {
+                error_log("PaymentService: Pending registration ID $registration_id not found for user $user_id or status not pending.");
+                return ['success' => false, 'error' => 'invalid_order_state'];
+            }
+
+            // --- Verify Session Price with DB Price ---
+            $db_total_price = (float)$registration_details['total_price'];
+            if (abs($db_total_price - $session_total_price) > 0.01) {
+                error_log("PaymentService: Price mismatch session ({$session_total_price}) vs DB ({$db_total_price}) for registration ID $registration_id.");
+                $verified_total_price = $db_total_price;
+                $_SESSION['pending_total_price'] = $verified_total_price; // Update session
+            } else {
+                $verified_total_price = $session_total_price;
+            }
+
+            // --- Fetch Package and Location Details ---
+            // Assuming Package and Location classes are available or their logic is integrated here
+            // For simplicity, let's assume you have methods in this service or direct queries
+            $package_stmt = $this->conn->prepare("SELECT name FROM package WHERE id = :id");
+            $package_stmt->bindParam(':id', $registration_details['package_id'], PDO::PARAM_INT);
+            $package_stmt->execute();
+            $package_details = $package_stmt->fetch(PDO::FETCH_ASSOC);
+
+            $location_stmt = $this->conn->prepare("SELECT province FROM location WHERE id = :id");
+            $location_stmt->bindParam(':id', $registration_details['location_id'], PDO::PARAM_INT);
+            $location_stmt->execute();
+            $location_details = $location_stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$package_details || !$location_details) {
+                error_log("PaymentService: Could not fetch package or location details for registration ID $registration_id.");
+                return ['success' => false, 'error' => 'data_fetch_error'];
+            }
+
+            return [
+                'success' => true,
+                'data' => [
+                    'registration_id' => $registration_details['id'],
+                    'package_name' => $package_details['name'],
+                    'quantity' => $registration_details['num_account'],
+                    'province' => $location_details['province'],
+                    'verified_total_price' => $verified_total_price,
+                    'base_price_from_registration' => $registration_details['base_price'],
+                    'vat_percent_from_registration' => $registration_details['vat_percent'],
+                    'vat_amount_from_registration' => $registration_details['vat_amount']
+                ]
+            ];
+
+        } catch (PDOException $e) {
+            error_log("PaymentService DB error: " . $e->getMessage());
+            return ['success' => false, 'error' => 'database_error'];
+        } catch (Exception $e) {
+            error_log("PaymentService general error: " . $e->getMessage());
+            return ['success' => false, 'error' => 'unknown_error'];
+        }
     }
 
     /**

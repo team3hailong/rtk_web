@@ -136,8 +136,14 @@ include $project_root_path . '/private/includes/header.php';
                             <?php endforeach; ?>
                         </ul>
 
+                        <!-- Thêm lựa chọn Purchase Type -->
+                        <div class="purchase-type-selector" style="margin-top: 10px; margin-bottom:10px;">
+                            <label style="margin-right: 10px;"><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="individual" checked> Cá nhân</label>
+                            <label><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="company"> Công ty (+10% VAT)</label>
+                        </div>
+
                         <!-- Nút bấm với link chính xác -->
-                        <a href="<?php echo $details_url; ?>" class="<?php echo $button_classes; ?>">
+                        <a href="#" data-package-id="<?php echo htmlspecialchars($package['package_id']); ?>" class="<?php echo $button_classes; ?> select-package-button">
                             <?php echo htmlspecialchars($package['button_text']); ?>
                         </a>
                     </div>
@@ -151,6 +157,33 @@ include $project_root_path . '/private/includes/header.php';
 
 <!-- Page-specific JS -->
 <script src="<?php echo $base_path; ?>/assets/js/pages/purchase/packages.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const packageButtons = document.querySelectorAll('.select-package-button');
+    packageButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const packageId = this.dataset.packageId;
+            const purchaseTypeInput = document.querySelector('input[name="purchase_type_' + packageId + '"]:checked');
+            const purchaseType = purchaseTypeInput ? purchaseTypeInput.value : 'individual';
+            
+            let detailsUrl = '<?php echo $base_path; ?>/pages/purchase/details.php?package=' + packageId + '&purchase_type=' + purchaseType;
+            
+            // For contact button, redirect to contact page or handle differently
+            if (this.classList.contains('contact')) {
+                // Example: Redirect to a contact page or open a modal
+                // For now, let's assume it still goes to details but could be handled differently
+                // detailsUrl = '<?php echo $base_path; ?>/pages/support/contact.php?package=' + packageId;
+                // For the purpose of this task, we'll let it proceed to details page
+                // to show how purchase_type is passed.
+            }
+            
+            window.location.href = detailsUrl;
+        });
+    });
+});
+</script>
 
 <?php
 // --- Include Footer ---

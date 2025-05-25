@@ -17,6 +17,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 $user_id = $_SESSION['user_id'];
 
+// $purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_SANITIZE_STRING);
+$purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_DEFAULT);
+if (!in_array($purchase_type, ['individual', 'company'])) {
+    $purchase_type = 'individual'; // Default to individual if invalid
+}
+
 $selected_accounts = $_POST['selected_accounts'] ?? [];
 $package_id = $_POST['package_id'] ?? null;
 if (empty($selected_accounts) || !is_array($selected_accounts) || empty($package_id)) {
@@ -100,11 +106,23 @@ try {
     }
     
     // Tính tổng giá trị cho toàn bộ giao dịch
-    $total_price = $package['price'] * $total_accounts;
+    $base_price_per_account = $package['price'];
+    $sub_total = $base_price_per_account * $total_accounts;
+
+    $vat_percent = 0;
+    $vat_amount = 0;
+    $invoice_allowed = 0;
+
+    if ($purchase_type === 'company') {
+        $vat_percent = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10;
+        $vat_amount = round($sub_total * ($vat_percent / 100));
+        $invoice_allowed = 1;
+    }
+    $total_price = $sub_total + $vat_amount;
     
     // 1. Tạo một đăng ký mới cho tất cả tài khoản
-    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, created_at, updated_at) 
-               VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, 0, 0, :total_price, 'pending', NOW(), NOW())";
+    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at) 
+               VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
     $stmt_reg = $conn->prepare($sql_reg);
     $stmt_reg->execute([
         ':user_id' => $user_id,
@@ -113,8 +131,12 @@ try {
         ':num_account' => $total_accounts,
         ':start_time' => $first_acc['start_time'], 
         ':end_time' => $end_time,
-        ':base_price' => $package['price'],
-        ':total_price' => $total_price
+        ':base_price' => $base_price_per_account, // Store base price per account
+        ':vat_percent' => $vat_percent,
+        ':vat_amount' => $vat_amount,
+        ':total_price' => $total_price, // This is the final total price including VAT
+        ':purchase_type' => $purchase_type,
+        ':invoice_allowed' => $invoice_allowed
     ]);
     
     $registration_id = $conn->lastInsertId();
@@ -149,17 +171,22 @@ try {
     
     // Lưu thông tin vào session để xử lý ở trang thanh toán
     $_SESSION['pending_registration_id'] = $registration_id;
-    $_SESSION['pending_total_price'] = $total_price;
+    $_SESSION['pending_total_price'] = $total_price; // Ensure this is the final total price
     $_SESSION['pending_is_trial'] = false;
     $_SESSION['is_renewal'] = true; 
-    $_SESSION['renewal_account_ids'] = $selected_accounts; 
+    $_SESSION['renewal_account_ids'] = $selected_accounts;
+    $_SESSION['purchase_type'] = $purchase_type; // Pass purchase type to payment page
     
     // Lưu thêm thông tin chi tiết cho trang thanh toán hiển thị
     $_SESSION['pending_renewal_details'] = [
         'total_accounts' => $total_accounts,
+        'sub_total' => $sub_total,
+        'vat_percent' => $vat_percent,
+        'vat_amount' => $vat_amount,
         'total_price' => $total_price,
         'timestamp' => time(),
-        'package_name' => $package['name']
+        'package_name' => $package['name'],
+        'purchase_type' => $purchase_type
     ];
       // Log renewal request với đầy đủ thông tin
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;

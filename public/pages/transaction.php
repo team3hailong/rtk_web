@@ -249,7 +249,7 @@ if ($invoice_row) {
         <a href="<?php echo $base_url; ?>/public/pages/invoice/completed_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice-success" title="Xem hóa đơn <?php echo htmlspecialchars($invoice_id); ?>">
             <i class="fas fa-check-circle"></i> <span class="action-text">Xem HĐ</span>
         </a>
-    <?php else: ?>
+    <?php elseif (!empty($tx['invoice_allowed']) && $tx['invoice_allowed'] == 1): ?>
         <a href="<?php echo $base_url; ?>/public/pages/invoice/request_export_invoice.php?tx_id=<?php echo htmlspecialchars($tx['id']); ?>" class="action-button btn-invoice" title="Yêu cầu xuất hóa đơn">
             <i class="fas fa-file-invoice-dollar"></i> <span class="action-text">Hóa đơn</span>
         </a>

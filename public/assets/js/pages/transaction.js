@@ -46,12 +46,11 @@ function showTransactionDetails(txData) {
         rejectionReasonSection.style.display = 'block';
     } else {
         rejectionReasonSection.style.display = 'none'; // Hide for other statuses or if no reason
-    }
-
-    // Show payment proof image link if available
+    }    // Show payment proof image link if available
     if (txData.payment_image) {
         paymentProofSection.style.display = 'block';
-        modalTxPaymentImageLink.href = `/public/uploads/payment_proofs/${txData.payment_image}`;
+        // Sử dụng view_image.php để hiển thị ảnh một cách an toàn
+        modalTxPaymentImageLink.href = `/public/handlers/view_image.php?file=${txData.payment_image}`;
     } else {
         paymentProofSection.style.display = 'none';
     }

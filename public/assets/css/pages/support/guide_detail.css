@@ -1,12 +1,14 @@
 /* CSS for Guide Detail Page */
 
 .guide-detail-container { 
-  max-width: 800px; 
+  width: calc(100% - 48px); /* 24px padding on each side */
+  max-width: 1200px; 
   margin: 32px auto 0 auto; 
   background: #fff; 
   border-radius: 12px; 
   box-shadow: 0 2px 16px rgba(39,174,96,0.07); 
-  padding: 32px 28px; 
+  padding: 32px; 
+  box-sizing: border-box;
 }
 
 .guide-title { 
@@ -51,10 +53,55 @@
   margin-top: 32px;
 }
 
-@media (max-width: 900px) { 
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .guide-detail-container {
+    width: calc(100% - 32px);
+    padding: 28px;
+  }
+}
+
+@media (max-width: 768px) { 
   .guide-detail-container { 
-    padding: 18px 6vw; 
-  } 
+    width: calc(100% - 24px);
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .guide-title {
+    font-size: 1.5rem;
+  }
+
+  .guide-content {
+    font-size: 1em;
+    line-height: 1.6;
+  }
+}
+
+/* Ensure tables are responsive */
+.guide-content table {
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.guide-content table td,
+.guide-content table th {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  min-width: 120px;
+}
+
+/* Ensure images are responsive */
+.guide-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
 }
 
 /* Đảm bảo mọi ảnh trong nội dung không vượt quá khung */

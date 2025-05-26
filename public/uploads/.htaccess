@@ -1,0 +1,20 @@
+\
+# Allow access to all files in this directory and subdirectories
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+</IfModule>
+
+# Specifically allow common image types and other document types
+<FilesMatch "\\.(?i)(jpg|jpeg|png|gif|pdf|doc|docx|xls|xlsx|txt)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Allow from all
+    </IfModule>
+</FilesMatch>

@@ -39,3 +39,13 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[25-May-2025 22:58:55 Asia/Ho_Chi_Minh] Uncaught Exception: Plugin 'mysql_native_password' is not loaded
+#0 C:\laragon\www\rtk_web\private\config\database.php(12): mysqli->__construct('localhost', 'qeqlwgvdhosting...', Object(SensitiveParameterValue), 'qeqlwgvdhosting...')
+#1 C:\laragon\www\rtk_web\private\classes\Database.php(22): require_once('C:\\laragon\\www\\...')
+#2 C:\laragon\www\rtk_web\public\pages\homepage.php(21): Database->__construct()
+#3 {main}
+[25-May-2025 23:01:11 Asia/Ho_Chi_Minh] Payment Page: Updated renewal transaction_history amount to 6000000 for registration ID 293
+[26-May-2025 15:16:10 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

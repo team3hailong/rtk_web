@@ -23,6 +23,7 @@ $base_url = rtrim($protocol . $domain . $base_project_dir, '/');
 require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/purchase/PaymentProofService.php';
+require_once $project_root_path . '/private/classes/Voucher.php';
 
 // --- Constants ---
 // Define upload directory relative to the public folder
@@ -132,8 +133,8 @@ try {
     if (!$transaction) {
         throw new Exception('No pending transaction found for this registration.');
     }
-    
-    $transaction_id = $transaction['id'];
+      $transaction_id = $transaction['id'];
+    $voucher_id = $transaction['voucher_id'];
 
     // Update transaction record with payment image
     $sql_update = "UPDATE transaction_history 
@@ -146,6 +147,21 @@ try {
     $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
     $stmt_update->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
     $stmt_update->execute();
+    
+    // Mark device voucher as used if present
+    if (isset($_SESSION['device_fingerprint']) && isset($_SESSION['order']['voucher_code'])) {
+        try {
+            $voucherService = new Voucher($db);
+            $deviceFingerprint = $_SESSION['device_fingerprint'];
+            $voucherCode = $_SESSION['order']['voucher_code'];
+            
+            // Mark the device voucher as used
+            $voucherService->markDeviceVoucherUsed($deviceFingerprint, $voucherCode);
+        } catch (Exception $e) {
+            // Log error but don't stop the process
+            error_log("Error marking device voucher as used: " . $e->getMessage());
+        }
+    }
 
     $conn->commit(); // Commit transaction
 

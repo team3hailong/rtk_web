@@ -283,4 +283,89 @@ class Voucher {
             }
         }
     }
+    
+    /**
+     * Check for device voucher and auto-apply if it's the first purchase
+     *
+     * @param string $deviceFingerprint The device fingerprint
+     * @param float $orderValue The order value
+     * @param int $userId The user ID
+     * @return array Returns voucher data if found and valid, otherwise empty array
+     */
+    public function checkDeviceVoucher($deviceFingerprint, $orderValue, $userId) {
+        if (empty($deviceFingerprint)) {
+            return [];
+        }
+        
+        try {
+            $pdo = $this->db->getConnection();
+            
+            // Check if the device has a stored voucher and hasn't been used yet
+            $stmt = $pdo->prepare("
+                SELECT voucher_code, voucher_used
+                FROM user_devices 
+                WHERE device_fingerprint = :fingerprint 
+                AND voucher_code IS NOT NULL
+                AND voucher_used = 0
+            ");
+            $stmt->bindParam(':fingerprint', $deviceFingerprint, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // If no voucher found or already used
+            if (!$result || $result['voucher_used'] == 1) {
+                return [];
+            }
+            
+            $voucherCode = $result['voucher_code'];
+            
+            // Validate the voucher
+            $voucherResult = $this->validateVoucher($voucherCode, $orderValue, $userId);
+            
+            // If voucher is valid, return it
+            if ($voucherResult['status']) {
+                return [
+                    'code' => $voucherCode,
+                    'data' => $voucherResult['data']
+                ];
+            }
+            
+            return [];
+        } catch (Exception $e) {
+            error_log("Error checking device voucher: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Mark a device voucher as used
+     *
+     * @param string $deviceFingerprint The device fingerprint
+     * @param string $voucherCode The voucher code
+     * @return bool True if marked as used successfully
+     */
+    public function markDeviceVoucherUsed($deviceFingerprint, $voucherCode) {
+        if (empty($deviceFingerprint) || empty($voucherCode)) {
+            return false;
+        }
+        
+        try {
+            $pdo = $this->db->getConnection();
+            $stmt = $pdo->prepare("
+                UPDATE user_devices 
+                SET voucher_used = 1 
+                WHERE device_fingerprint = :fingerprint 
+                AND voucher_code = :voucher_code
+            ");
+            
+            $stmt->bindParam(':fingerprint', $deviceFingerprint, PDO::PARAM_STR);
+            $stmt->bindParam(':voucher_code', $voucherCode, PDO::PARAM_STR);
+            return $stmt->execute();
+            
+        } catch (Exception $e) {
+            error_log("Error marking device voucher as used: " . $e->getMessage());
+            return false;
+        }
+    }
 }

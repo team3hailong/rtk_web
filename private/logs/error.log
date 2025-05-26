@@ -49,3 +49,18 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[26-May-2025 22:44:31 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[26-May-2025 22:45:51 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[26-May-2025 22:47:48 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (2000000) for registration ID 300.
+[26-May-2025 22:53:09 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 300
+[26-May-2025 22:53:46 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (2000000) for registration ID 301.
+[26-May-2025 22:53:46 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 301
+[26-May-2025 22:54:50 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 800000 for registration ID 302
+[26-May-2025 22:56:32 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (800000) for registration ID 303.
+[26-May-2025 22:56:32 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 303
+[26-May-2025 22:56:56 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (800000) for registration ID 304.
+[26-May-2025 22:56:56 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 304
+[26-May-2025 22:57:06 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 304
+[26-May-2025 22:57:14 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 800000 for registration ID 305

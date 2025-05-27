@@ -105,11 +105,15 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     </div>
                 </div>
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
+                    <div class="feature-card-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Hỗ trợ 24/7</h3>
                     </div>
-                    <h3>Hỗ trợ 24/7</h3>
-                    <p>Đội ngũ hỗ trợ khách hàng luôn sẵn sàng giải đáp mọi thắc mắc và xử lý các vấn đề kỹ thuật bất cứ khi nào bạn gặp khó khăn.</p>
+                    <div class="feature-card-content">
+                        <p>Đội ngũ hỗ trợ khách hàng luôn sẵn sàng giải đáp mọi thắc mắc và xử lý các vấn đề kỹ thuật bất cứ khi nào bạn gặp khó khăn.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,6 +206,9 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <div class="step-number">4</div>
                         <div class="step-image-large">
                             <!-- Ảnh sẽ thêm sau -->
+                            <!-- SUGGESTION: This step is missing an image, creating visual inconsistency with other steps. 
+                                 Consider adding an image or removing/restyling this 'step-image-large' div 
+                                 if no image is intended here, to avoid an empty box. -->
                         </div>
                         <div class="step-content">
                             <h3>Nhận tài khoản</h3>

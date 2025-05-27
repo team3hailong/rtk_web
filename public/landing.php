@@ -1,5 +1,8 @@
 <?php
 // Include any necessary configuration or header files
+$voucher_code = "VIP20"; // Define voucher code here
+$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+$register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $voucher_code;
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -37,7 +40,7 @@
                     <li><a href="#testimonials">Đánh giá</a></li>
                 </ul>
             </div>
-            <a href="#register-section" class="navbar-cta-button pulse-animation">Đăng ký ngay</a>
+            <a href="<?php echo $register_url; ?>" class="navbar-cta-button pulse-animation">Đăng ký ngay</a>
         </div>
     </nav>
 
@@ -46,7 +49,7 @@
             <h1 data-aos="fade-up">Trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!</h1>
             <p class="tagline" data-aos="fade-up" data-aos-delay="200">Giải pháp đo đạc chính xác, tiết kiệm thời gian và chi phí</p>
             <div class="cta-primary" data-aos="fade-up" data-aos-delay="400">
-                <a href="#register-section" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
+                <a href="<?php echo $register_url; ?>" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
             </div>
         </div>
     </header>
@@ -226,7 +229,7 @@
                         <li><i class="fas fa-check-circle"></i> Không có ràng buộc</li>
                         <li><i class="fas fa-check-circle"></i> Hủy bất cứ lúc nào</li>
                     </ul>
-                    <a href="register.php" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
+                    <a href="<?php echo $register_url; ?>" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
                 </div>
                 <div class="register-qr" data-aos="fade-left">
                     <h3>Hoặc quét mã QR</h3>
@@ -235,8 +238,11 @@
                         <div id="qrcode"></div>
                     </div>
                     <div class="register-timer">
-                        <span>Ưu đãi kết thúc sau:</span>
-                        <div id="countdown" class="countdown">30:00:00</div>
+                        <span>Ưu đãi kết thúc vào 06/06/2025:</span>
+                        <div id="countdown" class="countdown">00:00:00:00</div>
+                        <small style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; margin-top: 0.5rem; display: block;">
+                            (Ngày:Giờ:Phút:Giây)
+                        </small>
                     </div>
                 </div>
             </div>
@@ -338,6 +344,10 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <!-- AOS Animation library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Pass the register URL to JavaScript for QR code generation
+        window.registerUrl = "<?php echo $register_url; ?>";
+    </script>
     <script src="assets/js/landing.js"></script>
 </body>
 </html>

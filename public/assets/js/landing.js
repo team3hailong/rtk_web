@@ -22,14 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMobileNav();
     
     // Start the countdown timer
-    setupCountdown();
+    initCountdown();
 });
 
 // Function to generate QR Code
 function generateQRCode() {
-    // Get the current URL with 'register.php' appended
-    const baseUrl = window.location.origin;
-    const registerUrl = baseUrl + '/register.php';
+    // Use the register URL passed from PHP
+    const registerUrl = window.registerUrl;
     
     // Create QR code
     const qr = qrcode(0, 'M');
@@ -84,72 +83,64 @@ function setupScrollToTop() {
     }
 }
 
+// Initialize countdown timer
+function initCountdown() {
+    // Set target date: 31/12/2024 23:59:59 (Vietnam timezone)
+    const targetDate = new Date('2025-06-06T23:59:59+07:00');
+    
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = targetDate - now;
+        
+        if (timeLeft <= 0) {
+            document.getElementById('countdown').innerHTML = "00:00:00:00";
+            return;
+        }
+        
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+        // Format with leading zeros
+        const formattedDays = days.toString().padStart(2, '0');
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        const formattedSeconds = seconds.toString().padStart(2, '0');
+        
+        document.getElementById('countdown').innerHTML = `${formattedDays}:${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    }
+    
+    // Update countdown immediately
+    updateCountdown();
+    
+    // Update every second
+    setInterval(updateCountdown, 1000);
+}
+
 // Social sharing functions
 function shareOnFacebook() {
     const url = encodeURIComponent(window.location.href);
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-    openShareWindow(shareUrl);
+    const title = encodeURIComponent('Trạm CORS Thái Nguyên - Miễn Phí 3 Tháng');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
 }
 
 function shareOnTwitter() {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('Trải nghiệm tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng! Đăng ký ngay:');
-    const shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-    openShareWindow(shareUrl);
+    const text = encodeURIComponent('Trải nghiệm dịch vụ trạm CORS Thái Nguyên miễn phí 3 tháng!');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
 }
 
 function shareOnLinkedIn() {
     const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent('Trải nghiệm tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!');
-    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-    openShareWindow(shareUrl);
+    const title = encodeURIComponent('Trạm CORS Thái Nguyên - Miễn Phí 3 Tháng');
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
 }
 
 function shareViaEmail() {
-    const subject = encodeURIComponent('Trải nghiệm tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!');
-    const body = encodeURIComponent('Xin chào,\n\nTôi muốn chia sẻ với bạn cơ hội trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí trong 3 tháng. Đăng ký tại đây: ' + window.location.href);
+    const subject = encodeURIComponent('Trạm CORS Thái Nguyên - Miễn Phí 3 Tháng');
+    const body = encodeURIComponent(`Xin chào,\n\nTôi muốn chia sẻ với bạn cơ hội trải nghiệm dịch vụ trạm CORS Thái Nguyên miễn phí 3 tháng.\n\nXem chi tiết tại: ${window.location.href}\n\nTrân trọng!`);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
-}
-
-function openShareWindow(url) {
-    window.open(
-        url,
-        'share-dialog',
-        'width=800,height=600,toolbar=0,status=0'
-    );
-}
-
-// Setup countdown timer
-function setupCountdown() {
-    const countdownElement = document.getElementById('countdown');
-    
-    if (countdownElement) {
-        // Set the countdown for 30 hours from now
-        const hours = 30;
-        let totalSeconds = hours * 60 * 60;
-        
-        // Update the countdown every second
-        const countdownInterval = setInterval(function() {
-            if (totalSeconds <= 0) {
-                clearInterval(countdownInterval);
-                countdownElement.textContent = "Đã kết thúc";
-                return;
-            }
-            
-            const hoursLeft = Math.floor(totalSeconds / 3600);
-            const minutesLeft = Math.floor((totalSeconds % 3600) / 60);
-            const secondsLeft = totalSeconds % 60;
-            
-            // Format the time
-            const formattedHours = String(hoursLeft).padStart(2, '0');
-            const formattedMinutes = String(minutesLeft).padStart(2, '0');
-            const formattedSeconds = String(secondsLeft).padStart(2, '0');
-            
-            countdownElement.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-            
-            totalSeconds--;
-        }, 1000);
-    }
 }
 
 // Mobile Navigation Menu Toggle

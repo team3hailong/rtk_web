@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
     $tax_code = $is_company ? trim($_POST['tax_code'] ?? '') : null;
     $tax_registered = ($is_company && isset($_POST['tax_registered'])) ? 1 : null;
     $referral_code = trim($_POST['referral_code'] ?? '');
+    $voucher_code = trim($_POST['voucher_code'] ?? '');
     $device_fingerprint = $_POST['device_fingerprint'] ?? '';
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
@@ -157,10 +158,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                 $dsn = "mysql:host=".DB_SERVER.";dbname=".DB_NAME.";charset=utf8mb4";
                 $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-                // Khởi tạo DeviceTracker và lưu thông tin thiết bị
+                  // Khởi tạo DeviceTracker và lưu thông tin thiết bị
                 $deviceTracker = new DeviceTracker($pdo);
-                $deviceTracker->trackUserDevice($user_id, $device_fingerprint, $ip_address, $user_agent);
+                $deviceTracker->trackUserDevice($user_id, $device_fingerprint, $ip_address, $user_agent, $voucher_code);
                 
                 // Lưu thông tin vào session để sử dụng sau này
                 $_SESSION['device_fingerprint'] = $device_fingerprint;

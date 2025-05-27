@@ -14,6 +14,7 @@ $project_root_path = PROJECT_ROOT_PATH;
 // --- Include Required Files ---
 require_once $project_root_path . '/private/utils/functions.php'; // For CRC function if moved there
 require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
+require_once $project_root_path . '/private/utils/device_voucher_helper.php'; // Include Device Voucher Helper
 require_once $project_root_path . '/private/classes/purchase/PaymentService.php';
 
 // --- VAT Rate ---
@@ -61,6 +62,23 @@ if (!isset($_SESSION['is_renewal'])) {
     unset($_SESSION['pending_renewal_details']);
 }
 
+// Check for device vouchers if no voucher has been applied already
+$sessionKey = $is_renewal ? 'renewal' : 'order';
+if (isset($_SESSION['device_fingerprint']) && 
+    (!isset($_SESSION[$sessionKey]['voucher_code']) || empty($_SESSION[$sessionKey]['voucher_code']))) {
+    
+    $deviceVoucherResult = checkAndApplyDeviceVoucher($_SESSION['device_fingerprint'], $sessionKey);
+    // If a voucher was auto-applied, we'll use this for display later
+    $autoAppliedVoucher = $deviceVoucherResult ? true : false;
+      // Update verified total price if a voucher was applied
+    if ($deviceVoucherResult) {
+        $session_total_price = $deviceVoucherResult['new_amount'];
+        $_SESSION['pending_total_price'] = $session_total_price;
+        // Ensure we're using the updated price for later use
+        $verified_total_price = $session_total_price;
+    }
+}
+
 // Lấy mảng các registration IDs cho trường hợp gia hạn nhiều tài khoản
 $registration_ids = $is_renewal ? ($_SESSION['renewal_account_ids'] ?? [$registration_id]) : [$registration_id];
 $renewal_details = $is_renewal ? ($_SESSION['pending_renewal_details'] ?? null) : null;
@@ -87,6 +105,15 @@ $quantity = $payment_data['quantity'];
 $province = $payment_data['province'];
 $verified_total_price = $payment_data['verified_total_price'];
 
+// Override verified_total_price with session price if voucher is applied
+if (isset($_SESSION[$sessionKey]['voucher_code'])) {
+    if ($sessionKey === 'order' && isset($_SESSION[$sessionKey]['total_price'])) {
+        $verified_total_price = $_SESSION[$sessionKey]['total_price'];
+    } elseif ($sessionKey === 'renewal' && isset($_SESSION[$sessionKey]['amount'])) {
+        $verified_total_price = $_SESSION[$sessionKey]['amount'];
+    }
+}
+
 // --- Tạo nội dung chuyển khoản (chỉ cần nếu không phải trial) ---
 $order_description = "REG{$registration_id} MUA GOI"; // Keep it short
 
@@ -97,12 +124,8 @@ if (!$is_trial) {
     $base_price_for_qr_and_display = $verified_total_price; // Giá này đã bao gồm VAT nếu có từ process_order.php
     $session_key = $is_renewal ? 'renewal' : 'order';
 
-    // Nếu có voucher, giá trị $verified_total_price từ session đã được điều chỉnh (nếu voucher giảm tiền)
-    // $verified_total_price lúc này là giá cuối cùng *trước* khi xem xét VAT ở trang payment (nếu có)
-    // Tuy nhiên, VAT đã được tính ở process_order.php và lưu vào DB, $session_total_price cũng phản ánh điều đó.
-    // Do đó, $verified_total_price (đã được payment_helper xác minh với DB) là giá cuối cùng cần thanh toán.
-
-    $final_price_for_qr = $verified_total_price; // Sử dụng trực tiếp giá đã xác minh, vì nó đã bao gồm VAT nếu có.
+    // Sử dụng giá đã được giảm nếu có voucher
+    $final_price_for_qr = $verified_total_price; // Sử dụng trực tiếp giá đã xác minh và đã tính voucher ở trên
 
     // Logic cập nhật transaction_history amount nên sử dụng $final_price_for_qr
     // vì đây là số tiền người dùng thực sự cần thanh toán.
@@ -189,7 +212,7 @@ include $project_root_path . '/private/includes/header.php';
                 <?php endif; ?>
                   <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
                     <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
@@ -197,7 +220,7 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <div class="summary-item summary-total" style="margin-top: 1.5rem;">
                     <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format(($payment_data['base_price_from_registration'] * $quantity) + $payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 
                 <?php else: ?>
@@ -244,12 +267,20 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <?php endif; ?>                <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
                     <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
                     <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
+                
+                <?php if (isset($_SESSION[$sessionKey]['voucher_code']) && isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0): ?>
+                <div class="summary-item" style="color: #e53e3e; font-weight: bold;">
+                    <span>Giảm giá (<?php echo htmlspecialchars($_SESSION[$sessionKey]['voucher_code']); ?>):</span>
+                    <strong>-<?php echo number_format($_SESSION[$sessionKey]['voucher_discount'], 0, ',', '.'); ?> đ</strong>
+                </div>
+                <?php endif; ?>
+                
                 <div class="summary-item summary-total">
                     <span>Tổng thanh toán:</span>
                     <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
@@ -333,9 +364,15 @@ include $project_root_path . '/private/includes/header.php';
     const JS_BASE_URL = "<?php echo htmlspecialchars($base_url, ENT_QUOTES, 'UTF-8'); ?>";
     const JS_CSRF_TOKEN = "<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>";
     const JS_VIETQR_BANK_ID = "<?php echo defined('VIETQR_BANK_ID') ? htmlspecialchars(VIETQR_BANK_ID, ENT_QUOTES, 'UTF-8') : ''; ?>";
-    const JS_VIETQR_ACCOUNT_NO = "<?php echo defined('VIETQR_ACCOUNT_NO') ? htmlspecialchars(VIETQR_ACCOUNT_NO, ENT_QUOTES, 'UTF-8') : ''; ?>";
-    const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? htmlspecialchars(VIETQR_IMAGE_TEMPLATE, ENT_QUOTES, 'UTF-8') : 'compact'; ?>";
+    const JS_VIETQR_ACCOUNT_NO = "<?php echo defined('VIETQR_ACCOUNT_NO') ? htmlspecialchars(VIETQR_ACCOUNT_NO, ENT_QUOTES, 'UTF-8') : ''; ?>";    const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? htmlspecialchars(VIETQR_IMAGE_TEMPLATE, ENT_QUOTES, 'UTF-8') : 'compact'; ?>";
     const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? htmlspecialchars(VIETQR_ACCOUNT_NAME, ENT_QUOTES, 'UTF-8') : ''; ?>";
+      <?php if (isset($autoAppliedVoucher) && $autoAppliedVoucher): ?>
+    // Flag for auto-applied voucher notification
+    const autoAppliedVoucher = <?php echo $autoAppliedVoucher ? 'true' : 'false'; ?>;
+    <?php if (isset($_SESSION[$sessionKey]['voucher_discount'])): ?>
+    const autoAppliedVoucherDiscount = <?php echo $_SESSION[$sessionKey]['voucher_discount']; ?>;
+    <?php endif; ?>
+    <?php endif; ?>
 </script>
 
 <!-- Script cho quá trình kích hoạt gói dùng thử -->
@@ -348,6 +385,7 @@ include $project_root_path . '/private/includes/header.php';
 
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_data.js"></script>
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_voucher.js"></script>
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/auto_voucher_notification.js"></script>
 
 <?php
 // --- Include Footer ---

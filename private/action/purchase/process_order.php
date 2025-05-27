@@ -131,10 +131,10 @@ try {
     $db = new Database();
     $conn = $db->getConnection();
     
-    // Reset any previously applied voucher session data
     $voucherObj = new Voucher($db);
-    $voucherObj->resetVoucherSession('order');
-    
+    // Disabled resetVoucherSession here to preserve applied voucher data
+    // $voucherObj->resetVoucherSession('order');
+
     $conn->beginTransaction();
 
     // 1. Insert into Registration
@@ -217,6 +217,20 @@ try {
     $stmt_log->bindParam(':new_values', $log_data);
     $stmt_log->bindParam(':notify_content', $notify_content);
     $stmt_log->execute();
+
+    // Sau khi ghi nhật ký hoạt động, đánh dấu voucher thiết bị đã sử dụng để tránh tái sử dụng
+    if (isset($_SESSION['device_fingerprint']) && isset($_SESSION['order']['voucher_id'])) {
+        try {
+            $voucherObj->markDeviceVoucherUsed(
+                $_SESSION['device_fingerprint'], 
+                $_SESSION['order']['voucher_code']
+            );
+            // Xóa session voucher để tránh giữ lại cho phiên tiếp theo
+            unset($_SESSION['order']['voucher_id'], $_SESSION['order']['voucher_code'], $_SESSION['order']['voucher_discount'], $_SESSION['order']['additional_months']);
+        } catch (Exception $e) {
+            error_log("Error marking device voucher as used after activity log: " . $e->getMessage());
+        }
+    }
 
     // Store registration ID, total price, and trial status in session for payment page
     $_SESSION['pending_registration_id'] = $registration_id;

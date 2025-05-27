@@ -64,13 +64,16 @@ include $project_root_path . '/private/includes/header.php';
         <a href="<?php echo $base_url . $base_path; ?>/pages/transaction.php" class="back-link">&larr; Quay lại Quản Lý Giao Dịch</a>
 
         <h2 class="text-2xl font-semibold mb-4">Tải lên minh chứng thanh toán</h2>
-        <p class="text-sm text-gray-600 mb-6">Đơn hàng: <strong>REG<?php echo htmlspecialchars($registration_id); ?></strong></p>
-
-        <!-- === Hiển thị minh chứng đã tải lên (nếu có) === -->
+        <p class="text-sm text-gray-600 mb-6">Đơn hàng: <strong>REG<?php echo htmlspecialchars($registration_id); ?></strong></p>        <!-- === Hiển thị minh chứng đã tải lên (nếu có) === -->
         <?php if ($existing_proof_url): ?>
         <div class="existing-proof-section">
             <h4>Minh chứng đã tải lên:</h4>
-            <img src="<?php echo $existing_proof_url; ?>" alt="Minh chứng thanh toán hiện tại">
+            <div class="proof-image-container">
+                <a href="javascript:void(0)" onclick="window.open('<?php echo $base_url . $base_path; ?>/pages/view_image.php?image=<?php echo urlencode($existing_proof_url); ?>', 'ImageViewer', 'width=800,height=600')">
+                    <img src="<?php echo $existing_proof_url; ?>" alt="Minh chứng thanh toán hiện tại" style="max-width: 300px; cursor: pointer;">
+                </a>
+                <p class="text-sm text-gray-600 mt-2">Click vào ảnh để xem chi tiết</p>
+            </div>
         </div>
         <?php endif; ?>
         <!-- === Kết thúc hiển thị === -->

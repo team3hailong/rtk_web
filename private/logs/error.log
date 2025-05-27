@@ -126,3 +126,53 @@
 [27-May-2025 10:46:12 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 62, Accounts: 5
 [27-May-2025 10:47:03 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
 [27-May-2025 10:47:03 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 62, Accounts: 5
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 63, Accounts: 1
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 6000000, Discount: 100000.00, New Amount: 5900000, Type: fixed_discount
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 6000000, Discount: 100000.00, New amount: 5900000
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 6000000, Discount: 100000.00, New: 5900000
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (5900000) vs DB (6000000) for registration ID 352.
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 6000000, Discount: 100000.00, New: 5900000
+[27-May-2025 11:50:27 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 5900000 for registration ID 352
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 1
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2000000, Discount: 100000.00, New Amount: 1900000, Type: fixed_discount
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 2000000, Discount: 100000.00, New amount: 1900000
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (2000000) for registration ID 353.
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 11:55:18 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 353
+[27-May-2025 11:55:31 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 11:55:31 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 2
+[27-May-2025 11:56:27 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 1
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2000000, Discount: 100000.00, New Amount: 1900000, Type: fixed_discount
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 2000000, Discount: 100000.00, New amount: 1900000
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (2000000) for registration ID 355.
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 11:58:08 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 355
+[27-May-2025 12:08:00 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[27-May-2025 14:42:57 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 100000.00, New Amount: 700000, Type: fixed_discount
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 800000, Discount: 100000.00, New amount: 700000
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 800000, Discount: 100000.00, New: 700000
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (700000) vs DB (800000) for registration ID 356.
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 800000, Discount: 100000.00, New: 700000
+[27-May-2025 14:44:46 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 700000 for registration ID 356
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 1
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2000000, Discount: 100000.00, New Amount: 1900000, Type: fixed_discount
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 2000000, Discount: 100000.00, New amount: 1900000
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (1900000) vs DB (2000000) for registration ID 357.
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 2000000, Discount: 100000.00, New: 1900000
+[27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 357
+[27-May-2025 14:58:09 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 14:58:09 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 2

@@ -1,6 +1,6 @@
 <?php
 // Include any necessary configuration or header files
-$voucher_code = "VIP20"; // Define voucher code here
+$voucher_code = "TNN3THANG"; // Define voucher code here
 $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $voucher_code;
 ?>
@@ -9,7 +9,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trạm CORS Thái Nguyên - Miễn Phí 3 Tháng</title>
+    <title>Trải nghiệm miễn phí tài khoản đo đạc 3 tháng</title>
     <link rel="stylesheet" href="assets/css/landing.css">
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -19,11 +19,9 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
 <body>
     <!-- Navigation Header -->
     <nav class="navbar">
-        <div class="container">
-            <div class="navbar-logo">
+        <div class="container">            <div class="navbar-logo">
                 <a href="#">
-                    <span class="logo-text">CORS</span>
-                    <span class="logo-accent">Thái Nguyên</span>
+                    <span class="logo-text">Taikhoandodac</span>
                 </a>
             </div>
             <div class="navbar-toggle" id="navbar-toggle">
@@ -35,37 +33,23 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 <ul class="navbar-links">
                     <li><a href="#intro">Giới thiệu</a></li>
                     <li><a href="#features">Điểm nổi bật</a></li>
-                    <li><a href="#cors-info">Định nghĩa</a></li>
+                    <li><a href="#cors-info">Trạm CORS</a></li>
                     <li><a href="#how-to">Cách nhận</a></li>
                     <li><a href="#testimonials">Đánh giá</a></li>
-                </ul>
-            </div>
-            <a href="<?php echo $register_url; ?>" class="navbar-cta-button pulse-animation">Đăng ký ngay</a>
+                </ul>            </div>
+            <a href="#register-section" class="navbar-cta-button pulse-animation">Đăng ký ngay</a>
         </div>
     </nav>
 
-    <header class="hero-section">
-        <div class="container">
-            <h1 data-aos="fade-up">Trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!</h1>
+    <header class="hero-section" id="intro">
+        <div class="container">            <h1 data-aos="fade-up">Trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!</h1>
             <p class="tagline" data-aos="fade-up" data-aos-delay="200">Giải pháp đo đạc chính xác, tiết kiệm thời gian và chi phí</p>
             <div class="cta-primary" data-aos="fade-up" data-aos-delay="400">
-                <a href="<?php echo $register_url; ?>" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
+                <a href="#register-section" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
             </div>
         </div>
     </header>
-      <!-- Phần 1: Giới thiệu dịch vụ -->
-    <section class="section intro-section" id="intro">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>Giới thiệu dịch vụ</h2>
-                <p>Công nghệ hiện đại cho ngành đo đạc</p>
-            </div>
-            <div class="intro-content" data-aos="fade-up" data-aos-delay="200">
-                <p>Trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh <span class="highlight">Thái Nguyên miễn phí 3 tháng</span>. Hệ thống CORS giúp các kỹ sư, nhà khảo sát và chuyên gia địa chính thực hiện công việc đo đạc với <span class="tech-accent">độ chính xác cao</span>, tiết kiệm thời gian và chi phí đáng kể.</p>
-                <p>Với công nghệ RTK Network hiện đại, chúng tôi cung cấp dữ liệu vệ tinh thời gian thực, cho phép bạn thực hiện công việc nhanh chóng và hiệu quả hơn bao giờ hết.</p>
-            </div>
-        </div>
-    </section>
+    
       <!-- Phần 2: Điểm nổi bật -->
     <section class="section features-section" id="features">
         <div class="container">
@@ -142,16 +126,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     <div class="map-container">
                         <img src="assets/img/danhsachtramTNN.png" alt="Bản đồ trạm CORS Thái Nguyên" class="map-image">
                     </div>
-                    <div class="map-legend">
-                        <div class="legend-item">
-                            <span class="legend-dot active"></span>
-                            <span>Trạm CORS đang hoạt động</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-dot planned"></span>
-                            <span>Trạm CORS dự kiến</span>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -167,7 +142,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     <div class="step-card-large" data-aos="fade-right" data-aos-delay="100">
                         <div class="step-number">1</div>
                         <div class="step-image-large">
-                            <img src="https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/11/tai-hinh-nen-dep-mien-phi-3.jpg" alt="Đăng ký tài khoản CORS" class="step-image">
+                            <img src="/public/assets/img/An-dang-ky.png" alt="Đăng ký tài khoản CORS" class="step-image">
                             <!-- Ảnh sẽ thêm sau -->
                         </div>
                         <div class="step-content">
@@ -178,34 +153,34 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     <div class="step-card-large" data-aos="fade-left" data-aos-delay="200">
                         <div class="step-number">2</div>
                         <div class="step-image-large">
-                            <img src="assets/img/anhdangky.png" alt="Xác thực tài khoản CORS" class="step-image">
+                            <img src="/public/assets/img/dang-ky-thong-tin.png" alt="Xác thực email" class="step-image">
                             <!-- Ảnh sẽ thêm sau -->
                         </div>
                         <div class="step-content">
                             <h3>Xác thực</h3>
-                            <p>Thực hiện đăng ký tài khoản với thông tin của bạn và xác thực email thông qua đường dẫn được gửi tới hộp thư điện tử</p>
+                            <p>Thực hiện đăng ký tài khoản với thông tin của bạn và xác thực email thông qua đường dẫn được gửi tới hòm thư</p>
                         </div>
                     </div>
                 </div>
                 <div class="step-row">
                     <div class="step-card-large" data-aos="fade-right" data-aos-delay="300">
                         <div class="step-number">3</div>                        <div class="step-image-large">
-                            <img src="https://i.ibb.co/MVjP5Yd/choose-plan.jpg" alt="Chọn gói dịch vụ CORS" class="step-image">
+                            <img src="/public/assets/img/dang-ky-goi-3-thang.png" alt="Chọn gói 3 tháng" class="step-image">
                             <!-- Hình ảnh tạm thời - cần thay thế bằng ảnh thực tế -->
                         </div>
                         <div class="step-content">
-                            <h3>Chọn gói</h3>
-                            <p>Chọn gói dịch vụ 3 tháng và ấn Mua. Mã voucher giảm giá sẽ tự động áp dụng, sau đó bấm trở về và chờ hệ thống duyệt tài khoản</p>
+                            <h3>Mua tài khoản</h3>
+                            <p>Chọn gói dịch vụ 3 tháng, tỉnh Thái Nguyên và ấn Mua. Mã voucher giảm giá sẽ tự động áp dụng. Bỏ qua gửi ảnh minh chứng, sau đó bấm trở về và chờ duyệt tài khoản</p>
                         </div>
                     </div>
                     <div class="step-card-large" data-aos="fade-left" data-aos-delay="400">
                         <div class="step-number">4</div>
                         <div class="step-image-large">
-                            <!-- Ảnh sẽ thêm sau -->
+                            <img src="/public/assets/img/thong-tin-tai-khoan.png" alt="Nhận tài khoản" class="step-image">
                         </div>
                         <div class="step-content">
                             <h3>Nhận tài khoản</h3>
-                            <p>Sau khi nhận thông tin của bạn, chúng tôi sẽ xác nhận và tạo tài khoản đo đạc. Thông tin đăng nhập sẽ được gửi đến email của bạn</p>
+                            <p>Sau khi nhận thông tin của bạn, chúng tôi sẽ xác nhận và tạo tài khoản đo đạc. Thông tin tài khoản xem tại mục Quản lý tài khoản</p>
                         </div>
                     </div>
                 </div>
@@ -227,7 +202,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <li><i class="fas fa-check-circle"></i> Không cần thẻ tín dụng</li>
                         <li><i class="fas fa-check-circle"></i> Hỗ trợ kỹ thuật đầy đủ</li>
                         <li><i class="fas fa-check-circle"></i> Không có ràng buộc</li>
-                        <li><i class="fas fa-check-circle"></i> Hủy bất cứ lúc nào</li>
+                       
                     </ul>
                     <a href="<?php echo $register_url; ?>" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
                 </div>
@@ -238,11 +213,9 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <div id="qrcode"></div>
                     </div>
                     <div class="register-timer">
-                        <span>Ưu đãi kết thúc vào 06/06/2025:</span>
+                        <span>Ưu đãi kết thúc vào 30/06/2025:</span>
                         <div id="countdown" class="countdown">00:00:00:00</div>
-                        <small style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; margin-top: 0.5rem; display: block;">
-                            (Ngày:Giờ:Phút:Giây)
-                        </small>
+                       
                     </div>
                 </div>
             </div>
@@ -300,33 +273,18 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         </div>
                     </div>
                 </div>
-                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="testimonial-avatar">
-                        <!-- Avatar placeholder -->
-                    </div>
-                    <div class="testimonial-content">
-                        <div class="testimonial-rating">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="testimonial-text">"Trải nghiệm 3 tháng miễn phí là cơ hội tuyệt vời để tôi kiểm chứng hiệu quả của hệ thống. Giờ đây, tôi không thể làm việc mà thiếu CORS."</p>
-                        <div class="testimonial-info">
-                            <h4>Phạm Thị D</h4>
-                            <span>Thái Nguyên</span>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </section>
     
     <!-- Phần 7: Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="sharing-section">
+        <div class="container">            <div class="sharing-section">
                 <p>Chia sẻ cơ hội này với bạn bè:</p>
                 <div class="social-buttons">
                     <a href="javascript:void(0)" onclick="shareOnFacebook()" class="social-button"><i class="fab fa-facebook-f"></i></a>
-                    <a href="javascript:void(0)" onclick="shareOnTwitter()" class="social-button"><i class="fab fa-twitter"></i></a>
+                    <a href="javascript:void(0)" onclick="shareOnInstagram()" class="social-button"><i class="fab fa-instagram"></i></a>
                     <a href="javascript:void(0)" onclick="shareOnLinkedIn()" class="social-button"><i class="fab fa-linkedin-in"></i></a>
                     <a href="javascript:void(0)" onclick="shareViaEmail()" class="social-button"><i class="fas fa-envelope"></i></a>
                 </div>

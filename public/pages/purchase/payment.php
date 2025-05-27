@@ -67,15 +67,36 @@ $sessionKey = $is_renewal ? 'renewal' : 'order';
 if (isset($_SESSION['device_fingerprint']) && 
     (!isset($_SESSION[$sessionKey]['voucher_code']) || empty($_SESSION[$sessionKey]['voucher_code']))) {
     
+    // Store the base price information for proper voucher calculation
+    if (!isset($_SESSION['payment_data'])) {
+        $_SESSION['payment_data'] = [
+            'base_price_from_registration' => $session_total_price,
+            'quantity' => 1
+        ];
+    }
+    
     $deviceVoucherResult = checkAndApplyDeviceVoucher($_SESSION['device_fingerprint'], $sessionKey);
     // If a voucher was auto-applied, we'll use this for display later
     $autoAppliedVoucher = $deviceVoucherResult ? true : false;
-      // Update verified total price if a voucher was applied
+    
+    // Update verified total price if a voucher was applied
     if ($deviceVoucherResult) {
-        $session_total_price = $deviceVoucherResult['new_amount'];
+        // Use base price as the original price for clean calculation
+        $original_price = isset($_SESSION['payment_data']['base_price_from_registration']) 
+            ? ($_SESSION['payment_data']['base_price_from_registration'] * ($_SESSION['payment_data']['quantity'] ?? 1)) 
+            : $session_total_price;
+            
+        $discount_amount = $deviceVoucherResult['discount_value'];
+        
+        // Calculate the new price exactly once
+        $session_total_price = $original_price - $discount_amount;
+        if ($session_total_price < 0) $session_total_price = 0;
+        
+        // Update session values
         $_SESSION['pending_total_price'] = $session_total_price;
-        // Ensure we're using the updated price for later use
         $verified_total_price = $session_total_price;
+        
+        error_log("Auto-applied voucher: Original: {$original_price}, Discount: {$discount_amount}, New: {$session_total_price}");
     }
 }
 
@@ -105,13 +126,30 @@ $quantity = $payment_data['quantity'];
 $province = $payment_data['province'];
 $verified_total_price = $payment_data['verified_total_price'];
 
+// Lưu thông tin giá gốc vào session để tránh dùng giá đã giảm
+$_SESSION['payment_data'] = $payment_data;
+
 // Override verified_total_price with session price if voucher is applied
 if (isset($_SESSION[$sessionKey]['voucher_code'])) {
-    if ($sessionKey === 'order' && isset($_SESSION[$sessionKey]['total_price'])) {
-        $verified_total_price = $_SESSION[$sessionKey]['total_price'];
-    } elseif ($sessionKey === 'renewal' && isset($_SESSION[$sessionKey]['amount'])) {
-        $verified_total_price = $_SESSION[$sessionKey]['amount'];
+    $originalPrice = $payment_data['base_price_from_registration'] * $quantity + $payment_data['vat_amount_from_registration'];
+    $discountAmount = $_SESSION[$sessionKey]['voucher_discount'] ?? 0;
+    
+    // Tính lại giá đúng, đảm bảo chỉ trừ một lần
+    $discountedPrice = $originalPrice - $discountAmount;
+    if ($discountedPrice < 0) $discountedPrice = 0;
+    
+    // Log để debug
+    error_log("PAYMENT PAGE - Original: {$originalPrice}, Discount: {$discountAmount}, New: {$discountedPrice}");
+    
+    // Update session với giá đã tính lại
+    if ($sessionKey === 'order') {
+        $_SESSION[$sessionKey]['total_price'] = $discountedPrice;
+    } elseif ($sessionKey === 'renewal') {
+        $_SESSION[$sessionKey]['amount'] = $discountedPrice;
     }
+    
+    // Cập nhật giá hiển thị
+    $verified_total_price = $discountedPrice;
 }
 
 // --- Tạo nội dung chuyển khoản (chỉ cần nếu không phải trial) ---

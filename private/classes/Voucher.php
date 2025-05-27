@@ -71,8 +71,7 @@ class Voucher {
         
         return ['status' => true, 'data' => $voucher];
     }
-    
-    /**
+      /**
      * Apply voucher to an order and calculate new amount
      * 
      * @param array $voucher The voucher data
@@ -100,7 +99,7 @@ class Voucher {
                 break;
                 
             case 'fixed_discount':
-                $discountAmount = $voucher['discount_value'];
+                $discountAmount = $voucher['discount_value']; 
                 $newAmount = $amount - $discountAmount;
                 
                 // Ensure amount doesn't go below zero
@@ -116,6 +115,9 @@ class Voucher {
                 $additionalMonths = $voucher['discount_value'];
                 break;
         }
+        
+        // Log calculation for debugging
+        error_log("Voucher calculation: Original: {$amount}, Discount: {$discountValue}, New Amount: {$newAmount}, Type: {$voucher['voucher_type']}");
         
         return [
             'new_amount' => $newAmount,

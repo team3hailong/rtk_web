@@ -104,3 +104,25 @@
 [27-May-2025 10:21:30 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (700000) vs DB (800000) for registration ID 328.
 [27-May-2025 10:21:30 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 800000, Discount: 100000.00, New: 700000
 [27-May-2025 10:21:30 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 700000 for registration ID 328
+[27-May-2025 10:25:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[27-May-2025 10:25:48 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 100000.00, New Amount: 1500000, Type: percentage_discount
+[27-May-2025 10:26:26 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[27-May-2025 10:40:36 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[27-May-2025 10:40:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[27-May-2025 10:41:05 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[27-May-2025 10:41:05 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 63, Accounts: 1
+[27-May-2025 10:41:07 Asia/Ho_Chi_Minh] Voucher calculation: Original: 6000000, Discount: 180000.00, New Amount: 5820000, Type: percentage_discount
+[27-May-2025 10:41:55 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[27-May-2025 10:41:55 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 63, Accounts: 1
+[27-May-2025 10:41:57 Asia/Ho_Chi_Minh] Voucher calculation: Original: 6600000, Discount: 180000.00, New Amount: 6420000, Type: percentage_discount
+[27-May-2025 10:42:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[27-May-2025 10:42:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 1
+[27-May-2025 10:42:12 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2200000, Discount: 180000.00, New Amount: 2020000, Type: percentage_discount
+[27-May-2025 10:42:21 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[27-May-2025 10:42:21 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 6
+[27-May-2025 10:42:39 Asia/Ho_Chi_Minh] Using base price from payment_data: 12000000
+[27-May-2025 10:42:39 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 61, Accounts: 5
+[27-May-2025 10:46:12 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
+[27-May-2025 10:46:12 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 62, Accounts: 5
+[27-May-2025 10:47:03 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
+[27-May-2025 10:47:03 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 62, Accounts: 5

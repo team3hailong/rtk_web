@@ -92,7 +92,39 @@ try {
 // Create Voucher instance and validate
 try {
     $voucherService = new Voucher($db);
-    $validationResult = $voucherService->validateVoucher($voucherCode, $orderAmount, $userId);
+    
+    // Lấy thêm thông tin về package_id, location_id và số lượng tài khoản nếu có
+    $packageId = null;
+    $locationId = null;
+    $numSurveyAccounts = null;
+    
+    // Nếu có thông tin đăng ký, lấy từ đó
+    if (isset($_SESSION['pending_registration_id'])) {
+        $registration_id = $_SESSION['pending_registration_id'];
+        try {
+            $conn = $db->getConnection();
+            $stmt = $conn->prepare("SELECT package_id, location_id, num_account FROM registration WHERE id = ?");
+            $stmt->execute([$registration_id]);
+            $regInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($regInfo) {
+                $packageId = $regInfo['package_id'];
+                $locationId = $regInfo['location_id'];
+                $numSurveyAccounts = $regInfo['num_account'];
+            }
+        } catch (Exception $e) {
+            error_log("Error fetching registration info for voucher validation: " . $e->getMessage());
+        }
+    }
+    
+    // Validate voucher với các điều kiện bổ sung
+    $validationResult = $voucherService->validateVoucher(
+        $voucherCode, 
+        $orderAmount, 
+        $userId, 
+        $packageId, 
+        $locationId, 
+        $numSurveyAccounts
+    );
 } catch (Exception $e) {
     $response['message'] = 'Lỗi xử lý mã giảm giá';
     $response['debug'] = $e->getMessage();

@@ -56,8 +56,32 @@ function checkAndApplyDeviceVoucher($deviceFingerprint, $sessionKey = 'order') {
         $db = new Database();
         $voucherService = new Voucher($db);
         
+        // Lấy thông tin về package_id, location_id và số lượng tài khoản
+        $packageId = null;
+        $locationId = null;
+        $numSurveyAccounts = null;
+        
+        // Nếu có thông tin đăng ký, lấy từ session hoặc từ database
+        if (isset($_SESSION['pending_registration_id'])) {
+            $registration_id = $_SESSION['pending_registration_id'];
+            try {
+                $conn = $db->getConnection();
+                $stmt = $conn->prepare("SELECT package_id, location_id, num_account FROM registration WHERE id = ?");
+                $stmt->execute([$registration_id]);
+                $regInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($regInfo) {
+                    $packageId = $regInfo['package_id'];
+                    $locationId = $regInfo['location_id'];
+                    $numSurveyAccounts = $regInfo['num_account'];
+                    error_log("Auto Voucher: Found registration info - Package: $packageId, Location: $locationId, Accounts: $numSurveyAccounts");
+                }
+            } catch (Exception $e) {
+                error_log("Error fetching registration info for auto voucher: " . $e->getMessage());
+            }
+        }
+        
         // Check if device has a voucher
-        $voucherResult = $voucherService->checkDeviceVoucher($deviceFingerprint, $orderAmount, $userId);
+        $voucherResult = $voucherService->checkDeviceVoucher($deviceFingerprint, $orderAmount, $userId, $packageId, $locationId, $numSurveyAccounts);
         
         if (empty($voucherResult)) {
             return false;
@@ -77,12 +101,14 @@ function checkAndApplyDeviceVoucher($deviceFingerprint, $sessionKey = 'order') {
         // Store the discount amount
         $_SESSION[$sessionKey]['voucher_discount'] = $appliedVoucher['discount_value'];
           // Update the totals based on voucher type
-        if ($voucherData['voucher_type'] !== 'extend_duration') {
-            // Calculate new amount correctly (original - discount)
+        if ($voucherData['voucher_type'] !== 'extend_duration') {            // Calculate new amount correctly (original - discount)
             $newAmount = $orderAmount - $appliedVoucher['discount_value'];
             if ($newAmount < 0) $newAmount = 0;
             
-            error_log("AUTO VOUCHER: Original amount: {$orderAmount}, Discount: {$appliedVoucher['discount_value']}, New amount: {$newAmount}");
+            // Log chi tiết để theo dõi quá trình áp dụng voucher
+            $voucherType = $voucherData['voucher_type'] ?? 'unknown';
+            $voucherCode = $voucherData['code'] ?? 'unknown';
+            error_log("AUTO VOUCHER [{$voucherCode}] - Type: {$voucherType}, Original amount: {$orderAmount}, Discount: {$appliedVoucher['discount_value']}, New amount: {$newAmount}");
             
             // Update session values with the correct amount
             if (isset($_SESSION[$sessionKey]['total_price'])) {

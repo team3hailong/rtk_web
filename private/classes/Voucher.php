@@ -21,8 +21,7 @@ class Voucher {
      * @param float $orderValue The current order value
      * @param int $userId The user ID trying to use the voucher
      * @return array Result with status and message/voucher data
-     */
-    public function validateVoucher($code, $orderValue, $userId = null) {
+     */    public function validateVoucher($code, $orderValue, $userId = null, $packageId = null, $locationId = null, $numSurveyAccounts = null) {
         // Validate parameters
         if (empty($code)) {
             return ['status' => false, 'message' => 'Mã voucher không được để trống'];
@@ -45,6 +44,50 @@ class Voucher {
         // Check if voucher has been used up (tổng số lượng)
         if ($voucher['quantity'] !== null && $voucher['used_quantity'] >= $voucher['quantity']) {
             return ['status' => false, 'message' => 'Mã voucher đã hết lượt sử dụng'];
+        }
+          // Kiểm tra điều kiện gói dịch vụ nếu được chỉ định
+        if ($voucher['package_id'] !== null && $packageId !== null && $voucher['package_id'] != $packageId) {
+            // Lấy thông tin tên gói
+            try {
+                $packageName = '';
+                $stmt = $pdo->prepare("SELECT name FROM package WHERE id = :id");
+                $stmt->bindParam(':id', $voucher['package_id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $packageInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($packageInfo) {
+                    $packageName = $packageInfo['name'];
+                }
+                
+                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho gói dịch vụ: ' . $packageName];
+            } catch (Exception $e) {
+                error_log("Error fetching package info for voucher validation: " . $e->getMessage());
+                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho gói dịch vụ cụ thể'];
+            }
+        }
+        
+        // Kiểm tra điều kiện địa điểm nếu được chỉ định
+        if ($voucher['location_id'] !== null && $locationId !== null && $voucher['location_id'] != $locationId) {
+            // Lấy thông tin tên tỉnh/thành phố
+            try {
+                $provinceName = '';
+                $stmt = $pdo->prepare("SELECT province FROM location WHERE id = :id");
+                $stmt->bindParam(':id', $voucher['location_id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $locationInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($locationInfo) {
+                    $provinceName = $locationInfo['province'];
+                }
+                
+                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực: ' . $provinceName];
+            } catch (Exception $e) {
+                error_log("Error fetching location info for voucher validation: " . $e->getMessage());
+                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực cụ thể'];
+            }
+        }
+        
+        // Kiểm tra số lượng tài khoản survey tối đa
+        if ($voucher['max_sa'] !== null && $numSurveyAccounts !== null && $numSurveyAccounts > $voucher['max_sa']) {
+            return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho đơn hàng có tối đa ' . $voucher['max_sa'] . ' tài khoản'];
         }
         
         // Check user limit usage if userId provided
@@ -285,16 +328,18 @@ class Voucher {
             }
         }
     }
-    
-    /**
+      /**
      * Check for device voucher and auto-apply if it's the first purchase
      *
      * @param string $deviceFingerprint The device fingerprint
      * @param float $orderValue The order value
      * @param int $userId The user ID
+     * @param int|null $packageId Package ID to check against voucher condition
+     * @param int|null $locationId Location ID to check against voucher condition
+     * @param int|null $numSurveyAccounts Number of survey accounts to check against max_sa
      * @return array Returns voucher data if found and valid, otherwise empty array
      */
-    public function checkDeviceVoucher($deviceFingerprint, $orderValue, $userId) {
+    public function checkDeviceVoucher($deviceFingerprint, $orderValue, $userId, $packageId = null, $locationId = null, $numSurveyAccounts = null) {
         if (empty($deviceFingerprint)) {
             return [];
         }
@@ -322,8 +367,8 @@ class Voucher {
             
             $voucherCode = $result['voucher_code'];
             
-            // Validate the voucher
-            $voucherResult = $this->validateVoucher($voucherCode, $orderValue, $userId);
+            // Validate the voucher with additional conditions
+            $voucherResult = $this->validateVoucher($voucherCode, $orderValue, $userId, $packageId, $locationId, $numSurveyAccounts);
             
             // If voucher is valid, return it
             if ($voucherResult['status']) {

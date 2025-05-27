@@ -70,27 +70,36 @@
                 <h2>Điểm nổi bật</h2>
                 <p>Lý do nên chọn dịch vụ trạm CORS của chúng tôi</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-icon">
-                        <i class="fas fa-broadcast-tower"></i>
+            <div class="features-grid">                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-broadcast-tower"></i>
+                        </div>
+                        <h3>Phủ sóng rộng khắp</h3>
                     </div>
-                    <h3>Phủ sóng rộng khắp</h3>
-                    <p>Hệ thống trạm CORS phủ sóng toàn tỉnh Thái Nguyên, đảm bảo kết nối ổn định và liên tục trong mọi khu vực đo đạc. Trải nghiệm miễn phí trọn vẹn 3 tháng không giới hạn.</p>
-                </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-icon">
-                        <i class="fas fa-bullseye"></i>
+                    <div class="feature-card-content">
+                        <p>Hệ thống trạm CORS phủ sóng toàn tỉnh Thái Nguyên, đảm bảo kết nối ổn định và liên tục trong mọi khu vực đo đạc. Trải nghiệm miễn phí trọn vẹn 3 tháng không giới hạn.</p>
                     </div>
-                    <h3>Độ chính xác cao</h3>
-                    <p>Tỉ lệ fixed cao, đạt độ chính xác đến cm, giúp hạn chế tình trạng float buổi chiều - vấn đề thường gặp trong công tác đo đạc truyền thống.</p>
-                </div>
-                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-icon">
-                        <i class="fas fa-tools"></i>
+                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>Độ chính xác cao</h3>
                     </div>
-                    <h3>Hỗ trợ kỹ thuật</h3>
-                    <p>Đội ngũ kỹ thuật chuyên nghiệp sẵn sàng hướng dẫn cách thức đo đạc cơ bản và tối ưu hóa việc sử dụng tài khoản CORS trong công việc của bạn.</p>
+                    <div class="feature-card-content">
+                        <p>Tỉ lệ fixed cao, đạt độ chính xác đến cm, giúp hạn chế tình trạng float buổi chiều - vấn đề thường gặp trong công tác đo đạc truyền thống.</p>
+                    </div>
+                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Hỗ trợ kỹ thuật</h3>
+                    </div>
+                    <div class="feature-card-content">
+                        <p>Đội ngũ kỹ thuật chuyên nghiệp sẵn sàng hướng dẫn cách thức đo đạc cơ bản và tối ưu hóa việc sử dụng tài khoản CORS trong công việc của bạn.</p>
+                    </div>
                 </div>
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
                     <div class="feature-icon">
@@ -114,7 +123,7 @@
                     <h3>Định nghĩa trạm CORS</h3>
                     <p><strong>CORS</strong> (<em>Continuously Operating Reference Station</em>) là hệ thống trạm tham chiếu hoạt động liên tục, cung cấp dữ liệu vệ tinh chính xác cho các thiết bị đo đạc RTK. Công nghệ này sử dụng hệ thống vệ tinh định vị toàn cầu (GNSS) để xác định vị trí với độ chính xác cao.</p>
                     
-                    <p>Khi sử dụng trạm CORS, các máy đo đạc của bạn nhận được dữ liệu hiệu chỉnh thời gian thực, giúp tăng đáng kể độ chính xác của kết quả đo đạc xuống đến centimet. Điều này mang lại lợi ích to lớn trong các công tác:</p>
+                    <p>Ứng dụng của trạm CORS:</p>
                     
                     <ul class="tech-list">
                         <li>Khảo sát địa hình, địa chính</li>
@@ -128,7 +137,7 @@
                 <div class="cors-map" data-aos="fade-left">
                     <h3>Bản đồ trạm CORS tại Thái Nguyên</h3>
                     <div class="map-container">
-                        <!-- Khung ảnh bản đồ - sẽ thêm sau -->
+                        <img src="assets/img/danhsachtramTNN.png" alt="Bản đồ trạm CORS Thái Nguyên" class="map-image">
                     </div>
                     <div class="map-legend">
                         <div class="legend-item">
@@ -155,6 +164,7 @@
                     <div class="step-card-large" data-aos="fade-right" data-aos-delay="100">
                         <div class="step-number">1</div>
                         <div class="step-image-large">
+                            <img src="https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/11/tai-hinh-nen-dep-mien-phi-3.jpg" alt="Đăng ký tài khoản CORS" class="step-image">
                             <!-- Ảnh sẽ thêm sau -->
                         </div>
                         <div class="step-content">
@@ -165,6 +175,7 @@
                     <div class="step-card-large" data-aos="fade-left" data-aos-delay="200">
                         <div class="step-number">2</div>
                         <div class="step-image-large">
+                            <img src="assets/img/anhdangky.png" alt="Xác thực tài khoản CORS" class="step-image">
                             <!-- Ảnh sẽ thêm sau -->
                         </div>
                         <div class="step-content">
@@ -175,9 +186,9 @@
                 </div>
                 <div class="step-row">
                     <div class="step-card-large" data-aos="fade-right" data-aos-delay="300">
-                        <div class="step-number">3</div>
-                        <div class="step-image-large">
-                            <!-- Ảnh sẽ thêm sau -->
+                        <div class="step-number">3</div>                        <div class="step-image-large">
+                            <img src="https://i.ibb.co/MVjP5Yd/choose-plan.jpg" alt="Chọn gói dịch vụ CORS" class="step-image">
+                            <!-- Hình ảnh tạm thời - cần thay thế bằng ảnh thực tế -->
                         </div>
                         <div class="step-content">
                             <h3>Chọn gói</h3>

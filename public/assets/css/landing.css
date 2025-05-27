@@ -467,7 +467,7 @@ section {
 
 .feature-card {
     background-color: var(--white);
-    padding: 2.5rem 2rem;
+    padding: 2rem 2rem; /* Giảm padding-top từ 2.5rem xuống 2rem */
     border-radius: 16px;
     box-shadow: var(--shadow-lg);
     text-align: center;
@@ -505,14 +505,13 @@ section {
 .feature-icon {
     font-size: 3rem;
     color: var(--primary-500);
-    margin-bottom: 1.8rem;
     position: relative;
     height: 80px;
     width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.8rem;
+    margin: 0 auto 1rem; /* Giảm margin bottom từ 1.8rem xuống 1rem */
 }
 
 .feature-icon::after {
@@ -531,15 +530,20 @@ section {
 }
 
 .feature-card h3 {
+    margin-top: 0;
     margin-bottom: 1rem;
     color: var(--primary-500);
     font-size: 1.4rem;
+    min-height: 1.8rem; /* Đảm bảo chiều cao nhất quán cho tiêu đề */
 }
 
 .feature-card p {
     color: var(--text-light);
     line-height: 1.7;
-    margin-top: auto;
+    margin-top: 0;
+    flex-grow: 1; /* Cho phép đoạn văn mở rộng để điền vào không gian còn lại */
+    display: flex;
+    align-items: flex-start; /* Căn đầu đoạn văn */
 }
 
 /* CORS Info Section */
@@ -564,17 +568,27 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 4rem;
-    align-items: center;
+    align-items: start; /* Changed from center to start to align items at the top */
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .cors-definition {
     position: relative;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.cors-map {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .cors-definition h3,
 .cors-map h3 {
     color: var(--primary-500);
     margin-bottom: 1.5rem;
+    margin-top: 0;
     font-size: 1.6rem;
     display: inline-block;
     position: relative;
@@ -634,6 +648,7 @@ section {
     box-shadow: var(--shadow-lg);
     position: relative;
     transition: var(--transition);
+    margin-top: 0;
 }
 
 .map-container:hover {
@@ -672,7 +687,7 @@ section {
 }
 
 .map-container::before {
-    content: 'Bản đồ trạm CORS tỉnh Thái Nguyên';
+   
     position: absolute;
     top: 50%;
     left: 50%;
@@ -759,12 +774,28 @@ section {
 
 .step-image-large {
     width: 100%;
-    height: 220px;
-    background-color: var(--tech-dark);
+    height: 300px; /* Chiều cao cố định cho tất cả các container ảnh */
+    background-color: #f8f9fa; /* Màu nền sáng hơn */
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.step-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Thay đổi từ contain sang cover để lấp đầy container */
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.step-card-large:hover .step-image {
+    transform: scale(1.05); /* Hiệu ứng hover nhẹ */
 }
 
 .step-content {
@@ -794,7 +825,17 @@ section {
     }
     
     .step-image-large {
-        height: 180px;
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-image-large {
+        min-height: 150px;
+    }
+    
+    .step-card-large {
+        margin-bottom: 1.5rem;
     }
 }
 

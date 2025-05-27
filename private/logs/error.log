@@ -64,3 +64,7 @@
 [26-May-2025 22:56:56 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 304
 [26-May-2025 22:57:06 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 304
 [26-May-2025 22:57:14 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 800000 for registration ID 305
+[27-May-2025 08:48:36 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

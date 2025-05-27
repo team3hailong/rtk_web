@@ -212,7 +212,7 @@ include $project_root_path . '/private/includes/header.php';
                 <?php endif; ?>
                   <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
                     <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
@@ -220,7 +220,7 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <div class="summary-item summary-total" style="margin-top: 1.5rem;">
                     <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format(($payment_data['base_price_from_registration'] * $quantity) + $payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
                 </div>
                 
                 <?php else: ?>
@@ -267,7 +267,7 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 <?php endif; ?>                <div class="summary-item">
                     <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'], 0, ',', '.'); ?> đ</strong>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
                 </div>
                 <div class="summary-item">
                     <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>

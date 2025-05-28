@@ -85,39 +85,43 @@ function setupScrollToTop() {
 
 // Initialize countdown timer
 function initCountdown() {
-    // Target time in Vietnam: 2025-06-30 23:59:59 GMT+7
-    // Convert to UTC: subtract 7 hours => 2025-06-30 16:59:59 UTC
-    const targetUTC = Date.UTC(2025, 5, 30, 16, 59, 59); // Month 5 = June (zero-based index)
+    // Set the countdown duration to 48 hours from now
+    const countdownDuration = 48 * 60 * 60 * 1000; // 48 hours in milliseconds
+    const targetTime = new Date(Date.now() + countdownDuration);
+    let intervalId;
 
-    function updateCountdown() {
-        const nowUTC = Date.now(); // Current UTC time in ms
-        const timeLeft = targetUTC - nowUTC;
-
-        if (timeLeft <= 0) {
-            document.getElementById('countdown').innerHTML = "00 : 00 : 00 : 00";
-            clearInterval(intervalId); // Stop interval when countdown ends
-            return;
-        }
-
+    // Helper function to format the countdown in Vietnamese: "X ngày Y giờ Z phút W giây"
+    function formatCountdown(timeLeft) {
         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
         const seconds = Math.floor((timeLeft / 1000) % 60);
-
-        // Format with leading zeros
-        const formattedDays = days.toString().padStart(2, '0');
-        const formattedHours = hours.toString().padStart(2, '0');
-        const formattedMinutes = minutes.toString().padStart(2, '0');
-        const formattedSeconds = seconds.toString().padStart(2, '0');
-
-        document.getElementById('countdown').innerHTML =
-            `${formattedDays} : ${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
+        return `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
 
-    updateCountdown();
-    const intervalId = setInterval(updateCountdown, 1000);
-}
+    const countdownContainer = document.getElementById('countdown');
+    const countdownLabel = document.querySelector('.register-timer .countdown-label');
+    const countdownValue = document.querySelector('.register-timer .countdown-value');
 
+    function updateCountdown() {
+        const now = Date.now();
+        const timeLeft = targetTime.getTime() - now;
+
+        if (timeLeft <= 0) {
+            if (countdownLabel) countdownLabel.textContent = 'Ưu đãi đã kết thúc!';
+            if (countdownValue) countdownValue.textContent = '';
+            if (intervalId) clearInterval(intervalId);
+            return;
+        }
+
+        if (countdownLabel) countdownLabel.textContent = 'Thời gian còn lại của ưu đãi';
+        if (countdownValue) countdownValue.textContent = formatCountdown(timeLeft);
+    }
+
+    // Initial render
+    updateCountdown();
+    intervalId = setInterval(updateCountdown, 1000);
+}
 
 // Social sharing functions
 function shareOnFacebook() {

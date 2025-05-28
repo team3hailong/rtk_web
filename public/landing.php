@@ -9,7 +9,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trải nghiệm miễn phí tài khoản đo đạc 3 tháng</title>
+    <title>Chương trình tri ân miễn phí 3 tháng sử dụng tài khoản CORS trên địa bàn tỉnh Thái Nguyên</title>
     <link rel="stylesheet" href="assets/css/landing.css">
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -42,7 +42,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
     </nav>
 
     <header class="hero-section" id="intro">
-        <div class="container">            <h1 data-aos="fade-up">Trải nghiệm dịch vụ tài khoản trạm CORS phủ khắp tỉnh Thái Nguyên miễn phí 3 tháng!</h1>
+        <div class="container">            <h1 data-aos="fade-up">Chương trình tri ân miễn phí 3 tháng sử dụng tài khoản CORS trên địa bàn tỉnh Thái Nguyên</h1>
             <p class="tagline" data-aos="fade-up" data-aos-delay="200">Giải pháp đo đạc chính xác, tiết kiệm thời gian và chi phí</p>
             <div class="cta-primary" data-aos="fade-up" data-aos-delay="400">
                 <a href="#register-section" class="cta-button pulse-animation">ĐĂNG KÝ NGAY</a>
@@ -65,7 +65,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <h3>Phủ sóng rộng khắp</h3>
                     </div>
                     <div class="feature-card-content">
-                        <p>Hệ thống trạm CORS phủ sóng toàn tỉnh Thái Nguyên, đảm bảo kết nối ổn định và liên tục trong mọi khu vực đo đạc. Trải nghiệm miễn phí trọn vẹn 3 tháng không giới hạn.</p>
+                        <p>Hệ thống trạm CORS phủ sóng toàn tỉnh Thái Nguyên, đảm bảo kết nối ổn định và liên tục trên toàn địa bàn Tỉnh</p>
                     </div>
                 </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card-header">
@@ -75,17 +75,17 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <h3>Độ chính xác cao</h3>
                     </div>
                     <div class="feature-card-content">
-                        <p>Tỉ lệ fixed cao, đạt độ chính xác đến cm, giúp hạn chế tình trạng float buổi chiều - vấn đề thường gặp trong công tác đo đạc truyền thống.</p>
+                        <p>Hệ thống được hiệu chuẩn theo mốc tọa độ, cao độ VN2000, đảm bảo độ chính xác của dữ liệu mọi lúc, mọi nơi</p>
                     </div>
                 </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="feature-card-header">
                         <div class="feature-icon">
                             <i class="fas fa-tools"></i>
                         </div>
-                        <h3>Hỗ trợ kỹ thuật</h3>
+                        <h3>Hỗ trợ nhiều loại máy</h3>
                     </div>
                     <div class="feature-card-content">
-                        <p>Đội ngũ kỹ thuật chuyên nghiệp sẵn sàng hướng dẫn cách thức đo đạc cơ bản và tối ưu hóa việc sử dụng tài khoản CORS trong công việc của bạn.</p>
+                        <p>Hệ thống hỗ trợ đầy đủ cho tất cả các dòng máy RTK phổ biến hiện nay như: CHC, ComNav, Geomate, eSurvey, Mediant,...</p>
                     </div>
                 </div>
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
@@ -170,7 +170,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         </div>
                         <div class="step-content">
                             <h3>Mua tài khoản</h3>
-                            <p>Chọn gói dịch vụ 3 tháng, tỉnh Thái Nguyên và ấn Mua. Mã voucher giảm giá sẽ tự động áp dụng. Bỏ qua gửi ảnh minh chứng, sau đó bấm trở về và chờ duyệt tài khoản</p>
+                            <p>Chọn gói dịch vụ 3 tháng. Chọn 1 tài khoản và tỉnh Thái Nguyên rồi ấn Mua. Mã voucher giảm giá sẽ tự động áp dụng. Bỏ qua gửi ảnh minh chứng, sau đó bấm trở về và chờ duyệt tài khoản</p>
                         </div>
                     </div>
                     <div class="step-card-large" data-aos="fade-left" data-aos-delay="400">
@@ -212,11 +212,11 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     <div class="qr-container">
                         <div id="qrcode"></div>
                     </div>
-                    <div class="register-timer">
-                        <span>Ưu đãi kết thúc vào 30/06/2025:</span>
-                        <div id="countdown" class="countdown">00:00:00:00</div>
-                       
-                    </div>
+                <div class="register-timer">
+                <div class="countdown-label"></div>
+                <div class="countdown-value"></div>
+                </div>
+                    
                 </div>
             </div>
         </div>
@@ -236,10 +236,10 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <div class="testimonial-rating">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
-                        <p class="testimonial-text">"Dịch vụ CORS tại Thái Nguyên đã giúp tôi tiết kiệm rất nhiều thời gian trong công tác đo đạc. Độ chính xác rất cao và hỗ trợ kỹ thuật luôn sẵn sàng giúp đỡ."</p>
+                        <p class="testimonial-text">"Từ khi dùng hệ thống này, tôi đã đo đạc được cả ngày liên tục, thoát khỏi cảnh cứ phải căn giờ đo vào sáng sớm như trước kia"</p>
                         <div class="testimonial-info">
-                            <h4>Nguyễn Văn A</h4>
-                            <span>Thái Nguyên</span>
+                            <h4>Nguyễn Anh Đức</h4>
+                            <span>Đồng Hỷ</span>
                         </div>
                     </div>
                 </div>
@@ -251,10 +251,10 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <div class="testimonial-rating">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
-                        <p class="testimonial-text">"Hệ thống CORS tại Thái Nguyên giúp tôi giảm đáng kể chi phí đo đạc. Không còn cảnh float buổi chiều nữa, fixed gần như 100% thời gian."</p>
+                        <p class="testimonial-text">"Rất ổn định và rộng khắp, anh em kỹ thuật cũng hỗ trợ nhiệt tình nên tôi nhanh chóng làm quen và giờ đã thành thục sử dụng hệ thống mới. Tôi chắc chắn sẽ sử dụng lâu dài với hệ thống này"</p>
                         <div class="testimonial-info">
-                            <h4>Trần Thị B</h4>
-                            <span>Thái Nguyên</span>
+                            <h4>Hoàng Văn Khải</h4>
+                            <span>Sông Công</span>
                         </div>
                     </div>
                 </div>
@@ -266,10 +266,10 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         <div class="testimonial-rating">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
                         </div>
-                        <p class="testimonial-text">"Đội ngũ kỹ thuật hỗ trợ nhiệt tình, giải đáp mọi thắc mắc của tôi một cách nhanh chóng. Tôi đã giới thiệu dịch vụ này cho nhiều đồng nghiệp."</p>
+                        <p class="testimonial-text">"Tôi được người anh trong giới chia sẻ về hệ thống này, mới sử dụng được 1 tháng nay nhưng dịch vụ ổn định, vùng phủ rộng. Tôi đã dừng sử dụng trạm Radio từ khi sử dụng hệ thống này"</p>
                         <div class="testimonial-info">
-                            <h4>Lê Văn C</h4>
-                            <span>Thái Nguyên</span>
+                            <h4>Lê Trung Hải</h4>
+                            <span>Định Hóa</span>
                         </div>
                     </div>
                 </div>

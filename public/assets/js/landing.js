@@ -85,38 +85,39 @@ function setupScrollToTop() {
 
 // Initialize countdown timer
 function initCountdown() {
-    // Set target date: 31/12/2024 23:59:59 (Vietnam timezone)
-    const targetDate = new Date('2025-06-06T23:59:59+07:00');
-    
+    // Target time in Vietnam: 2025-06-30 23:59:59 GMT+7
+    // Convert to UTC: subtract 7 hours => 2025-06-30 16:59:59 UTC
+    const targetUTC = Date.UTC(2025, 5, 30, 16, 59, 59); // Month 5 = June (zero-based index)
+
     function updateCountdown() {
-        const now = new Date();
-        const timeLeft = targetDate - now;
-        
+        const nowUTC = Date.now(); // Current UTC time in ms
+        const timeLeft = targetUTC - nowUTC;
+
         if (timeLeft <= 0) {
-            document.getElementById('countdown').innerHTML = "00:00:00:00";
+            document.getElementById('countdown').innerHTML = "00 : 00 : 00 : 00";
+            clearInterval(intervalId); // Stop interval when countdown ends
             return;
         }
-        
+
         const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
+        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+
         // Format with leading zeros
         const formattedDays = days.toString().padStart(2, '0');
         const formattedHours = hours.toString().padStart(2, '0');
         const formattedMinutes = minutes.toString().padStart(2, '0');
         const formattedSeconds = seconds.toString().padStart(2, '0');
-        
-        document.getElementById('countdown').innerHTML = `${formattedDays}:${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+
+        document.getElementById('countdown').innerHTML =
+            `${formattedDays} : ${formattedHours} : ${formattedMinutes} : ${formattedSeconds}`;
     }
-    
-    // Update countdown immediately
+
     updateCountdown();
-    
-    // Update every second
-    setInterval(updateCountdown, 1000);
+    const intervalId = setInterval(updateCountdown, 1000);
 }
+
 
 // Social sharing functions
 function shareOnFacebook() {
@@ -125,10 +126,18 @@ function shareOnFacebook() {
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
 }
 
-function shareOnTwitter() {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent('Trải nghiệm dịch vụ trạm CORS Thái Nguyên miễn phí 3 tháng!');
-    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+function shareOnInstagram() {
+    // Instagram doesn't have a direct share URL API like Facebook
+    // Use a modal to guide users to share on Instagram
+    const currentUrl = window.location.href;
+    alert(`Để chia sẻ trên Instagram:\n\n1. Copy đường link này: ${currentUrl}\n\n2. Mở Instagram và dán link vào bio hoặc chia sẻ trong story của bạn.\n\nĐường link đã được copy vào clipboard!`);
+    
+    // Copy URL to clipboard
+    navigator.clipboard.writeText(currentUrl).then(() => {
+        console.log('URL copied to clipboard');
+    }).catch(err => {
+        console.error('Could not copy URL: ', err);
+    });
 }
 
 function shareOnLinkedIn() {

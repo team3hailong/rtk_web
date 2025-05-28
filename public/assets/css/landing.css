@@ -51,13 +51,13 @@ body {
 }
 
 section {
-    padding: 6rem 0;
-    margin-bottom: 2rem;
+    padding: 4rem 0;
+    margin-bottom: 0.5rem;
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
     position: relative;
 }
 
@@ -117,12 +117,9 @@ section {
 }
 
 .logo-text {
-    color: var(--tech-dark);
-    margin-right: 4px;
-}
-
-.logo-accent {
     color: var(--primary-500);
+    font-weight: 750;
+    letter-spacing: 0.5px;
 }
 
 .navbar-links {
@@ -256,6 +253,10 @@ section {
     
     .navbar-links li {
         margin: 1.5rem 0;
+    }
+
+    .navbar-logo {
+        display: none; /* Ẩn logo trên màn hình nhỏ */
     }
     
     .navbar-toggle {
@@ -566,7 +567,7 @@ section {
 
 .cors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 4rem;
     align-items: start; /* Changed from center to start to align items at the top */
     margin-top: 0;
@@ -651,6 +652,7 @@ section {
     position: relative;
     transition: var(--transition);
     margin-top: 0;
+    max-width: 100%;
 }
 
 .map-container:hover {
@@ -658,11 +660,21 @@ section {
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
 }
 
+.map-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    max-width: 100%;
+    display: block;
+}
+
 .map-legend {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
     margin-top: 1.5rem;
+    flex-wrap: wrap; /* Cho phép wrap trên màn hình nhỏ */
+    padding: 0 0.5rem;
 }
 
 .legend-item {
@@ -702,13 +714,18 @@ section {
 @media (max-width: 992px) {
     .cors-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .cors-map {
+        margin-top: 2rem;
     }
 }
 
 /* How To Section */
 .how-to-section {
     background-color: var(--light-gray);
-    padding: 6rem 0;
+    padding: 4rem 0;
 }
 
 /* Original step card styles - keep for reference */
@@ -873,9 +890,9 @@ section {
 
 .register-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 5rem;
-    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+    align-items: start;
     position: relative;
 }
 
@@ -988,7 +1005,7 @@ section {
 .register-timer {
     margin-top: 1.5rem;
     color: var(--white);
-    text-align: center;
+    text-align: justify;
 }
 
 .register-timer span {
@@ -996,6 +1013,13 @@ section {
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
+}
+.register-timer small {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: justify;
 }
 
 .countdown {
@@ -1010,6 +1034,8 @@ section {
     letter-spacing: 2px;
     border: 2px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
+    min-width: 260px;
+    text-align: center;
 }
 
 /* Testimonials Section */
@@ -1038,6 +1064,9 @@ section {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(16, 185, 129, 0.1);
+    height: 100%; /* Đảm bảo tất cả các card có cùng chiều cao */
+    display: flex;
+    flex-direction: column;
 }
 
 .testimonial-card::before {
@@ -1068,10 +1097,17 @@ section {
     overflow: hidden;
 }
 
+.testimonial-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Cho phép nội dung mở rộng để lấp đầy card */
+}
+
 .testimonial-rating {
     color: #FFD700;
     margin-bottom: 1.2rem;
     font-size: 1.1rem;
+    text-align: center;
 }
 
 .testimonial-text {
@@ -1082,11 +1118,14 @@ section {
     font-size: 1.05rem;
     position: relative;
     z-index: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .testimonial-info {
     border-top: 1px solid rgba(16, 185, 129, 0.1);
     padding-top: 1.2rem;
+    margin-bottom: 1rem; /* Thêm margin-bottom để các testimonial card đồng đều */
 }
 
 .testimonial-info h4 {
@@ -1276,5 +1315,17 @@ section {
     .cta-button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .tech-list {
+        padding-left: 0.5rem;
+    }
+    
+    .tech-list li {
+        padding-left: 1.5rem;
     }
 }

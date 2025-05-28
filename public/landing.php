@@ -28,6 +28,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
+                <a href="#register-section" class="navbar-cta-button pulse-animation mobile-only">Đăng ký ngay</a>
             </div>
             <div class="navbar-menu" id="navbar-menu">
                 <ul class="navbar-links">

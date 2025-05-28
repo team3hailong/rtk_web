@@ -176,3 +176,19 @@
 [27-May-2025 14:57:32 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1900000 for registration ID 357
 [27-May-2025 14:58:09 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
 [27-May-2025 14:58:09 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 2
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 100000.00, New Amount: 700000, Type: fixed_discount
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] AUTO VOUCHER [FIXED100K] - Type: fixed_discount, Original amount: 800000, Discount: 100000.00, New amount: 700000
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] Auto-applied voucher: Original: 800000, Discount: 100000.00, New: 700000
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (700000) vs DB (800000) for registration ID 359.
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 800000, Discount: 100000.00, New: 700000
+[28-May-2025 16:55:50 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 700000 for registration ID 359
+[28-May-2025 16:56:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[28-May-2025 16:56:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[28-May-2025 17:00:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[28-May-2025 17:00:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[28-May-2025 17:00:04 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 800000 for registration ID 360
+[28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 361

@@ -192,3 +192,9 @@
 [28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
 [28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
 [28-May-2025 17:09:10 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 361
+[28-May-2025 17:48:25 Asia/Ho_Chi_Minh] PAYMENT PAGE - Original: 2200000, Discount: 330000, New: 1870000
+[28-May-2025 17:48:25 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 1870000 for registration ID 366
+[28-May-2025 17:48:33 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[28-May-2025 17:48:33 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 63, Accounts: 1
+[28-May-2025 17:48:33 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 2200000 for registration ID 366
+[28-May-2025 17:48:35 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2200000, Discount: 330000, New Amount: 1870000, Type: percentage_discount

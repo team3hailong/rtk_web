@@ -6,11 +6,11 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
 ?>
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chương trình tri ân miễn phí 3 tháng sử dụng tài khoản CORS trên địa bàn tỉnh Thái Nguyên</title>
     <link rel="stylesheet" href="assets/css/landing.css">
+    <link rel="stylesheet" href="assets/css/landing-notes-addition.css">
     <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- AOS Animation library -->
@@ -184,6 +184,16 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                             <p>Sau khi nhận thông tin của bạn, chúng tôi sẽ xác nhận và tạo tài khoản đo đạc. Thông tin tài khoản xem tại mục Quản lý tài khoản</p>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Notes Section -->
+                <div class="important-notes" data-aos="fade-up" data-aos-delay="500">
+                    <h3>Lưu ý quan trọng:</h3>
+                    <ul class="notes-list">
+                        <li><i class="fas fa-info-circle"></i> Mỗi tài khoản sẽ được miễn phí tối đa 3 tài khoản, sẽ tính phí từ tài khoản thứ 4</li>
+                        <li><i class="fas fa-tag"></i> Nhập mã voucher <strong>TNN3THANG</strong> cho gói 3 tháng nếu không thấy áp voucher tự động</li>
+                        <li><i class="fas fa-phone-alt"></i> Nếu có vướng mắc gì, hãy liên hệ tới số điện thoại <strong>0981190564</strong> (8h-17h T2 đến T6)</li>
+                    </ul>
                 </div>
             </div>
         </div>

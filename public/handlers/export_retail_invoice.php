@@ -169,6 +169,9 @@ foreach ($retail_invoices as $invoice) {
     $companyEmail = $company['email'] ?? '';
     $companyWebsite = $company['website'] ?? '';
     $addresses = json_decode($company['address'] ?? '[]', true);
+    if (!is_array($addresses)) {
+        $addresses = []; // Ensure $addresses is an array
+    }
     $headOffice = '';
     foreach ($addresses as $addr) {
         if (($addr['type'] ?? '') === 'trụ sở') {
@@ -210,6 +213,18 @@ foreach ($retail_invoices as $invoice) {
         }
     }
     
+    // Calculate Unit Price and prepare display values for the item row
+    $num_accounts_raw_str = (string)(($invoice['registration_details'] ?? [])['num_account'] ?? '0');
+    $num_accounts_for_calc = (int)$num_accounts_raw_str;
+    $current_item_total_amount = (float)($invoice['amount'] ?? 0);
+    
+    $calculated_unit_price_for_item = $current_item_total_amount; // Default unit price to total amount if quantity is not positive
+    if ($num_accounts_for_calc > 0) {
+        $calculated_unit_price_for_item = $current_item_total_amount / $num_accounts_for_calc;
+    }
+    $display_num_accounts_for_item = htmlspecialchars($num_accounts_raw_str);
+    // End of new code block for calculation
+
     // Build HTML cho hóa đơn
     $html = $css . '
     <div class="invoice-container">
@@ -266,9 +281,9 @@ foreach ($retail_invoices as $invoice) {
                     <tr>
                         <td>1</td>
                         <td>' . $product_name . '</td>
-                        <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
-                        <td> '. htmlspecialchars((string)$invoice['registration_details']['num_account']) .'</td>
-                        <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
+                        <td>' . number_format($calculated_unit_price_for_item, 0, ',', '.') . ' đ</td>
+                        <td> '. $display_num_accounts_for_item .'</td>
+                        <td>' . number_format($current_item_total_amount, 0, ',', '.') . ' đ</td>
                     </tr>';
       // Thêm thông tin chi tiết về gói dịch vụ nếu có
     if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {

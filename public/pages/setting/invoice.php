@@ -97,7 +97,7 @@ document.getElementById('invoice-form').addEventListener('submit', function(e) {
     // Tax code validation (simple pattern for Vietnam tax code)
     if (taxCode !== '' && !/^\d{10}(-\d{3})?$/.test(taxCode)) {
         e.preventDefault();
-        errorElement.textContent = 'Mã số thuế không hợp lệ. Định dạng: 10 chữ số hoặc 10 chữ số-3 chữ số.';
+        errorElement.textContent = 'Mã số thuế không hợp lệ. Định dạng: 10 chữ số (VD: 0123456789) hoặc 10-3 chữ số (VD: 0123456789-001).';
         errorElement.style.display = 'block';
     }
     

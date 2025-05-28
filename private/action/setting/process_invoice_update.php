@@ -33,7 +33,7 @@ if (!empty($tax_code) && empty($company_name)) {
 
 // Tax code validation - Vietnam tax code format
 if (!empty($tax_code) && !preg_match('/^\d{10}(-\d{3})?$/', $tax_code)) {
-    $_SESSION['error'] = "Mã số thuế không hợp lệ. Định dạng: 10 chữ số hoặc 10 chữ số-3 chữ số.";
+    $_SESSION['error'] = "Mã số thuế không hợp lệ. Định dạng: 10 chữ số (VD: 0123456789) hoặc 10-3 chữ số (VD: 0123456789-001).";
     header('Location: ' . $invoice_page_url);
     exit;
 }

@@ -94,41 +94,6 @@ function initializeBankSelector() {
     
     // Tùy chỉnh style cho select
     bankSelect.style.appearance = 'auto'; // Hiển thị arrow dropdown
-    
-    // Thêm tính năng tìm kiếm với datalist cho các trình duyệt cũ
-    if (!('onfocusin' in document)) { // Kiểm tra nếu trình duyệt không hỗ trợ focusin (một số trình duyệt cũ)
-        const datalist = document.createElement('datalist');
-        datalist.id = 'bank_list';
-        vietnamBanks.forEach(bank => {
-            const option = document.createElement('option');
-            option.value = bank.name;
-            datalist.appendChild(option);
-        });
-        document.body.appendChild(datalist);
-        
-        // Tạo input để tìm kiếm
-        const searchInput = document.createElement('input');
-        searchInput.type = 'text';
-        searchInput.placeholder = 'Tìm kiếm ngân hàng...';
-        searchInput.className = 'form-control mb-2';
-        searchInput.setAttribute('list', 'bank_list');
-        searchInput.disabled = isDisabled;
-        
-        // Thêm sự kiện khi chọn từ datalist
-        searchInput.addEventListener('change', function() {
-            const selectedValue = this.value;
-            const options = bankSelect.options;
-            for (let i = 0; i < options.length; i++) {
-                if (options[i].value === selectedValue) {
-                    bankSelect.selectedIndex = i;
-                    break;
-                }
-            }
-        });
-        
-        // Chèn input tìm kiếm trước select
-        bankSelect.parentNode.insertBefore(searchInput, bankSelect);
-    }
 }
 
 // Thêm vào sự kiện document ready

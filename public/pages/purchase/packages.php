@@ -137,10 +137,12 @@ include $project_root_path . '/private/includes/header.php';
                         </ul>
 
                         <!-- Thêm lựa chọn Purchase Type -->
+                        <?php if ($package['package_id'] !== 'trial_7d'): ?>
                         <div class="purchase-type-selector" style="margin-top: 10px; margin-bottom:10px;">
                             <label style="margin-right: 10px;"><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="individual" checked> Cá nhân</label>
                             <label><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="company"> Công ty (+10% VAT)</label>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Nút bấm với link chính xác -->
                         <a href="#" data-package-id="<?php echo htmlspecialchars($package['package_id']); ?>" class="<?php echo $button_classes; ?> select-package-button">

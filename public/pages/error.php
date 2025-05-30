@@ -77,8 +77,7 @@ unset($_SESSION['error_details']);
     <div class="error-container">
         <div class="error-icon">&#9888;</div> <!-- Biểu tượng cảnh báo -->
         <h1>Đã xảy ra lỗi</h1>
-        <?php 
-            session_start(); // Start session to access session variables
+        <?php
             $errorMessage = $_SESSION['error_message'] ?? 'Đã có lỗi xảy ra trong quá trình xử lý yêu cầu của bạn. Vui lòng thử lại sau hoặc liên hệ quản trị viên.';
             // Clear the error message after displaying it
             unset($_SESSION['error_message']);

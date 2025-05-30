@@ -96,6 +96,7 @@ include $project_root_path . '/private/includes/header.php';
                 </div>
                 
                 <!-- Company Information -->
+                <!--
                 <div class="company-info-section">
                     <h3>Thông tin công ty</h3>
                     <?php if ($companyInfo): ?>
@@ -178,6 +179,7 @@ include $project_root_path . '/private/includes/header.php';
                         <p>Không có thông tin công ty.</p>
                     <?php endif; ?>
                 </div>
+                -->
             </div>
 
             <!-- Previous Support Requests -->

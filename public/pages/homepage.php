@@ -232,6 +232,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     </section>
 
     <!-- Company Info Section -->
+    <!--
     <section class="company-info" id="about">
         <div class="container">
             <h2 class="section-title">Về chúng tôi</h2>
@@ -326,6 +327,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             </div>
         </div>
     </section>
+    -->
 
     <!-- Footer -->
     <footer class="site-footer">

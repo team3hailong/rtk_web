@@ -104,18 +104,18 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
     <section class="section image-gallery-section" id="image-gallery">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <h2>Thư viện hình ảnh</h2>
-                <p>Những khoảnh khắc ấn tượng và công nghệ hiện đại của chúng tôi</p>
+                <h2>Độ chính xác cao</h2>
+                <p>Hình ảnh thực tế từ những lần hiệu chỉnh lấy tọa độ chuẩn cho trạm từ mốc địa chính cấp III</p>
             </div>
             <div class="gallery-grid">
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh công nghệ 1">
+                    <img src="/public/assets/img/landingpage/do-moc-1.jpg" alt="Hình ảnh đo mốc 1">
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh dịch vụ 2">
+                    <img src="/public/assets/img/landingpage/do-moc-2.jpg" alt="Hình ảnh đo mốc 2">
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh trạm CORS 3">
+                    <img src="/public/assets/img/landingpage/do-moc-3.jpg" alt="Hình ảnh đo mốc 3">
                 </div>
                 <!-- Bạn có thể thêm nhiều ảnh hơn tại đây -->
             </div>

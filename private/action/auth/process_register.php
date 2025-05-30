@@ -88,27 +88,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
             }
             $stmt_check->close();
         }
-    }
-
-    // --- Nếu không có lỗi ---
+    }        // --- Nếu không có lỗi ---
     if (empty($errors)) {
         // Mã hóa mật khẩu
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        // Tạo token xác thực email
-        $verification_token = bin2hex(random_bytes(32));
-
         // Bắt đầu transaction
         $conn->begin_transaction();
 
-        try {
-            // Chuẩn bị câu lệnh INSERT cho bảng user với thêm token xác thực
-            $sql_user = "INSERT INTO user (username, email, password, phone, is_company, company_name, tax_code, tax_registered, email_verify_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        try {            // Chuẩn bị câu lệnh INSERT cho bảng user
+            $sql_user = "INSERT INTO user (username, email, password, phone, is_company, company_name, tax_code, tax_registered, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
             $stmt_user = $conn->prepare($sql_user);
             if ($stmt_user === false) {
                 throw new Exception("Lỗi chuẩn bị câu lệnh user: " . $conn->error);
             }
-            $stmt_user->bind_param("ssssisiss", 
+            $stmt_user->bind_param("ssssisis", 
                 $username, 
                 $email, 
                 $hashed_password, 
@@ -116,8 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                 $is_company, 
                 $company_name, 
                 $tax_code, 
-                $tax_registered,
-                $verification_token
+                $tax_registered
             );
 
             // Thực thi câu lệnh user
@@ -140,16 +133,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
              // Thực thi câu lệnh settings
             if (!$stmt_settings->execute()) {
                  throw new Exception("Lỗi khi thêm cài đặt người dùng: " . $stmt_settings->error);
-            }
-            $stmt_settings->close();
+            }            $stmt_settings->close();
 
-            // Gửi email xác nhận
-            $emailSent = sendVerificationEmail($email, $username, $verification_token);
+            // Tạo mã OTP để xác thực email
+            require_once __DIR__ . '/../../utils/otp_helper.php';
+            require_once __DIR__ . '/../../utils/email_helper.php';
+              $otpResult = create_email_verification_otp($conn, $email);
             
-            if (!$emailSent) {
+            if ($otpResult['success']) {
+                // Gửi email với mã OTP
+                $emailSent = sendVerificationOTP($email, $username, $otpResult['otp']);
+                
+                if ($emailSent) {
+                    // Lưu thời gian gửi OTP vào session để kiểm soát việc gửi lại
+                    $_SESSION['last_email_otp_sent'] = time();
+                } else {
+                    // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
+                    error_log("Failed to send verification OTP email to: $email");
+                }
+            } else {
                 // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
-                error_log("Failed to send verification email to: $email");
-            }            // Commit transaction nếu mọi thứ thành công
+                error_log("Failed to create verification OTP for: $email - " . ($otpResult['message'] ?? 'Unknown error'));
+            }// Commit transaction nếu mọi thứ thành công
             $conn->commit();
             
             // Lưu thông tin thiết bị và IP
@@ -218,15 +223,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                     }
                 }
             }
-            
-            // Xóa dữ liệu form khỏi session và đặt thông báo thành công
+              // Xóa dữ liệu form khỏi session và lưu email để xác thực
             unset($_SESSION['form_data']);
-            $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng kiểm tra email của bạn để xác nhận tài khoản.";
+            $_SESSION['verify_email'] = $email;
             
-            // Chuyển hướng về trang đăng ký để hiển thị thông báo thành công
-            // JavaScript sẽ đếm ngược 7 giây trước khi chuyển hướng đến trang đăng nhập
-            header("Location: ../../../public/pages/auth/register.php");
-            exit();        } catch (Exception $e) {
+            // Chuyển hướng đến trang nhập OTP
+            header("Location: ../../../public/pages/auth/verify-email-otp.php");
+            exit();} catch (Exception $e) {
             // Rollback transaction nếu có lỗi
             $conn->rollback();
             

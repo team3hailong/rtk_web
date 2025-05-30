@@ -26,14 +26,14 @@ $data = handle_forgot_password_request();
             </div>
         <?php endif; ?>
         
-        <p>Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu.</p>
+        <p>Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn mã OTP 6 chữ số để đặt lại mật khẩu.</p>
         
         <form action="/public/handlers/action_handler.php?module=auth&action=process_forgot_password" method="POST">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            <button type="submit" class="btn-submit">Gửi Liên Kết Đặt Lại</button>
+            <button type="submit" class="btn-submit">Gửi Mã OTP</button>
         </form>
         <div class="login-link">
             <a href="login.php">Quay lại đăng nhập</a>

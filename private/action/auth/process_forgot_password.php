@@ -38,22 +38,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Bắt đầu transaction
                 $conn->begin_transaction();
                 
-                try {
-                    // Xóa bất kỳ token đặt lại nào hiện có cho user này
-                    $stmt_delete = $conn->prepare("DELETE FROM password_resets WHERE user_id = ?");
-                    $stmt_delete->bind_param("i", $user_id);
-                    $stmt_delete->execute();
-                    $stmt_delete->close();
+                try {                // Tạo và lưu OTP đặt lại mật khẩu
+                    require_once __DIR__ . '/../../utils/otp_helper.php';
+                    require_once __DIR__ . '/../../utils/email_helper.php';
                     
-                    // Lưu token mới vào database
-                    $stmt_insert = $conn->prepare("INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)");
-                    $stmt_insert->bind_param("iss", $user_id, $token, $expires_at);
+                    $otpResult = create_password_reset_otp($conn, $email);
                     
-                    if ($stmt_insert->execute()) {
-                        // Gửi email với link đặt lại mật khẩu
-                        $emailSent = sendPasswordResetEmail($email, $username, $token);
-                        
-                        if ($emailSent) {
+                    if ($otpResult['success']) {
+                        // Gửi email với mã OTP
+                        $emailSent = sendPasswordResetOTP($email, $username, $otpResult['otp']);
+                          if ($emailSent) {
                             $conn->commit();
                             
                             // Log thành công vào activity_logs
@@ -71,26 +65,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $stmt_log->execute();
                                 $stmt_log->close();
                             }
+                              // Lưu email vào session để sử dụng trong quá trình xác thực OTP
+                            $_SESSION['reset_email'] = $email;
                             
-                            $_SESSION['reset_message'] = 'Liên kết đặt lại mật khẩu đã được gửi đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến của bạn.';
-                            $_SESSION['reset_message_type'] = 'success';                        } else {
+                            // Lưu thời gian gửi OTP đầu tiên
+                            $_SESSION['last_reset_otp_sent'] = time();
+                            
+                            // Chuyển hướng đến trang xác thực OTP
+                            header("Location: ../../../public/pages/auth/reset-password-otp.php");
+                            exit();}else {
                             $conn->rollback();
                             $_SESSION['reset_message'] = 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.';
                             $_SESSION['reset_message_type'] = 'error';
                             
                             // Log error
                             log_error($conn, 'auth', "Failed to send password reset email to: $email", null, $user_id);
-                        }
-                    } else {
+                        }                    } else {
                         $conn->rollback();
                         $_SESSION['reset_message'] = 'Đã xảy ra lỗi. Vui lòng thử lại sau.';
                         $_SESSION['reset_message_type'] = 'error';
                         
                         // Log error
-                        log_error($conn, 'auth', "Password reset token insert failed: " . $stmt_insert->error, null, $user_id);
-                    }
-                    
-                    $stmt_insert->close();                } catch (Exception $e) {
+                        log_error($conn, 'auth', "Password reset OTP creation failed", null, $user_id);
+                    }} catch (Exception $e) {
                     $conn->rollback();
                     $_SESSION['reset_message'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.';
                     $_SESSION['reset_message_type'] = 'error';

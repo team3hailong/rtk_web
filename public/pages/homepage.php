@@ -70,9 +70,8 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
 <body>
     <!-- Header and Navigation -->
     <header class="site-header">
-        <div class="container">
-            <div class="logo-container">                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
-                    <img src="<?php echo $base_path; ?>/assets/img/logo_geotek.png" alt="Đo đạc RTK Logo">
+        <div class="container">            <div class="logo-container">                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
+                    Taikhoandodac
                 </a>
             </div>
               <nav class="main-nav">
@@ -333,7 +332,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <footer class="site-footer">
         <div class="container">
             <div class="footer-content">                <div class="footer-logo">
-                    <img src="<?php echo $base_path; ?>/assets/img/logo_geotek.png" alt="Đo đạc RTK Logo">
+                    Taikhoandodac
                     <p>Dịch vụ tài khoản đo đạc RTK chất lượng cao</p>
                 </div>
                 
@@ -369,11 +368,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             
             <div class="footer-bottom">
                 <p>&copy; <?php echo date('Y'); ?> Dịch vụ đo đạc RTK. Tất cả các quyền đã được bảo lưu.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
-                    <a href="#" aria-label="Zalo">Zalo</a>
-                </div>
+                
             </div>
         </div>
     </footer>

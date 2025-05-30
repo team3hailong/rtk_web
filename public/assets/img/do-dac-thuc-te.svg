@@ -1,0 +1,30 @@
+<svg width="400" height="250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="250" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" rx="10"/>
+  
+  <!-- Main RTK device -->
+  <rect x="150" y="80" width="100" height="120" fill="#374151" rx="5"/>
+  <rect x="160" y="90" width="80" height="40" fill="#1f2937" rx="3"/>
+  <circle cx="200" cy="110" r="8" fill="#10b981"/>
+  
+  <!-- Antenna -->
+  <rect x="195" y="60" width="10" height="20" fill="#6b7280"/>
+  <circle cx="200" cy="55" r="15" fill="#10b981" opacity="0.8"/>
+  <circle cx="200" cy="55" r="25" fill="none" stroke="#10b981" stroke-width="2" opacity="0.4"/>
+  <circle cx="200" cy="55" r="35" fill="none" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+  
+  <!-- Ground/base -->
+  <rect x="100" y="200" width="200" height="30" fill="#059669" opacity="0.3" rx="15"/>
+  
+  <!-- Signal waves -->
+  <path d="M 200 45 Q 180 30 160 25" stroke="#10b981" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 200 45 Q 220 30 240 25" stroke="#10b981" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 200 45 Q 185 35 170 30" stroke="#10b981" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M 200 45 Q 215 35 230 30" stroke="#10b981" stroke-width="1" fill="none" opacity="0.4"/>
+  
+  <!-- Accuracy indicator -->
+  <text x="200" y="235" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600" fill="#10b981">RTK ± 2cm</text>
+  
+  <!-- Title -->
+  <text x="200" y="25" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#374151">Độ chính xác cao VN2000</text>
+</svg>

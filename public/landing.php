@@ -75,10 +75,12 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                         </div>
                         <h3>Độ chính xác cao</h3>
                     </div>
-                    <div class="feature-card-content">
+                    <div class="feature-card-content">                        <div class="feature-image-container">
+                            <img src="assets/img/do-dac-thuc-te.svg" alt="Hình ảnh đo đạc thực tế với thiết bị RTK" class="feature-image">
+                        </div>
                         <p>Hệ thống được hiệu chuẩn theo mốc tọa độ, cao độ VN2000, đảm bảo độ chính xác của dữ liệu mọi lúc, mọi nơi</p>
                     </div>
-                </div>                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                </div><div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="feature-card-header">
                         <div class="feature-icon">
                             <i class="fas fa-tools"></i>
@@ -90,11 +92,15 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                     </div>
                 </div>
                 <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
+                    <div class="feature-card-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Hỗ trợ 24/7</h3>
                     </div>
-                    <h3>Hỗ trợ 24/7</h3>
-                    <p>Đội ngũ hỗ trợ khách hàng luôn sẵn sàng giải đáp mọi thắc mắc và xử lý các vấn đề kỹ thuật bất cứ khi nào bạn gặp khó khăn.</p>
+                    <div class="feature-card-content">
+                        <p>Đội ngũ hỗ trợ khách hàng luôn sẵn sàng giải đáp mọi thắc mắc và xử lý các vấn đề kỹ thuật bất cứ khi nào bạn gặp khó khăn.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,7 +196,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 <div class="important-notes" data-aos="fade-up" data-aos-delay="500">
                     <h3>Lưu ý quan trọng:</h3>
                     <ul class="notes-list">
-                        <li><i class="fas fa-info-circle"></i> Mỗi tài khoản sẽ được miễn phí tối đa 3 tài khoản, sẽ tính phí từ tài khoản thứ 4</li>
+                        <li><i class="fas fa-info-circle"></i> Mỗi người dùng sẽ được miễn phí tối đa 3 tài khoản, sẽ tính phí từ tài khoản thứ 4</li>
                         <li><i class="fas fa-tag"></i> Nhập mã voucher <strong>TNN3THANG</strong> cho gói 3 tháng nếu không thấy áp voucher tự động</li>
                         <li><i class="fas fa-phone-alt"></i> Nếu có vướng mắc gì, hãy liên hệ tới số điện thoại <strong>0981190564</strong> (8h-17h T2 đến T6)</li>
                     </ul>

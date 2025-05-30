@@ -498,6 +498,7 @@ section {
     gap: 2.5rem;
     position: relative;
     z-index: 2;
+    justify-content: center; /* Added to center items */
 }
 
 .feature-card {
@@ -570,6 +571,26 @@ section {
     color: var(--primary-500);
     font-size: 1.4rem;
     min-height: 1.8rem; /* Đảm bảo chiều cao nhất quán cho tiêu đề */
+}
+
+/* Feature Image Container */
+.feature-image-container {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.feature-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    margin-bottom: 1rem;
+}
+
+.feature-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
 }
 
 .feature-card p {
@@ -879,6 +900,12 @@ section {
     
     .step-image-large {
         min-height: 180px;
+    }
+
+    .step-number { /* Adjusted for mobile to be at the bottom-left of the image container */
+        top: 250px;  /* (step-image-large min-height 180px) - (step-number height 40px) - 10px margin from bottom */
+        left: 10px;
+        bottom: auto; /* Override any previous bottom positioning */
     }
 }
 

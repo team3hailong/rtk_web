@@ -98,7 +98,30 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 </div>
             </div>
         </div>
+    </section> <!-- This is the end of features-section (id="features") -->
+
+    <!-- Phần X: Thư viện hình ảnh -->
+    <section class="section image-gallery-section" id="image-gallery">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Thư viện hình ảnh</h2>
+                <p>Những khoảnh khắc ấn tượng và công nghệ hiện đại của chúng tôi</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh công nghệ 1">
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh dịch vụ 2">
+                </div>
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="assets/img/dang-ky-thong-tin.png" alt="Hình ảnh trạm CORS 3">
+                </div>
+                <!-- Bạn có thể thêm nhiều ảnh hơn tại đây -->
+            </div>
+        </div>
     </section>
+
       <!-- Phần 3: Định nghĩa trạm CORS và bản đồ -->
     <section class="section cors-info-section" id="cors-info">
         <div class="container">
@@ -190,7 +213,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 <div class="important-notes" data-aos="fade-up" data-aos-delay="500">
                     <h3>Lưu ý quan trọng:</h3>
                     <ul class="notes-list">
-                        <li><i class="fas fa-info-circle"></i> Mỗi tài khoản sẽ được miễn phí tối đa 3 tài khoản, sẽ tính phí từ tài khoản thứ 4</li>
+                        <li><i class="fas fa-info-circle"></i> Mỗi người dùng sẽ được miễn phí tối đa 3 tài khoản, sẽ tính phí từ tài khoản thứ 4</li>
                         <li><i class="fas fa-tag"></i> Nhập mã voucher <strong>TNN3THANG</strong> cho gói 3 tháng nếu không thấy áp voucher tự động</li>
                         <li><i class="fas fa-phone-alt"></i> Nếu có vướng mắc gì, hãy liên hệ tới số điện thoại <strong>0981190564</strong> (8h-17h T2 đến T6)</li>
                     </ul>

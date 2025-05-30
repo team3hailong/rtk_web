@@ -880,6 +880,10 @@ section {
     .step-image-large {
         min-height: 180px;
     }
+
+    .step-number {
+        top: 250px; /* Adjusted from 20px */
+    }
 }
 
 @media (max-width: 480px) {
@@ -1311,6 +1315,99 @@ section {
     color: rgba(255, 255, 255, 0.5);
     padding-top: 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Image Gallery Section */
+.image-gallery-section {
+    padding: 60px 0;
+    background-color: #f9f9f9; /* Light background for contrast */
+}
+
+.image-gallery-section .section-header {
+    text-align: center; /* Center align header text */
+    margin-bottom: 50px; /* Increased margin for better spacing */
+}
+
+.image-gallery-section .section-header h2 {
+    color: #333;
+    font-size: 2.5em; /* Larger heading */
+    margin-bottom: 15px;
+    font-weight: 700; /* Bolder heading */
+}
+
+.image-gallery-section .section-header p {
+    color: #555; /* Slightly darker paragraph text */
+    font-size: 1.1em;
+    max-width: 700px; /* Limit width for readability */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; /* Slightly increased gap */
+}
+
+.gallery-item {
+    overflow: hidden;
+    border-radius: 12px; /* More pronounced rounded corners */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); /* Softer, more modern shadow */
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color: #fff; /* Ensure background for images that might have transparency */
+    border: 1px solid #ddd; /* Added border */
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px; /* Fixed height for uniform look */
+    object-fit: cover; /* Ensures the image covers the area, cropping if necessary */
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px) scale(1.02); /* More noticeable hover effect */
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1); /* Slightly larger image zoom on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) { /* Adjusted breakpoint for tablets */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .gallery-item img {
+        height: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .image-gallery-section .section-header h2 {
+        font-size: 2.2em;
+    }
+    .image-gallery-section .section-header p {
+        font-size: 1em;
+    }
+    .gallery-item img {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) { /* Adjusted breakpoint for mobile */
+    .gallery-grid {
+        grid-template-columns: 1fr; /* Single column on small screens */
+        gap: 20px;
+    }
+    .gallery-item img {
+        height: 230px; /* Adjust height for single column layout */
+    }
+    .image-gallery-section .section-header {
+        margin-bottom: 30px;
+    }
 }
 
 /* Responsive Design */

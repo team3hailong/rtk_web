@@ -16,9 +16,10 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         $mail->SMTPAuth = true;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Sử dụng SSL thay vì STARTTLS
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = 0; // Tắt debug mode
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -118,9 +119,10 @@ function sendPasswordResetEmail($userEmail, $username, $resetToken) {
         $mail->SMTPAuth = true;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Sử dụng SSL thay vì STARTTLS
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = 0; // Tắt debug mode
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);

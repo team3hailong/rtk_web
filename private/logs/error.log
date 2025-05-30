@@ -1,2 +1,4 @@
-[30-May-2025 10:24:06 Asia/Ho_Chi_Minh] Failed to send password reset email to: dovannguyen2005bv@gmail.com. Error: SMTP Error: Could not connect to SMTP host. | Exception: SMTP Error: Could not connect to SMTP host.
-[30-May-2025 10:24:06 Asia/Ho_Chi_Minh] [2025-05-30 10:24:06] [auth] Failed to send password reset email to: dovannguyen2005bv@gmail.com [User ID: 92] [IP: ::1]
+[30-May-2025 11:38:50 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $emailSent in C:\laragon\www\rtk_web_test\private\action\auth\resend-reset-otp.php on line 51
+[30-May-2025 11:39:23 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $emailSent in C:\laragon\www\rtk_web_test\private\action\auth\resend-reset-otp.php on line 51
+[30-May-2025 11:41:28 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

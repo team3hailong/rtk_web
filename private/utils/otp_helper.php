@@ -286,11 +286,9 @@ function verify_password_reset_otp($conn, $email, $otp) {
                 'success' => false,
                 'error' => 'email_not_found'
             ];
-        }
+        }          $user = $result->fetch_assoc();
         
-        $user = $result->fetch_assoc();
-        
-        // Check if OTP matches
+        // Simple OTP comparison
         if ($user['password_reset_otp'] !== $otp) {
             return [
                 'success' => false,

@@ -20,6 +20,7 @@ if (empty($email)) {
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xác Thực Email - RTK Web</title>
     <link rel="stylesheet" href="/public/assets/css/base.css">
@@ -67,32 +68,42 @@ if (empty($email)) {
         }
         .info {
             color: #555;
-        }
-        .button {
+        }        .button {
             display: inline-block;
             background-color: #4caf50;
             color: white;
             padding: 12px 24px;
             text-decoration: none;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             margin-top: 20px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             cursor: pointer;
             font-size: 1rem;
             width: auto;
+            min-width: 120px;
+            text-align: center;
         }
         .button:hover {
             background-color: #388e3c;
         }
         .secondary-button {
-            background-color: #f5f5f5;
+            background-color: #f1f1f1;
             color: #333;
             border: 1px solid #ddd;
             margin-right: 10px;
+            transition: all 0.3s;
         }
         .secondary-button:hover {
             background-color: #e0e0e0;
+        }        .secondary-button:disabled {
+            opacity: 1;
+            cursor: not-allowed;
+            background-color: #f1f1f1;
+            color: #333;
+            border: 1px solid #ddd;
+            box-shadow: none;
+            pointer-events: none;
         }
         .timer {
             margin-top: 1rem;
@@ -114,8 +125,7 @@ if (empty($email)) {
             <?php if ($error): ?>
                 <p class="error"><?php echo htmlspecialchars($error); ?></p>
             <?php endif; ?>
-            
-            <form action="/public/handlers/action_handler.php?module=auth&action=verify-email-otp" method="POST">
+              <form action="/public/handlers/action_handler.php?module=auth&action=verify-email-otp" method="POST" id="otpForm">
                 <div class="form-group">
                     <label for="otp_code">Vui lòng nhập mã 6 số:</label>
                     <div class="otp-input-container">
@@ -138,29 +148,39 @@ if (empty($email)) {
                 </div>
             </form>
               <form action="/public/handlers/action_handler.php?module=auth&action=resend-email-otp" method="POST">
-                <div class="form-group">
-                    <button type="submit" id="resendBtn" class="button secondary-button">Gửi lại mã</button>
-                    <a href="/public/pages/auth/login.php" class="button secondary-button">Quay lại đăng nhập</a>
-                </div>
-            </form>
+    <div class="form-group">
+        <button type="submit" id="resendBtn" class="button secondary-button">Gửi lại mã</button>
+        <button type="button" onclick="window.location.href='/public/pages/auth/login.php'" class="button secondary-button" id="backBtn">Quay lại đăng nhập</button>
+    </div>
+</form>
         <?php endif; ?>
     </div>
-    
-    <script>
+      <script>
         // OTP input handling
         const otpInputs = document.querySelectorAll('.otp-input');
         const fullOtpInput = document.getElementById('full_otp');
+        const otpForm = document.getElementById('otpForm');
+        
+        // Add form submission handler to ensure OTP is combined properly
+        otpForm.addEventListener('submit', function(e) {
+            updateFullOtp(); // Update the hidden field before submission
+            
+            if (fullOtpInput.value.length !== 6) {
+                e.preventDefault();
+                alert('Vui lòng nhập đầy đủ 6 chữ số OTP');
+                return false;
+            }
+        });
         
         otpInputs.forEach((input, index) => {
             // Auto-focus the first input on page load
             if (index === 0) {
                 input.focus();
             }
-            
-            // Handle input
+              // Handle input
             input.addEventListener('input', function(e) {
-                // Allow only digits
-                this.value = this.value.replace(/[^0-9]/g, '');
+                // Allow only digits and limit to 1 character
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
                 
                 // Move to next input field if this one is filled
                 if (this.value.length === 1 && index < otpInputs.length - 1) {
@@ -171,6 +191,26 @@ if (empty($email)) {
                 updateFullOtp();
             });
             
+            // Support pasting OTP
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+                
+                if (pasteData) {
+                    // Fill all inputs with respective digits
+                    for (let i = 0; i < Math.min(pasteData.length, otpInputs.length); i++) {
+                        otpInputs[i].value = pasteData[i] || '';
+                    }
+                    
+                    // Focus appropriate field
+                    const focusIndex = Math.min(pasteData.length, otpInputs.length - 1);
+                    otpInputs[focusIndex].focus();
+                    
+                    // Update hidden field
+                    updateFullOtp();
+                }
+            });
+            
             // Handle backspace
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
@@ -178,80 +218,96 @@ if (empty($email)) {
                 }
             });
         });
-        
-        // Update the hidden full OTP input
+          // Update the hidden full OTP input
         function updateFullOtp() {
             let otp = '';
-            otpInputs.forEach(input => {
-                otp += input.value;
-            });
+            // Force the correct order of inputs
+            for (let i = 0; i < otpInputs.length; i++) {
+                otp += otpInputs[i].value || '';
+            }
             fullOtpInput.value = otp;
-        }
-          // Countdown timer
-        let timeLeft = 15 * 60; // 15 minutes in seconds
+            return otp.length === 6; // Return true if we have a complete OTP
+        }          // Countdown timer
+        const fifteenMinutes = 15 * 60; // 15 minutes in seconds
+        let timeLeft = fifteenMinutes; // Initialize with 15 minutes
+        let countdownInterval; // Define countdownInterval variable
         const countdownEl = document.getElementById('countdown');
         const resendBtn = document.getElementById('resendBtn');
         let cooldownActive = false;
         let cooldownSeconds = 0;
         let cooldownTimer = null;
+          // Start countdown timer
+        function startCountdown() {
+            // Clear any existing interval
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            // Only reset the timer when it's the first time or has expired
+            if (!timeLeft || timeLeft <= 0) {
+                timeLeft = fifteenMinutes; // Reset to 15 minutes
+            }
+            updateCountdownDisplay(); // Update display immediately
+            
+            // Start the countdown
+            countdownInterval = setInterval(function() {
+                timeLeft--; // Reduce time left
+                updateCountdownDisplay(); // Update display
+                
+                // Check if time is up
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    handleExpiredOTP();
+                }
+            }, 1000);
+        }
         
-        function updateCountdown() {
+        // Update countdown display
+        function updateCountdownDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                countdownEl.textContent = '00:00';
-                if (!cooldownActive) {
-                    resendBtn.disabled = false;
-                    resendBtn.classList.remove('secondary-button');
-                    resendBtn.classList.add('button');
-                    // Thêm thông báo cho người dùng biết có thể gửi lại mã
-                    document.querySelector('.timer p').innerHTML = 'Mã xác thực đã hết hạn. Vui lòng <strong>gửi lại mã</strong>.';
-                }
-            } else {
-                timeLeft--;
+        }
+        
+        // Handle expired OTP
+        function handleExpiredOTP() {
+            countdownEl.textContent = '00:00';
+            if (!cooldownActive) {
+                resendBtn.disabled = false;
+                // Thêm thông báo cho người dùng biết có thể gửi lại mã
+                document.querySelector('.timer p').innerHTML = 'Mã xác thực đã hết hạn. Vui lòng <strong>gửi lại mã</strong>.';
             }
         }
         
         // Xử lý cooldown sau khi gửi lại mã
         function startCooldown() {
             cooldownActive = true;
-            cooldownSeconds = 30; // Thời gian chờ 30 giây
-            resendBtn.disabled = true;
-            resendBtn.classList.add('secondary-button');
-            resendBtn.classList.remove('button');
-            
-            // Hiển thị thời gian chờ trên nút
+            cooldownSeconds = 30; // Thời gian chờ 30 giây            resendBtn.disabled = true;
+            // Không đổi class hay style, chỉ set disabled và đổi text
             updateCooldownButton();
-            
+
             // Bắt đầu đếm ngược cho cooldown
             if (cooldownTimer) clearInterval(cooldownTimer);
             cooldownTimer = setInterval(updateCooldownTime, 1000);
         }
-        
+
         function updateCooldownTime() {
             cooldownSeconds--;
             updateCooldownButton();
-            
+
             if (cooldownSeconds <= 0) {
                 clearInterval(cooldownTimer);
-                cooldownActive = false;
-                resendBtn.disabled = false;
+                cooldownActive = false;                resendBtn.disabled = false;
                 resendBtn.textContent = 'Gửi lại mã';
-                resendBtn.classList.remove('secondary-button');
-                resendBtn.classList.add('button');
+                // Không đổi class hay style
             }
-        }
-        
-        function updateCooldownButton() {
+        }        function updateCooldownButton() {
             resendBtn.textContent = `Gửi lại mã (${cooldownSeconds}s)`;
+            // Đảm bảo nút luôn có style đúng trong quá trình cooldown
+            resendBtn.className = 'button secondary-button';
         }
-        
-        // Initial call to set up the countdown display
-        updateCountdown();
-        const countdownInterval = setInterval(updateCountdown, 1000);
+          // Initialize the countdown
+        startCountdown();
         
         // Bắt đầu cooldown ban đầu
         startCooldown();
@@ -264,6 +320,8 @@ if (empty($email)) {
             }
             // Bắt đầu cooldown khi form được gửi đi
             startCooldown();
+            // Khởi động lại đếm ngược 15 phút cho mã OTP mới khi người dùng nhận được mã mới
+            startCountdown();
         });
     </script>
 </body>

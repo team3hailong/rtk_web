@@ -2,3 +2,19 @@
 [30-May-2025 11:39:23 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $emailSent in C:\laragon\www\rtk_web_test\private\action\auth\resend-reset-otp.php on line 51
 [30-May-2025 11:41:28 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
                 (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] Raw form data: {"otp_code":"281651"}
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] Session email: 'dovannguyen2005bv@gmail.com', OTP from form: '281651'
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] Verifying password reset OTP: Email=dovannguyen2005bv@gmail.com, OTP=281651
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] OTP Comparison - Database OTP: '218651', Input OTP: '281651'
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] OTP Type Check - Database OTP Type: string, Input OTP Type: string
+[01-Jun-2025 21:38:48 Asia/Ho_Chi_Minh] OTP verification result: {"success":false,"error":"invalid_otp","debug":{"db_otp":"218651","input_otp":"281651"}}
+[01-Jun-2025 21:42:14 Asia/Ho_Chi_Minh] Generated OTP: '175100'
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] Raw form data: {"otp_code":"175100"}
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] Session email: 'dovannguyen2005bv@gmail.com', OTP from form: '175100'
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] Verifying password reset OTP: Email=dovannguyen2005bv@gmail.com, OTP=175100
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] OTP Comparison - Database OTP: '175100', Input OTP: '175100'
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] OTP Type Check - Database OTP Type: string, Input OTP Type: string
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] Enhanced OTP comparison - DB OTP: '175100', Input OTP: '175100'
+[01-Jun-2025 21:42:51 Asia/Ho_Chi_Minh] OTP verification result: {"success":true,"user_id":92}
+[01-Jun-2025 22:13:47 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

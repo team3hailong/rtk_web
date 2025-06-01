@@ -9,6 +9,8 @@ require_once __DIR__ . '/../../utils/error_handler.php';
 $email = $_SESSION['reset_email'] ?? '';
 $otp_code = $_POST['otp_code'] ?? '';
 
+// Process OTP verification
+
 // Validate input
 if (empty($email)) {
     $_SESSION['reset_otp_error'] = 'Phiên đặt lại mật khẩu không hợp lệ. Vui lòng thử lại.';
@@ -16,7 +18,18 @@ if (empty($email)) {
     exit();
 }
 
-if (empty($otp_code) || strlen($otp_code) !== 6 || !is_numeric($otp_code)) {
+// Ensure OTP is properly formatted
+if (empty($otp_code)) {
+    $_SESSION['reset_otp_error'] = 'Mã OTP không được để trống. Vui lòng nhập mã OTP.';
+    header('Location: /public/pages/auth/reset-password-otp.php');
+    exit();
+}
+
+// Clean and normalize the OTP
+$otp_code = trim($otp_code);
+$otp_code = preg_replace('/[^0-9]/', '', $otp_code); // Remove any non-numeric characters
+
+if (strlen($otp_code) !== 6) {
     $_SESSION['reset_otp_error'] = 'Mã OTP không hợp lệ. Vui lòng nhập đúng 6 chữ số.';
     header('Location: /public/pages/auth/reset-password-otp.php');
     exit();

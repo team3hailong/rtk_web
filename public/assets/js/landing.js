@@ -23,6 +23,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start the countdown timer
     initCountdown();
+    
+    // Setup Zalo chat popup toggle
+    const zaloIcon = document.getElementById('zaloIcon');
+    const zaloPopup = document.querySelector('.zalo-popup');
+    if (zaloIcon && zaloPopup) {
+        zaloIcon.addEventListener('click', function(event) {
+            event.stopPropagation();
+            zaloPopup.classList.toggle('active');
+        });
+        // Close popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!zaloPopup.contains(e.target)) {
+                zaloPopup.classList.remove('active');
+            }
+        });
+    }
 });
 
 // Function to generate QR Code

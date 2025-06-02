@@ -341,5 +341,13 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
         window.registerUrl = "<?php echo $register_url; ?>";
     </script>
     <script src="assets/js/landing.js"></script>
+
+    <!-- Zalo Chat Popup -->
+    <div class="zalo-popup">
+        <div id="zaloIcon" class="zalo-icon">Zalo</div>
+        <div id="zaloContent" class="zalo-content">
+            <a href="https://taikhoandodac.vn/" target="_blank">https://taikhoandodac.vn/</a>
+        </div>
+    </div>
 </body>
 </html>

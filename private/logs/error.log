@@ -1,2 +1,0 @@
-[30-May-2025 10:24:06 Asia/Ho_Chi_Minh] Failed to send password reset email to: dovannguyen2005bv@gmail.com. Error: SMTP Error: Could not connect to SMTP host. | Exception: SMTP Error: Could not connect to SMTP host.
-[30-May-2025 10:24:06 Asia/Ho_Chi_Minh] [2025-05-30 10:24:06] [auth] Failed to send password reset email to: dovannguyen2005bv@gmail.com [User ID: 92] [IP: ::1]

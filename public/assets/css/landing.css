@@ -1551,3 +1551,41 @@ section {
         font-size: 1.1rem;
     }
 }
+
+/* Zalo Chat Popup Styles */
+.zalo-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    text-align: right;
+}
+.zalo-icon {
+    background-color: #0088cc;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+}
+.zalo-icon:hover {
+    background-color: #006699;
+}
+.zalo-content {
+    display: none;
+    position: absolute;
+    bottom: 50px;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: var(--shadow-lg);
+    max-width: 200px;
+    word-wrap: break-word;
+}
+.zalo-popup.active .zalo-content {
+    display: block;
+}

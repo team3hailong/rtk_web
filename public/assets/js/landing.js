@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start the countdown timer
     initCountdown();
+    
+    // Setup Zalo chat popup toggle
+    const zaloIcon = document.getElementById('zaloIcon');
+    const zaloPopup = document.querySelector('.zalo-popup');
+    if (zaloIcon && zaloPopup) {
+        zaloIcon.addEventListener('click', function() {
+            zaloPopup.classList.toggle('active');
+        });
+    }
 });
 
 // Function to generate QR Code

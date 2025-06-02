@@ -1144,13 +1144,15 @@ section {
 .testimonial-avatar {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
-    background-color: var(--medium-gray);
-    margin: 0 auto 1.5rem;
-    border: 3px solid white;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    position: relative;
+    margin: 0 auto 1rem;
     overflow: hidden;
+    border-radius: 50%;
+}
+
+.testimonial-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .testimonial-content {
@@ -1564,7 +1566,12 @@ section {
     background-color: #0088cc;
     color: #fff;
     font-weight: bold;
-    padding: 10px 15px;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 25px;
     cursor: pointer;
     box-shadow: var(--shadow-lg);
@@ -1572,6 +1579,10 @@ section {
 }
 .zalo-icon:hover {
     background-color: #006699;
+}
+.zalo-icon-img {
+    width: 100%;
+    height: 100%;
 }
 .zalo-content {
     display: none;
@@ -1583,9 +1594,25 @@ section {
     border-radius: 8px;
     padding: 10px;
     box-shadow: var(--shadow-lg);
-    max-width: 200px;
+    min-width: 350px; /* Increased max-width for wider content */
     word-wrap: break-word;
 }
 .zalo-popup.active .zalo-content {
     display: block;
+}
+
+/* Zalo Chat Popup - Join Group Button */
+.join-group-button {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #0088cc;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.join-group-button:hover {
+    background-color: #006699;
 }

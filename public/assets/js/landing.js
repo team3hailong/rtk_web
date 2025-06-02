@@ -28,8 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const zaloIcon = document.getElementById('zaloIcon');
     const zaloPopup = document.querySelector('.zalo-popup');
     if (zaloIcon && zaloPopup) {
-        zaloIcon.addEventListener('click', function() {
+        zaloIcon.addEventListener('click', function(event) {
+            event.stopPropagation();
             zaloPopup.classList.toggle('active');
+        });
+        // Close popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!zaloPopup.contains(e.target)) {
+                zaloPopup.classList.remove('active');
+            }
         });
     }
 });

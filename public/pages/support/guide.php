@@ -59,9 +59,8 @@ include $project_root_path . '/private/includes/header.php';
             <div>
                 <label for="keyword">Từ khóa</label>
                 <input type="text" name="keyword" id="keyword" placeholder="Nhập từ khóa..." value="<?php echo htmlspecialchars($keyword); ?>">
-            </div>
-            <button type="submit">Tìm kiếm</button>
-            <a href="guide.php" class="reset-button">Reset</a>
+            </div>            <button type="submit">Tìm kiếm</button>
+            <button type="button" onclick="window.location.href='guide.php'" class="reset-button">Reset</button>
         </form>
         <div class="guide-list">
             <?php if (empty($articles)): ?>

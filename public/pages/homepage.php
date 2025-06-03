@@ -52,6 +52,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
       <!-- CSS styles -->
     <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/home.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/home-custom.css">
       <!-- Leaflet for map display -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <!-- Leaflet z-index fix -->
@@ -73,18 +74,17 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
         <div class="container">            <div class="logo-container">                <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="logo">
                     Taikhoandodac
                 </a>
-            </div>
-              <nav class="main-nav">
+            </div>              <nav class="main-nav">
                 <button class="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="hamburger"></span>
                 </button>
                 
                 <ul class="nav-links">
-                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php" class="active">Trang chủ</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Map hiển thị</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Mua tài khoản</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn</a></li>
-                    <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hỗ trợ</a></li>
+                    <li><a href="#home" class="active">Trang chủ</a></li>
+                    <li><a href="#features">Tính năng</a></li>
+                    <li><a href="#packages">Gói tài khoản</a></li>
+                    <li><a href="#support">Hỗ trợ</a></li>
+                    <li><a href="#about">Thông tin</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <li><a href="<?php echo $base_path; ?>/pages/dashboard.php">Dashboard</a></li>
                     <?php else: ?>
@@ -95,20 +95,37 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             </nav>
         </div>
     </header>    <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
                 <h1>Dịch vụ tài khoản đo đạc RTK</h1>
-                <p class="subtitle">Cung cấp dịch vụ đo đạc RTK chính xác, ổn định và đáng tin cậy cho các công trình xây dựng, đo đạc địa chính và khảo sát địa hình.</p>
+                <p class="subtitle">Giải pháp RTK phù hợp cho các đơn vị, nhóm đo đạc nhỏ lẻ, hỗ trợ tận tâm và linh hoạt theo nhu cầu thực tế.</p>
                 <div class="hero-cta">
-                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-primary">Xem các gói dịch vụ</a>
-                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-secondary">Xem bản đồ trạm</a>
+                    <a href="#packages" class="btn btn-primary">Xem các gói tài khoản</a>
+                    <a href="#features" class="btn btn-secondary">Khám phá tính năng</a>
                 </div>
-            </div>            <div class="hero-map-container">
-                <h3>Bản đồ trạm đo đạc</h3>
-                <div id="hero-map" class="hero-map"></div>
-                <div class="view-all-stations">
-                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn-view-all-stations">Xem chi tiết bản đồ <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="hero-info-container">
+                <h2>Chất lượng tài khoản đo đạc</h2>
+                <div class="hero-stats">
+                    <div class="hero-stat-item">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-number">100+</div>
+                        <div class="stat-text">Khách hàng đã sử dụng</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-number">93%</div>
+                        <div class="stat-text">Tỉ lệ hài lòng</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="stat-icon"><i class="fas fa-headset"></i></div>
+                        <div class="stat-number">Tận tâm</div>
+                        <div class="stat-text">Hỗ trợ cá nhân</div>
+                    </div>
+                </div>
+                <div class="hero-action">
+                    <a href="#features" class="btn-hero-action">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -120,14 +137,13 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             <h2 class="section-title">Các tính năng nổi bật</h2>
             <p class="section-description">Chúng tôi cung cấp dịch vụ tài khoản đo đạc toàn diện nâng cao trải nghiệm dịch vụ</p>
             
-            <div class="features-grid">
-                <div class="feature-card">
+            <div class="features-grid">                <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-map-marked-alt"></i>
+                        <i class="fas fa-network-wired"></i>
                     </div>
-                    <h3>Map hiển thị trạm</h3>
-                    <p>Theo dõi trạng thái hoạt động của các trạm base RTK trên toàn quốc thông qua bản đồ trực quan, cập nhật theo thời gian thực.</p>
-                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Xem bản đồ <i class="fas fa-chevron-right"></i></a>
+                    <h3>Kết nối ổn định</h3>
+                    <p>Hệ thống máy chủ hiện đại với kết nối băng thông cao, đảm bảo dịch vụ hoạt động ổn định 24/7 với độ trễ thấp.</p>
+                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="feature-link">Tìm hiểu thêm <i class="fas fa-chevron-right"></i></a>
                 </div>
                 
                 <div class="feature-card">
@@ -163,7 +179,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     <!-- Packages Section -->
     <section class="packages" id="packages">
         <div class="container">
-            <h2 class="section-title">Các gói dịch vụ</h2>
+            <h2 class="section-title">Các gói tài khoản</h2>
             <p class="section-description">Lựa chọn gói dịch vụ phù hợp với nhu cầu của bạn</p>
             
             <div class="packages-slider">
@@ -210,11 +226,14 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 <?php endif; ?>
             </div>
             
-            <div class="packages-cta">
+            <div class="packages-cta" id=support>
                 <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-view-all">Xem tất cả các gói</a>
             </div>
         </div>
-    </section>
+    </section>    <!-- Support Section -->
+
+
+
 
     <!-- CTA Section -->
     <section class="cta">
@@ -224,7 +243,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 <p>Đăng ký tài khoản, mua gói dịch vụ và trải nghiệm các dịch vụ đo đạc RTK chất lượng cao</p>
                 <div class="cta-buttons">
                     <a href="<?php echo $base_path; ?>/pages/auth/register.php" class="btn btn-primary">Đăng ký ngay</a>
-                    <a href="<?php echo $base_path; ?>/pages/auth/login.php" class="btn btn-outline">Liên hệ tư vấn</a>
+                    <a href="#support" class="btn btn-outline">Liên hệ tư vấn</a>
                 </div>
             </div>
         </div>
@@ -329,29 +348,28 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
     -->
 
     <!-- Footer -->
-    <footer class="site-footer">
+    <footer class="site-footer" id="about">
         <div class="container">
             <div class="footer-content">                <div class="footer-logo">
                     Taikhoandodac
                     <p>Dịch vụ tài khoản đo đạc RTK chất lượng cao</p>
                 </div>
                 
-                <div class="footer-links">
-                    <div class="footer-column">
+                <div class="footer-links">                    <div class="footer-column">
                         <h4>Dịch vụ</h4>
                         <ul>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Các gói dịch vụ</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Bản đồ trạm</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn sử dụng</a></li>
+                            <li><a href="#packages">Các gói tài khoản</a></li>
+                            <li><a href="#features">Tính năng nổi bật</a></li>
+                            <li><a href="#about">Về chúng tôi</a></li>
                         </ul>
                     </div>
                     
                     <div class="footer-column">
                         <h4>Hỗ trợ</h4>
                         <ul>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Liên hệ</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Hướng dẫn cài đặt</a></li>
-                            <li><a href="<?php echo $base_path; ?>/pages/auth/login.php">Yêu cầu hỗ trợ</a></li>
+                            <li><a href="#support">Liên hệ hỗ trợ</a></li>
+                            <li><a href="#support">Hotline hỗ trợ</a></li>
+                            <li><a href="#support">Email hỗ trợ</a></li>
                         </ul>
                     </div>
                     
@@ -371,122 +389,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                 
             </div>
         </div>
-    </footer>
-
-    <!-- JavaScript -->    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const navLinks = document.querySelector('.nav-links');
-            
-            if (mobileMenuToggle) {
-                mobileMenuToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    navLinks.classList.toggle('show');
-                    mobileMenuToggle.classList.toggle('active');
-                });
-                
-                // Add better touch area for mobile
-                mobileMenuToggle.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                    navLinks.classList.toggle('show');
-                    mobileMenuToggle.classList.toggle('active');
-                }, {passive: true});
-            }
-            
-            // Make each nav link item also close the menu when clicked
-            const navItems = document.querySelectorAll('.nav-links li a');
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        navLinks.classList.remove('show');
-                        mobileMenuToggle.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!event.target.closest('.main-nav') && navLinks.classList.contains('show')) {
-                    navLinks.classList.remove('show');
-                    mobileMenuToggle.classList.remove('active');
-                }
-            });
-            
-            // Smooth scroll for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href').substring(1);
-                    if (!targetId) return;
-                    
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Close mobile menu after clicking
-                        if (navLinks.classList.contains('show')) {
-                            navLinks.classList.remove('show');
-                            mobileMenuToggle.classList.remove('active');
-                        }
-                    }
-                });            });
-        });
-    </script>
-    
-    <!-- Leaflet map script -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Data for map
-            const stationsData = <?php echo json_encode($stations); ?>;
-            const userAccessibleStations = <?php echo json_encode($user_accessible_stations); ?>;
-            
-            // Initialize map
-            const initialCenter = [16.0, 106.0]; // Center of Vietnam
-            const initialZoom = 5;
-            const map = L.map('hero-map').setView(initialCenter, initialZoom);
-            
-            // Add tile layer (map background)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-            
-            // Add stations to map
-            const radiusKm = 15;
-            stationsData.forEach((station) => {
-                // Skip stations with status 0 (Bị tắt) or invalid coordinates
-                if (station.lat && station.long && station.status != 0 && station.status != -1) {
-                    const pos = [parseFloat(station.lat), parseFloat(station.long)];
-                    let circleColor = '#3cb043'; // Default: Green for Status 1 (Hoạt động)
-                    
-                    // Check if user has access to this station
-                    let isUserAccessible = userAccessibleStations.includes(station.id);
-                    
-                    // Set color based on status and accessibility
-                    if (station.status == 3) {
-                        circleColor = '#e74c3c'; // Red for Status 3 (Không hoạt động)
-                    } else if (isUserAccessible) {
-                        circleColor = '#3498db'; // Blue for stations user has access to
-                    }
-                    
-                    // Add circle to map
-                    const circle = L.circle(pos, {
-                        radius: radiusKm * 1000,
-                        color: circleColor,
-                        fillColor: circleColor,
-                        fillOpacity: 0.3,
-                        weight: 1,
-                        className: 'map-circle' // Add a class for styling
-                    }).addTo(map);
-                }
-            });
-        });
-    </script>
+    </footer>    <!-- JavaScript -->
+    <script src="<?php echo $base_path; ?>/assets/js/home.js"></script>
 </body>
 </html>

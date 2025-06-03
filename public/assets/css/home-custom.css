@@ -1,0 +1,71 @@
+/* CSS custom cho homepage (box info nhỏ lẻ) */
+.hero-info-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 40px 48px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    min-width: 340px;
+    flex: 1 1 0%;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-action {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 32px;
+}
+
+.btn-hero-action {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: #10b981;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1.125rem;
+    box-shadow: 0 2px 8px rgba(16,185,129,0.08);
+}
+
+.btn-hero-action:hover {
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .hero-action {
+    justify-content: center;
+  }
+}
+
+.hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.hero-stat-item {
+    flex: 0 0 30%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.stat-icon {
+    font-size: 24px;
+    color: #10b981;
+    margin-bottom: 10px;
+}
+.stat-number {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+.stat-text {
+    font-size: 14px;
+    color: #7f8c8d;
+}

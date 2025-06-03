@@ -340,17 +340,19 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
         // Pass the register URL to JavaScript for QR code generation
         window.registerUrl = "<?php echo $register_url; ?>";
     </script>
-    <script src="assets/js/landing.js"></script>
-
-    <!-- Zalo Chat Popup -->
+    <script src="assets/js/landing.js"></script>    <!-- Zalo Chat Popup -->
     <div class="zalo-popup">
-        <div id="zaloIcon" class="zalo-icon">
+        <div id="zaloIcon" class="zalo-icon pulsing-zalo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" class="zalo-icon-img">
+            <span class="notification-badge">1</span>
+        </div>
+        <div class="zalo-register">
+            <a href="<?php echo $register_url; ?>" class="navbar-cta-button pulse-animation zalo-register-button">Đăng ký ngay</a>
         </div>
         <div id="zaloContent" class="zalo-content">
-            <h4>Nhóm Zalo RTK Thái Nguyên</h4>
-            <p>Tham gia nhóm để nhận hỗ trợ, chia sẻ kinh nghiệm và cập nhật tin tức mới nhất.</p>
-            <a href="https://zalo.me/1234567890" target="_blank" class="join-group-button">Tham gia nhóm</a>
+            <h4>Nhóm hỗ trợ đo đạc Thái Nguyên</h4>
+            <p>Tham gia nhóm để nhận hỗ trợ và giải đáp các vướng mắc về đăng ký tài khoản đo đạc</p>
+            <a href="https://zalo.me/g/djrkof344" target="_blank" class="join-group-button">Tham gia nhóm</a>
         </div>
     </div>
 </body>

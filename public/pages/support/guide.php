@@ -10,6 +10,9 @@ $project_root_path = PROJECT_ROOT_PATH;
 $admin_site = ADMIN_SITE;
 
 require_once $project_root_path . '/private/classes/Database.php';
+require_once $project_root_path . '/private/utils/guide_helper.php';
+
+// Khởi tạo kết nối database
 $db = new Database();
 $pdo = $db->getConnection();
 
@@ -17,26 +20,9 @@ $pdo = $db->getConnection();
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $topic = isset($_GET['topic']) ? trim($_GET['topic']) : '';
 
-// Lấy danh sách chủ đề
-$topic_stmt = $pdo->query("SELECT DISTINCT topic FROM guide WHERE topic IS NOT NULL AND topic != ''");
-$topics = $topic_stmt->fetchAll(PDO::FETCH_COLUMN);
-
-// Xây dựng query lấy bài viết
-$sql = "SELECT * FROM guide WHERE status = 'published'";
-$params = [];
-if ($keyword) {
-    $sql .= " AND (title LIKE :kw1 OR content LIKE :kw2)";
-    $params[':kw1'] = "%$keyword%";
-    $params[':kw2'] = "%$keyword%";
-}
-if ($topic) {
-    $sql .= " AND topic = :topic";
-    $params[':topic'] = $topic;
-}
-$sql .= " ORDER BY published_at DESC, created_at DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Lấy dữ liệu từ helper
+$topics = get_guide_topics($pdo);
+$articles = get_filtered_guide_articles($pdo, $keyword, $topic);
 include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
@@ -59,9 +45,8 @@ include $project_root_path . '/private/includes/header.php';
             <div>
                 <label for="keyword">Từ khóa</label>
                 <input type="text" name="keyword" id="keyword" placeholder="Nhập từ khóa..." value="<?php echo htmlspecialchars($keyword); ?>">
-            </div>
-            <button type="submit">Tìm kiếm</button>
-            <a href="guide.php" class="reset-button">Reset</a>
+            </div>            <button type="submit">Tìm kiếm</button>
+            <button type="button" onclick="window.location.href='guide.php'" class="reset-button">Reset</button>
         </form>
         <div class="guide-list">
             <?php if (empty($articles)): ?>

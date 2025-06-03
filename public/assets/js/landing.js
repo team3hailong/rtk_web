@@ -23,18 +23,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start the countdown timer
     initCountdown();
-    
-    // Setup Zalo chat popup toggle
+      // Setup Zalo chat popup toggle
     const zaloIcon = document.getElementById('zaloIcon');
     const zaloPopup = document.querySelector('.zalo-popup');
+    const zaloContent = document.getElementById('zaloContent');
     if (zaloIcon && zaloPopup) {
         zaloIcon.addEventListener('click', function(event) {
             event.stopPropagation();
             zaloPopup.classList.toggle('active');
+            
+            // Remove notification badge when clicked
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.style.display = 'none';
+            }
         });
+        
         // Close popup when clicking outside
         document.addEventListener('click', function(e) {
-            if (!zaloPopup.contains(e.target)) {
+            if (!zaloContent.contains(e.target) && !zaloIcon.contains(e.target)) {
                 zaloPopup.classList.remove('active');
             }
         });

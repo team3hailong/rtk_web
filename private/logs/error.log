@@ -12,3 +12,68 @@
 [02-Jun-2025 22:31:02 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
 [02-Jun-2025 22:31:02 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 17, Accounts: 4
 [02-Jun-2025 22:31:05 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8800000, Discount: 200000.00, New Amount: 8600000, Type: percentage_discount
+[04-Jun-2025 15:47:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 880000
+[04-Jun-2025 15:47:46 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 15:48:19 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 15:48:22 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 15:48:22 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10016
+[04-Jun-2025 15:48:44 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 15:48:44 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10016
+[04-Jun-2025 15:48:55 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 15:48:55 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 15:48:55 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10016
+[04-Jun-2025 15:51:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 15:51:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 15:51:19 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10016
+[04-Jun-2025 15:51:21 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 15:51:21 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 15:51:21 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10016
+[04-Jun-2025 15:51:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 15:56:40 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 15:56:40 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10016
+[04-Jun-2025 15:56:50 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 15:56:50 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 15:56:50 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10016
+[04-Jun-2025 15:57:18 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 15:57:36 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 15:57:36 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10016
+[04-Jun-2025 16:10:54 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:10:54 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10016
+[04-Jun-2025 16:11:15 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:11:16 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:11:16 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (734800) vs DB (880000) for registration ID 10017.
+[04-Jun-2025 16:11:16 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:12:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:12:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:12:13 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:12:21 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 16:20:23 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:20:23 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:20:27 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:20:27 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:20:27 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:25:36 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:25:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:25:36 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:25:43 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 16:25:44 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:25:44 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:25:52 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:25:52 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:25:57 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:25:57 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:25:57 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:26:07 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 16:26:08 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:26:08 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:26:18 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:26:18 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:26:32 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:26:32 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:26:32 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017
+[04-Jun-2025 16:27:29 Asia/Ho_Chi_Minh] Voucher calculation: Original: 880000, Discount: 132000, New Amount: 748000, Type: percentage_discount
+[04-Jun-2025 16:27:30 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 800000, Discount: 132000, After discount: 668000, VAT: 66800, Final: 734800
+[04-Jun-2025 16:27:30 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 734800 for registration ID 10017
+[04-Jun-2025 16:27:42 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[04-Jun-2025 16:27:42 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[04-Jun-2025 16:27:42 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10017

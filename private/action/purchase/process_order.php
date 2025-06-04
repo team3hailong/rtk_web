@@ -75,21 +75,38 @@ try {
     if ($is_trial_package) {
         $quantity = 1;
         $base_price = 0; // Ensure price is 0 for trial
+    }    $calculated_subtotal = $base_price * $quantity;
+    $discounted_subtotal = $calculated_subtotal;
+    $discount_amount = 0;
+    
+    // Kiểm tra nếu có voucher giảm giá cần áp dụng vào giá gốc (trước VAT)
+    if (isset($_SESSION['order']['voucher_id']) && isset($_SESSION['order']['voucher_discount'])) {
+        $discount_amount = $_SESSION['order']['voucher_discount'];
+        $discounted_subtotal = $calculated_subtotal - $discount_amount;
+        
+        // Đảm bảo giá sau giảm giá không âm
+        if ($discounted_subtotal < 0) {
+            $discounted_subtotal = 0;
+        }
+        
+        // Lưu thông tin giá gốc và giảm giá để hiển thị trên trang thanh toán
+        $_SESSION['order']['original_subtotal'] = $calculated_subtotal;
+        $_SESSION['order']['discounted_subtotal'] = $discounted_subtotal;
     }
-    $calculated_subtotal = $base_price * $quantity;
-
+    
     // VAT Calculation based on purchase_type
+    // Luôn tính VAT trên giá đã giảm giá (discounted_subtotal)
     $vat_percent = 0;
     $vat_amount = 0;
     $invoice_allowed = 0; // Mặc định không cho phép xuất hóa đơn
 
     if ($purchase_type === 'company' && !$is_trial_package) {
         $vat_percent = 10; // 10% VAT for company
-        $vat_amount = round($calculated_subtotal * ($vat_percent / 100), 2);
+        $vat_amount = round($discounted_subtotal * ($vat_percent / 100), 2); // VAT trên giá đã giảm
         $invoice_allowed = 1; // Cho phép xuất hóa đơn cho công ty
     }
 
-    $final_total_price = $calculated_subtotal + $vat_amount;
+    $final_total_price = $discounted_subtotal + $vat_amount;
 
     // Ensure final price is 0 if it's a trial package
     if ($is_trial_package) {

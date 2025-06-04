@@ -16,13 +16,18 @@ require_once $project_root_path . '/private/utils/guide_helper.php';
 $db = new Database();
 $pdo = $db->getConnection();
 
-// Xử lý filter
+// Xử lý filter và phân trang
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $topic = isset($_GET['topic']) ? trim($_GET['topic']) : '';
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$items_per_page = 5; // Số bài viết hiển thị trên mỗi trang
 
 // Lấy dữ liệu từ helper
 $topics = get_guide_topics($pdo);
-$articles = get_filtered_guide_articles($pdo, $keyword, $topic);
+$result = get_filtered_guide_articles($pdo, $keyword, $topic, $page, $items_per_page);
+$articles = $result['articles'];
+$pagination = $result['pagination'];
+
 include $project_root_path . '/private/includes/header.php';
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
@@ -86,6 +91,65 @@ include $project_root_path . '/private/includes/header.php';
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+        
+        <?php if ($pagination['total_pages'] > 1): ?>
+        <div class="pagination-container">
+            <div class="pagination">
+                <?php
+                // Build the query string for pagination links
+                $query_params = [];
+                if (!empty($keyword)) $query_params['keyword'] = $keyword;
+                if (!empty($topic)) $query_params['topic'] = $topic;
+                $query_string = !empty($query_params) ? '&' . http_build_query($query_params) : '';
+                
+                // Previous page link
+                if ($pagination['current_page'] > 1): ?>
+                    <a href="?page=<?php echo $pagination['current_page'] - 1 . $query_string; ?>" class="pagination-link">&laquo; Trước</a>
+                <?php endif; ?>
+                
+                <?php
+                // Calculate range of page numbers to show
+                $range = 2; // Number of pages to show before and after current page
+                $start_page = max(1, $pagination['current_page'] - $range);
+                $end_page = min($pagination['total_pages'], $pagination['current_page'] + $range);
+                
+                // Always show first page link
+                if ($start_page > 1): ?>
+                    <a href="?page=1<?php echo $query_string; ?>" class="pagination-link">1</a>
+                    <?php if ($start_page > 2): ?>
+                        <span class="pagination-ellipsis">...</span>
+                    <?php endif; ?>
+                <?php endif; ?>
+                
+                <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
+                    <?php if ($i == $pagination['current_page']): ?>
+                        <span class="pagination-current"><?php echo $i; ?></span>
+                    <?php else: ?>
+                        <a href="?page=<?php echo $i . $query_string; ?>" class="pagination-link"><?php echo $i; ?></a>
+                    <?php endif; ?>
+                <?php endfor; ?>
+                
+                <?php
+                // Always show last page link
+                if ($end_page < $pagination['total_pages']): ?>
+                    <?php if ($end_page < $pagination['total_pages'] - 1): ?>
+                        <span class="pagination-ellipsis">...</span>
+                    <?php endif; ?>
+                    <a href="?page=<?php echo $pagination['total_pages'] . $query_string; ?>" class="pagination-link"><?php echo $pagination['total_pages']; ?></a>
+                <?php endif; ?>
+                
+                <?php
+                // Next page link
+                if ($pagination['current_page'] < $pagination['total_pages']): ?>
+                    <a href="?page=<?php echo $pagination['current_page'] + 1 . $query_string; ?>" class="pagination-link">Tiếp &raquo;</a>
+                <?php endif; ?>
+            </div>
+            <div class="pagination-info">
+                Trang <?php echo $pagination['current_page']; ?> / <?php echo $pagination['total_pages']; ?> 
+                (<?php echo $pagination['total_items']; ?> bài viết)
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 </div>
 <?php

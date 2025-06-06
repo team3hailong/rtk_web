@@ -25,6 +25,7 @@ require_once $project_root_path . '/private/classes/RtkAccount.php';
 // Chỉ include file CSS/JS tối ưu (đã gộp, không include file cũ)
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css?v=' . time() . '">';
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/time-remaining.css?v=' . time() . '">';
+echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_account_update.css?v=' . time() . '">';
 echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js?v=' . time() . '"></script>';
 echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_filter_extension.js?v=' . time() . '"></script>';
 
@@ -109,7 +110,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán -->            <div class="filter-container">
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản RTK</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán --><div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>
                     <button type="button" class="filter-toggle-btn" aria-label="Toggle filters">
@@ -175,10 +176,12 @@ function getPaginationUrl($page, $perPage, $filter) {
                     </div>
                 </div>
             </div>
-            
-            <!-- Thêm nút Export Excel -->
+              <!-- Thêm nút Export Excel -->
             <div class="export-section">
                 <div class="export-section-buttons">
+                    <button id="update-survey-accounts" class="export-button" style="background:#4CAF50;">
+                        <i class="fas fa-sync"></i> Cập nhật quyền sở hữu
+                    </button>
                     <button id="export-excel" class="export-button" disabled>
                         <i class="fas fa-file-excel"></i> Xuất Excel
                     </button>
@@ -294,11 +297,14 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             <span class="status-badge <?php echo $status_class; ?>">
                                                 <?php echo htmlspecialchars($status_text); ?>
                                             </span>
-                                        </td>
-                                        <td class="actions">
+                                        </td>                                        <td class="actions">
                                             <button type="button" class="action-button btn-details" title="Xem chi tiết" 
                                                     onclick='showAccountDetails(<?php echo $account_json; ?>)'>
                                                 <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
+                                            </button>
+                                            <button type="button" class="action-button btn-change-password" title="Đổi mật khẩu" 
+                                                    onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
+                                                <i class="fas fa-key"></i> <span class="action-text">Đổi mật khẩu</span>
                                             </button>
                                         </td>
                                     </tr>
@@ -457,11 +463,83 @@ function getPaginationUrl($page, $perPage, $filter) {
         totalPages: <?php echo $pagination['total_pages']; ?>,
         totalRecords: <?php echo $pagination['total']; ?>,
         currentFilter: '<?php echo $filter; ?>'
-    };
-
-    // All other JavaScript logic has been moved to rtk_accountmanagement.js
+    };    // All other JavaScript logic has been moved to rtk_accountmanagement.js
     // This script block now only contains PHP-generated variables for the external JS file.
 </script>
+
+<!-- Update Survey Account Modal -->
+<div id="update-survey-account-modal" class="modal-overlay">
+    <div class="modal-content account-update-modal">
+        <div class="modal-header">
+            <h4>Cập Nhật Quyền Sở Hữu Tài Khoản</h4>
+            <button class="modal-close-btn" onclick="closeUpdateAccountModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="mb-3">Nhập tên đăng nhập và mật khẩu của các tài khoản cần chuyển quyền sở hữu về tài khoản của bạn:</p>
+            
+            <table class="account-form-table" id="update-accounts-table">
+                <thead>
+                    <tr>
+                        <th>Tên đăng nhập</th>
+                        <th>Mật khẩu</th>
+                    </tr>
+                </thead>
+                <tbody id="update-accounts-tbody">
+                    <!-- Default 5 rows -->
+                    <?php for($i = 0; $i < 5; $i++): ?>
+                    <tr>
+                        <td><input type="text" class="form-input username-input" placeholder="Tên đăng nhập"></td>
+                        <td><input type="text" class="form-input password-input" placeholder="Mật khẩu"></td>
+                    </tr>
+                    <?php endfor; ?>
+                </tbody>
+            </table>
+            
+            <button id="add-account-row" class="add-row-button" title="Thêm dòng">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-button" onclick="closeUpdateAccountModal()">Hủy</button>
+            <button class="confirm-button" id="confirm-update-accounts">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div id="change-password-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Đổi Mật Khẩu Tài Khoản</h4>
+            <button class="modal-close-btn" onclick="closeChangePasswordModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-row">
+                    <label class="form-label">Tên đăng nhập:</label>
+                    <input type="text" id="cp-username" class="form-input" readonly>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Mật khẩu hiện tại:</label>
+                    <input type="text" id="cp-current-password" class="form-input" readonly>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Mật khẩu mới:</label>
+                    <input type="text" id="cp-new-password" class="form-input" placeholder="Nhập mật khẩu mới">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Xác nhận mật khẩu mới:</label>
+                    <input type="text" id="cp-confirm-password" class="form-input" placeholder="Nhập lại mật khẩu mới">
+                </div>
+            </div>
+            <input type="hidden" id="cp-account-id">
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-button" onclick="closeChangePasswordModal()">Hủy</button>
+            <button class="confirm-button" id="confirm-change-password">Xác nhận</button>
+        </div>
+    </div>
+</div>
 
 <?php
 include $project_root_path . '/private/includes/footer.php';

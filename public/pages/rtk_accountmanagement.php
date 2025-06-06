@@ -304,7 +304,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             </button>
                                             <button type="button" class="action-button btn-change-password" title="Đổi mật khẩu" 
                                                     onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
-                                                <i class="fas fa-key"></i> <span class="action-text">Đổi mật khẩu</span>
+                                                <i class="fas fa-key"></i> <span class="action-text">Đổi MK</span>
                                             </button>
                                         </td>
                                     </tr>

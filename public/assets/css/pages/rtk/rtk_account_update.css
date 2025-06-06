@@ -54,11 +54,13 @@
 }
 
 .modal-body .form-input {
-    width: 100%;
+
     padding: 0.5rem;
     border: 1px solid var(--gray-300);
     border-radius: var(--rounded-md);
     font-size: 0.875rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .account-form-table {

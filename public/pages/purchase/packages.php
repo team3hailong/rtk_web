@@ -125,9 +125,7 @@ include $project_root_path . '/private/includes/header.php';
                         <!-- Hiển thị text tiết kiệm nếu có -->
                         <span class="package-savings">
                             <?php echo isset($package['savings_text']) ? htmlspecialchars($package['savings_text']) : '&nbsp;'; ?>
-                        </span>
-
-                        <ul class="package-features">
+                        </span>                        <ul class="package-features">
                             <?php foreach ($features as $feature): ?>
                                 <li>
                                     <i class="fas <?php echo htmlspecialchars($feature['icon']); ?>" aria-hidden="true"></i>
@@ -135,12 +133,17 @@ include $project_root_path . '/private/includes/header.php';
                                 </li>
                             <?php endforeach; ?>
                         </ul>
-
-                        <!-- Thêm lựa chọn Purchase Type -->
-                        <div class="purchase-type-selector" style="margin-top: 10px; margin-bottom:10px;">
-                            <label style="margin-right: 10px;"><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="individual" checked> Cá nhân</label>
+                        
+                        <!-- Thêm div flex-spacer để đẩy các phần tử xuống cuối -->
+                        <div class="flex-spacer"></div>
+                        
+                        <!-- Thêm lựa chọn Purchase Type (chỉ hiển thị khi không phải gói dùng thử) -->
+                        <?php if ($package['package_id'] !== 'trial_7d'): ?>
+                        <div class="purchase-type-selector">
+                            <label><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="individual" checked> Cá nhân</label>
                             <label><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="company"> Công ty (+10% VAT)</label>
                         </div>
+                        <?php endif; ?>
 
                         <!-- Nút bấm với link chính xác -->
                         <a href="#" data-package-id="<?php echo htmlspecialchars($package['package_id']); ?>" class="<?php echo $button_classes; ?> select-package-button">
@@ -165,10 +168,16 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(event) {
             event.preventDefault();
             const packageId = this.dataset.packageId;
-            const purchaseTypeInput = document.querySelector('input[name="purchase_type_' + packageId + '"]:checked');
-            const purchaseType = purchaseTypeInput ? purchaseTypeInput.value : 'individual';
             
-            let detailsUrl = '<?php echo $base_path; ?>/pages/purchase/details.php?package=' + packageId + '&purchase_type=' + purchaseType;
+            // Xác định URL chi tiết dựa vào loại gói
+            let detailsUrl = '<?php echo $base_path; ?>/pages/purchase/details.php?package=' + packageId;
+            
+            // Chỉ thêm purchase_type nếu không phải gói dùng thử
+            if (packageId !== 'trial_7d') {
+                const purchaseTypeInput = document.querySelector('input[name="purchase_type_' + packageId + '"]:checked');
+                const purchaseType = purchaseTypeInput ? purchaseTypeInput.value : 'individual';
+                detailsUrl += '&purchase_type=' + purchaseType;
+            }
             
             // For contact button, redirect to contact page or handle differently
             if (this.classList.contains('contact')) {

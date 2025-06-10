@@ -286,7 +286,6 @@ section {
     .navbar-menu .navbar-cta-button {
         display: block !important;
         margin: 1.5rem auto 0 auto;
-        width: 90vw;
         max-width: 320px;
         font-size: 1.1rem;
         text-align: center;
@@ -1432,7 +1431,7 @@ section {
     .navbar-menu .navbar-cta-button {
         display: block !important;
         margin: 1.5rem auto 0 auto;
-        width: 90vw;
+       
         max-width: 320px;
         font-size: 1.1rem;
         text-align: center;
@@ -1482,7 +1481,6 @@ section {
     .navbar-menu .navbar-cta-button {
         display: block !important;
         margin: 1.5rem auto 0 auto;
-        width: 90vw;
         max-width: 320px;
         font-size: 1.1rem;
         text-align: center;
@@ -1522,7 +1520,7 @@ section {
     .navbar-cta-button {
         font-size: 1rem;
         padding: 0.7rem 0.5rem;
-        width: 95vw;
+
         max-width: 98vw;
     }
 }

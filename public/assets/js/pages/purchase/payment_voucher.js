@@ -1,7 +1,13 @@
 // Script JS để xử lý các chức năng voucher và xác nhận chuyển trang
 document.addEventListener('DOMContentLoaded', function() {
-    // Biến cờ để kiểm soát việc hiển thị hộp thoại xác nhận
+    // Biến cờ để kiểm soát việc hiển thị hộp thoại xác nhận trình duyệt
     let allowBrowserDialog = true;
+    // Biến cờ để xác định xem có phải là tải lại trang bằng bàn phím không
+    let isKeyboardReload = false;
+    // Biến cờ để xác định xem có phải điều hướng có chủ đích sau khi xác nhận dialog tùy chỉnh không
+    // hoặc tải lại trang có chủ đích từ mã JS (ví dụ sau khi áp dụng/xóa voucher)
+    let isProgrammaticNavigation = false;
+
     // --- Chức năng áp dụng voucher ---
     const isTrial = JS_IS_TRIAL; // Được thay thế bởi PHP
     const isRenewal = JS_IS_RENEWAL; // Được thay thế bởi PHP
@@ -15,26 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateQRCode(amount) {
         if (isTrial) return; // Không cần cập nhật QR nếu là gói dùng thử
         
-        // Tạo URL mới cho VietQR với số tiền đã cập nhật
         const newVietQRURL = `https://img.vietqr.io/image/${JS_VIETQR_BANK_ID}-${JS_VIETQR_ACCOUNT_NO}-${JS_VIETQR_IMAGE_TEMPLATE}.png?amount=${Math.round(amount)}&addInfo=${encodeURIComponent(orderDescription)}&accountName=${encodeURIComponent(JS_VIETQR_ACCOUNT_NAME)}`;
         
-        // Tìm và cập nhật ảnh QR
         const qrcodeImg = document.querySelector('#qrcode img');
         if (qrcodeImg) {
             qrcodeImg.src = newVietQRURL;
         }
     }
     
-    // Khởi tạo biến để lưu trữ ID của voucher đã áp dụng
     let appliedVoucherId = null;
     
     if (!isTrial) {
-        // Hàm định dạng tiền tệ
         const formatCurrency = (amount) => {
             return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
         };
 
-        // Tìm tất cả các vùng nhập voucher trên trang
         const voucherSections = document.querySelectorAll('.voucher-section');
         
         voucherSections.forEach(section => {
@@ -45,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const voucherInfo = section.querySelector('.voucher-info');
             const totalPriceDisplay = document.querySelector('.summary-total strong');
             
-            // Xử lý sự kiện áp dụng voucher
             if (applyBtn && voucherInput) {
                 applyBtn.addEventListener('click', function() {
                     const voucherCode = voucherInput.value.trim();
@@ -55,18 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
-                    // Disable nút khi đang gửi request
                     applyBtn.disabled = true;
                     if (voucherStatus) {
                         voucherStatus.textContent = 'Đang kiểm tra...';
                         voucherStatus.className = 'voucher-status';
                     }
                     
-                    // Tạo FormData
                     const formData = new FormData();
                     formData.append('voucher_code', voucherCode);
                     
-                    // Lấy giá hiện tại từ hiển thị
                     const displayedPrice = totalPriceDisplay ? 
                         parseFloat(totalPriceDisplay.textContent.replace(/[^\d]/g, '')) : 
                         currentPrice;
@@ -75,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     formData.append('context', isRenewal ? 'renewal' : 'purchase');
                     formData.append('csrf_token', JS_CSRF_TOKEN);
                     
-                    // Gửi request
                     fetch(`${baseUrl}/public/handlers/action_handler.php?module=purchase&action=apply_voucher`, {
                         method: 'POST',
                         body: formData
@@ -85,60 +81,41 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('Voucher response:', data);
                         
                         if (data.status) {
-                            // Voucher hợp lệ
                             if (voucherStatus) {
                                 voucherStatus.textContent = data.message;
                                 voucherStatus.className = 'voucher-status success';
                             }
-                            
-                            // Lưu ID voucher
                             appliedVoucherId = data.data.voucher_id;
-                            
-                            // Hiển thị thông tin voucher
                             const appliedVoucherCode = section.querySelector('[id^="applied-voucher-code"]');
-                            if (appliedVoucherCode) {
-                                appliedVoucherCode.textContent = data.data.voucher_code;
-                            }
+                            if (appliedVoucherCode) appliedVoucherCode.textContent = data.data.voucher_code;
                             
-                            // Hiển thị thông tin giảm giá
                             const discountInfo = section.querySelector('[id^="discount-info"]');
                             if (discountInfo) {
                                 let discountMessage = '';
-                                if (data.data.voucher_type === 'percentage_discount') {
-                                    discountMessage = `Giảm giá: ${formatCurrency(data.data.discount_value)}`;
-                                } else if (data.data.voucher_type === 'fixed_discount') {
-                                    discountMessage = `Giảm giá cố định: ${formatCurrency(data.data.discount_value)}`;
-                                } else if (data.data.voucher_type === 'extend_duration') {
-                                    discountMessage = `Tăng thêm ${data.data.additional_months} tháng sử dụng`;
-                                }
+                                if (data.data.voucher_type === 'percentage_discount') discountMessage = `Giảm giá: ${formatCurrency(data.data.discount_value)}`;
+                                else if (data.data.voucher_type === 'fixed_discount') discountMessage = `Giảm giá cố định: ${formatCurrency(data.data.discount_value)}`;
+                                else if (data.data.voucher_type === 'extend_duration') discountMessage = `Tăng thêm ${data.data.additional_months} tháng sử dụng`;
                                 discountInfo.textContent = discountMessage;
                             }
                             
-                            // Cập nhật tổng tiền
-                            if (totalPriceDisplay) {
-                                totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
-                            }
+                            if (totalPriceDisplay) totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
                             
-                            // Cập nhật số tiền trong phần thông tin thanh toán
                             const paymentAmountElement = document.getElementById('payment-amount');
-                            if (paymentAmountElement) {
-                                paymentAmountElement.textContent = formatCurrency(data.data.new_amount);
-                            }
-                            
-                            // Cập nhật mã QR
+                            if (paymentAmountElement) paymentAmountElement.textContent = formatCurrency(data.data.new_amount);
                             updateQRCode(data.data.new_amount);
                             
-                            // Hiển thị box voucher và ẩn form nhập
-                            if (voucherInfo) {
-                                voucherInfo.style.display = 'block';
-                            }
-                            
+                            // Đánh dấu là tải lại trang có chủ đích trước khi reload
+                            isProgrammaticNavigation = true;
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000); // Giữ lại timeout nếu cần thiết cho UX
+
+                            if (voucherInfo) voucherInfo.style.display = 'block';
                             voucherInput.value = '';
                             voucherInput.style.display = 'none';
                             applyBtn.style.display = 'none';
                             
                         } else {
-                            // Voucher không hợp lệ
                             if (voucherStatus) {
                                 voucherStatus.textContent = data.message;
                                 voucherStatus.className = 'voucher-status error';
@@ -153,24 +130,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.error('Voucher application error:', error);
                     })
                     .finally(() => {
-                        // Enable lại nút
                         applyBtn.disabled = false;
                     });
                 });
             }
             
-            // Xử lý sự kiện xóa voucher
             if (removeBtn) {
                 removeBtn.addEventListener('click', function() {
-                    // Disable nút khi đang gửi request
                     removeBtn.disabled = true;
-                    
-                    // Tạo FormData
                     const formData = new FormData();
                     formData.append('context', isRenewal ? 'renewal' : 'purchase');
                     formData.append('csrf_token', JS_CSRF_TOKEN);
                     
-                    // Gửi request
                     fetch(`${baseUrl}/public/handlers/action_handler.php?module=purchase&action=remove_voucher`, {
                         method: 'POST',
                         body: formData
@@ -178,38 +149,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.json())
                     .then(data => {
                         if (data.status) {
-                            // Xóa voucher thành công
                             if (voucherStatus) {
                                 voucherStatus.textContent = data.message;
                                 voucherStatus.className = 'voucher-status';
                             }
-                            
-                            // Ẩn thông tin voucher và hiển thị lại form nhập
-                            if (voucherInfo) {
-                                voucherInfo.style.display = 'none';
-                            }
-                            
+                            if (voucherInfo) voucherInfo.style.display = 'none';
                             if (voucherInput && applyBtn) {
                                 voucherInput.style.display = '';
                                 applyBtn.style.display = '';
                             }
-                            
-                            // Cập nhật tổng tiền về giá ban đầu
-                            if (totalPriceDisplay) {
-                                totalPriceDisplay.textContent = formatCurrency(data.data.original_amount);
-                            }
-                            
-                            // Cập nhật số tiền trong phần thông tin thanh toán
+                            if (totalPriceDisplay) totalPriceDisplay.textContent = formatCurrency(data.data.original_amount);
                             const paymentAmountElement = document.getElementById('payment-amount');
-                            if (paymentAmountElement) {
-                                paymentAmountElement.textContent = formatCurrency(data.data.original_amount);
-                            }
-                            
-                            // Cập nhật mã QR
+                            if (paymentAmountElement) paymentAmountElement.textContent = formatCurrency(data.data.original_amount);
                             updateQRCode(data.data.original_amount);
-                            
-                            // Reset voucher ID
                             appliedVoucherId = null;
+                            
+                            // Đánh dấu là tải lại trang có chủ đích trước khi reload
+                            isProgrammaticNavigation = true;
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000); // Giữ lại timeout nếu cần thiết cho UX
                         } else {
                             if (voucherStatus) {
                                 voucherStatus.textContent = data.message;
@@ -225,14 +184,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.error('Voucher removal error:', error);
                     })
                     .finally(() => {
-                        // Enable lại nút
                         removeBtn.disabled = false;
                     });
                 });
             }
         });
         
-        // Xử lý các nút copy
         const copyButtons = document.querySelectorAll('.bank-details code[data-copy-target]');
         copyButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -243,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (targetSelector === '#payment-amount') {
                         textToCopy = textToCopy.replace(/đ|\.|,/g, '');
                     }
-
                     navigator.clipboard.writeText(textToCopy)
                         .then(() => {
                             const originalText = this.innerText;
@@ -263,57 +219,98 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    }      // Thêm xác nhận khi người dùng cố gắng rời khỏi trang
+    } // End of if (!isTrial)
+
+    // --- Navigation Confirmation Logic ---
+
+    // Lắng nghe sự kiện nhấn phím để phát hiện tải lại trang (F5, Ctrl+R, Cmd+R)
+    window.addEventListener('keydown', function(event) {
+        if (((event.ctrlKey || event.metaKey) && (event.key === 'r' || event.key === 'R')) || event.key === 'F5') {
+            isKeyboardReload = true;
+        }
+    });
+
+    // Xử lý xác nhận khi người dùng cố gắng rời khỏi trang
+    window.addEventListener('beforeunload', function(e) {
+        // Trường hợp 1: Tải lại bằng bàn phím (F5, Ctrl+R)
+        if (isKeyboardReload) {
+            isKeyboardReload = false; // Reset cờ cho lần tương tác tiếp theo
+            // Không hiển thị hộp thoại xác nhận, cho phép tải lại tự nhiên
+            return; // Hoặc return undefined;
+        }
+
+        // Trường hợp 2: Điều hướng có chủ đích từ mã JS (sau khi xác nhận dialog tùy chỉnh,
+        // hoặc sau khi áp dụng/xóa voucher và trang tự reload)
+        if (isProgrammaticNavigation) {
+            isProgrammaticNavigation = false; // Reset cờ
+            // Không hiển thị hộp thoại xác nhận
+            return; // Hoặc return undefined;
+        }
+
+        // Trường hợp 3: Các hành động khác (nhấn back/forward, đóng tab, gõ URL mới,
+        // nhấn nút reload của trình duyệt) và dialog tùy chỉnh KHÔNG đang được hiển thị
+        if (allowBrowserDialog) {
+            const confirmationMessage = 'Bạn có chắc chắn muốn rời khỏi trang thanh toán?';
+            e.preventDefault(); // Cần thiết cho một số trình duyệt để hiển thị thông báo tùy chỉnh
+            e.returnValue = confirmationMessage; // Dành cho các trình duyệt cũ hơn
+            return confirmationMessage; // Dành cho các trình duyệt hiện đại
+        }
+        // Nếu allowBrowserDialog = false, nghĩa là một dialog tùy chỉnh đang được hiển thị
+        // hoặc vừa được xử lý, không cần hộp thoại của trình duyệt nữa.
+    });
+    
     function setupNavigationConfirmation() {
-        // Xác nhận khi tải lại trang hoặc đóng tab, nhưng chỉ khi không có hộp thoại tùy chỉnh nào đang hiển thị
-        window.addEventListener('beforeunload', function(e) {
-            if (allowBrowserDialog) {
-                e.preventDefault();
-                e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang thanh toán?';
-                return e.returnValue;
-            }
-        });
-        
+        // Hàm chung để xử lý khi người dùng hủy/đóng dialog tùy chỉnh
+        const commonOnCancelOrClose = () => {
+            allowBrowserDialog = true; // Cho phép hộp thoại trình duyệt hiển thị lại
+            isProgrammaticNavigation = false; // Đảm bảo reset cờ này nếu hủy
+        };
+
         // Xác nhận khi nhấp vào các liên kết trong sidebar
         const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
-        sidebarLinks.forEach(link => {            link.addEventListener('click', function(e) {
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetHref = this.getAttribute('href');
                 
-                // Tắt hộp thoại trình duyệt khi hiển thị hộp thoại tùy chỉnh
-                allowBrowserDialog = false;
+                allowBrowserDialog = false; // Tạm thời tắt hộp thoại trình duyệt
                 
                 showConfirmationDialog(
                     'Xác nhận chuyển trang',
                     'Bạn có chắc chắn muốn rời khỏi trang thanh toán?',
-                    function() {
+                    function() { // onConfirm
+                        isProgrammaticNavigation = true; // Đánh dấu là điều hướng có chủ đích
                         window.location.href = targetHref;
-                    }
+                    },
+                    commonOnCancelOrClose // onCancelOrClose
                 );
             });
-        });        // Xác nhận khi nhấp vào nút đã thanh toán
+        });
+
+        // Xác nhận khi nhấp vào nút "Đã thanh toán"
         const paymentConfirmBtn = document.querySelector('.btn-payment-confirm');
         if (paymentConfirmBtn) {
             paymentConfirmBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetHref = this.getAttribute('data-href');
                 
-                // Tắt hộp thoại trình duyệt khi hiển thị hộp thoại tùy chỉnh
-                allowBrowserDialog = false;
+                allowBrowserDialog = false; // Tạm thời tắt hộp thoại trình duyệt
                 
                 showConfirmationDialog(
                     'Xác nhận đã thanh toán',
                     'Bạn xác nhận đã hoàn tất thanh toán và muốn tải lên minh chứng?',
-                    function() {
+                    function() { // onConfirm
+                        isProgrammaticNavigation = true; // Đánh dấu là điều hướng có chủ đích
                         window.location.href = targetHref;
-                    }
+                    },
+                    commonOnCancelOrClose // onCancelOrClose
                 );
             });
         }
     }
-      // Hàm hiển thị hộp thoại xác nhận
-    function showConfirmationDialog(title, message, onConfirm) {
-        // Tạo phần tử dialog
+    
+    // Hàm hiển thị hộp thoại xác nhận tùy chỉnh
+    function showConfirmationDialog(title, message, onConfirm, onCancelOrClose) {
         const dialogOverlay = document.createElement('div');
         dialogOverlay.style.position = 'fixed';
         dialogOverlay.style.top = '0';
@@ -336,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dialogContent.style.position = 'relative';
         dialogContent.style.zIndex = '10001';
         
-        // Tạo nội dung dialog
         const titleEl = document.createElement('h4');
         titleEl.style.marginTop = '0';
         titleEl.style.color = 'var(--gray-800)';
@@ -370,35 +366,42 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.style.borderRadius = '4px';
         confirmBtn.style.cursor = 'pointer';
         
-        // Thêm các phần tử vào dialog
         buttonsDiv.appendChild(cancelBtn);
         buttonsDiv.appendChild(confirmBtn);
-        
         dialogContent.appendChild(titleEl);
         dialogContent.appendChild(messageEl);
         dialogContent.appendChild(buttonsDiv);
-        
         dialogOverlay.appendChild(dialogContent);
         document.body.appendChild(dialogOverlay);
-          // Xử lý sự kiện các nút
+
+        const removeDialog = () => {
+            if (dialogOverlay.parentNode) {
+                document.body.removeChild(dialogOverlay);
+            }
+        };
+
         cancelBtn.addEventListener('click', function() {
-            document.body.removeChild(dialogOverlay);
-            // Kích hoạt lại hộp thoại trình duyệt sau khi đóng hộp thoại tùy chỉnh
-            allowBrowserDialog = true;
+            removeDialog();
+            if (typeof onCancelOrClose === 'function') {
+                onCancelOrClose();
+            }
         });
         
         confirmBtn.addEventListener('click', function() {
+            // Việc xóa dialog có thể được xử lý bởi onConfirm nếu nó điều hướng.
+            // Tuy nhiên, để chắc chắn, gọi removeDialog() ở đây.
+            removeDialog(); 
             if (typeof onConfirm === 'function') {
-                onConfirm();
+                onConfirm(); // Hàm này sẽ đặt isProgrammaticNavigation = true và điều hướng
             }
-            document.body.removeChild(dialogOverlay);
         });
-          // Đóng dialog khi click bên ngoài
+        
         dialogOverlay.addEventListener('click', function(e) {
-            if (e.target === dialogOverlay) {
-                document.body.removeChild(dialogOverlay);
-                // Kích hoạt lại hộp thoại trình duyệt sau khi đóng hộp thoại tùy chỉnh
-                allowBrowserDialog = true;
+            if (e.target === dialogOverlay) { // Chỉ đóng khi click vào overlay, không phải content
+                removeDialog();
+                if (typeof onCancelOrClose === 'function') {
+                    onCancelOrClose();
+                }
             }
         });
     }

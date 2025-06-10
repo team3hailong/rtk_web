@@ -370,9 +370,7 @@ class RtkAccount {
             error_log("Error fetching RTK account details: " . $e->getMessage());
             return null;
         }
-    }
-
-    public function updatePassword($accountId, $newPassword) {
+    }    public function updatePassword($accountId, $newPassword) {
         try {
             $sql = "UPDATE survey_account 
                    SET password_acc = :password, updated_at = NOW() 
@@ -386,6 +384,84 @@ class RtkAccount {
 
         } catch (PDOException $e) {
             error_log("Error updating RTK account password: " . $e->getMessage());
+            return false;
+        }
+    }
+      /**
+     * Get account details if username and password match the records in the database
+     * 
+     * @param string $username The username to validate
+     * @param string $password The password to validate
+     * @return array|null Account details if credentials are valid, null otherwise
+     */
+    public function getAccountByCredentials($username, $password) {
+        try {
+            $sql = "SELECT sa.id, sa.registration_id 
+                   FROM survey_account sa
+                   WHERE sa.username_acc = :username AND sa.password_acc = :password 
+                   AND sa.deleted_at IS NULL";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            error_log("Error getting RTK account by credentials: " . $e->getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Update the ownership of an account by setting the user_id in the registration table
+     * 
+     * @param int $registrationId The registration ID to update
+     * @param int $userId The new user ID (owner)
+     * @return bool True if update succeeded, false otherwise
+     */
+    public function updateAccountOwnership($registrationId, $userId) {
+        try {
+            $sql = "UPDATE registration 
+                   SET user_id = :user_id, updated_at = NOW() 
+                   WHERE id = :registration_id";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':registration_id', $registrationId, PDO::PARAM_INT);
+            
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            error_log("Error updating RTK account ownership: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Validate if username and password match the records in the database
+     * 
+     * @param string $username The username to validate
+     * @param string $password The password to validate
+     * @return bool True if credentials are valid, false otherwise
+     */
+    public function validateCredentials($username, $password) {
+        try {
+            $sql = "SELECT COUNT(*) as count FROM survey_account 
+                   WHERE username_acc = :username AND password_acc = :password 
+                   AND deleted_at IS NULL";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return ($result['count'] > 0);
+
+        } catch (PDOException $e) {
+            error_log("Error validating RTK account credentials: " . $e->getMessage());
             return false;
         }
     }

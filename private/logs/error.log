@@ -1,14 +1,1 @@
-[02-Jun-2025 22:18:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[02-Jun-2025 22:18:46 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 61, Accounts: 1
-[02-Jun-2025 22:18:46 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 880000 for registration ID 10013
-[02-Jun-2025 22:25:37 Asia/Ho_Chi_Minh] Uncaught Exception: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'th.vat_amount' in 'field list'
-#0 C:\laragon\www\02062025_user_web\private\classes\invoice\RetailInvoiceService.php(86): PDO->prepare('SELECT th.*, \r\n...')
-#1 C:\laragon\www\02062025_user_web\private\classes\invoice\RetailInvoiceService.php(35): RetailInvoiceService->getRegistrationDetails(243)
-#2 C:\laragon\www\02062025_user_web\public\handlers\export_retail_invoice.php(41): RetailInvoiceService->getRetailInvoicesData(Array, 92)
-#3 {main}
-[02-Jun-2025 22:30:11 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[02-Jun-2025 22:30:11 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 62, Accounts: 5
-[02-Jun-2025 22:30:31 Asia/Ho_Chi_Minh] Voucher calculation: Original: 10000000, Discount: 200000.00, New Amount: 9800000, Type: percentage_discount
-[02-Jun-2025 22:31:02 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
-[02-Jun-2025 22:31:02 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 17, Accounts: 4
-[02-Jun-2025 22:31:05 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8800000, Discount: 200000.00, New Amount: 8600000, Type: percentage_discount
+[06-Jun-2025 23:09:25 Asia/Ho_Chi_Minh] PHP Error [2]: foreach() argument must be of type array|object, string given in C:\laragon\www\02062025_user_web\public\handlers\rtk_account_handlers.php on line 60

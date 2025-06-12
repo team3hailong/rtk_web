@@ -541,6 +541,25 @@ function getPaginationUrl($page, $perPage, $filter) {
     </div>
 </div>
 
+<!-- OTP Confirmation Modal -->
+<div id="otp-confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Xác nhận OTP chuyển quyền</h4>
+            <button class="modal-close-btn" onclick="closeOtpModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Nhập mã OTP được gửi đến email của chủ sở hữu hiện tại:</p>
+            <input type="text" id="otp-input" class="form-input" placeholder="Mã OTP">
+            <input type="hidden" id="otp-registration-id">
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-button" onclick="closeOtpModal()">Hủy</button>
+            <button class="confirm-button" id="confirm-otp-btn">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
 <?php
 include $project_root_path . '/private/includes/footer.php';
 ?>

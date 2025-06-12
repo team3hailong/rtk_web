@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once dirname(__DIR__) . '/config/config.php';
-require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 
 function sendVerificationEmail($userEmail, $username, $verificationToken) {
     global $conn;
@@ -418,5 +418,60 @@ HTML;
         // Ghi chi tiết lỗi vào server log
         error_log("Failed to send password reset OTP to: $userEmail. Error: " . $mail->ErrorInfo . " | Exception: " . $e->getMessage());
         return false; // Báo lỗi
+    }
+}
+
+/**
+ * Send notification email when a survey account is linked to the user
+ *
+ * @param string $userEmail Email of the user
+ * @param string $username Username of the user
+ * @param string $surveyUserName The linked RTK survey account username
+ * @return bool True if sent successfully, false otherwise
+ */
+function sendSurveyAccountLinkNotification($userEmail, $username, $surveyUserName) {
+    global $conn;
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        // Use SSL for port 465, otherwise STARTTLS
+        if (SMTP_PORT == 465) {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        } else {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        }
+        $mail->Port = SMTP_PORT;
+        $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = 0;
+
+        // Recipients
+        $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+        $mail->addAddress($userEmail, $username);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Xác nhận liên kết tài khoản RTK';
+        $managementLink = SITE_URL . '/public/pages/rtk_accountmanagement.php';
+        $mail->Body = <<<HTML
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #2e7d32;">Xin chào {$username}!</h2>
+    <p>Bạn đã liên kết thành công tài khoản RTK <strong>{$surveyUserName}</strong> vào tài khoản của mình.</p>
+    <p>Vui lòng truy cập <a href="{$managementLink}">trang quản lý tài khoản</a> để xem chi tiết.</p>
+    <p style="color: #666; font-size: 0.9em; margin-top: 30px;">Nếu bạn không thực hiện thao tác này, vui lòng liên hệ bộ phận hỗ trợ.</p>
+</div>
+HTML;
+        $mail->AltBody = "Xin chào {$username}! Bạn đã liên kết thành công tài khoản RTK {$surveyUserName}. Truy cập {$managementLink} để xem chi tiết.";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Failed to send survey account link notification to {$userEmail}. Error: " . $e->getMessage());
+        return false;
     }
 }

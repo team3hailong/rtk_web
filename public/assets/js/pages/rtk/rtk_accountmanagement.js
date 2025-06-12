@@ -526,6 +526,33 @@ document.addEventListener('DOMContentLoaded', function() {
     updateExportButtonState();
     // Initialize renewal button state on page load
     updateRenewalButtonState();
+
+    // OTP modal controls
+    const otpBtn = document.getElementById('confirm-otp-btn');
+    if (otpBtn) {
+        otpBtn.addEventListener('click', function() {
+            const regId = document.getElementById('otp-registration-id').value;
+            const otp = document.getElementById('otp-input').value.trim();
+            if (!otp) {
+                alert('Vui lòng nhập mã OTP');
+                return;
+            }
+            fetch('../handlers/confirm_transfer.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `registration_id=${regId}&otp=${encodeURIComponent(otp)}`
+            })
+            .then(response => response.json())
+            .then(resp => {
+                alert(resp.message);
+                if (resp.success) {
+                    closeOtpModal();
+                    window.location.reload();
+                }
+            })
+            .catch(() => alert('Lỗi khi xác thực OTP'));
+        });
+    }
 });
 
 // Show update account modal
@@ -610,13 +637,20 @@ function validateAndUpdateAccounts() {
             confirmBtn.disabled = false;
             confirmBtn.innerHTML = 'Xác nhận';
         }
-        
+
         if (data.success) {
+            // If some transfers require confirmation, show OTP modal
+            const toConfirm = data.results.find(r => r.requires_confirmation);
+            if (toConfirm) {
+                closeUpdateAccountModal();
+                showOtpModal(toConfirm.registration_id);
+                return;
+            }
             // Show appropriate message based on validation results
             if (data.all_valid) {
                 alert(`Cập nhật quyền sở hữu thành công cho ${data.updated_count} tài khoản!`);
                 closeUpdateAccountModal();
-                
+
                 // If accounts were updated, reload the page to show updated ownership
                 if (data.updated_count > 0) {
                     window.location.reload();
@@ -640,6 +674,41 @@ function validateAndUpdateAccounts() {
         }
     });
 }
+
+// OTP modal controls
+function showOtpModal(registrationId) {
+    const modal = document.getElementById('otp-confirm-modal');
+    document.getElementById('otp-registration-id').value = registrationId;
+    document.getElementById('otp-input').value = '';
+    modal.classList.add('active');
+}
+
+function closeOtpModal() {
+    document.getElementById('otp-confirm-modal').classList.remove('active');
+}
+
+document.getElementById('confirm-otp-btn').addEventListener('click', function() {
+    const regId = document.getElementById('otp-registration-id').value;
+    const otp = document.getElementById('otp-input').value.trim();
+    if (!otp) {
+        alert('Vui lòng nhập mã OTP');
+        return;
+    }
+    fetch(`${baseUrl}/public/handlers/confirm_transfer.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `registration_id=${regId}&otp=${encodeURIComponent(otp)}`
+    })
+    .then(response => response.json())
+    .then(resp => {
+        alert(resp.message);
+        if (resp.success) {
+            closeOtpModal();
+            window.location.reload();
+        }
+    })
+    .catch(() => alert('Lỗi khi xác thực OTP'));
+});
 
 // Show change password modal
 window.showChangePasswordModal = function(account) {

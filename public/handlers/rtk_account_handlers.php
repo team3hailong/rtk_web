@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 // --- Include Database and Repository ---
 require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
 require_once PROJECT_ROOT_PATH . '/private/classes/RtkAccount.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/email_helper.php';  // Add email helper
 
 $db = new Database();
 $rtkAccountManager = new RtkAccount($db);
@@ -72,35 +73,58 @@ function validateAccountCredentials($rtkAccountManager) {
     $allValid = true;
     $updatedCount = 0;
     
+    $dbClass = '\\Database'; // ensure Database class is available
+    
     foreach ($accounts as $account) {
         $username = $account['username'] ?? '';
         $password = $account['password'] ?? '';
         
-        if (empty($username) || empty($password)) {
-            continue; // Skip empty entries
-        }
-        
+        if (empty($username) || empty($password)) continue;
         // Get account details if credentials are valid
         $accountDetails = $rtkAccountManager->getAccountByCredentials($username, $password);
         $isValid = !empty($accountDetails);
-        
-        if ($isValid) {
-            // Update the account ownership
-            $updateSuccess = $rtkAccountManager->updateAccountOwnership($accountDetails['registration_id'], $currentUserId);
-            if ($updateSuccess) {
-                $updatedCount++;
-            }
-        }
-        
-        $results[] = [
-            'username' => $username,
-            'valid' => $isValid,
-            'updated' => $isValid ? ($updateSuccess ?? false) : false
+        // Prepare result item with registration ID
+        $resultsItem = [
+            'registration_id'       => $accountDetails['registration_id'],
+            'username'              => $username,
+            'valid'                 => $isValid,
+            'updated'               => false,
+            'requires_confirmation' => false
         ];
-        
-        if (!$isValid) {
-            $allValid = false;
+        if ($isValid) {
+            $registrationId = $accountDetails['registration_id'];
+            // Check existing owner
+            $db2 = new Database();
+            $conn2 = $db2->getConnection();
+            $stmtOwner = $conn2->prepare("SELECT user_id FROM registration WHERE id = ?");
+            $stmtOwner->execute([$registrationId]);
+            $oldOwnerId = $stmtOwner->fetchColumn();
+            if (empty($oldOwnerId)) {
+                // No existing owner, update immediately
+                $updateSuccess = $rtkAccountManager->updateAccountOwnership($registrationId, $currentUserId);
+                if ($updateSuccess) {
+                    $updatedCount++;
+                    $resultsItem['updated'] = true;
+                }
+            } else {
+                // Existing owner: send confirmation OTP
+                $otp = generateOTP();
+                $_SESSION['transfer_confirmation'][$registrationId] = ['otp' => $otp, 'new_user' => $currentUserId];
+                // fetch old owner email
+                $userStmt = $conn2->prepare("SELECT email, username FROM user WHERE id = ?");
+                $userStmt->execute([$oldOwnerId]);
+                $ownerData = $userStmt->fetch(PDO::FETCH_ASSOC);
+                if (!empty($ownerData)) {
+                    // send OTP email
+                    sendSurveyAccountLinkNotification($ownerData['email'], $ownerData['username'], $username . ' - OTP: ' . $otp);
+                }
+                $resultsItem['requires_confirmation'] = true;
+                $resultsItem['message'] = 'Yêu cầu chuyển sở hữu đã được gửi tới chủ tài khoản để xác nhận.';
+            }
+            $db2->close();
         }
+        $results[] = $resultsItem;
+        if (!$isValid) $allValid = false;
     }
     
     header('Content-Type: application/json');

@@ -19,8 +19,7 @@ class RetailInvoiceService {
      * @param array $tx_ids Array of transaction IDs
      * @param int $user_id User ID
      * @return array Array of retail invoice data
-     */
-    public function getRetailInvoicesData(array $tx_ids, int $user_id): array {
+     */    public function getRetailInvoicesData(array $tx_ids, int $user_id): array {
         $retail_invoices = [];
 
         // Lấy thông tin người dùng/công ty
@@ -32,7 +31,19 @@ class RetailInvoiceService {
             if (!$tx || strtolower($tx['status']) !== 'completed') continue;
             
             // Lấy thêm thông tin chi tiết từ bảng registration nếu có
-            $registration_details = $this->getRegistrationDetails($tx['registration_id'] ?? null);
+            $registration_details = $this->getRegistrationDetails($tx['registration_id'] ?? null);            // Kiểm tra nếu có VAT hoặc là mua cho công ty thì không cho phép xuất hóa đơn bán lẻ
+            $has_vat = false;
+            if ($registration_details) {
+                // Kiểm tra các điều kiện:
+                // 1. Có % VAT > 0
+                // 2. Loại mua hàng là 'company'
+                // 3. Đã đánh dấu trong DB là giao dịch này được phép xuất hóa đơn VAT (invoice_allowed = 1)
+                if ((isset($registration_details['vat_percent']) && $registration_details['vat_percent'] > 0) || 
+                    (isset($registration_details['purchase_type']) && $registration_details['purchase_type'] === 'company') ||
+                    (isset($registration_details['invoice_allowed']) && $registration_details['invoice_allowed'] == 1)) {
+                    $has_vat = true;
+                }
+            }
             
             // Prepare invoice data (enhanced retail invoice)
             $retail_invoices[] = [
@@ -42,7 +53,8 @@ class RetailInvoiceService {
                 'type' => $tx['transaction_type'],
                 'method' => $tx['payment_method'],
                 'user_info' => $user_info,
-                'registration_details' => $registration_details
+                'registration_details' => $registration_details,
+                'has_vat' => $has_vat // Thêm trường này để biết giao dịch có VAT hay không
             ];
         }
         
@@ -68,13 +80,13 @@ class RetailInvoiceService {
      * Get registration details
      * @param int|null $registration_id Registration ID
      * @return array|null Registration details
-     */
-    private function getRegistrationDetails(?int $registration_id): ?array {
+     */    private function getRegistrationDetails(?int $registration_id): ?array {
         if (empty($registration_id)) {
             return null;
         }
         
-        $reg_stmt = $this->pdo->prepare("SELECT r.*, p.name as package_name, p.duration_text as duration, l.province 
+        $reg_stmt = $this->pdo->prepare("SELECT r.*, p.name as package_name, p.duration_text as duration, l.province,
+                                      r.vat_percent, r.vat_amount, r.purchase_type, r.invoice_allowed
                                       FROM registration r 
                                       LEFT JOIN package p ON r.package_id = p.id
                                       LEFT JOIN location l ON r.location_id = l.id

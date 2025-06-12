@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Renewal elements
     const renewalBtn = document.getElementById('renewal-btn');
     const renewalForm = document.getElementById('renewal-form');
+    
+    // Update Survey Account elements
+    const updateSurveyAccountsBtn = document.getElementById('update-survey-accounts');
+    const updateSurveyAccountModal = document.getElementById('update-survey-account-modal');
+    const addAccountRowBtn = document.getElementById('add-account-row');
+    const confirmUpdateAccountsBtn = document.getElementById('confirm-update-accounts');
+    
+    // Change Password elements
+    const changePasswordModal = document.getElementById('change-password-modal');
+    const confirmChangePasswordBtn = document.getElementById('confirm-change-password');
       // Theo dõi trạng thái lọc và tìm kiếm hiện tại
     let currentFilter = paginationConfig.currentFilter || 'all';
     let currentSearchTerm = '';
@@ -461,13 +471,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Close modal with Escape key
+      // Close modal with Escape key
     document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
-            closeModal();
+        if (event.key === 'Escape') {
+            if (modalOverlay && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+            if (updateSurveyAccountModal && updateSurveyAccountModal.classList.contains('active')) {
+                closeUpdateAccountModal();
+            }
+            if (changePasswordModal && changePasswordModal.classList.contains('active')) {
+                closeChangePasswordModal();
+            }
         }
     });
+    
+    // Update Survey Account button click handler
+    if (updateSurveyAccountsBtn) {
+        updateSurveyAccountsBtn.addEventListener('click', function() {
+            showUpdateAccountModal();
+        });
+    }
+    
+    // Add row to update accounts table
+    if (addAccountRowBtn) {
+        addAccountRowBtn.addEventListener('click', function() {
+            addAccountRow();
+        });
+    }
+    
+    // Confirm update accounts button handler
+    if (confirmUpdateAccountsBtn) {
+        confirmUpdateAccountsBtn.addEventListener('click', function() {
+            validateAndUpdateAccounts();
+        });
+    }
+    
+    // Change password confirmation button handler
+    if (confirmChangePasswordBtn) {
+        confirmChangePasswordBtn.addEventListener('click', function() {
+            changePassword();
+        });
+    }
     
     // Nếu đã chọn filter, tự động kích hoạt nút filter tương ứng
     if (currentFilter && currentFilter !== 'all') {
@@ -482,4 +527,208 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize renewal button state on page load
     updateRenewalButtonState();
 });
+
+// Show update account modal
+function showUpdateAccountModal() {
+    if (!document.getElementById('update-survey-account-modal')) return;
+    
+    // Clear any existing values
+    const inputs = document.querySelectorAll('#update-accounts-tbody input');
+    inputs.forEach(input => {
+        input.value = '';
+    });
+    
+    document.getElementById('update-survey-account-modal').classList.add('active');
+}
+
+// Close update account modal
+function closeUpdateAccountModal() {
+    if (!document.getElementById('update-survey-account-modal')) return;
+    document.getElementById('update-survey-account-modal').classList.remove('active');
+}
+
+// Add a new row to the update accounts table
+function addAccountRow() {
+    const tbody = document.getElementById('update-accounts-tbody');
+    if (!tbody) return;
+    
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" class="form-input username-input" placeholder="Tên đăng nhập"></td>
+        <td><input type="text" class="form-input password-input" placeholder="Mật khẩu"></td>
+    `;
+    
+    tbody.appendChild(newRow);
+}
+
+// Validate and update accounts
+function validateAndUpdateAccounts() {
+    // Collect all account credentials
+    const tbody = document.getElementById('update-accounts-tbody');
+    if (!tbody) return;
+    
+    const rows = tbody.querySelectorAll('tr');
+    const accounts = [];
+    
+    rows.forEach(row => {
+        const usernameInput = row.querySelector('.username-input');
+        const passwordInput = row.querySelector('.password-input');
+        
+        if (usernameInput && passwordInput && usernameInput.value.trim() && passwordInput.value.trim()) {
+            accounts.push({
+                username: usernameInput.value.trim(),
+                password: passwordInput.value.trim()
+            });
+        }
+    });
+    
+    if (accounts.length === 0) {
+        alert('Vui lòng nhập ít nhất một tài khoản để cập nhật quyền sở hữu.');
+        return;
+    }
+    
+    // Send to server for validation
+    const formData = new FormData();
+    formData.append('action', 'validate_accounts');
+    formData.append('accounts', JSON.stringify(accounts));
+    
+    // Disable the confirm button and show loading state
+    const confirmBtn = document.getElementById('confirm-update-accounts');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+    }
+    
+    fetch(baseUrl + '/public/handlers/rtk_account_handlers.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Re-enable the confirm button
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Xác nhận';
+        }
+        
+        if (data.success) {
+            // Show appropriate message based on validation results
+            if (data.all_valid) {
+                alert(`Cập nhật quyền sở hữu thành công cho ${data.updated_count} tài khoản!`);
+                closeUpdateAccountModal();
+                
+                // If accounts were updated, reload the page to show updated ownership
+                if (data.updated_count > 0) {
+                    window.location.reload();
+                }
+            } else {
+                let invalidAccounts = data.results.filter(result => !result.valid).map(result => result.username).join(', ');
+                alert(`Sai tên đăng nhập hoặc mật khẩu cho tài khoản: ${invalidAccounts}`);
+            }
+        } else {
+            alert(data.message || 'Có lỗi xảy ra khi xử lý yêu cầu.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
+        
+        // Re-enable the confirm button on error
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Xác nhận';
+        }
+    });
+}
+
+// Show change password modal
+window.showChangePasswordModal = function(account) {
+    if (!document.getElementById('change-password-modal') || !account) return;
+    
+    document.getElementById('cp-username').value = account.username;
+    document.getElementById('cp-current-password').value = account.password;
+    document.getElementById('cp-new-password').value = '';
+    document.getElementById('cp-confirm-password').value = '';
+    document.getElementById('cp-account-id').value = account.id;
+    
+    document.getElementById('change-password-modal').classList.add('active');
+};
+
+// Close change password modal
+function closeChangePasswordModal() {
+    if (!document.getElementById('change-password-modal')) return;
+    document.getElementById('change-password-modal').classList.remove('active');
+}
+
+// Process password change
+function changePassword() {
+    const accountId = document.getElementById('cp-account-id').value;
+    const newPassword = document.getElementById('cp-new-password').value;
+    const confirmPassword = document.getElementById('cp-confirm-password').value;
+    
+    if (!newPassword) {
+        alert('Vui lòng nhập mật khẩu mới.');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        alert('Mật khẩu mới và xác nhận mật khẩu không khớp.');
+        return;
+    }
+    
+    // Send to server for processing
+    const formData = new FormData();
+    formData.append('action', 'change_password');
+    formData.append('account_id', accountId);
+    formData.append('new_password', newPassword);
+    
+    // Disable the confirm button and show loading state
+    const confirmBtn = document.getElementById('confirm-change-password');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+    }
+    
+    fetch(baseUrl + '/public/handlers/rtk_account_handlers.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Re-enable the confirm button
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Xác nhận';
+        }
+        
+        if (data.success) {
+            alert('Đổi mật khẩu thành công!');
+            closeChangePasswordModal();
+            
+            // Update the password in the table
+            const accountRows = document.querySelectorAll('.accounts-table tbody tr');
+            accountRows.forEach(row => {
+                const checkbox = row.querySelector('.account-checkbox');
+                if (checkbox && checkbox.value === accountId) {
+                    const passwordCell = row.querySelector('td:nth-child(3)');
+                    if (passwordCell) {
+                        passwordCell.textContent = newPassword;
+                    }
+                }
+            });
+        } else {
+            alert(data.message || 'Có lỗi xảy ra khi xử lý yêu cầu.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
+        
+        // Re-enable the confirm button on error
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Xác nhận';
+        }
+    });
+}
 

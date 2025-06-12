@@ -18,6 +18,7 @@
     flex-direction: column;
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 500px; /* Đảm bảo tất cả card có chiều cao tối thiểu giống nhau */
 }
 
 .package-card:hover {
@@ -86,6 +87,11 @@
     color: var(--gray-400);
 }
 
+/* Flex spacer để đẩy các phần tử xuống cuối */
+.flex-spacer {
+    flex-grow: 1;
+}
+
 /* Package Selection Button */
 .btn-select-package {
     display: inline-block;
@@ -99,7 +105,6 @@
     text-decoration: none;
     transition: background-color 0.2s ease;
     cursor: pointer;
-    margin-top: auto;
     box-sizing: border-box;
 }
 
@@ -140,6 +145,26 @@
     font-size: var(--font-size-xs);
     font-weight: var(--font-semibold);
     z-index: 1;
+}
+
+/* --- Purchase Type Selector --- */
+.purchase-type-selector {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    height: 26px; /* Đảm bảo chiều cao cố định */
+    margin-bottom: 30px; /* Khoảng cách cố định giữa selector và nút */
+    margin-top: auto; /* Đẩy xuống cuối, trước nút */
+}
+
+.purchase-type-selector label {
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+}
+
+.purchase-type-selector input[type="radio"] {
+    margin-right: 5px;
 }
 
 /* --- Responsive Layout --- */

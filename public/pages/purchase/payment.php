@@ -131,25 +131,35 @@ $_SESSION['payment_data'] = $payment_data;
 
 // Override verified_total_price with session price if voucher is applied
 if (isset($_SESSION[$sessionKey]['voucher_code'])) {
-    $originalPrice = $payment_data['base_price_from_registration'] * $quantity + $payment_data['vat_amount_from_registration'];
+    // Tính lại tổng giá trị sau khi áp dụng voucher và VAT
+    $base_subtotal = $payment_data['base_price_from_registration'] * $quantity;
     $discountAmount = $_SESSION[$sessionKey]['voucher_discount'] ?? 0;
     
-    // Tính lại giá đúng, đảm bảo chỉ trừ một lần
-    $discountedPrice = $originalPrice - $discountAmount;
-    if ($discountedPrice < 0) $discountedPrice = 0;
+    // Giá sau giảm giá, trước thuế
+    $discounted_subtotal = $base_subtotal - $discountAmount;
+    if ($discounted_subtotal < 0) $discounted_subtotal = 0;
+    
+    // Tính VAT trên giá đã giảm giá
+    $vat_percent = $payment_data['vat_percent_from_registration'];
+    $vat_on_discounted = round($discounted_subtotal * ($vat_percent / 100));
+    
+    // Tổng giá cuối cùng
+    $final_price = $discounted_subtotal + $vat_on_discounted;
     
     // Log để debug
-    error_log("PAYMENT PAGE - Original: {$originalPrice}, Discount: {$discountAmount}, New: {$discountedPrice}");
+    error_log("PAYMENT PAGE - Base: {$base_subtotal}, Discount: {$discountAmount}, After discount: {$discounted_subtotal}, VAT: {$vat_on_discounted}, Final: {$final_price}");
     
     // Update session với giá đã tính lại
     if ($sessionKey === 'order') {
-        $_SESSION[$sessionKey]['total_price'] = $discountedPrice;
+        $_SESSION[$sessionKey]['total_price'] = $final_price;
+        $_SESSION[$sessionKey]['discounted_subtotal'] = $discounted_subtotal;
     } elseif ($sessionKey === 'renewal') {
-        $_SESSION[$sessionKey]['amount'] = $discountedPrice;
+        $_SESSION[$sessionKey]['amount'] = $final_price;
+        $_SESSION[$sessionKey]['discounted_subtotal'] = $discounted_subtotal;
     }
     
     // Cập nhật giá hiển thị
-    $verified_total_price = $discountedPrice;
+    $verified_total_price = $final_price;
 }
 
 // --- Tạo nội dung chuyển khoản (chỉ cần nếu không phải trial) ---
@@ -300,16 +310,15 @@ include $project_root_path . '/private/includes/header.php';
                                 echo 'Tăng thêm ' . $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] . ' tháng sử dụng';
                             }
                             ?>
-                        </div>
+                        </div>                    </div>
                     </div>
                 </div>
-                <?php endif; ?>                <div class="summary-item">
-                    <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
-                </div>
+                <?php endif; ?>
+                
+                <!-- Hiển thị thông tin giá gốc và giảm giá -->
                 <div class="summary-item">
-                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
-                    <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
+                    <span>Giá gốc:</span>
+                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
                 </div>
                 
                 <?php if (isset($_SESSION[$sessionKey]['voucher_code']) && isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0): ?>
@@ -317,11 +326,56 @@ include $project_root_path . '/private/includes/header.php';
                     <span>Giảm giá (<?php echo htmlspecialchars($_SESSION[$sessionKey]['voucher_code']); ?>):</span>
                     <strong>-<?php echo number_format($_SESSION[$sessionKey]['voucher_discount'], 0, ',', '.'); ?> đ</strong>
                 </div>
+                
+                <!-- Hiển thị giá sau khi giảm giá -->
+                <div class="summary-item">
+                    <span>Giá sau giảm giá:</span>
+                    <strong><?php 
+                    // Tính giá sau giảm giá, trước VAT
+                    $subtotal = $payment_data['base_price_from_registration'] * $quantity;
+                    $discounted_subtotal = isset($_SESSION[$sessionKey]['discounted_subtotal']) 
+                        ? $_SESSION[$sessionKey]['discounted_subtotal'] 
+                        : ($subtotal - $_SESSION[$sessionKey]['voucher_discount']);
+                    if ($discounted_subtotal < 0) $discounted_subtotal = 0;
+                    echo number_format($discounted_subtotal, 0, ',', '.'); 
+                    ?> đ</strong>
+                </div>
                 <?php endif; ?>
                 
-                <div class="summary-item summary-total">
+                <div class="summary-item">
+                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
+                    <strong><?php 
+                    // Hiển thị VAT tính trên giá đã giảm giá
+                    if (isset($_SESSION[$sessionKey]['voucher_code']) && isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0) {
+                        $subtotal = $payment_data['base_price_from_registration'] * $quantity;
+                        $discounted_subtotal = isset($_SESSION[$sessionKey]['discounted_subtotal']) 
+                            ? $_SESSION[$sessionKey]['discounted_subtotal'] 
+                            : ($subtotal - $_SESSION[$sessionKey]['voucher_discount']);
+                        if ($discounted_subtotal < 0) $discounted_subtotal = 0;
+                        $vat_on_discounted = round($discounted_subtotal * ($payment_data['vat_percent_from_registration'] / 100));
+                        echo number_format($vat_on_discounted, 0, ',', '.'); 
+                    } else {
+                        echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); 
+                    }
+                    ?> đ</strong>
+                </div>
+                  <div class="summary-item summary-total">
                     <span>Tổng thanh toán:</span>
-                    <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                    <strong id="total-price-display"><?php 
+                    // Tính lại tổng thanh toán dựa trên giá đã giảm giá + VAT
+                    if (isset($_SESSION[$sessionKey]['voucher_code']) && isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0) {
+                        $subtotal = $payment_data['base_price_from_registration'] * $quantity;
+                        $discounted_subtotal = isset($_SESSION[$sessionKey]['discounted_subtotal']) 
+                            ? $_SESSION[$sessionKey]['discounted_subtotal'] 
+                            : ($subtotal - $_SESSION[$sessionKey]['voucher_discount']);
+                        if ($discounted_subtotal < 0) $discounted_subtotal = 0;
+                        $vat_on_discounted = round($discounted_subtotal * ($payment_data['vat_percent_from_registration'] / 100));
+                        $final_price = $discounted_subtotal + $vat_on_discounted;
+                        echo number_format($final_price, 0, ',', '.');
+                    } else {
+                        echo number_format($verified_total_price, 0, ',', '.'); 
+                    }
+                    ?> đ</strong>
                 </div>
                 <?php endif; ?>
             </section>

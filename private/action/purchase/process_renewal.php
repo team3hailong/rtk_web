@@ -1,4 +1,4 @@
-<?php
+    <?php
 session_start();
 $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';
@@ -104,10 +104,26 @@ try {
         $end_date->modify("+{$additional_months} months");
         $end_time = $end_date->format('Y-m-d H:i:s');
     }
-    
-    // Tính tổng giá trị cho toàn bộ giao dịch
+      // Tính tổng giá trị cho toàn bộ giao dịch
     $base_price_per_account = $package['price'];
     $sub_total = $base_price_per_account * $total_accounts;
+      // Kiểm tra nếu có voucher giảm giá cần áp dụng vào giá gốc (trước VAT)
+    $discounted_sub_total = $sub_total;
+    $discount_amount = 0;
+    
+    if (isset($_SESSION['renewal']['voucher_id']) && isset($_SESSION['renewal']['voucher_discount'])) {
+        $discount_amount = $_SESSION['renewal']['voucher_discount'];
+        $discounted_sub_total = $sub_total - $discount_amount;
+        
+        // Đảm bảo giá sau giảm giá không âm
+        if ($discounted_sub_total < 0) {
+            $discounted_sub_total = 0;
+        }
+        
+        // Lưu thông tin giá gốc và giảm giá để hiển thị trên trang thanh toán
+        $_SESSION['renewal']['original_subtotal'] = $sub_total;
+        $_SESSION['renewal']['discounted_subtotal'] = $discounted_sub_total;
+    }
 
     $vat_percent = 0;
     $vat_amount = 0;
@@ -115,10 +131,11 @@ try {
 
     if ($purchase_type === 'company') {
         $vat_percent = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10;
-        $vat_amount = round($sub_total * ($vat_percent / 100));
+        // Tính VAT dựa trên giá đã giảm giá
+        $vat_amount = round($discounted_sub_total * ($vat_percent / 100));
         $invoice_allowed = 1;
     }
-    $total_price = $sub_total + $vat_amount;
+    $total_price = $discounted_sub_total + $vat_amount;
     
     // 1. Tạo một đăng ký mới cho tất cả tài khoản
     $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at) 
@@ -176,11 +193,12 @@ try {
     $_SESSION['is_renewal'] = true; 
     $_SESSION['renewal_account_ids'] = $selected_accounts;
     $_SESSION['purchase_type'] = $purchase_type; // Pass purchase type to payment page
-    
-    // Lưu thêm thông tin chi tiết cho trang thanh toán hiển thị
+      // Lưu thêm thông tin chi tiết cho trang thanh toán hiển thị
     $_SESSION['pending_renewal_details'] = [
         'total_accounts' => $total_accounts,
         'sub_total' => $sub_total,
+        'discounted_sub_total' => $discounted_sub_total,
+        'discount_amount' => $discount_amount,
         'vat_percent' => $vat_percent,
         'vat_amount' => $vat_amount,
         'total_price' => $total_price,

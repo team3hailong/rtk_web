@@ -17,14 +17,11 @@ if (!isset($_SESSION['user_id'])) {
 // --- Include Database and other required files ---
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/utils/csrf_helper.php';
+require_once $project_root_path . '/private/utils/user_data_helper.php';
 
 // --- Get User Data ---
-$db = new Database();
-$conn = $db->getConnection();
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT company_name, tax_code, company_address FROM user WHERE id = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user = get_user_invoice_data($user_id);
 
 // --- Include Header ---
 // Moved CSS link before header include

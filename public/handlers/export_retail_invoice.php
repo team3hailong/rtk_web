@@ -46,6 +46,31 @@ if (empty($retail_invoices)) {
     exit;
 }
 
+// Lọc bỏ các giao dịch có VAT hoặc được mua cho công ty - không cho xuất hóa đơn bán lẻ
+$filtered_invoices = [];
+$vat_tx_ids = []; // Danh sách các ID giao dịch có VAT
+foreach ($retail_invoices as $invoice) {
+    if (isset($invoice['has_vat']) && $invoice['has_vat'] === true) {
+        $vat_tx_ids[] = $invoice['id']; // Lưu ID giao dịch có VAT để thông báo
+    } else {
+        $filtered_invoices[] = $invoice; // Chỉ giữ lại các giao dịch không có VAT
+    }
+}
+$retail_invoices = $filtered_invoices;
+
+// Kiểm tra lại sau khi lọc VAT
+if (empty($retail_invoices)) {
+    $error_message = 'Giao dịch có thuế VAT không thể xuất hóa đơn bán lẻ.';
+    
+    if (!empty($vat_tx_ids)) {
+        $error_message .= ' Các giao dịch không hợp lệ: ' . implode(', ', $vat_tx_ids);
+    }
+    
+    http_response_code(400);
+    echo json_encode(['error' => $error_message]);
+    exit;
+}
+
 $tmp_dir = sys_get_temp_dir();
 $pdf_files = [];
 
@@ -251,8 +276,7 @@ foreach ($retail_invoices as $invoice) {
         </div>
         
         <div class="transaction-details info-section">
-            <h3>CHI TIẾT GIAO DỊCH</h3>
-            <table class="transaction-table">
+            <h3>CHI TIẾT GIAO DỊCH</h3>            <table class="transaction-table">
                 <thead>
                     <tr>
                         <th width="10%">STT</th>
@@ -266,13 +290,12 @@ foreach ($retail_invoices as $invoice) {
                     <tr>
                         <td>1</td>
                         <td>' . $product_name . '</td>
-                        <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
+                        <td>' . number_format((float)(($invoice['package_price'] ?? $invoice['amount']) / ($invoice['registration_details']['num_account'] ?? 1)), 0, ',', '.') . ' đ</td>
                         <td> '. htmlspecialchars((string)$invoice['registration_details']['num_account']) .'</td>
                         <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
                     </tr>';
       // Thêm thông tin chi tiết về gói dịch vụ nếu có
-    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {
-        if (!empty($invoice['registration_details']['province'])) {
+    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {        if (!empty($invoice['registration_details']['province'])) {
             $html .= '
                     <tr>
                         <td></td>
@@ -281,9 +304,7 @@ foreach ($retail_invoices as $invoice) {
         }
         
         
-    }
-    
-    // Tổng thanh toán
+    }    // Tổng thanh toán
     $html .= '
                 </tbody>
                 <tfoot>

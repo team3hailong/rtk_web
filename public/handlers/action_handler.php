@@ -46,7 +46,12 @@ $public_actions = [
     'auth/verify-email',
     'auth/process_forgot_password',
     'auth/process_reset_password',
-    'auth/process_logout'  // Thêm process_logout vào danh sách public actions
+    'auth/process_reset_password_otp',
+    'auth/process_logout',  // Thêm process_logout vào danh sách public actions
+    'auth/verify-email-otp', // Xác thực email bằng OTP
+    'auth/resend-email-otp', // Gửi lại mã OTP xác thực email
+    'auth/verify-reset-otp', // Xác thực mật khẩu bằng OTP
+    'auth/resend-reset-otp'  // Gửi lại mã OTP đặt lại mật khẩu
 ];
 
 // Check if the current action requires authentication
@@ -64,6 +69,11 @@ $csrf_exempt_actions = [
     'auth/verify-email',  // Verification qua email link không cần CSRF
     'auth/process_forgot_password',  // Form quên mật khẩu không cần CSRF
     'auth/process_reset_password',  // Form đặt lại mật khẩu không cần CSRF
+    'auth/process_reset_password_otp',  // Form đặt lại mật khẩu với OTP không cần CSRF
+    'auth/verify-email-otp', // Xác thực email OTP không cần CSRF
+    'auth/resend-email-otp', // Gửi lại OTP không cần CSRF
+    'auth/verify-reset-otp', // Xác thực OTP reset mật khẩu không cần CSRF
+    'auth/resend-reset-otp', // Gửi lại OTP reset mật khẩu không cần CSRF
     'purchase/apply_voucher',  // Voucher applications via AJAX
     'purchase/remove_voucher',  // Voucher removal via AJAX
 ];

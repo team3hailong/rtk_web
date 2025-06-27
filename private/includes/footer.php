@@ -27,5 +27,8 @@
     <!-- Session Activity Tracker - Chỉ tải khi người dùng đã đăng nhập -->
     <script src="<?php echo $base_url ?? ''; ?>/public/assets/js/session_tracker.js"></script>
     <?php endif; ?>
+    
+    <!-- Include Kinh Tuyen Truc Popup Component -->
+    <?php include_once $project_root_path . '/private/includes/popup-component.php'; ?>
 </body>
 </html>

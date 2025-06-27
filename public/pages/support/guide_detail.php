@@ -41,11 +41,7 @@ include $project_root_path . '/private/includes/header.php';
                     <?php endif; ?>
                     <span>Ngày đăng: <?php echo date('d/m/Y', strtotime($article['created_at'])); ?></span>
                 </div>
-                <?php if (!empty($article['thumbnail'])): ?>
-                    <img class="guide-thumbnail"
-                         src="<?php echo $admin_site . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
-                         alt="Thumbnail">
-                <?php endif; ?>
+                
                 <div class="guide-content"><?php echo $article['content']; ?></div>
                 <div class="guide-back-container"><a href="guide.php" class="guide-back-link">&larr; Quay lại danh sách bài viết</a></div>
             </div>

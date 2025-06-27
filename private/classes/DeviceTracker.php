@@ -18,7 +18,8 @@ class DeviceTracker {
     
     /**
      * Lưu hoặc cập nhật thông tin thiết bị và IP của người dùng
-     *     * @param int $userId ID của người dùng
+     * 
+     * @param int $userId ID của người dùng
      * @param string $deviceFingerprint Vân tay thiết bị
      * @param string $ipAddress Địa chỉ IP
      * @param string $userAgent Thông tin User-Agent
@@ -96,6 +97,86 @@ class DeviceTracker {
         } catch (PDOException $e) {
             error_log("DeviceTracker error: " . $e->getMessage());
             return false;
+        }
+    }
+    
+    /**
+     * Đánh dấu thiết bị đã sử dụng gói trial và thiết lập thời gian hết hạn
+     * 
+     * @param string $deviceFingerprint Vân tay thiết bị
+     * @param string $ipAddress Địa chỉ IP
+     * @return bool True nếu thành công, ngược lại False
+     */
+    public function markTrialUsed($deviceFingerprint, $ipAddress) {
+        try {
+            // Thiết lập thời gian hết hạn là 3 tháng (90 ngày) từ hiện tại
+            $expireDate = date('Y-m-d H:i:s', strtotime('+90 days'));
+            
+            $stmt = $this->conn->prepare("
+                UPDATE user_devices 
+                SET trial_used = 1, 
+                    trial_expire_date = :expire_date 
+                WHERE device_fingerprint = :fingerprint OR ip_address = :ip_address
+            ");
+            $stmt->bindParam(':expire_date', $expireDate);
+            $stmt->bindParam(':fingerprint', $deviceFingerprint);
+            $stmt->bindParam(':ip_address', $ipAddress);
+            $stmt->execute();
+            
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("DeviceTracker markTrialUsed error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Kiểm tra trạng thái sử dụng gói trial của thiết bị
+     * 
+     * @param string $deviceFingerprint Vân tay thiết bị
+     * @param string $ipAddress Địa chỉ IP
+     * @return array Thông tin trạng thái trial với các key: trial_used, days_remaining, trial_expire_date
+     */
+    public function getTrialStatus($deviceFingerprint, $ipAddress) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT trial_used, trial_expire_date
+                FROM user_devices 
+                WHERE device_fingerprint = :fingerprint OR ip_address = :ip_address
+                LIMIT 1
+            ");
+            $stmt->bindParam(':fingerprint', $deviceFingerprint);
+            $stmt->bindParam(':ip_address', $ipAddress);
+            $stmt->execute();
+            
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Nếu không có kết quả hoặc chưa dùng trial
+            if (!$result || empty($result['trial_used'])) {
+                return [
+                    'trial_used' => false,
+                    'days_remaining' => 0,
+                    'trial_expire_date' => null
+                ];
+            }
+            
+            // Tính số ngày còn lại
+            $expireDate = strtotime($result['trial_expire_date']);
+            $currentDate = time();
+            $daysRemaining = max(0, ceil(($expireDate - $currentDate) / (60 * 60 * 24)));
+            
+            return [
+                'trial_used' => (bool)$result['trial_used'],
+                'days_remaining' => $daysRemaining,
+                'trial_expire_date' => $result['trial_expire_date']
+            ];
+        } catch (PDOException $e) {
+            error_log("DeviceTracker getTrialStatus error: " . $e->getMessage());
+            return [
+                'trial_used' => false,
+                'days_remaining' => 0,
+                'trial_expire_date' => null
+            ];
         }
     }
     

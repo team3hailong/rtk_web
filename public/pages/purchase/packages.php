@@ -28,8 +28,12 @@ $service = new PurchaseService();
 $user_has_registration = $service->userHasRegistration($user_id);
 $survey_account_count = $service->getUserSurveyAccountCount($user_id);
 
-// Kiểm tra thiết bị và IP đã được sử dụng trước đây hay chưa
+// Kiểm tra thiết bị và IP đã sử dụng gói trial hay chưa và trạng thái còn lại
 $show_trial_package = true;
+$trial_button_disabled = false;
+$trial_days_remaining = 0;
+$trial_expire_date = null;
+
 try {
     // Lấy thông tin vân tay thiết bị và IP từ session hoặc từ request
     $device_fingerprint = $_SESSION['device_fingerprint'] ?? $_POST['device_fingerprint'] ?? '';
@@ -41,19 +45,23 @@ try {
         $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Khởi tạo DeviceTracker và kiểm tra
+        // Khởi tạo DeviceTracker và kiểm tra trạng thái trial
         $deviceTracker = new DeviceTracker($pdo);
-        $device_registered = $deviceTracker->isDeviceOrIPRegistered($device_fingerprint, $ip_address);
         
-        // Nếu thiết bị hoặc IP đã tồn tại, ẩn gói trial
-        if ($device_registered) {
-            $show_trial_package = false;
+        // Luôn hiển thị gói trial nhưng disable nút nếu đã sử dụng
+        $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip_address);
+        
+        if ($trialStatus['trial_used']) {
+            $trial_button_disabled = true;
+            $trial_days_remaining = $trialStatus['days_remaining'];
+            $trial_expire_date = $trialStatus['trial_expire_date'];
+            
+            // Lưu vào session để có sẵn cho các trang khác
+            $_SESSION['trial_status'] = $trialStatus;
         }
     }
 } catch (Exception $e) {
-    error_log("Error checking device fingerprint: " . $e->getMessage());
-    // Để an toàn, vẫn hiển thị gói trial nếu có lỗi
-    $show_trial_package = true;
+    error_log("Error checking trial status: " . $e->getMessage());
 }
 
 // Lấy tất cả các gói dịch vụ
@@ -81,14 +89,9 @@ include $project_root_path . '/private/includes/header.php';
             <?php if (empty($all_packages)): ?>
                 <p class="text-center text-gray-500 col-span-full">Hiện tại không có gói dịch vụ nào.</p>
             <?php else: ?>
-                <?php foreach ($all_packages as $package): ?>                    <?php                        // --- LOGIC ẨN GÓI DÙNG THỬ ---
-                        // Ẩn gói trial trong các trường hợp:
-                        // 1. Người dùng đã có tài khoản survey_account
-                        // 2. Thiết bị hoặc IP đã được sử dụng trước đó (đã đăng ký)
-                        if ($package['package_id'] === 'trial_7d' && ($survey_account_count > 0 || !$show_trial_package)) {
-                            continue; // Bỏ qua gói dùng thử
-                        }
-                        // --- KẾT THÚC LOGIC ẨN ---
+                <?php foreach ($all_packages as $package): ?>                    <?php                        // --- LOGIC GÓI DÙNG THỬ ---
+                        // Luôn hiển thị gói dùng thử 7 ngày (đã bỏ điều kiện ẩn)
+                        // --- KẾT THÚC LOGIC ---
 
                         // Decode features JSON
                         $features = json_decode($package['features_json'], true); // true for associative array
@@ -146,9 +149,16 @@ include $project_root_path . '/private/includes/header.php';
                         <?php endif; ?>
 
                         <!-- Nút bấm với link chính xác -->
+                        <?php if ($package['package_id'] === 'trial_7d' && $trial_button_disabled): ?>
+                        <button class="<?php echo $button_classes; ?> disabled" disabled>
+                            <?php echo htmlspecialchars($package['button_text']); ?> 
+                            <span class="countdown">(<?php echo $trial_days_remaining; ?> ngày nữa)</span>
+                        </button>
+                        <?php else: ?>
                         <a href="#" data-package-id="<?php echo htmlspecialchars($package['package_id']); ?>" class="<?php echo $button_classes; ?> select-package-button">
                             <?php echo htmlspecialchars($package['button_text']); ?>
                         </a>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -198,3 +208,112 @@ document.addEventListener('DOMContentLoaded', function() {
 // --- Include Footer ---
 include $project_root_path . '/private/includes/footer.php';
 ?>
+
+<!-- Trial Status Notification Modal -->
+<div id="trialStatusModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3>Thông báo về gói dùng thử</h3>
+        <p>Bạn đã kích hoạt gói dùng thử 7 ngày. Bạn sẽ phải đợi <strong><span id="trialCooldownDays">90</span> ngày</strong> trước khi có thể đăng ký gói dùng thử khác.</p>
+        <p>Gói dùng thử sẽ được mở lại vào: <strong><span id="trialExpireDate"></span></strong></p>
+        <button id="closeTrialModal" class="btn btn-primary">Đã hiểu</button>
+    </div>
+</div>
+
+<!-- Thêm CSS cho modal -->
+<style>
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: var(--rounded-lg);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.close-modal {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.btn-primary {
+    margin-top: 1rem;
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-600);
+    color: white;
+    border: none;
+    border-radius: var(--rounded-md);
+    cursor: pointer;
+    font-weight: var(--font-semibold);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-700);
+}
+</style>
+
+<!-- Script để hiển thị modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    <?php if (isset($_SESSION['trial_status']) && $_SESSION['trial_status']['trial_used']): ?>
+    // Kiểm tra nếu người dùng vừa kích hoạt trial hoặc có thông tin trial đã sử dụng
+    const modal = document.getElementById('trialStatusModal');
+    const closeBtn = document.querySelector('.close-modal');
+    const closeModalBtn = document.getElementById('closeTrialModal');
+    const daysElement = document.getElementById('trialCooldownDays');
+    const expireDateElement = document.getElementById('trialExpireDate');
+    
+    // Hiển thị số ngày và ngày hết hạn
+    daysElement.textContent = '<?php echo $_SESSION['trial_status']['days_remaining']; ?>';
+    
+    // Format ngày hết hạn
+    const expireDate = new Date('<?php echo $_SESSION['trial_status']['trial_expire_date']; ?>');
+    const formattedDate = expireDate.toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    expireDateElement.textContent = formattedDate;
+    
+    // Hiển thị modal nếu vừa kích hoạt
+    <?php if (isset($_SESSION['just_activated_trial']) && $_SESSION['just_activated_trial']): ?>
+    modal.style.display = 'flex';
+    delete <?php unset($_SESSION['just_activated_trial']); ?>;
+    <?php endif; ?>
+    
+    // Xử lý đóng modal
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    closeModalBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+    
+    // Đóng khi click bên ngoài
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+    <?php endif; ?>
+});
+</script>

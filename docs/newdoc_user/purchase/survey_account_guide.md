@@ -96,7 +96,7 @@ Khi tài khoản sắp hết hạn, bạn có thể gia hạn:
    - Xem tổng chi phí gia hạn
    - Tiếp tục quy trình thanh toán
 
-> **Lưu ý**: Các tài khoản dùng thử (gói trial) không thể được gia hạn. Bạn cần đăng ký gói dịch vụ mới cho những tài khoản này.
+> **Lưu ý**: Gói dùng thử 7 ngày luôn hiển thị và có thể đăng ký bất cứ lúc nào.
 
 ## Xuất dữ liệu tài khoản
 

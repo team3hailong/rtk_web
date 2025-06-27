@@ -1,0 +1,8 @@
+[27-Jun-2025 09:05:05 Asia/Ho_Chi_Minh] Using base price from payment_data: 0
+[27-Jun-2025 09:05:05 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 7, Location: 63, Accounts: 1
+[27-Jun-2025 09:05:10 Asia/Ho_Chi_Minh] Commission calculation skipped: Transaction ID 10027 has status 'pending'
+[27-Jun-2025 09:26:59 Asia/Ho_Chi_Minh] Using base price from payment_data: 0
+[27-Jun-2025 09:26:59 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 7, Location: 63, Accounts: 1
+[27-Jun-2025 09:27:02 Asia/Ho_Chi_Minh] Commission calculation skipped: Transaction ID 10028 has status 'pending'
+[27-Jun-2025 09:27:40 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

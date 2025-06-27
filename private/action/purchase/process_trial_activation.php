@@ -134,9 +134,24 @@ try {
         throw new Exception('Không tìm thấy giao dịch cần cập nhật.');
     }
 
-    // 11. Ghi log hoạt động
+    // 11. Đánh dấu thiết bị đã sử dụng gói trial
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
     $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
+    $device_fingerprint = $_SESSION['device_fingerprint'] ?? '';
+    
+    // Đánh dấu thiết bị đã sử dụng trial
+    if (!empty($device_fingerprint) || !empty($ip)) {
+        require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/DeviceTracker.php';
+        $deviceTracker = new DeviceTracker($conn);
+        $deviceTracker->markTrialUsed($device_fingerprint, $ip);
+        
+        // Lưu thời điểm hết hạn vào session để hiển thị ngay
+        $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip);
+        $_SESSION['trial_status'] = $trialStatus;
+        $_SESSION['just_activated_trial'] = true; // Mark that trial was just activated
+    }
+
+    // 12. Ghi log hoạt động
     $notify_content = 'Kích hoạt tài khoản dùng thử cho đăng ký #' . $registration_id;
     $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, notify_content, created_at) VALUES (?, 'trial_activation', 'registration', ?, ?, ?, ?, NOW())");
     $stmt->execute([$user_id, $registration_id, $ip, $ua, $notify_content]);
@@ -144,7 +159,9 @@ try {
     $conn->commit();
     log_trial('Kích hoạt thành công', $user_id, $registration_id, 'success', ['username' => $username, 'start' => $start, 'end' => $end]);
     $_SESSION['success'] = "Kích hoạt thành công! Tài khoản RTK của bạn đã được tạo.";
-    header('Location: ' . BASE_URL . '/public/pages/rtk_accountmanagement.php');
+    
+    // Redirect to packages page to show the disabled trial button with countdown
+    header('Location: ' . BASE_URL . '/public/pages/purchase/packages.php?trial_activated=true');
     exit;
 
 } catch (Exception $e) {

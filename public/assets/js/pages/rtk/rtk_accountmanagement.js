@@ -63,10 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Thêm sự kiện cho từng checkbox
     accountCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
-            // Check if this is a package_id = 7 account and show warning if it's selected
-            if (checkbox.checked && checkbox.dataset.packageId === "7") {
-                alert('Tài khoản này sử dụng gói dùng thử và không thể gia hạn.');
-            }
+            // Removed warning for trial accounts (package_id = 7)
             
             updateExportButtonState();
             updateRenewalButtonState();
@@ -117,19 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; 
             }
             
-            // Check if any selected account has package_id = 7
-            let hasPackage7 = false;
-            checkedBoxes.forEach(cb => {
-                if (cb.dataset.packageId === "7") {
-                    hasPackage7 = true;
-                }
-            });
-            
-            if (hasPackage7) {
-                alert('Một hoặc nhiều tài khoản được chọn không thể gia hạn vì đang sử dụng gói dùng thử.');
-                e.preventDefault();
-                return;
-            }
+            // Removed restriction for trial accounts (package_id = 7)
 
             // Add hidden input for each selected account
             checkedBoxes.forEach(cb => {

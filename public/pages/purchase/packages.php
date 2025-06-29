@@ -48,16 +48,24 @@ try {
         // Khởi tạo DeviceTracker và kiểm tra trạng thái trial
         $deviceTracker = new DeviceTracker($pdo);
         
-        // Luôn hiển thị gói trial nhưng disable nút nếu đã sử dụng
-        $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip_address);
-        
-        if ($trialStatus['trial_used']) {
+        // Kiểm tra trạng thái trial dựa trên thiết bị và tài khoản
+        $trialStatusDevice = $deviceTracker->getTrialStatus($device_fingerprint, $ip_address);
+        $trialStatusUser = $deviceTracker->getUserTrialStatus($user_id);
+        $trialUsed = $trialStatusDevice['trial_used'] || $trialStatusUser['trial_used'];
+        if ($trialUsed) {
             $trial_button_disabled = true;
-            $trial_days_remaining = $trialStatus['days_remaining'];
-            $trial_expire_date = $trialStatus['trial_expire_date'];
-            
+            // Chọn expire date và days remaining ưu tiên user nếu có
+            if ($trialStatusUser['trial_used']) {
+                $trial_days_remaining = $trialStatusUser['days_remaining'];
+                $trial_expire_date = $trialStatusUser['trial_expire_date'];
+                $combinedStatus = $trialStatusUser;
+            } else {
+                $trial_days_remaining = $trialStatusDevice['days_remaining'];
+                $trial_expire_date = $trialStatusDevice['trial_expire_date'];
+                $combinedStatus = $trialStatusDevice;
+            }
             // Lưu vào session để có sẵn cho các trang khác
-            $_SESSION['trial_status'] = $trialStatus;
+            $_SESSION['trial_status'] = $combinedStatus;
         }
     }
 } catch (Exception $e) {
@@ -152,7 +160,7 @@ include $project_root_path . '/private/includes/header.php';
                         <?php if ($package['package_id'] === 'trial_7d' && $trial_button_disabled): ?>
                         <button class="<?php echo $button_classes; ?> disabled" disabled>
                             <?php echo htmlspecialchars($package['button_text']); ?> 
-                            <span class="countdown">(<?php echo $trial_days_remaining; ?> ngày nữa)</span>
+                            <span class="countdown">(Không thể đăng kí)</span>
                         </button>
                         <?php else: ?>
                         <a href="#" data-package-id="<?php echo htmlspecialchars($package['package_id']); ?>" class="<?php echo $button_classes; ?> select-package-button">

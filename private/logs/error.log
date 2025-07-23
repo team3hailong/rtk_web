@@ -6,3 +6,105 @@
 [27-Jun-2025 09:27:02 Asia/Ho_Chi_Minh] Commission calculation skipped: Transaction ID 10028 has status 'pending'
 [27-Jun-2025 09:27:40 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
                 (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[27-Jun-2025 15:31:34 Asia/Ho_Chi_Minh] Using base price from payment_data: 0
+[27-Jun-2025 15:31:34 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 7, Location: 63, Accounts: 1
+[27-Jun-2025 15:31:40 Asia/Ho_Chi_Minh] Using base price from payment_data: 0
+[27-Jun-2025 15:31:40 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 7, Location: 54, Accounts: 1
+[27-Jun-2025 15:31:42 Asia/Ho_Chi_Minh] Commission calculation skipped: Transaction ID 10030 has status 'pending'
+[29-Jun-2025 09:17:16 Asia/Ho_Chi_Minh] Using base price from payment_data: 0
+[29-Jun-2025 09:17:16 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 7, Location: 51, Accounts: 1
+[29-Jun-2025 09:17:19 Asia/Ho_Chi_Minh] Commission calculation skipped: Transaction ID 10027 has status 'pending'
+[04-Jul-2025 16:14:06 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[04-Jul-2025 16:17:15 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[04-Jul-2025 16:17:15 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 27, Accounts: 1
+[07-Jul-2025 10:53:57 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[07-Jul-2025 10:59:37 Asia/Ho_Chi_Minh] Process Order Error: Missing or invalid input. UserID: 10017, PackageID: 4, Qty: , LocationID: 24, PurchaseType: individual
+[07-Jul-2025 10:59:55 Asia/Ho_Chi_Minh] Process Order Error: Missing or invalid input. UserID: 10017, PackageID: 4, Qty: , LocationID: 24, PurchaseType: individual
+[07-Jul-2025 11:00:17 Asia/Ho_Chi_Minh] Using base price from payment_data: 12000000
+[07-Jul-2025 11:00:17 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 54, Accounts: 2
+[07-Jul-2025 11:00:17 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 12000000 for registration ID 10031
+[07-Jul-2025 11:00:51 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[07-Jul-2025 11:00:51 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 24, Accounts: 1
+[07-Jul-2025 11:01:22 Asia/Ho_Chi_Minh] Voucher calculation: Original: 12000000, Discount: 12000000, New Amount: 0, Type: percentage_discount
+[07-Jul-2025 11:01:23 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[07-Jul-2025 11:01:23 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 24, Accounts: 1
+[07-Jul-2025 11:01:23 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 6000000 for registration ID 10032
+[07-Jul-2025 11:01:23 Asia/Ho_Chi_Minh] PAYMENT PAGE - Base: 12000000, Discount: 12000000, After discount: 0, VAT: 0, Final: 0
+[07-Jul-2025 11:01:23 Asia/Ho_Chi_Minh] Payment Page: Updated purchase transaction_history amount to 0 for registration ID 10031
+[07-Jul-2025 11:51:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[07-Jul-2025 11:51:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 63, Accounts: 1
+[09-Jul-2025 16:46:52 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[09-Jul-2025 16:46:52 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 51, Accounts: 1
+[10-Jul-2025 16:35:35 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[10-Jul-2025 16:38:25 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[10-Jul-2025 16:38:25 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: 54, Accounts: 1
+[14-Jul-2025 18:51:40 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[14-Jul-2025 18:55:53 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[14-Jul-2025 19:03:12 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:03:12 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:06:10 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:06:10 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:17:22 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:17:22 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:17:48 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:17:48 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:18:25 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:18:25 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:18:56 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 29
+[14-Jul-2025 19:18:56 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:18:59 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 29
+[14-Jul-2025 19:18:59 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[14-Jul-2025 19:26:24 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[14-Jul-2025 19:26:24 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[15-Jul-2025 14:57:01 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[15-Jul-2025 14:57:01 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 24, Accounts: 1
+[15-Jul-2025 14:57:14 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[15-Jul-2025 14:57:14 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 51, Accounts: 1
+[16-Jul-2025 10:09:54 Asia/Ho_Chi_Minh] Process Order Error: Missing or invalid input. UserID: 10017, PackageID: 4, Qty: , LocationID: 55, PurchaseType: individual
+[16-Jul-2025 10:10:35 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[16-Jul-2025 10:10:35 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 13, Accounts: 1
+[16-Jul-2025 10:35:42 Asia/Ho_Chi_Minh] Process Order Error: Missing or invalid input. UserID: 10017, PackageID: 4, Qty: , LocationID: 55, PurchaseType: individual
+[16-Jul-2025 10:36:07 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[16-Jul-2025 10:36:07 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 55, Accounts: 1
+[18-Jul-2025 15:50:24 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[18-Jul-2025 15:57:45 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[18-Jul-2025 15:57:45 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 51, Accounts: 1
+[19-Jul-2025 10:29:48 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[19-Jul-2025 10:29:48 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 3, Accounts: 1
+[21-Jul-2025 08:10:47 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[21-Jul-2025 08:10:47 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 24, Accounts: 1
+[21-Jul-2025 08:14:12 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[21-Jul-2025 08:14:12 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 3, Accounts: 1
+[21-Jul-2025 08:54:21 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[21-Jul-2025 08:54:21 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 24, Accounts: 1
+[21-Jul-2025 09:07:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[21-Jul-2025 09:07:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 24, Accounts: 2
+[21-Jul-2025 12:24:58 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[21-Jul-2025 12:27:59 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[21-Jul-2025 12:27:59 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 24, Accounts: 1
+[21-Jul-2025 14:11:22 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[21-Jul-2025 14:52:49 Asia/Ho_Chi_Minh] Using base price from payment_data: 3500000
+[21-Jul-2025 14:52:49 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 3, Location: 51, Accounts: 1
+[21-Jul-2025 16:07:30 Asia/Ho_Chi_Minh] PHP Error [2]: Trying to access array offset on false in /home/qeqlwgvdhosting/public_html/public/handlers/rtk_account_handlers.php on line 88
+[21-Jul-2025 16:10:56 Asia/Ho_Chi_Minh] PHP Error [2]: Trying to access array offset on false in /home/qeqlwgvdhosting/public_html/public/handlers/rtk_account_handlers.php on line 88
+[21-Jul-2025 18:46:05 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php on line 232
+[21-Jul-2025 18:46:05 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/private/action/purchase/process_renewal.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[23-Jul-2025 14:28:36 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[23-Jul-2025 14:28:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 54, Accounts: 1
+[23-Jul-2025 14:30:54 Asia/Ho_Chi_Minh] General error uploading payment proof: No pending transaction found for this registration.
+[23-Jul-2025 15:01:49 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[23-Jul-2025 15:24:39 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

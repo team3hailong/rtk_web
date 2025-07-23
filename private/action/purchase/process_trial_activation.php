@@ -39,6 +39,23 @@ try {
     $reg = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$reg) throw new Exception('Đăng ký không tồn tại hoặc đã xử lý.');
     if ($reg['price'] > 0) throw new Exception('Gói này không phải dùng thử.');
+    
+    // 1.5. Kiểm tra xem người dùng đã từng dùng gói trial trước đó chưa
+    require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/DeviceTracker.php';
+    $deviceTracker = new DeviceTracker($conn);
+    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+    $device_fingerprint = $_SESSION['device_fingerprint'] ?? '';
+    
+    // Kiểm tra cả thiết bị và user_id
+    $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip, $user_id);
+    if ($trialStatus['trial_used']) {
+        $reason = $trialStatus['reason'] ?? 'unknown';
+        if ($reason == 'user') {
+            throw new Exception('Tài khoản của bạn đã sử dụng gói dùng thử trước đây.');
+        } else {
+            throw new Exception('Thiết bị này đã được sử dụng để đăng ký gói dùng thử trước đây.');
+        }
+    }
 
     // 2. Kiểm tra đã có tài khoản RTK chưa
     $stmt = $conn->prepare("SELECT COUNT(*) FROM survey_account WHERE registration_id = ? AND deleted_at IS NULL");
@@ -134,22 +151,20 @@ try {
         throw new Exception('Không tìm thấy giao dịch cần cập nhật.');
     }
 
-    // 11. Đánh dấu thiết bị đã sử dụng gói trial
-    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+    // 11. Đánh dấu thiết bị và tài khoản người dùng đã sử dụng gói trial
     $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    $device_fingerprint = $_SESSION['device_fingerprint'] ?? '';
     
-    // Đánh dấu thiết bị đã sử dụng trial
-    if (!empty($device_fingerprint) || !empty($ip)) {
-        require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/DeviceTracker.php';
-        $deviceTracker = new DeviceTracker($conn);
-        $deviceTracker->markTrialUsed($device_fingerprint, $ip);
-        
-        // Lưu thời điểm hết hạn vào session để hiển thị ngay
-        $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip);
-        $_SESSION['trial_status'] = $trialStatus;
-        $_SESSION['just_activated_trial'] = true; // Mark that trial was just activated
-    }
+    // Đánh dấu cả thiết bị và user_id
+    $deviceTracker->markTrialUsed($device_fingerprint, $ip, $user_id);
+    
+    // Lưu thời điểm hết hạn vào session để hiển thị ngay
+    $trialStatus = $deviceTracker->getTrialStatus($device_fingerprint, $ip, $user_id);
+    $_SESSION['trial_status'] = $trialStatus;
+    $_SESSION['just_activated_trial'] = true; // Mark that trial was just activated
+    
+    // Log về việc đánh dấu user đã dùng trial
+    log_trial('Đã đánh dấu user_id=' . $user_id . ' và device=' . $device_fingerprint . ' đã dùng trial', 
+              $user_id, $registration_id, 'info');
 
     // 12. Ghi log hoạt động
     $notify_content = 'Kích hoạt tài khoản dùng thử cho đăng ký #' . $registration_id;

@@ -97,6 +97,7 @@ try {
         $deviceTracker = new DeviceTracker($pdo);
 
         
+<<<<<<< HEAD
 
         // Kiểm tra trạng thái trial dựa trên thiết bị và tài khoản
 
@@ -134,6 +135,26 @@ try {
 
             $_SESSION['trial_status'] = $combinedStatus;
 
+=======
+        // Kiểm tra trạng thái trial dựa trên thiết bị và tài khoản
+        $trialStatusDevice = $deviceTracker->getTrialStatus($device_fingerprint, $ip_address);
+        $trialStatusUser = $deviceTracker->getUserTrialStatus($user_id);
+        $trialUsed = $trialStatusDevice['trial_used'] || $trialStatusUser['trial_used'];
+        if ($trialUsed) {
+            $trial_button_disabled = true;
+            // Chọn expire date và days remaining ưu tiên user nếu có
+            if ($trialStatusUser['trial_used']) {
+                $trial_days_remaining = $trialStatusUser['days_remaining'];
+                $trial_expire_date = $trialStatusUser['trial_expire_date'];
+                $combinedStatus = $trialStatusUser;
+            } else {
+                $trial_days_remaining = $trialStatusDevice['days_remaining'];
+                $trial_expire_date = $trialStatusDevice['trial_expire_date'];
+                $combinedStatus = $trialStatusDevice;
+            }
+            // Lưu vào session để có sẵn cho các trang khác
+            $_SESSION['trial_status'] = $combinedStatus;
+>>>>>>> 8ad2d97dd71bb09bcf5520cb895b6701c5b7df12
         }
 
     }
@@ -321,9 +342,13 @@ include $project_root_path . '/private/includes/header.php';
                         <button class="<?php echo $button_classes; ?> disabled" disabled>
 
                             <?php echo htmlspecialchars($package['button_text']); ?> 
+<<<<<<< HEAD
 
                             <span class="countdown" id="trialCountdown"><?php echo $trial_days_remaining; ?> ngày</span>
 
+=======
+                            <span class="countdown">(Không thể đăng kí)</span>
+>>>>>>> 8ad2d97dd71bb09bcf5520cb895b6701c5b7df12
                         </button>
 
                         <?php else: ?>

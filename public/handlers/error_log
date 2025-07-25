@@ -198,3 +198,67 @@
 [23-Jul-2025 07:31:03 UTC] [CSRF DEBUG] User: 97 has 1 tokens in session
 [23-Jul-2025 07:35:20 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
                 (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 08:02:15 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 08:26:02 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 08:26:10 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 08:54:58 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 09:22:56 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 09:45:35 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 09:45:52 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 09:57:04 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 09:57:11 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 15:10:01 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[23-Jul-2025 16:03:44 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 01:18:42 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 01:21:02 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 02:26:04 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 02:26:09 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 02:36:38 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 03:35:09 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 06:19:01 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 08:39:41 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 08:40:29 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 08:40:33 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 10:28:10 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 10:31:29 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 12:39:42 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 12:39:45 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 12:39:54 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[24-Jul-2025 12:41:17 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[25-Jul-2025 01:20:25 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[25-Jul-2025 11:15:43 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[25-Jul-2025 11:21:48 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[25-Jul-2025 12:21:12 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[25-Jul-2025 13:26:49 UTC] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1

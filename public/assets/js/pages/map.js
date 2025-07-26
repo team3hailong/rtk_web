@@ -208,7 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // Tạo popup HTML
             const popupContent = `
                 <div class="distance-calculator">
-                    <h3>Tính khoảng cáchTính khoảng cách                     ${stationOptions}
+                    <h3>Tính khoảng cách đến trạm</h3>
+                    <p><small>Khoảng cách được tính theo đường chim bay đến trạm, có sai số 1km-1.5km</small></p>
+                    
+                    <div class="form-group">
+                        <label for="station-select">Chọn trạm:</label>
+                        <select id="station-select" class="form-control">
+                            ${stationOptions}
                         </select>
                     </div>
                     

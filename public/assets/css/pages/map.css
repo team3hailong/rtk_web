@@ -95,6 +95,128 @@
     position: relative;
 }
 
+/* Styles for distance calculator popup */
+.distance-calculator {
+    font-family: inherit;
+    color: var(--gray-800);
+    padding: 10px;
+    max-width: 350px;
+}
+
+.distance-calculator h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color, #3498db);
+    border-bottom: 1px solid var(--gray-200);
+    padding-bottom: 8px;
+}
+
+.distance-calculator p small {
+    font-size: 12px;
+    color: var(--gray-600);
+}
+
+.distance-calculator .form-group {
+    margin-bottom: 15px;
+}
+
+.distance-calculator label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.distance-calculator .form-control {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.distance-calculator select.form-control {
+    background-color: white;
+    height: 36px;
+}
+
+.distance-calculator .btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.distance-calculator .btn-primary {
+    background-color: var(--primary-color, #3498db);
+    color: white;
+    width: 100%;
+    font-weight: 500;
+}
+
+.distance-calculator .btn-primary:hover {
+    background-color: var(--primary-dark, #2980b9);
+}
+
+.distance-calculator .btn-secondary {
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+}
+
+.distance-calculator .btn-secondary:hover {
+    background-color: var(--gray-300);
+}
+
+.distance-calculator #result-container {
+    background-color: var(--gray-50);
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.distance-calculator #result-container h4 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: var(--gray-800);
+}
+
+.distance-calculator #distance-result h3 {
+    border-bottom: none;
+    font-size: 22px;
+    color: var(--success-color, #2ecc71);
+    margin: 10px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Custom popup styles to ensure it's above controls */
+.distance-calculator-popup {
+    z-index: 1000 !important;
+}
+
+.distance-calculator-popup .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+}
+
+.distance-calculator-popup .leaflet-popup-tip-container {
+    left: 50%;
+    margin-left: -10px;
+}
+
+/* Button style for calculate distance in map controls */
+#calculateDistance {
+    background-color: #f39c12;
+    color: white;
+}
+
+#calculateDistance:hover {
+    background-color: #e67e22;
+}
+
 /* Responsive styles for mobile devices */
 @media (max-width: 768px) {
     #map {
@@ -110,6 +232,7 @@
         width: 90%;
         max-width: 400px;
         justify-content: center;
+        z-index: 400; /* Giảm z-index để không che popups */
     }
     
     .map-type-btn {
@@ -126,6 +249,36 @@
         max-width: 160px;
         font-size: 10px;
         padding: 8px;
+    }
+    
+    /* Popup distance calculator styles for mobile */
+    .distance-calculator {
+        padding: 8px;
+        max-width: 280px;
+        font-size: 0.9rem;
+    }
+    
+    .distance-calculator h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .distance-calculator .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .distance-calculator label {
+        font-size: 12px;
+    }
+    
+    .distance-calculator .form-control {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+    
+    /* Đảm bảo popup hiển thị trên cùng */
+    .leaflet-popup {
+        z-index: 1000 !important;
     }
     
     .legend-color {
@@ -171,4 +324,44 @@
     .map-controls, .map-legend {
         background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
     }
+}
+
+
+/* --- CSS CHO NHÃN TRẠM --- */
+
+/* 1. Tùy chỉnh giao diện của nhãn (tooltip) */
+.station-label-tooltip {
+    background-color: rgba(255, 255, 255, 0.85); /* Nền trắng mờ để dễ đọc */
+    border: none; /* Bỏ viền mặc định của tooltip */
+    box-shadow: none; /* Bỏ bóng đổ mặc định của tooltip */
+    border-radius: 4px; /* Bo góc nhẹ */
+    padding: 2px 6px; /* Khoảng đệm bên trong */
+    
+    color: #333; /* Màu chữ */
+    font-size: 12px; /* Cỡ chữ */
+    font-weight: bold; /* In đậm */
+    white-space: nowrap; /* Đảm bảo tên trạm không bị xuống dòng */
+}
+
+/* 2. Logic ẩn/hiện nhãn dựa trên class của map container */
+
+/* Mặc định, ẩn tất cả các nhãn của trạm */
+.station-label-tooltip {
+    display: none;
+    pointer-events: none; /* Ngăn không cho nhãn bắt sự kiện chuột */
+}
+
+/* Khi map container có class 'show-station-labels', thì hiển thị các nhãn */
+.show-station-labels .station-label-tooltip {
+    display: block;
+}
+
+/* CSS cho các nhãn quần đảo (giữ nguyên nếu có) */
+.island-label {
+    background: none;
+    border: none;
+    box-shadow: none;
+    font-weight: bold;
+    color: #555;
+    text-shadow: 1px 1px 2px white;
 }

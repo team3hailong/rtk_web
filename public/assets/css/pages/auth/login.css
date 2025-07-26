@@ -1,292 +1,590 @@
-/* CSS Reset - Đặt lại các thuộc tính mặc định của trình duyệt */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body - Định dạng chung cho toàn bộ trang */
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #00c48dc3;
-    overflow: hidden; /* Prevent scrolling if content overflows on smaller screens */
-}
-
-/* Container chính chứa cả phần đăng nhập và đăng ký */
-.login-container {
-    display: flex;
-    width: 900px; /* Base width for larger screens */
-    height: 550px; /* Base height for larger screens */
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    position: relative;
-}
-
-/* Phần bên trái - Khu vực đăng ký */
-.register-link {
-    flex: 1;
-    background: linear-gradient(to right, #00C48C, #00C48C);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Tiêu đề "BẮT ĐẦU HÀNH TRÌNH CỦA BẠN" */
-.register-link .title {
-    font-size: 2.5em;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-/* Đoạn văn mô tả trong phần đăng ký */
-.register-link p {
-    font-size: 1.1em;
-    font-weight: 300;
-    margin-bottom: 30px;
-    line-height: 1.6;
-}
-
-/* Nút "ĐĂNG KÝ" trong phần đăng ký */
-.register-link a {
-    text-transform: uppercase;
-    display: inline-block;
-    background-color: #ffffff73;
-    color: #00C48C;
-    padding: 12px 30px;
-    border-radius: 25px;
-    border: 1px solid white;   
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.register-link a:hover {
-    background-color: #e0e0e0c1;
-    color: #00C48C;
-}
-/* Phần bên phải - Khu vực đăng nhập */
-.login-form {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-}
-
-/* Tiêu đề "ĐĂNG NHẬP" */
-.login-form h2 {
-    text-transform: uppercase;
-    font-size: 2.2em;
-    margin-bottom: 30px;
-    color: #333;
-    font-weight: 600;
-}
-
-/* Form đăng nhập */
-.login-form form {
-    width: 100%;
-    max-width: 350px;
-}
-
-/* Nhóm form (chứa input) */
-.form-group {
-    margin-bottom: 20px;
-    position: relative; /* Needed for positioning the eye icon */
-}
-
-/* Trường input (Email và Password) */
-.form-group input {
-    width: 100%;
-    padding: 15px 15px;
-    border: none;
-    border-radius: 20px;
-    font-size: 1em;
-    color: #333;
-    background-color: #f0f0f0;
-}
-
-/* Placeholder of input */
-.form-group input::placeholder {
-    color: #a0a0a0;
-}
-
-/* Focus state of input */
-.form-group input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #00C48C;
-}
-
-/* Eye icon for password visibility */
-.toggle-password {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #777; /* Default color for the icon */
-    font-size: 1.1em;
-    display: flex; /* To center the icon if it's a font icon */
-    align-items: center;
-    justify-content: center;
-    width: 24px; /* Adjust as needed for icon size */
-    height: 24px; /* Adjust as needed for icon size */
-}
-
-/* Link "Quên mật khẩu?" */
-.forgot-password {
-    text-align: right;
-    margin-top: -10px;
-    margin-bottom: 25px;
-}
-
-.forgot-password a {
-    color: #777;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: color 0.3s ease;
-}
-
-.forgot-password a:hover {
-    color: #00C48C;
-}
-
-/* Button "ĐĂNG NHẬP" */
-.btn-login {
-    text-transform: uppercase;
-    width: 100%; /* Changed to 100% for better mobile adaptability */
-    padding: 14px;
-    background-color: #00C48C;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    display: block; /* Ensures button takes full width and new line */
-    margin: 0 auto; /* Centers the button horizontally */
-}
-
-.btn-login:hover {
-    background-color: #00C48C;
-    transform: translateY(-2px);
-}
-
-/* MEDIA QUERIES FOR RESPONSIVENESS */
-
-/* For screens smaller than 900px (e.g., tablets in landscape) */
-@media (max-width: 900px) {
-    .login-container {
-        width: 90%; /* Adjust container width */
-        height: auto; /* Allow height to adjust based on content */
-        flex-direction: column; /* Stack sections vertically */
-    }
-
-    .register-link, .login-form {
-        flex: none; /* Remove flex sizing */
-        width: 100%; /* Take full width */
-        padding: 30px; /* Adjust padding */
-    }
-
-    .register-link {
-        border-bottom-left-radius: 0; /* Remove bottom-left radius */
-    }
-
-    .login-form {
-        border-top-right-radius: 0; /* Remove top-right radius */
-        border-bottom-left-radius: 15px; /* Add bottom-left radius for stacked layout */
-    }
-
-    .register-link .title {
-        font-size: 2em; /* Smaller title */
-    }
-
-    .register-link p {
-        font-size: 1em; /* Smaller paragraph text */
-    }
-}
-
-/* For screens smaller than 600px (e.g., mobile devices) */
-@media (max-width: 600px) {
-    body {
-        padding: 20px; /* Add some padding around the container */
-        overflow-y: auto; /* Allow vertical scrolling on small screens if content overflows */
-    }
-
-    .login-container {
-        width: 100%; /* Full width on very small screens */
-        border-radius: 10px; /* Slightly less rounded corners */
-        box-shadow: none; /* Remove shadow to make it feel more integrated */
-    }
-
-    .register-link, .login-form {
-        padding: 25px; /* Further reduce padding */
-    }
-
-    .login-form h2 {
-        font-size: 1.8em; /* Smaller heading */
-        margin-bottom: 20px;
-    }
-
-    .register-link .title {
-        font-size: 1.8em; /* Even smaller title for mobile */
-    }
-
-    .register-link p {
-        font-size: 0.9em; /* Smaller paragraph */
-    }
-
-    .register-link a, .btn-login {
-        padding: 10px 20px; /* Smaller buttons */
-        font-size: 1em;
-    }
-
-    .form-group input {
-        padding: 10px 12px; /* Smaller input fields */
-        font-size: 0.9em;
-    }
-
-    .forgot-password a {
-        font-size: 0.8em; /* Smaller forgotten password link */
-    }
-}
-
-.error-message {
-    background-color: #ffebee;
-    color: #c62828;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ef9a9a;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.info-message {
-    background-color: #e3f2fd;
-    color: #1565c0;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #90caf9;
-    font-size: 0.9rem;
-    text-align: center;
+/* CSS Reset - Đặt lại các thuộc tính mặc định của trình duyệt */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+
+/* Body - Định dạng chung cho toàn bộ trang */
+
+body {
+
+    font-family: 'Poppins', sans-serif;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 100vh;
+
+    background-color: #00c48dc3;
+
+    overflow: hidden; /* Prevent scrolling if content overflows on smaller screens */
+
+}
+
+
+
+/* Container chính chứa cả phần đăng nhập và đăng ký */
+
+.login-container {
+
+    display: flex;
+
+    width: 900px; /* Base width for larger screens */
+
+    height: 550px; /* Base height for larger screens */
+
+    background-color: #fff;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    overflow: hidden;
+
+    position: relative;
+
+}
+
+
+
+/* Phần bên trái - Khu vực đăng ký */
+
+.register-link {
+
+    flex: 1;
+
+    background: linear-gradient(to right, #00C48C, #00C48C);
+
+    color: #fff;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 40px;
+
+    text-align: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+
+
+/* Tiêu đề "BẮT ĐẦU HÀNH TRÌNH CỦA BẠN" */
+
+.register-link .title {
+
+    font-size: 2.5em;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    margin-bottom: 20px;
+
+    text-transform: uppercase;
+
+}
+
+
+
+/* Đoạn văn mô tả trong phần đăng ký */
+
+.register-link p {
+
+    font-size: 1.1em;
+
+    font-weight: 300;
+
+    margin-bottom: 30px;
+
+    line-height: 1.6;
+
+}
+
+
+
+/* Nút "ĐĂNG KÝ" trong phần đăng ký */
+
+.register-link a {
+
+    text-transform: uppercase;
+
+    display: inline-block;
+
+    background-color: #ffffff73;
+
+    color: #00C48C;
+
+    padding: 12px 30px;
+
+    border-radius: 25px;
+
+    border: 1px solid white;   
+
+    text-decoration: none;
+
+    font-size: 1.1em;
+
+    font-weight: 600;
+
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+.register-link a:hover {
+
+    background-color: #e0e0e0c1;
+
+    color: #00C48C;
+
+}
+
+/* Phần bên phải - Khu vực đăng nhập */
+
+.login-form {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 40px;
+
+}
+
+
+
+/* Tiêu đề "ĐĂNG NHẬP" */
+
+.login-form h2 {
+
+    text-transform: uppercase;
+
+    font-size: 2.2em;
+
+    margin-bottom: 30px;
+
+    color: #333;
+
+    font-weight: 600;
+
+}
+
+
+
+/* Form đăng nhập */
+
+.login-form form {
+
+    width: 100%;
+
+    max-width: 350px;
+
+}
+
+
+
+/* Nhóm form (chứa input) */
+
+.form-group {
+
+    margin-bottom: 20px;
+
+    position: relative; /* Needed for positioning the eye icon */
+
+}
+
+
+
+/* Trường input (Email và Password) */
+
+.form-group input {
+
+    width: 100%;
+
+    padding: 15px 15px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    font-size: 1em;
+
+    color: #333;
+
+    background-color: #f0f0f0;
+
+}
+
+
+
+/* Placeholder of input */
+
+.form-group input::placeholder {
+
+    color: #a0a0a0;
+
+}
+
+
+
+/* Focus state of input */
+
+.form-group input:focus {
+
+    outline: none;
+
+    box-shadow: 0 0 0 2px #00C48C;
+
+}
+
+
+
+/* Eye icon for password visibility */
+
+.toggle-password {
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+
+    color: #777; /* Default color for the icon */
+
+    font-size: 1.1em;
+
+    display: flex; /* To center the icon if it's a font icon */
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 24px; /* Adjust as needed for icon size */
+
+    height: 24px; /* Adjust as needed for icon size */
+
+}
+
+
+
+/* Link "Quên mật khẩu?" */
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.remember-me label {
+    color: #777;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.forgot-password {
+    text-align: right;
+}
+
+.forgot-password a {
+    color: #777;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #00C48C;
+}
+
+
+
+/* Button "ĐĂNG NHẬP" */
+
+.btn-login {
+
+    text-transform: uppercase;
+
+    width: 100%; /* Changed to 100% for better mobile adaptability */
+
+    padding: 14px;
+
+    background-color: #00C48C;
+
+    color: #fff;
+
+    border: none;
+
+    border-radius: 25px;
+
+    font-size: 1.1em;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+    display: block; /* Ensures button takes full width and new line */
+
+    margin: 0 auto; /* Centers the button horizontally */
+
+}
+
+
+
+.btn-login:hover {
+
+    background-color: #00C48C;
+
+    transform: translateY(-2px);
+
+}
+
+
+
+/* MEDIA QUERIES FOR RESPONSIVENESS */
+
+
+
+/* For screens smaller than 900px (e.g., tablets in landscape) */
+
+@media (max-width: 900px) {
+
+    .login-container {
+
+        width: 90%; /* Adjust container width */
+
+        height: auto; /* Allow height to adjust based on content */
+
+        flex-direction: column; /* Stack sections vertically */
+
+    }
+
+
+
+    .register-link, .login-form {
+
+        flex: none; /* Remove flex sizing */
+
+        width: 100%; /* Take full width */
+
+        padding: 30px; /* Adjust padding */
+
+    }
+
+
+
+    .register-link {
+
+        border-bottom-left-radius: 0; /* Remove bottom-left radius */
+
+    }
+
+
+
+    .login-form {
+
+        border-top-right-radius: 0; /* Remove top-right radius */
+
+        border-bottom-left-radius: 15px; /* Add bottom-left radius for stacked layout */
+
+    }
+
+
+
+    .register-link .title {
+
+        font-size: 2em; /* Smaller title */
+
+    }
+
+
+
+    .register-link p {
+
+        font-size: 1em; /* Smaller paragraph text */
+
+    }
+
+}
+
+
+
+/* For screens smaller than 600px (e.g., mobile devices) */
+
+@media (max-width: 600px) {
+
+    body {
+
+        padding: 20px; /* Add some padding around the container */
+
+        overflow-y: auto; /* Allow vertical scrolling on small screens if content overflows */
+
+    }
+
+
+
+    .login-container {
+
+        width: 100%; /* Full width on very small screens */
+
+        border-radius: 10px; /* Slightly less rounded corners */
+
+        box-shadow: none; /* Remove shadow to make it feel more integrated */
+
+    }
+
+
+
+    .register-link, .login-form {
+
+        padding: 25px; /* Further reduce padding */
+
+    }
+
+
+
+    .login-form h2 {
+
+        font-size: 1.8em; /* Smaller heading */
+
+        margin-bottom: 20px;
+
+    }
+
+
+
+    .register-link .title {
+
+        font-size: 1.8em; /* Even smaller title for mobile */
+
+    }
+
+
+
+    .register-link p {
+
+        font-size: 0.9em; /* Smaller paragraph */
+
+    }
+
+
+
+    .register-link a, .btn-login {
+
+        padding: 10px 20px; /* Smaller buttons */
+
+        font-size: 1em;
+
+    }
+
+
+
+    .form-group input {
+
+        padding: 10px 12px; /* Smaller input fields */
+
+        font-size: 0.9em;
+
+    }
+
+
+
+    .forgot-password a {
+
+        font-size: 0.8em; /* Smaller forgotten password link */
+
+    }
+
+}
+
+
+
+.error-message {
+
+    background-color: #ffebee;
+
+    color: #c62828;
+
+    padding: 10px;
+
+    border-radius: 5px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #ef9a9a;
+
+    font-size: 0.9rem;
+
+    text-align: center;
+
+}
+
+
+
+.info-message {
+
+    background-color: #e3f2fd;
+
+    color: #1565c0;
+
+    padding: 10px;
+
+    border-radius: 5px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #90caf9;
+
+    font-size: 0.9rem;
+
+    text-align: center;
+
 }

@@ -11,6 +11,7 @@ require_once __DIR__ . '/../../classes/DeviceTracker.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['remember']) ? (bool)$_POST['remember'] : false;
     $device_fingerprint = $_POST['device_fingerprint'] ?? '';
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
@@ -51,7 +52,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         session_regenerate_id(true);
 
                         $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['username'] = $user['username'];                        // Ghi log hoạt động đăng nhập
+                        $_SESSION['username'] = $user['username'];
+                        
+                        // Xử lý chức năng ghi nhớ đăng nhập
+                        if ($remember) {
+                            // Tạo token ngẫu nhiên để lưu vào cookie và database
+                            $token = bin2hex(random_bytes(32));
+                            $hash = password_hash($token, PASSWORD_DEFAULT);
+                            
+                            // Lưu token vào database
+                            $expiry = date('Y-m-d H:i:s', strtotime('+30 days'));
+                            $remember_stmt = $conn->prepare("INSERT INTO remember_tokens (user_id, token, expiry) VALUES (?, ?, ?)");
+                            $remember_stmt->bind_param("iss", $user['id'], $hash, $expiry);
+                            $remember_stmt->execute();
+                            $remember_stmt->close();
+                            
+                            // Lưu token vào cookie (30 ngày)
+                            setcookie('remember_token', $user['id'] . ':' . $token, time() + 30 * 24 * 60 * 60, '/', '', false, true);
+                        }                        // Ghi log hoạt động đăng nhập
                         // Log successful login
                         $notify_content = 'Người dùng ' . $user['username'] . ' đã đăng nhập vào hệ thống';
                         log_activity($conn, $user['id'], 'login', 'user', $user['id'], null, [

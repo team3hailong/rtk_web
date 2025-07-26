@@ -36,6 +36,7 @@ include $project_root_path . '/private/includes/header.php';
             <div class="map-controls">
                 <button id="toggleMapType" class="map-type-btn active">Bản đồ vệ tinh</button>
                 <button id="getCurrentLocation" class="map-type-btn">Vị trí của tôi</button>
+                <button id="calculateDistance" class="map-type-btn">Tính khoảng cách</button>
             </div> 
                 <div class="map-legend">
                 <div class="legend-title">Chú thích:</div>

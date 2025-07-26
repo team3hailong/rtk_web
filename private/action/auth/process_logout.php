@@ -17,6 +17,17 @@ if (isset($_SESSION['user_id'])) {
         log_activity($conn, $user_id, 'logout', 'user', $user_id, null, [
             'logout_time' => date('Y-m-d H:i:s'),
         ], $notify_content);
+        
+        // Xóa token "Remember Me" trong database nếu có
+        if (isset($_COOKIE['remember_token'])) {
+            list($cookie_user_id, $token) = explode(':', $_COOKIE['remember_token'], 2);
+            if ($cookie_user_id == $user_id) {
+                $stmt = $conn->prepare("DELETE FROM remember_tokens WHERE user_id = ?");
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
     } catch (Exception $e) {
         log_error($conn, 'auth', "Error logging logout: " . $e->getMessage(), $e->getTraceAsString(), $_SESSION['user_id'] ?? null);
     }
@@ -24,6 +35,11 @@ if (isset($_SESSION['user_id'])) {
 
 // Unset all session variables
 $_SESSION = array();
+
+// Xóa cookie "Remember Me"
+if (isset($_COOKIE['remember_token'])) {
+    setcookie('remember_token', '', time() - 3600, '/', '', false, true);
+}
 
 // Destroy the session
 if (ini_get("session.use_cookies")) {

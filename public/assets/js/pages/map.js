@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Chức năng tính khoảng cách
+    // Chức năng tính khoảng cách đến trạm đã chọn
     const calculateDistanceBtn = document.getElementById('calculateDistance');
     if (calculateDistanceBtn) {
         calculateDistanceBtn.addEventListener('click', function() {
@@ -208,13 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Tạo popup HTML
             const popupContent = `
                 <div class="distance-calculator">
-                    <h3>Tính khoảng cách đến trạm</h3>
-                    <p><small>Khoảng cách được tính theo đường chim bay đến trạm, là khoảng cách tương đối, có sai số 1km-1.5km</small></p>
-                    
-                    <div class="form-group">
-                        <label for="station-select">Chọn trạm:</label>
-                        <select id="station-select" class="form-control">
-                            ${stationOptions}
+                    <h3>Tính khoảng cáchTính khoảng cách                     ${stationOptions}
                         </select>
                     </div>
                     
@@ -356,6 +350,163 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
                 }, 100); // Đợi một chút để DOM được cập nhật đầy đủ
+            });
+            
+            // Mở popup
+            popup.openOn(map);
+        });
+    }
+    
+    // Chức năng tìm trạm gần nhất
+    const calculateNearestBtn = document.getElementById('calculateNearestDistance');
+    if (calculateNearestBtn) {
+        calculateNearestBtn.addEventListener('click', function() {
+            // Tạo popup HTML
+            const popupContent = `
+                <div class="distance-calculator">
+                    <h3>Tìm trạm gần nhất</h3>
+                    <p><small>Hệ thống sẽ tự động tìm trạm gần nhất với vị trí của bạn</small></p>
+                    
+                    <div class="form-group">
+                        <label for="nearest-custom-lat">Vĩ độ (Latitude):</label>
+                        <input type="number" id="nearest-custom-lat" class="form-control" step="0.000001" placeholder="Ví dụ: 21.028511">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nearest-custom-lng">Kinh độ (Longitude):</label>
+                        <input type="number" id="nearest-custom-lng" class="form-control" step="0.000001" placeholder="Ví dụ: 105.804817">
+                    </div>
+                    
+                    <div class="form-group">
+                        <button id="nearest-get-current-position" class="btn btn-secondary">Dùng vị trí hiện tại</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button id="find-nearest-btn" class="btn btn-primary">Tìm trạm gần nhất</button>
+                    </div>
+                    
+                    <div id="nearest-result-container" style="display:none;">
+                        <h4>Kết quả</h4>
+                        <div id="nearest-distance-result"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Tạo popup và hiển thị
+            const popup = L.popup({
+                className: 'distance-calculator-popup',
+                autoPanPadding: [10, 80],
+                maxWidth: 350,
+                closeOnClick: false
+            })
+                .setLatLng(getOptimalPopupPosition(map))
+                .setContent(popupContent);
+                
+            map.off('popupopen');
+            
+            popup.once('add', function() {
+                setTimeout(function() {
+                    // Nút lấy vị trí hiện tại
+                    const getCurrentPositionBtn = document.getElementById('nearest-get-current-position');
+                    if (getCurrentPositionBtn) {
+                        const newGetCurrentPositionBtn = getCurrentPositionBtn.cloneNode(true);
+                        getCurrentPositionBtn.parentNode.replaceChild(newGetCurrentPositionBtn, getCurrentPositionBtn);
+                        
+                        newGetCurrentPositionBtn.addEventListener('click', function() {
+                            if (navigator.geolocation) {
+                                this.textContent = "Đang lấy vị trí...";
+                                this.disabled = true;
+                                
+                                navigator.geolocation.getCurrentPosition(
+                                    function(position) {
+                                        document.getElementById('nearest-custom-lat').value = position.coords.latitude;
+                                        document.getElementById('nearest-custom-lng').value = position.coords.longitude;
+                                        newGetCurrentPositionBtn.textContent = "Dùng vị trí hiện tại";
+                                        newGetCurrentPositionBtn.disabled = false;
+                                    },
+                                    function(error) {
+                                        alert("Không thể lấy vị trí hiện tại. Lỗi: " + error.message);
+                                        newGetCurrentPositionBtn.textContent = "Dùng vị trí hiện tại";
+                                        newGetCurrentPositionBtn.disabled = false;
+                                    },
+                                    {enableHighAccuracy: true, timeout: 10000, maximumAge: 0}
+                                );
+                            } else {
+                                alert("Trình duyệt của bạn không hỗ trợ định vị vị trí.");
+                            }
+                        });
+                    }
+                    
+                    // Nút tìm trạm gần nhất
+                    const findNearestBtn = document.getElementById('find-nearest-btn');
+                    if (findNearestBtn) {
+                        const newFindNearestBtn = findNearestBtn.cloneNode(true);
+                        findNearestBtn.parentNode.replaceChild(newFindNearestBtn, findNearestBtn);
+                        
+                        newFindNearestBtn.addEventListener('click', function() {
+                            // Hiển thị thông báo "đang tìm"
+                            const resultContainer = document.getElementById('nearest-result-container');
+                            const distanceResult = document.getElementById('nearest-distance-result');
+                            resultContainer.style.display = 'block';
+                            distanceResult.innerHTML = `<p>Đang tìm trạm gần nhất...</p>`;
+                            
+                            // Sử dụng setTimeout để tránh block UI
+                            setTimeout(function() {
+                                try {
+                                    const customLat = parseFloat(document.getElementById('nearest-custom-lat').value);
+                                    const customLng = parseFloat(document.getElementById('nearest-custom-lng').value);
+                                    
+                                    if (isNaN(customLat) || isNaN(customLng)) {
+                                        alert("Vui lòng nhập tọa độ hợp lệ.");
+                                        resultContainer.style.display = 'none';
+                                        return;
+                                    }
+                                    
+                                    // Tìm trạm gần nhất
+                                    let nearestStation = null;
+                                    let shortestDistance = Infinity;
+                                    
+                                    stations.forEach((station, index) => {
+                                        if (station.lat && station.long && station.status != 0 && station.status != -1) {
+                                            const stationLat = parseFloat(station.lat);
+                                            const stationLng = parseFloat(station.long);
+                                            
+                                            if (!isNaN(stationLat) && !isNaN(stationLng)) {
+                                                const distance = calculateSimpleDistance(customLat, customLng, stationLat, stationLng);
+                                                
+                                                if (distance < shortestDistance) {
+                                                    shortestDistance = distance;
+                                                    nearestStation = station;
+                                                }
+                                            }
+                                        }
+                                    });
+                                    
+                                    if (!nearestStation) {
+                                        distanceResult.innerHTML = `<p>Không tìm thấy trạm nào hoạt động gần vị trí của bạn.</p>`;
+                                        return;
+                                    }
+                                    
+                                    // Thêm sai số ngẫu nhiên từ 1 đến 1.5km
+                                    const randomError = (Math.random() * 0.5 + 1);
+                                    const finalDistance = shortestDistance + randomError;
+                                    
+                                    // Hiển thị kết quả
+                                    distanceResult.innerHTML = `
+                                        <p>Trạm gần nhất với vị trí<br>
+                                        <strong>(${customLat.toFixed(5)}, ${customLng.toFixed(5)})</strong><br>
+                                        là trạm <strong>${nearestStation.mountpoint || nearestStation.station_name}</strong>:</p>
+                                        <h3>${finalDistance.toFixed(2)} km</h3>
+                                    `;
+                                    
+                                } catch (error) {
+                                    console.error("Lỗi tìm trạm gần nhất:", error);
+                                    distanceResult.innerHTML = `<p>Đã xảy ra lỗi khi tìm trạm gần nhất: ${error.message}</p>`;
+                                }
+                            }, 50);
+                        });
+                    }
+                }, 100);
             });
             
             // Mở popup

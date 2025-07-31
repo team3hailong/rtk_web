@@ -156,4 +156,57 @@ class PaymentService {
             return false;
         }
     }
+
+    /**
+     * Kích hoạt đơn hàng miễn phí (giá = 0 do voucher)
+     * @param int $registration_id
+     * @param int $user_id
+     * @return array ['success' => true/false, 'error' => string (if failed)]
+     */
+    public function activateFreeOrder($registration_id, $user_id) {
+        try {
+            $this->conn->beginTransaction();
+
+            // 1. Kiểm tra registration tồn tại và thuộc về user
+            $stmt = $this->conn->prepare("SELECT id, package_id, location_id, num_account, total_price 
+                                         FROM registration 
+                                         WHERE id = :id AND user_id = :user_id AND status = 'pending'");
+            $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $registration = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$registration) {
+                $this->conn->rollBack();
+                return ['success' => false, 'error' => 'registration_not_found'];
+            }
+
+            // 2. Cập nhật trạng thái registration thành 'active'
+            $update_reg_stmt = $this->conn->prepare("UPDATE registration 
+                                                    SET status = 'active', updated_at = NOW() 
+                                                    WHERE id = :id");
+            $update_reg_stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
+            $update_reg_stmt->execute();
+
+            // 3. Cập nhật transaction_history  với amount = 0
+            $update_trans_stmt = $this->conn->prepare("UPDATE transaction_history 
+                                                      SET amount = 0, updated_at = NOW() 
+                                                      WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'");
+            $update_trans_stmt->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+            $update_trans_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $update_trans_stmt->execute();
+
+            $this->conn->commit();
+            return ['success' => true];
+
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            error_log("PaymentService Error in activateFreeOrder: " . $e->getMessage());
+            return ['success' => false, 'error' => 'database_error'];
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            error_log("PaymentService Error in activateFreeOrder: " . $e->getMessage());
+            return ['success' => false, 'error' => 'general_error'];
+        }
+    }
 }

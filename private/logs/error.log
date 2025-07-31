@@ -139,3 +139,26 @@
                 (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
 [31-Jul-2025 15:37:57 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
                 (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[31-Jul-2025 17:38:19 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[31-Jul-2025 18:11:50 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8000000, Discount: 200000.00, New Amount: 7800000, Type: percentage_discount
+[31-Jul-2025 18:19:54 Asia/Ho_Chi_Minh] Voucher calculation: Original: 88800000, Discount: 1000000.00, New Amount: 87800000, Type: percentage_discount
+[31-Jul-2025 18:20:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 88800000, Discount: 88800000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:23:25 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (44000000) for registration ID 10063.
+[31-Jul-2025 18:23:35 Asia/Ho_Chi_Minh] Voucher calculation: Original: 44000000, Discount: 44000000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:23:51 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10064.
+[31-Jul-2025 18:23:57 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:24:11 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (265600000) vs DB (266400000) for registration ID 10065.
+[31-Jul-2025 18:24:28 Asia/Ho_Chi_Minh] Voucher calculation: Original: 266400000, Discount: 266400000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:25:31 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (4177600000) vs DB (4444000000) for registration ID 10066.
+[31-Jul-2025 18:25:43 Asia/Ho_Chi_Minh] Voucher calculation: Original: 44000000, Discount: 44000000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:25:47 Asia/Ho_Chi_Minh] PaymentService Error in activateFreeOrder: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'duration_months' in 'field list'
+[31-Jul-2025 18:25:47 Asia/Ho_Chi_Minh] Free order activation failed for User ID 92, Registration ID 10067. Reason: database_error
+[31-Jul-2025 18:29:32 Asia/Ho_Chi_Minh] Voucher calculation: Original: 26400000, Discount: 26400000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:29:36 Asia/Ho_Chi_Minh] PaymentService Error in activateFreeOrder: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'duration_months' in 'field list'
+[31-Jul-2025 18:29:36 Asia/Ho_Chi_Minh] Free order activation failed for User ID 92, Registration ID 10068. Reason: database_error
+[31-Jul-2025 18:34:55 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (18400000) for registration ID 10069.
+[31-Jul-2025 18:35:02 Asia/Ho_Chi_Minh] Voucher calculation: Original: 18400000, Discount: 18400000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:35:26 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 1600000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:37:05 Asia/Ho_Chi_Minh] Voucher calculation: Original: 34400000, Discount: 34400000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:40:19 Asia/Ho_Chi_Minh] Voucher calculation: Original: 17600000, Discount: 17600000, New Amount: 0, Type: percentage_discount

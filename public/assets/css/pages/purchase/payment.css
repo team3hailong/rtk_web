@@ -285,3 +285,38 @@
         }
     }
 
+/* --- Styles cho đơn hàng miễn phí --- */
+.free-order-notice {
+    background-color: var(--success-50, #f0fdf4);
+    border-left: 4px solid var(--success-500, #22c55e);
+    padding: 1.5rem;
+    margin: 1rem 0 0 0;
+    text-align: left;
+    border-radius: var(--rounded-md);
+}
+
+.free-order-notice p {
+    color: var(--gray-800, #1f2937);
+    line-height: 1.6;
+    margin: 0 0 0.5rem 0;
+}
+
+.free-order-notice p:last-child {
+    margin-bottom: 0;
+}
+
+.btn-complete-free-order {
+    padding: 0.8rem 1.5rem;
+    font-size: var(--font-size-base);
+    background-color: var(--success-600, #16a34a);
+    border: none;
+    color: white;
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    border-radius: var(--rounded-md);
+    transition: background-color 0.2s ease;
+}
+
+.btn-complete-free-order:hover {
+    background-color: var(--success-700, #15803d);
+}

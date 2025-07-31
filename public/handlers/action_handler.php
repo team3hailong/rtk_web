@@ -76,6 +76,7 @@ $csrf_exempt_actions = [
     'auth/resend-reset-otp', // Gửi lại OTP reset mật khẩu không cần CSRF
     'purchase/apply_voucher',  // Voucher applications via AJAX
     'purchase/remove_voucher',  // Voucher removal via AJAX
+    'purchase/clear_session_voucher',  // <-- THÊM DÒNG NÀY VÀO
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_exempt_actions)) {

@@ -1,6 +1,5 @@
 <?php
 
-
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
 init_session();
@@ -10,7 +9,6 @@ $project_root_path = PROJECT_ROOT_PATH;
 
 // --- Authentication Check ---
 if (!isset($_SESSION['user_id'])) {
-    // Chuyển hướng về login
     header('Location: ' . $base_url . '/public/pages/auth/login.php');
     exit;
 }
@@ -22,45 +20,38 @@ include $project_root_path . '/private/includes/header.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/RtkAccount.php';
 
-// Chỉ include file CSS/JS tối ưu (đã gộp, không include file cũ)
+// --- OPTIMIZED: Include a single, consolidated CSS and JS file ---
 echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_accountmanagement.css?v=' . time() . '">';
-echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/time-remaining.css?v=' . time() . '">';
-echo '<link rel="stylesheet" href="' . $base_url . '/public/assets/css/pages/rtk/rtk_account_update.css?v=' . time() . '">';
 echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_accountmanagement.js?v=' . time() . '"></script>';
-echo '<script src="' . $base_url . '/public/assets/js/pages/rtk/rtk_filter_extension.js?v=' . time() . '"></script>';
 
 // --- Xử lý tham số từ URL cho phân trang ---
 $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($currentPage < 1) $currentPage = 1;
 
 $perPage = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 10;
-// Chỉ cho phép các giá trị cụ thể cho per_page
 if (!in_array($perPage, [10, 20, 50])) {
-    $perPage = 10; // Mặc định
+    $perPage = 10;
 }
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-// Chỉ cho phép các filter hợp lệ
 if (!in_array($filter, ['all', 'active', 'expired', 'locked'])) {
-    $filter = 'all'; // Mặc định
+    $filter = 'all';
 }
 
 // ===============================================
 // == FETCH ACCOUNT DATA FROM DATABASE WITH PAGINATION ==
 // ===============================================
 $db = new Database();
-$rtkAccountManager = new RtkAccount($db); // Instantiate RtkAccount
-$userId = $_SESSION['user_id']; // Get user ID from session
+$rtkAccountManager = new RtkAccount($db);
+$userId = $_SESSION['user_id'];
 
-// Lấy dữ liệu với phân trang
 $result = $rtkAccountManager->getAccountsByUserIdWithPagination($userId, $currentPage, $perPage, $filter);
 $accounts = $result['accounts'];
 $pagination = $result['pagination'];
 
-// Đóng kết nối database sau khi lấy dữ liệu (nếu class hỗ trợ)
 if (method_exists($db, 'close')) { $db->close(); }
 
-// Hàm tính toán ngày còn lại/quá hạn (ví dụ)
+// Helper functions
 function calculate_days_diff($end_date_str) {
     if (!$end_date_str) return ['remaining' => null, 'expired' => null];
     try {
@@ -68,34 +59,24 @@ function calculate_days_diff($end_date_str) {
         $end_date = new DateTime($end_date_str, $tz);
         $now = new DateTime('now', $tz);
         $interval = $now->diff($end_date);
-        $days = (int)$interval->format('%r%a'); // %r gives sign, %a total days
-
-        if ($days >= 0) {
-            return ['remaining' => $days, 'expired' => null];
-        } else {
-            return ['remaining' => null, 'expired' => abs($days)];
-        }
+        $days = (int)$interval->format('%r%a');
+        return ($days >= 0) ? ['remaining' => $days, 'expired' => null] : ['remaining' => null, 'expired' => abs($days)];
     } catch (Exception $e) {
-        return ['remaining' => null, 'expired' => null]; // Lỗi nếu ngày không hợp lệ
+        return ['remaining' => null, 'expired' => null];
     }
 }
 
-// Hàm định dạng ngày
 function format_date_display($date_str) {
     if (!$date_str) return 'N/A';
     try {
-        $date = new DateTime($date_str, new DateTimeZone('Asia/Ho_Chi_Minh'));
-        return $date->format('d-m-Y'); // Định dạng dd-mm-yyyy
+        return (new DateTime($date_str, new DateTimeZone('Asia/Ho_Chi_Minh')))->format('d-m-Y');
     } catch (Exception $e) {
         return 'N/A';
     }
 }
 
-// Hàm tạo URL phân trang với các tham số hiện tại
 function getPaginationUrl($page, $perPage, $filter) {
-    $params = [];
-    $params['page'] = $page;
-    $params['per_page'] = $perPage;
+    $params = ['page' => $page, 'per_page' => $perPage];
     if ($filter !== 'all') {
         $params['filter'] = $filter;
     }
@@ -110,83 +91,87 @@ function getPaginationUrl($page, $perPage, $filter) {
     <!-- Main Content -->
     <div class="content-wrapper accounts-content-wrapper">
         <div class="accounts-wrapper">
-            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản RTK</h2>            <!-- Add inline style -->            <!-- Bỏ các CSS inline và sử dụng CSS từ file để đảm bảo tính nhất quán --><div class="filter-container">
+            <h2 class="text-2xl font-semibold mb-5">Quản Lý Tài Khoản RTK</h2>
+
+            <!-- OPTIMIZED: Filter container -->
+            <div class="filter-container">
                 <div class="filter-group-header">
                     <span class="filter-group-title">Bộ lọc</span>
                     <button type="button" class="filter-toggle-btn" aria-label="Toggle filters">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
-                <div class="filter-group-content">
+                <div class="filter-group-content" style="display: none;">
                     <div class="filter-row">
                         <!-- Lọc theo trạng thái -->
-                        <div class="filter-group-item filter-status-group">
+                        <div class="filter-group-item">
                             <div class="filter-label">Trạng thái:</div>
-                            <div class="status-filter-group">
-                                <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all">
-                                        <i class="fas fa-list-ul"></i> Tất cả
-                                    </button>
-                                    <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active">
-                                        <i class="fas fa-check-circle"></i> Hoạt động
-                                    </button>
+                            
+                            <!-- Desktop buttons -->
+                            <div class="status-buttons-desktop">
+                                <div class="status-filter-group">
+                                    <div class="status-buttons-row">
+                                        <button class="filter-button <?php echo $filter === 'all' ? 'active' : ''; ?>" data-filter="all"><i class="fas fa-list-ul"></i> Tất cả</button>
+                                        <button class="filter-button <?php echo $filter === 'active' ? 'active' : ''; ?>" data-filter="active"><i class="fas fa-check-circle"></i> Hoạt động</button>
+                                    </div>
+                                    <div class="status-buttons-row">
+                                        <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired"><i class="fas fa-calendar-times"></i> Hết hạn</button>
+                                        <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked"><i class="fas fa-lock"></i> Đã khóa</button>
+                                    </div>
                                 </div>
-                                <div class="status-buttons-row">
-                                    <button class="filter-button <?php echo $filter === 'expired' ? 'active' : ''; ?>" data-filter="expired">
-                                        <i class="fas fa-calendar-times"></i> Hết hạn
-                                    </button>
-                                    <button class="filter-button <?php echo $filter === 'locked' ? 'active' : ''; ?>" data-filter="locked">
-                                        <i class="fas fa-lock"></i> Đã khóa
-                                    </button>
-                                </div>
+                            </div>
+
+                            <!-- Mobile select dropdown -->
+                            <div class="status-select-mobile">
+                                <select id="status-filter-mobile" class="filter-select">
+                                    <option value="all" <?php if ($filter === 'all') echo 'selected'; ?>>Tất cả</option>
+                                    <option value="active" <?php if ($filter === 'active') echo 'selected'; ?>>Hoạt động</option>
+                                    <option value="expired" <?php if ($filter === 'expired') echo 'selected'; ?>>Hết hạn</option>
+                                    <option value="locked" <?php if ($filter === 'locked') echo 'selected'; ?>>Đã khóa</option>
+                                </select>
                             </div>
                         </div>
 
                         <!-- Lọc theo thời hạn còn lại -->
                         <div class="filter-group-item">
                             <div class="filter-label">Thời hạn còn lại:</div>
-                            <div class="filter-dropdown-group">
-                                <select id="remaining-time-filter" class="filter-select">
-                                    <option value="all">Tất cả</option>
-                                    <option value="less-than-7">Dưới 7 ngày</option>
-                                    <option value="7-to-30">7 - 30 ngày</option>
-                                    <option value="30-to-90">30 - 90 ngày</option>
-                                    <option value="more-than-90">Trên 90 ngày</option>
-                                </select>
-                            </div>
+                            <select id="remaining-time-filter" class="filter-select">
+                                <option value="all">Tất cả</option>
+                                <option value="less-than-7">Dưới 7 ngày</option>
+                                <option value="7-to-30">7 - 30 ngày</option>
+                                <option value="30-to-90">30 - 90 ngày</option>
+                                <option value="more-than-90">Trên 90 ngày</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="filter-row">
                         <!-- Tìm kiếm -->
-                        <div class="filter-group-item search-container">
+                        <div class="filter-group-item">
                             <div class="filter-label">Tìm kiếm:</div>
                             <div class="search-group">
                                 <input type="text" class="search-box" id="search-input" placeholder="Tên TK, Tỉnh, Trạm...">
                                 <div class="search-buttons-container">
-                                    <button type="button" id="search-button" class="search-button">
-                                        <i class="fas fa-search"></i> <span>Tìm kiếm</span>
-                                    </button>
-                                    <button type="button" id="reset-button" class="reset-button">
-                                        <i class="fas fa-redo"></i> <span>Đặt lại</span>
-                                    </button>
+                                    <button type="button" id="search-button" class="search-button"><i class="fas fa-search"></i> <span>Tìm kiếm</span></button>
+                                    <button type="button" id="reset-button" class="reset-button"><i class="fas fa-redo"></i> <span>Đặt lại</span></button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-              <!-- Thêm nút Export Excel -->
+
+            <!-- Export Section -->
             <div class="export-section">
                 <div class="export-section-buttons">
-                    <button id="update-survey-accounts" class="export-button" style="background:#4CAF50;">
+                    <button id="update-survey-accounts" class="export-button btn-update-ownership">
                         <i class="fas fa-sync"></i> Cập nhật quyền sở hữu
                     </button>
-                    <button id="export-excel" class="export-button" disabled>
+                    <button id="export-excel" class="export-button btn-export-excel" disabled>
                         <i class="fas fa-file-excel"></i> Xuất Excel
                     </button>
-                    <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php" style="display:inline; flex: 1;">
-                        <button type="submit" id="renewal-btn" class="export-button" style="background:#1976D2;" disabled>
+                    <form id="renewal-form" method="post" action="<?php echo $base_url; ?>/public/pages/purchase/renewal.php">
+                        <button type="submit" id="renewal-btn" class="export-button btn-renewal" disabled>
                             <i class="fas fa-redo"></i> Gia hạn
                         </button>
                     </form>
@@ -226,46 +211,25 @@ function getPaginationUrl($page, $perPage, $filter) {
                             <?php else: ?>
                                 <?php foreach ($accounts as $account): ?>
                                     <?php
-                                        // Xử lý dữ liệu hiển thị
-                                        $status_class = 'status-' . $account['status'];
-                                        $days_diff = calculate_days_diff($account['effective_end_time']);
-                                        $account_id_display = str_replace('RTK_', '#', $account['id'] ?? 'N/A');
-                                        
-                                        // Đảm bảo data-status phải khớp với giá trị filter trong JS và nút filter trên UI
-                                        $data_status = $account['status']; // Lấy từ hàm calculateAccountStatus() trong class RtkAccount
-                                        
-                                        // Hiển thị văn bản trạng thái cho người dùng
-                                        if ($data_status === 'active') {
-                                            $status_text = 'Hoạt động';
-                                        } elseif ($data_status === 'expired') {
-                                            $status_text = 'Hết hạn';
-                                        } elseif ($data_status === 'pending' || $data_status === 'locked') {
-                                            $status_text = 'Đã khóa';
-                                            // Đảm bảo tất cả các trạng thái không hoạt động đều hiển thị là 'locked'
-                                            $data_status = 'locked';
-                                        } else {
-                                            $status_text = 'Không xác định';
-                                        }
-                                        
-                                        // Chuỗi search terms                                        $search_terms = [];
-                                        $search_terms[] = $account['id'] ?? '';
-                                        $search_terms[] = $account['username_acc'] ?? '';
-                                        $search_terms[] = $account['province'] ?? '';
-                                        $search_terms[] = $status_text ?? '';  // Thêm status text vào search terms
-                                        
-                                        // Thêm thời hạn còn lại vào search terms
                                         $days_diff_data = calculate_days_diff($account['effective_end_time']);
-                                        $remaining_days = $days_diff_data['remaining'] !== null ? $days_diff_data['remaining'] : 0;
-                                        
-                                        if (!empty($account['mountpoints'])) {
-                                            foreach ($account['mountpoints'] as $mp) {
-                                                $search_terms[] = $mp['mountpoint'] ?? '';
-                                            }
+                                        $remaining_days = $days_diff_data['remaining'] ?? ($days_diff_data['expired'] !== null ? -$days_diff_data['expired'] : -9999);
+                                        $data_status = $account['status'];
+                                        $status_text = 'Không xác định';
+                                        if ($data_status === 'active') $status_text = 'Hoạt động';
+                                        elseif ($data_status === 'expired') $status_text = 'Hết hạn';
+                                        elseif (in_array($data_status, ['pending', 'locked'])) {
+                                            $status_text = 'Đã khóa';
+                                            $data_status = 'locked';
                                         }
-                                        $search_terms = array_filter($search_terms); 
-                                        $search_terms_string = htmlspecialchars(strtolower(implode(' ', $search_terms)));
-                                        
-                                        // JSON data cho modal và export
+
+                                        $search_terms = strtolower(implode(' ', array_filter([
+                                            $account['id'] ?? '',
+                                            $account['username_acc'] ?? '',
+                                            $account['province'] ?? '',
+                                            $status_text,
+                                            isset($account['mountpoints']) ? implode(' ', array_column($account['mountpoints'], 'mountpoint')) : ''
+                                        ])));
+
                                         $account_details = [
                                             'id' => $account['id'],
                                             'username' => $account['username_acc'],
@@ -273,37 +237,38 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             'start_time' => date('d/m/Y H:i', strtotime($account['effective_start_time'])),
                                             'end_time' => date('d/m/Y H:i', strtotime($account['effective_end_time'])),
                                             'status' => $status_text,
-                                            'status_class' => $status_class,
                                             'province' => $account['province'] ?? 'N/A',
                                             'mountpoints' => $account['mountpoints'] ?? [],
                                             'package_id' => $account['package_id'] ?? 0
-                                        ];                                        $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
-                                    ?>                                    <tr data-status="<?php echo $data_status; ?>" data-search-terms="<?php echo $search_terms_string; ?>" data-remaining-days="<?php echo $remaining_days; ?>">
+                                        ];
+                                        $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
+                                    ?>
+                                    <tr data-status="<?php echo htmlspecialchars($data_status); ?>" data-search-terms="<?php echo htmlspecialchars($search_terms); ?>" data-remaining-days="<?php echo $remaining_days; ?>">
                                         <td class="select-column">
                                             <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox" data-package-id="<?php echo $account['package_id']; ?>">
                                         </td>
                                         <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                         <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>                                        <td><?php echo date('d/m/Y', strtotime($account['effective_start_time'])); ?></td>
+                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
+                                        <td><?php echo format_date_display($account['effective_start_time']); ?></td>
                                         <td>
-                                            <?php echo date('d/m/Y', strtotime($account['effective_end_time'])); ?>
-                                            <?php if ($account['status'] === 'active'): ?>
+                                            <?php echo format_date_display($account['effective_end_time']); ?>
+                                            <?php if ($days_diff_data['remaining'] !== null): ?>
                                                 <span class="time-remaining">(Còn <?php echo $days_diff_data['remaining']; ?> ngày)</span>
-                                            <?php elseif ($account['status'] === 'expired'): ?>
+                                            <?php elseif ($days_diff_data['expired'] !== null): ?>
                                                 <span class="time-expired">(Quá hạn <?php echo $days_diff_data['expired']; ?> ngày)</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="status">
-                                            <span class="status-badge <?php echo $status_class; ?>">
+                                            <span class="status-badge status-<?php echo htmlspecialchars($data_status); ?>">
                                                 <?php echo htmlspecialchars($status_text); ?>
                                             </span>
-                                        </td>                                        <td class="actions">
-                                            <button type="button" class="action-button btn-details" title="Xem chi tiết" 
-                                                    onclick='showAccountDetails(<?php echo $account_json; ?>)'>
+                                        </td>
+                                        <td class="actions">
+                                            <button type="button" class="action-button btn-details" title="Xem chi tiết" onclick='showAccountDetails(<?php echo $account_json; ?>)'>
                                                 <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
                                             </button>
-                                            <button type="button" class="action-button btn-change-password" title="Đổi mật khẩu" 
-                                                    onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
+                                            <button type="button" class="action-button btn-change-password" title="Đổi mật khẩu" onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
                                                 <i class="fas fa-key"></i> <span class="action-text">Đổi MK</span>
                                             </button>
                                         </td>
@@ -315,14 +280,15 @@ function getPaginationUrl($page, $perPage, $filter) {
                 </div>
             </form>
             
-            <!-- Pagination controls -->            <?php if ($pagination['total_pages'] > 1 || true): ?>
+            <!-- Pagination controls -->
+            <?php if ($pagination['total_pages'] > 1): ?>
             <div class="pagination-footer">
                 <div class="per-page-container">
                     <label for="per-page">Hiển thị:</label>
                     <select id="per-page" class="per-page-select">
-                        <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
-                        <option value="20" <?php echo $perPage == 20 ? 'selected' : ''; ?>>20</option>
-                        <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
+                        <option value="10" <?php if ($perPage == 10) echo 'selected'; ?>>10</option>
+                        <option value="20" <?php if ($perPage == 20) echo 'selected'; ?>>20</option>
+                        <option value="50" <?php if ($perPage == 50) echo 'selected'; ?>>50</option>
                     </select>
                     <span>bản ghi / trang</span>
                 </div>
@@ -335,58 +301,29 @@ function getPaginationUrl($page, $perPage, $filter) {
                     </div>
                     <div class="pagination-buttons">
                         <?php if ($pagination['current_page'] > 1): ?>
-                            <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button">
-                                <i class="fas fa-angle-double-left"></i>
-                            </a>
-                            <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button">
-                                <i class="fas fa-angle-left"></i>
-                            </a>
+                            <a href="<?php echo getPaginationUrl(1, $perPage, $filter); ?>" class="pagination-button"><i class="fas fa-angle-double-left"></i></a>
+                            <a href="<?php echo getPaginationUrl($pagination['current_page'] - 1, $perPage, $filter); ?>" class="pagination-button"><i class="fas fa-angle-left"></i></a>
                         <?php else: ?>
-                            <span class="pagination-button disabled">
-                                <i class="fas fa-angle-double-left"></i>
-                            </span>
-                            <span class="pagination-button disabled">
-                                <i class="fas fa-angle-left"></i>
-                            </span>
+                            <span class="pagination-button disabled"><i class="fas fa-angle-double-left"></i></span>
+                            <span class="pagination-button disabled"><i class="fas fa-angle-left"></i></span>
                         <?php endif; ?>
                         
                         <?php
-                        // Display pagination numbers with ellipsis for large page counts
                         $start = max(1, $pagination['current_page'] - 2);
                         $end = min($pagination['total_pages'], $pagination['current_page'] + 2);
-                        
-                        if ($start > 1) {
-                            echo '<span class="pagination-ellipsis">...</span>';
-                        }
-                        
-                        for ($i = $start; $i <= $end; $i++):
-                        ?>
-                            <?php if ($i == $pagination['current_page']): ?>
-                                <span class="pagination-button active"><?php echo $i; ?></span>
-                            <?php else: ?>
-                                <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button"><?php echo $i; ?></a>
-                            <?php endif; ?>
-                        <?php endfor; 
-                        
-                        if ($end < $pagination['total_pages']) {
-                            echo '<span class="pagination-ellipsis">...</span>';
-                        }
+                        if ($start > 1) echo '<span class="pagination-ellipsis">...</span>';
+                        for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="<?php echo getPaginationUrl($i, $perPage, $filter); ?>" class="pagination-button <?php if ($i == $pagination['current_page']) echo 'active'; ?>"><?php echo $i; ?></a>
+                        <?php endfor;
+                        if ($end < $pagination['total_pages']) echo '<span class="pagination-ellipsis">...</span>';
                         ?>
                         
                         <?php if ($pagination['current_page'] < $pagination['total_pages']): ?>
-                            <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button">
-                                <i class="fas fa-angle-right"></i>
-                            </a>
-                            <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button">
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
+                            <a href="<?php echo getPaginationUrl($pagination['current_page'] + 1, $perPage, $filter); ?>" class="pagination-button"><i class="fas fa-angle-right"></i></a>
+                            <a href="<?php echo getPaginationUrl($pagination['total_pages'], $perPage, $filter); ?>" class="pagination-button"><i class="fas fa-angle-double-right"></i></a>
                         <?php else: ?>
-                            <span class="pagination-button disabled">
-                                <i class="fas fa-angle-right"></i>
-                            </span>
-                            <span class="pagination-button disabled">
-                                <i class="fas fa-angle-double-right"></i>
-                            </span>
+                            <span class="pagination-button disabled"><i class="fas fa-angle-right"></i></span>
+                            <span class="pagination-button disabled"><i class="fas fa-angle-double-right"></i></span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -401,7 +338,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <div class="modal-content">
         <div class="modal-header">
             <h4 id="modal-title">Chi Tiết Tài Khoản</h4>
-            <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            <button class="modal-close-btn" onclick="closeModal('account-details-modal')">×</button>
         </div>
         <div class="modal-body">
             <div class="detail-grid">
@@ -409,18 +346,14 @@ function getPaginationUrl($page, $perPage, $filter) {
                     <div class="detail-label">Tài khoản:</div>
                     <div class="detail-value-container">
                         <div class="detail-value" id="modal-username"></div>
-                        <button class="copy-btn" data-copy-target="modal-username" title="Sao chép tài khoản">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                        <button class="copy-btn" data-copy-target="modal-username" title="Sao chép tài khoản"><i class="fas fa-copy"></i></button>
                     </div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Mật khẩu:</div>
                     <div class="detail-value-container">
                         <div class="detail-value" id="modal-password"></div>
-                        <button class="copy-btn" data-copy-target="modal-password" title="Sao chép mật khẩu">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                        <button class="copy-btn" data-copy-target="modal-password" title="Sao chép mật khẩu"><i class="fas fa-copy"></i></button>
                     </div>
                 </div>
                 <div class="detail-item">
@@ -444,9 +377,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                 <th>Trạm</th>
                             </tr>
                         </thead>
-                        <tbody id="modal-mountpoints-list">
-                            <!-- Mountpoints will be populated here -->
-                        </tbody>
+                        <tbody id="modal-mountpoints-list"></tbody>
                     </table>
                 </div>
             </div>
@@ -454,29 +385,15 @@ function getPaginationUrl($page, $perPage, $filter) {
     </div>
 </div>
 
-<script>
-    const baseUrl = '<?php echo $base_url; ?>';
-    // Thêm biến cấu hình cho phân trang
-    const paginationConfig = {
-        currentPage: <?php echo $pagination['current_page']; ?>,
-        perPage: <?php echo $perPage; ?>,
-        totalPages: <?php echo $pagination['total_pages']; ?>,
-        totalRecords: <?php echo $pagination['total']; ?>,
-        currentFilter: '<?php echo $filter; ?>'
-    };    // All other JavaScript logic has been moved to rtk_accountmanagement.js
-    // This script block now only contains PHP-generated variables for the external JS file.
-</script>
-
 <!-- Update Survey Account Modal -->
 <div id="update-survey-account-modal" class="modal-overlay">
     <div class="modal-content account-update-modal">
         <div class="modal-header">
             <h4>Cập Nhật Quyền Sở Hữu Tài Khoản</h4>
-            <button class="modal-close-btn" onclick="closeUpdateAccountModal()">&times;</button>
+            <button class="modal-close-btn" onclick="closeModal('update-survey-account-modal')">×</button>
         </div>
         <div class="modal-body">
             <p class="mb-3">Nhập tên đăng nhập và mật khẩu của các tài khoản cần chuyển quyền sở hữu về tài khoản của bạn:</p>
-            
             <table class="account-form-table" id="update-accounts-table">
                 <thead>
                     <tr>
@@ -485,7 +402,6 @@ function getPaginationUrl($page, $perPage, $filter) {
                     </tr>
                 </thead>
                 <tbody id="update-accounts-tbody">
-                    <!-- Default 5 rows -->
                     <?php for($i = 0; $i < 5; $i++): ?>
                     <tr>
                         <td><input type="text" class="form-input username-input" placeholder="Tên đăng nhập"></td>
@@ -494,13 +410,10 @@ function getPaginationUrl($page, $perPage, $filter) {
                     <?php endfor; ?>
                 </tbody>
             </table>
-            
-            <button id="add-account-row" class="add-row-button" title="Thêm dòng">
-                <i class="fas fa-plus"></i>
-            </button>
+            <button id="add-account-row" class="add-row-button" title="Thêm dòng"><i class="fas fa-plus"></i></button>
         </div>
         <div class="modal-footer">
-            <button class="cancel-button" onclick="closeUpdateAccountModal()">Hủy</button>
+            <button class="cancel-button" onclick="closeModal('update-survey-account-modal')">Hủy</button>
             <button class="confirm-button" id="confirm-update-accounts">Xác nhận</button>
         </div>
     </div>
@@ -511,7 +424,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <div class="modal-content">
         <div class="modal-header">
             <h4>Đổi Mật Khẩu Tài Khoản</h4>
-            <button class="modal-close-btn" onclick="closeChangePasswordModal()">&times;</button>
+            <button class="modal-close-btn" onclick="closeModal('change-password-modal')">×</button>
         </div>
         <div class="modal-body">
             <div class="form-grid">
@@ -525,17 +438,17 @@ function getPaginationUrl($page, $perPage, $filter) {
                 </div>
                 <div class="form-row">
                     <label class="form-label">Mật khẩu mới:</label>
-                    <input type="text" id="cp-new-password" class="form-input" placeholder="Nhập mật khẩu mới">
+                    <input type="password" id="cp-new-password" class="form-input" placeholder="Nhập mật khẩu mới">
                 </div>
                 <div class="form-row">
                     <label class="form-label">Xác nhận mật khẩu mới:</label>
-                    <input type="text" id="cp-confirm-password" class="form-input" placeholder="Nhập lại mật khẩu mới">
+                    <input type="password" id="cp-confirm-password" class="form-input" placeholder="Nhập lại mật khẩu mới">
                 </div>
             </div>
             <input type="hidden" id="cp-account-id">
         </div>
         <div class="modal-footer">
-            <button class="cancel-button" onclick="closeChangePasswordModal()">Hủy</button>
+            <button class="cancel-button" onclick="closeModal('change-password-modal')">Hủy</button>
             <button class="confirm-button" id="confirm-change-password">Xác nhận</button>
         </div>
     </div>
@@ -546,7 +459,7 @@ function getPaginationUrl($page, $perPage, $filter) {
     <div class="modal-content">
         <div class="modal-header">
             <h4>Xác nhận OTP chuyển quyền</h4>
-            <button class="modal-close-btn" onclick="closeOtpModal()">&times;</button>
+            <button class="modal-close-btn" onclick="closeModal('otp-confirm-modal')">×</button>
         </div>
         <div class="modal-body">
             <p>Nhập mã OTP được gửi đến email của chủ sở hữu hiện tại:</p>
@@ -554,11 +467,22 @@ function getPaginationUrl($page, $perPage, $filter) {
             <input type="hidden" id="otp-registration-id">
         </div>
         <div class="modal-footer">
-            <button class="cancel-button" onclick="closeOtpModal()">Hủy</button>
+            <button class="cancel-button" onclick="closeModal('otp-confirm-modal')">Hủy</button>
             <button class="confirm-button" id="confirm-otp-btn">Xác nhận</button>
         </div>
     </div>
 </div>
+
+<script>
+    const baseUrl = '<?php echo $base_url; ?>';
+    const paginationConfig = {
+        currentPage: <?php echo $pagination['current_page']; ?>,
+        perPage: <?php echo $perPage; ?>,
+        totalPages: <?php echo $pagination['total_pages']; ?>,
+        totalRecords: <?php echo $pagination['total']; ?>,
+        currentFilter: '<?php echo $filter; ?>'
+    };
+</script>
 
 <?php
 include $project_root_path . '/private/includes/footer.php';

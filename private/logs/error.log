@@ -135,3 +135,7 @@
 [25-Jul-2025 13:38:00 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/public/pages/auth/reset-password-otp.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
 [25-Jul-2025 13:38:01 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/public/pages/auth/reset-password-otp.php:1) in /home/qeqlwgvdhosting/public_html/public/pages/auth/reset-password-otp.php on line 15
 [25-Jul-2025 13:38:01 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/qeqlwgvdhosting/public_html/public/pages/auth/reset-password-otp.php:1) in /home/qeqlwgvdhosting/public_html/private/config/config.php on line 44
+[26-Jul-2025 22:07:10 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[31-Jul-2025 15:37:57 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

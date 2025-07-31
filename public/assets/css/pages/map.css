@@ -111,7 +111,6 @@
 /* Style for map container loading message */
 #map p {
     text-align: center;
-    padding-top: 50px;
     color: var(--gray-500);
 }
 
@@ -125,7 +124,7 @@
     font-family: inherit;
     color: var(--gray-800);
     padding: 10px;
-    max-width: 350px;
+    max-width: 150px;
 }
 
 .distance-calculator h3 {
@@ -265,7 +264,7 @@
 /* Responsive styles for mobile devices */
 @media (max-width: 768px) {
     #map {
-        height: calc(100vh - 180px); /* Adjust height for mobile */
+        height: calc(100vh - 250px); /* Adjust height for mobile */
     }
     
     .map-controls {
@@ -299,7 +298,7 @@
     /* Popup distance calculator styles for mobile */
     .distance-calculator {
         padding: 8px;
-        max-width: 280px;
+        max-width: 150px;
         font-size: 0.9rem;
     }
     
@@ -353,7 +352,7 @@
 /* Additional styles for very small screens */
 @media (max-width: 480px) {
     #map {
-        height: calc(100vh - 200px);
+        height: calc(100vh - 260px);
     }
     
     .map-controls {

@@ -17,6 +17,7 @@ Hệ thống đã được cập nhật để sử dụng Cloudinary thay vì l�
 3. Lấy thông tin: Cloud Name, API Key, API Secret
 
 ### 2. Cập nhật file .env
+#### a. Production (Đã cập nhật)
 Thêm cấu hình Cloudinary vào file `.env`:
 
 ```bash
@@ -24,6 +25,19 @@ Thêm cấu hình Cloudinary vào file `.env`:
 CLOUDINARY_CLOUD_NAME=your_cloud_name_here
 CLOUDINARY_API_KEY=your_api_key_here
 CLOUDINARY_API_SECRET=your_api_secret_here
+```
+
+#### b. Local
+
+Thêm cấu hình Cloudinary vào file `cloudinary.php`:
+
+```bash
+$cloudinary_config = [
+    'cloud_name' => env('CLOUDINARY_CLOUD_NAME', ''),
+    'api_key' => env('CLOUDINARY_API_KEY', ''),
+    'api_secret' => env('CLOUDINARY_API_SECRET', ''),
+    'secure' => true, // Luôn sử dụng HTTPS
+];
 ```
 
 ### 3. Chạy migration database
@@ -59,20 +73,7 @@ php migrate_to_cloudinary.php
 - Script sẽ hỏi xác nhận trước khi thực hiện
 - Không xóa file local tự động (cần uncomment code nếu muốn)
 
-### Cách 2: Migration thủ công
-Để giữ an toàn, có thể migration từng phần:
-
-1. **Test với vài record đầu**:
-   ```sql
-   SELECT * FROM transaction_history 
-   WHERE payment_image IS NOT NULL 
-   AND payment_image_public_id IS NULL 
-   LIMIT 5;
-   ```
-
-2. **Chạy script với limit nhỏ** (sửa trong script)
-
-## Chạy trên Production (cPanel)
+### Cách 2: Chạy trên Production (cPanel)
 
 Nếu bạn đã deploy qua cPanel và không có truy cập SSH trực tiếp, bạn có thể thực hiện:
 
@@ -92,6 +93,7 @@ Nếu bạn đã deploy qua cPanel và không có truy cập SSH trực tiếp, 
      ```
    - Lưu lại. Kết quả chạy sẽ gửi về email cPanel hoặc ghi vào log tùy cấu hình.
 
+# Phụ lục
 ## Thay đổi trong code
 
 ### Files đã được cập nhật:

@@ -24,13 +24,9 @@ require_once $project_root_path . '/private/config/config.php';
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/classes/purchase/PaymentProofService.php';
 require_once $project_root_path . '/private/classes/Voucher.php';
+require_once $project_root_path . '/private/classes/CloudinaryService.php';
 
 // --- Constants ---
-// Define upload directory relative to the public folder
-define('UPLOAD_DIR_RELATIVE', '/uploads/payment_proofs/');
-// Define absolute path for file operations
-define('UPLOAD_DIR_ABSOLUTE', $project_root_path . '/public' . UPLOAD_DIR_RELATIVE);
-
 // #uploadMC - Tăng giới hạn kích thước tải lên thành 15MB (từ 5MB)
 // Ensure consistency: Only allow image MIME types and extensions
 define('ALLOWED_MIME_TYPES', ['image/jpeg', 'image/png', 'image/gif']);
@@ -74,56 +70,29 @@ $user_id = $_SESSION['user_id'];
 $uploaded_file = $_FILES['payment_proof_image'];
 
 // --- File Upload Logic ---
-$destination_path = null; // Initialize destination path
+$cloudinary_result = null; // Initialize cloudinary result
 try {
-    // Validate Uploaded File
-    if ($uploaded_file['error'] !== UPLOAD_ERR_OK) {
-        throw new Exception('File upload error: ' . $uploaded_file['error']);
-    }
-
-    if ($uploaded_file['size'] > MAX_FILE_SIZE) {
-        throw new Exception('File exceeds maximum size limit (' . (MAX_FILE_SIZE / 1024 / 1024) . 'MB).');
-    }
-
-    $file_mime_type = mime_content_type($uploaded_file['tmp_name']);
-    $file_extension = strtolower(pathinfo($uploaded_file['name'], PATHINFO_EXTENSION));
-
-    // Updated validation to use defined constants
-    if (!in_array($file_mime_type, ALLOWED_MIME_TYPES) || !in_array($file_extension, ALLOWED_EXTENSIONS)) {
-        throw new Exception('Invalid file type. Only JPG, PNG, GIF are allowed.');
-    }
-
-    // Create Upload Directory if it doesn't exist
-    if (!is_dir(UPLOAD_DIR_ABSOLUTE)) {
-        if (!mkdir(UPLOAD_DIR_ABSOLUTE, 0755, true)) {
-            throw new Exception('Server error: Could not create upload directory.');
-        }
-    }
-
-    // Generate Unique Filename
-    $unique_filename = sprintf('reg_%d_%s.%s',
-        $registration_id,
-        time(),
-        $file_extension
-    );
-    $destination_path = UPLOAD_DIR_ABSOLUTE . $unique_filename; // Assign destination path
-
-    // Move Uploaded File
-    if (!move_uploaded_file($uploaded_file['tmp_name'], $destination_path)) {
-        throw new Exception('Failed to move uploaded file.');
-    }
+    // Initialize CloudinaryService
+    $cloudinaryService = new CloudinaryService();
+    
+    // Validate uploaded file
+    $cloudinaryService->validateUploadedFile($uploaded_file);
 
     // Database Interaction
     $db = new Database();
     $conn = $db->getConnection();
-    $conn->beginTransaction(); // Start transaction    // Create PaymentProofService instance and check if registration belongs to the user
+    $conn->beginTransaction(); // Start transaction
+
+    // Create PaymentProofService instance and check if registration belongs to the user
     $paymentProofService = new PaymentProofService();
     
     // Check if registration belongs to the user
     if (!$paymentProofService->registrationBelongsToUser($registration_id, $user_id)) {
         throw new Exception('Access denied. You do not own this registration.');
-    }// Find and update the transaction history record instead of the payment table
-    $sql_find_transaction = "SELECT id, voucher_id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
+    }
+
+    // Find and update the transaction history record instead of the payment table
+    $sql_find_transaction = "SELECT id, voucher_id, payment_image FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
     $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_find->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -133,20 +102,50 @@ try {
     if (!$transaction) {
         throw new Exception('No pending transaction found for this registration.');
     }
-      $transaction_id = $transaction['id'];
-    $voucher_id = $transaction['voucher_id'];
 
-    // Update transaction record with payment image
+    $transaction_id = $transaction['id'];
+    $voucher_id = $transaction['voucher_id'];
+    $old_payment_image = $transaction['payment_image'];
+
+    // Upload to Cloudinary
+    $metadata = [
+        'registration_id' => $registration_id,
+        'user_id' => $user_id,
+        'transaction_id' => $transaction_id
+    ];
+    
+    $cloudinary_result = $cloudinaryService->uploadPaymentProof($uploaded_file['tmp_name'], $metadata);
+    
+    if (!$cloudinary_result['success']) {
+        throw new Exception('Failed to upload image to Cloudinary');
+    }
+
+    // Update transaction record with Cloudinary URL and public_id
     $sql_update = "UPDATE transaction_history 
                    SET payment_image = :payment_image, 
+                       payment_image_public_id = :public_id,
                        payment_confirmed = 0, 
                        payment_confirmed_at = NULL, 
                        updated_at = NOW() 
                    WHERE id = :transaction_id";
     $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
+    $stmt_update->bindParam(':payment_image', $cloudinary_result['secure_url'], PDO::PARAM_STR);
+    $stmt_update->bindParam(':public_id', $cloudinary_result['public_id'], PDO::PARAM_STR);
     $stmt_update->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
     $stmt_update->execute();
+
+    // Delete old image from Cloudinary if exists
+    if (!empty($old_payment_image) && strpos($old_payment_image, 'cloudinary.com') !== false) {
+        try {
+            $old_public_id = CloudinaryService::extractPublicIdFromUrl($old_payment_image);
+            if ($old_public_id) {
+                $cloudinaryService->deletePaymentProof($old_public_id);
+            }
+        } catch (Exception $e) {
+            // Log error but don't fail the process
+            error_log("Error deleting old Cloudinary image: " . $e->getMessage());
+        }
+    }
     
     // Mark device voucher as used if present
     if (isset($_SESSION['device_fingerprint']) && isset($_SESSION['order']['voucher_code'])) {
@@ -169,6 +168,7 @@ try {
     $response['success'] = true;
     unset($response['error']);
     $response['message'] = 'Proof uploaded successfully.';
+    $response['image_url'] = $cloudinary_result['secure_url'];
 
 } catch (PDOException $e) {
     if ($conn && $conn->inTransaction()) {
@@ -176,19 +176,30 @@ try {
     }
     error_log("Database error uploading payment proof: " . $e->getMessage());
     $response['error'] = 'Database error occurred.';
-    // Clean up uploaded file if DB operation failed
-    if ($destination_path && file_exists($destination_path)) {
-        unlink($destination_path);
+    
+    // Clean up Cloudinary image if DB operation failed
+    if ($cloudinary_result && isset($cloudinary_result['public_id'])) {
+        try {
+            $cloudinaryService->deletePaymentProof($cloudinary_result['public_id']);
+        } catch (Exception $cleanup_error) {
+            error_log("Error cleaning up Cloudinary image: " . $cleanup_error->getMessage());
+        }
     }
+    
 } catch (Exception $e) {
     if ($conn && $conn->inTransaction()) {
         $conn->rollBack(); // Roll back transaction on general error if needed
     }
     error_log("General error uploading payment proof: " . $e->getMessage());
     $response['error'] = $e->getMessage();
-    // Clean up uploaded file if operation failed
-    if ($destination_path && file_exists($destination_path)) {
-        unlink($destination_path);
+    
+    // Clean up Cloudinary image if operation failed
+    if ($cloudinary_result && isset($cloudinary_result['public_id'])) {
+        try {
+            $cloudinaryService->deletePaymentProof($cloudinary_result['public_id']);
+        } catch (Exception $cleanup_error) {
+            error_log("Error cleaning up Cloudinary image: " . $cleanup_error->getMessage());
+        }
     }
 }
 

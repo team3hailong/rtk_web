@@ -3,15 +3,18 @@
  * PaymentProofService
  * 
  * Service class for handling payment proof uploads and retrievals
+ * Updated to support Cloudinary image storage
  */
 
 // Include Database class
 require_once dirname(dirname(__FILE__)) . '/Database.php';
+require_once dirname(dirname(__FILE__)) . '/CloudinaryService.php';
 
 class PaymentProofService {
     private $conn;
     private $base_url;
     private $project_root_path;
+    private $cloudinaryService;
 
     /**
      * Constructor
@@ -21,6 +24,7 @@ class PaymentProofService {
         $this->conn = $db->getConnection();
         $this->base_url = BASE_URL;
         $this->project_root_path = PROJECT_ROOT_PATH;
+        $this->cloudinaryService = new CloudinaryService();
     }
     
     /**
@@ -41,7 +45,7 @@ class PaymentProofService {
         ];
         
         try {
-            $sql_get_proof = "SELECT payment_image FROM transaction_history 
+            $sql_get_proof = "SELECT payment_image, payment_image_public_id FROM transaction_history 
                              WHERE registration_id = :registration_id 
                              AND user_id = :user_id
                              LIMIT 1";
@@ -49,13 +53,26 @@ class PaymentProofService {
             $stmt_get_proof->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
             $stmt_get_proof->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $stmt_get_proof->execute();
-            $existing_proof_image = $stmt_get_proof->fetchColumn();
+            $proof_data = $stmt_get_proof->fetch(PDO::FETCH_ASSOC);
 
-            if ($existing_proof_image) {
-                $upload_dir_relative = '/uploads/payment_proofs/';
-                $existing_proof_url = $this->base_url . '/public' . $upload_dir_relative . htmlspecialchars($existing_proof_image);
+            if ($proof_data && $proof_data['payment_image']) {
+                $payment_image = $proof_data['payment_image'];
+                $public_id = $proof_data['payment_image_public_id'];
                 
-                $result['data']['existing_proof_image'] = $existing_proof_image;
+                // Check if it's a Cloudinary URL
+                if (strpos($payment_image, 'cloudinary.com') !== false) {
+                    // It's already a Cloudinary URL
+                    $existing_proof_url = $payment_image;
+                } else if ($public_id && is_cloudinary_configured()) {
+                    // We have public_id, generate Cloudinary URL
+                    $existing_proof_url = $this->cloudinaryService->getImageUrl($public_id, 'medium');
+                } else {
+                    // Fallback to local storage URL (for legacy data)
+                    $upload_dir_relative = '/uploads/payment_proofs/';
+                    $existing_proof_url = $this->base_url . '/public' . $upload_dir_relative . htmlspecialchars($payment_image);
+                }
+                
+                $result['data']['existing_proof_image'] = $payment_image;
                 $result['data']['existing_proof_url'] = $existing_proof_url;
                 $result['success'] = true;
             } else {

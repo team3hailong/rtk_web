@@ -7,7 +7,6 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $project_root_path = PROJECT_ROOT_PATH;
-$admin_site = ADMIN_SITE;
 
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/utils/guide_helper.php';
@@ -62,7 +61,7 @@ include $project_root_path . '/private/includes/header.php';
                         <div class="guide-item-content">
                             <?php if (!empty($article['thumbnail'])): ?>
                                 <img class="guide-thumb"
-                                     src="<?php echo $admin_site   . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
+                                     src="<?php echo $article['thumbnail']; ?>"
                                      alt="Thumbnail">
                             <?php endif; ?>
                             <div class="guide-item-text">

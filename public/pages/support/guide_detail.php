@@ -7,7 +7,6 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
 $project_root_path = PROJECT_ROOT_PATH;
-$admin_site = ADMIN_SITE;
 
 require_once $project_root_path . '/private/classes/Database.php';
 $db = new Database();

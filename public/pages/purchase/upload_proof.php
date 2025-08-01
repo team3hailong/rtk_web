@@ -69,10 +69,19 @@ include $project_root_path . '/private/includes/header.php';
         <div class="existing-proof-section">
             <h4>Minh chứng đã tải lên:</h4>
             <div class="proof-image-container">
-                <a href="javascript:void(0)" onclick="window.open('<?php echo $base_url . $base_path; ?>/pages/view_image.php?image=<?php echo urlencode($existing_proof_url); ?>', 'ImageViewer', 'width=800,height=600')">
-                    <img src="<?php echo $existing_proof_url; ?>" alt="Minh chứng thanh toán hiện tại" style="max-width: 300px; cursor: pointer;">
-                </a>
-                <p class="text-sm text-gray-600 mt-2">Click vào ảnh để xem chi tiết</p>
+                <?php if (strpos($existing_proof_url, 'cloudinary.com') !== false): ?>
+                    <!-- Cloudinary image - open directly -->
+                    <a href="<?php echo htmlspecialchars($existing_proof_url); ?>" target="_blank">
+                        <img src="<?php echo htmlspecialchars($existing_proof_url); ?>" alt="Minh chứng thanh toán hiện tại" style="max-width: 300px; cursor: pointer;">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Click vào ảnh để xem chi tiết</p>
+                <?php else: ?>
+                    <!-- Local image - use view_image.php -->
+                    <a href="javascript:void(0)" onclick="window.open('<?php echo $base_url . $base_path; ?>/pages/view_image.php?image=<?php echo urlencode($existing_proof_url); ?>', 'ImageViewer', 'width=800,height=600')">
+                        <img src="<?php echo htmlspecialchars($existing_proof_url); ?>" alt="Minh chứng thanh toán hiện tại" style="max-width: 300px; cursor: pointer;">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Click vào ảnh để xem chi tiết</p>
+                <?php endif; ?>
             </div>
         </div>
         <?php endif; ?>

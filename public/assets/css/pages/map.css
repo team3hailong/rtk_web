@@ -1,411 +1,68 @@
-/* CSS Variables for consistency */
+/* CSS Variables */
 :root {
     --primary-color: #3498db;
-    --primary-dark: #2980b9;
-    --primary-600: #2980b9;
-    --primary-700: #2471a3;
-    --success-color: #2ecc71;
-    --gray-50: #f8f9fa;
+    --danger-color: #e74c3c;
     --gray-100: #f1f3f5;
-    --gray-200: #e9ecef;
     --gray-300: #dee2e6;
-    --gray-400: #ced4da;
-    --gray-500: #adb5bd;
-    --gray-600: #6c757d;
-    --gray-700: #495057;
     --gray-800: #343a40;
-    --rounded-md: 0.375rem;
-    --rounded-lg: 0.5rem;
-    --font-semibold: 600;
 }
 
-#map {height: calc(100vh - 120px); width: 100%; border-radius: var(--rounded-md); border: 1px solid var(--gray-200); background-color: var(--gray-100);}
-.map-controls {
+#map {height: calc(100vh - 120px); width: 100%; border-radius: 0.375rem; border: 1px solid #e9ecef; background-color: var(--gray-100);}
+#map-container { position: relative; }
+
+/* Styles cho các thành phần điều khiển và chú thích */
+.map-controls, .map-legend {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    background: #fff;
+    z-index: 800;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
     padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    gap: 5px;
-    width: auto;
-    max-width: 240px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-.map-type-btn {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-    cursor: pointer;
-    border-radius: 3px;
-    white-space: nowrap;
-    flex: 0 1 auto;
-    text-align: center;
-    font-size: 13px;
-    margin-bottom: 5px;
-}
-.map-type-btn.active {background: var(--primary-color);  border-color: var(--primary-color);}
-.station-label div {
-    padding: 3px 5px; 
-    border-radius: 3px; 
-    font-size: 13px; 
-    font-weight: 700; 
-    white-space: nowrap; 
-    color: #000000; 
-    text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white; 
-    background: rgba(255, 255, 255, 0.6);
-}
-.map-legend {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: white;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    font-size: 12px;
-}
-.legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-.legend-color {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
+.map-controls { top: 10px; left: 10px; display: flex; flex-direction: column; gap: 8px; }
+.map-legend { bottom: 20px; right: 20px; font-size: 12px; }
+.map-type-btn { padding: 8px 12px; border: 1px solid transparent; background-color: rgba(0, 0, 0, 0.05); color: var(--gray-800); cursor: pointer; border-radius: 6px; font-size: 13px; font-weight: 500; transition: all 0.2s ease-in-out; }
+.map-type-btn:hover { background-color: rgba(0, 0, 0, 0.1); }
+.legend-title { font-weight: bold; margin-bottom: 5px; }
+.legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+.legend-color { width: 15px; height: 15px; border-radius: 50%; margin-right: 8px; }
 .green-station {background-color: #3cb043;}
 .blue-station {background-color: #3498db;}
 .red-station {background-color: #e74c3c;}
-.island-label div {
-    padding: 3px 5px;
-    border-radius: 3px;
-    font-size: 13px;
-    font-weight: bold;
-    white-space: nowrap;
-    color: #003366;
-    text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white;
-    background: none;
+.station-label-tooltip { background-color: rgba(255, 255, 255, 0.85); border: none; box-shadow: none; border-radius: 4px; padding: 2px 6px; color: #333; font-size: 12px; font-weight: bold; }
+.station-label-tooltip { display: none; pointer-events: none; }
+.show-station-labels .station-label-tooltip { display: block; }
+
+/* --- STYLES CHO POPUP HTML/CSS --- */
+.ruler-choice-popup {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1001; text-align: center; transition: opacity 0.2s, visibility 0.2s;
+}
+.ruler-choice-popup.hidden { opacity: 0; visibility: hidden; }
+.ruler-choice-popup .popup-content h4 { margin-top: 0; margin-bottom: 15px; font-weight: 600; }
+.ruler-btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--gray-300); border-radius: 6px; background-color: white; cursor: pointer; font-size: 14px; transition: background-color 0.2s; }
+.ruler-btn:hover { background-color: var(--gray-100); }
+.ruler-btn.cancel-btn { background-color: #f1f1f1; margin-top: 5px; }
+.ruler-btn.cancel-btn:hover { background-color: #e1e1e1; }
+
+/* --- STYLES CHO RULER VÀ HIỆU ỨNG "HÍT" (SNAP) --- */
+.ruler-marker { font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.ruler-tooltip { background-color: rgba(0, 0, 0, 0.75); color: white; border: 1px solid transparent; font-weight: bold; border-radius: 4px; padding: 4px 8px; transition: all 0.1s ease-in-out; }
+.ruler-tooltip.snapped { color: var(--danger-color); background-color: white; border-color: var(--danger-color); }
+.leaflet-polyline.snapped { stroke-dasharray: none !important; }
+
+/* *** CSS MỚI, QUAN TRỌNG: Xử lý click xuyên qua vòng tròn *** */
+#map.ruler-mode-active .leaflet-interactive {
+    pointer-events: none !important;
 }
 
-/* Styles for the location button - moved from inline styles */
-#getCurrentLocation {
-    background-color: #3498db;
-    color: white;
-    margin-top: 0;
-}
-
-/* Style for legend title - moved from inline styles */
-.legend-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-/* Style for map container loading message */
-#map p {
-    text-align: center;
-    color: var(--gray-500);
-}
-
-/* Style for map container */
-#map-container {
-    position: relative;
-}
-
-/* Styles for distance calculator popup */
-.distance-calculator {
-    font-family: inherit;
-    color: var(--gray-800);
-    padding: 10px;
-    max-width: 150px;
-}
-
-.distance-calculator h3 {
-    margin: 0 0 10px 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--primary-color, #3498db);
-    border-bottom: 1px solid var(--gray-200);
-    padding-bottom: 8px;
-}
-
-.distance-calculator p small {
-    font-size: 12px;
-    color: var(--gray-600);
-}
-
-.distance-calculator .form-group {
-    margin-bottom: 15px;
-}
-
-.distance-calculator label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.distance-calculator .form-control {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid var(--gray-300);
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.distance-calculator select.form-control {
-    background-color: white;
-    height: 36px;
-}
-
-.distance-calculator .btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.distance-calculator .btn-primary {
-    background-color: var(--primary-color, #3498db);
-    color: white;
-    width: 100%;
-    font-weight: 500;
-}
-
-.distance-calculator .btn-primary:hover {
-    background-color: var(--primary-dark, #2980b9);
-}
-
-.distance-calculator .btn-secondary {
-    background-color: var(--gray-200);
-    color: var(--gray-800);
-}
-
-.distance-calculator .btn-secondary:hover {
-    background-color: var(--gray-300);
-}
-
-.distance-calculator #result-container {
-    background-color: var(--gray-50);
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 10px;
-}
-
-.distance-calculator #result-container h4 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    color: var(--gray-800);
-}
-
-.distance-calculator #distance-result h3 {
-    border-bottom: none;
-    font-size: 22px;
-    color: var(--success-color, #2ecc71);
-    margin: 10px 0 0 0;
-    padding: 0;
-    text-align: center;
-}
-
-/* Custom popup styles to ensure it's above controls */
-.distance-calculator-popup {
-    z-index: 1000 !important;
-}
-
-.distance-calculator-popup .leaflet-popup-content-wrapper {
-    border-radius: 8px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-}
-
-.distance-calculator-popup .leaflet-popup-tip-container {
-    left: 50%;
-    margin-left: -10px;
-}
-
-/* Button style for toggle map type */
-#toggleMapType {
-    background-color: #9b59b6;
-    color: white;
-}
-
-#toggleMapType:hover {
-    background-color: #8e44ad;
-}
-
-/* Button style for calculate distance in map controls */
-#calculateDistance {
-    background-color: #f39c12;
-    color: white;
-}
-
-#calculateDistance:hover {
-    background-color: #e67e22;
-}
-
-/* Button style for nearest distance in map controls */
-#calculateNearestDistance {
-    background-color: #27ae60;
-    color: white;
-}
-
-#calculateNearestDistance:hover {
-    background-color: #219955;
-}
-
-/* Responsive styles for mobile devices */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    #map {
-        height: calc(100vh - 250px); /* Adjust height for mobile */
-    }
-    
-    .map-controls {
-        flex-direction: row;
-        top: auto;
-        bottom: 10px;
-        right: 50%;
-        transform: translateX(50%);
-        width: 90%;
-        max-width: 400px;
-        justify-content: center;
-        z-index: 400; /* Giảm z-index để không che popups */
-    }
-    
-    .map-type-btn {
-        flex: 1 1 auto;
-        margin: 0;
-        padding: 8px;
-        font-size: 0.9rem;
-    }
-    
-    .map-legend {
-        bottom: 80px; /* Move legend above controls */
-        left: 10px;
-        right: auto;
-        max-width: 160px;
-        font-size: 10px;
-        padding: 8px;
-    }
-    
-    /* Popup distance calculator styles for mobile */
-    .distance-calculator {
-        padding: 8px;
-        max-width: 150px;
-        font-size: 0.9rem;
-    }
-    
-    .distance-calculator h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-    
-    .distance-calculator .form-group {
-        margin-bottom: 10px;
-    }
-    
-    .distance-calculator label {
-        font-size: 12px;
-    }
-    
-    .distance-calculator .form-control {
-        padding: 6px 8px;
-        font-size: 13px;
-    }
-    
-    /* Đảm bảo popup hiển thị trên cùng */
-    .leaflet-popup {
-        z-index: 1000 !important;
-    }
-    
-    .legend-color {
-        width: 12px;
-        height: 12px;
-    }
-    
-    .legend-title {
-        font-size: 11px;
-    }
-    
-    .content-wrapper {
-        padding: 1rem 0.5rem;
-    }
-    
-    h2.text-2xl {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    p.text-gray-600 {
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-    }
-}
-
-/* Additional styles for very small screens */
-@media (max-width: 480px) {
-    #map {
-        height: calc(100vh - 260px);
-    }
-    
-    .map-controls {
-        padding: 5px;
-        gap: 3px;
-    }
-    
-    .map-type-btn {
-        padding: 6px 4px;
-        font-size: 0.8rem;
-    }
-    
-    .map-controls, .map-legend {
-        background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-    }
-}
-
-
-/* --- CSS CHO NHÃN TRẠM --- */
-
-/* 1. Tùy chỉnh giao diện của nhãn (tooltip) */
-.station-label-tooltip {
-    background-color: rgba(255, 255, 255, 0.85); /* Nền trắng mờ để dễ đọc */
-    border: none; /* Bỏ viền mặc định của tooltip */
-    box-shadow: none; /* Bỏ bóng đổ mặc định của tooltip */
-    border-radius: 4px; /* Bo góc nhẹ */
-    padding: 2px 6px; /* Khoảng đệm bên trong */
-    
-    color: #333; /* Màu chữ */
-    font-size: 12px; /* Cỡ chữ */
-    font-weight: bold; /* In đậm */
-    white-space: nowrap; /* Đảm bảo tên trạm không bị xuống dòng */
-}
-
-/* 2. Logic ẩn/hiện nhãn dựa trên class của map container */
-
-/* Mặc định, ẩn tất cả các nhãn của trạm */
-.station-label-tooltip {
-    display: none;
-    pointer-events: none; /* Ngăn không cho nhãn bắt sự kiện chuột */
-}
-
-/* Khi map container có class 'show-station-labels', thì hiển thị các nhãn */
-.show-station-labels .station-label-tooltip {
-    display: block;
-}
-
-/* CSS cho các nhãn quần đảo (giữ nguyên nếu có) */
-.island-label {
-    background: none;
-    border: none;
-    box-shadow: none;
-    font-weight: bold;
-    color: #555;
-    text-shadow: 1px 1px 2px white;
+    #map { height: calc(100vh - 180px); }
+    .map-controls { bottom: 10px; top: auto; left: 10px; right: 10px; width: auto; transform: none; flex-direction: row; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+    .map-type-btn { flex: 1 1 calc(50% - 4px); margin: 0; padding: 10px 5px; font-size: 0.8rem; }
+    .map-legend { top: 10px; right: 10px; bottom: auto; left: auto; max-width: 160px; font-size: 10px; padding: 8px; }
+    .ruler-choice-popup { width: 90%; }
 }

@@ -186,3 +186,7 @@
 [02-Aug-2025 15:08:43 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
 [02-Aug-2025 15:34:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
 [02-Aug-2025 15:34:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 39, Accounts: 1
+[02-Aug-2025 17:20:53 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

@@ -505,7 +505,7 @@ html{
 
     /* --- Content Wrapper: Adjust Padding --- */
     .content-wrapper {
-        padding-top: 5.5rem; /* Increased top padding slightly */
+        padding-top: 3rem; /* Increased top padding slightly */
         padding-left: 1rem; /* Adjust mobile padding */
         padding-right: 1rem;
         /* Margin-left is not needed as sidebar is fixed */

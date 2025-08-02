@@ -162,3 +162,27 @@
 [31-Jul-2025 18:35:26 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 1600000, New Amount: 0, Type: percentage_discount
 [31-Jul-2025 18:37:05 Asia/Ho_Chi_Minh] Voucher calculation: Original: 34400000, Discount: 34400000, New Amount: 0, Type: percentage_discount
 [31-Jul-2025 18:40:19 Asia/Ho_Chi_Minh] Voucher calculation: Original: 17600000, Discount: 17600000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:44:06 Asia/Ho_Chi_Minh] Voucher calculation: Original: 17600000, Discount: 17600000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 18:44:56 Asia/Ho_Chi_Minh] Voucher calculation: Original: 9600000, Discount: 9600000, New Amount: 0, Type: percentage_discount
+[31-Jul-2025 21:51:29 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1
+[01-Aug-2025 07:29:17 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[01-Aug-2025 09:48:37 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[01-Aug-2025 09:50:26 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Aug-2025 10:25:48 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Aug-2025 15:30:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Aug-2025 15:30:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 62, Accounts: 1
+[01-Aug-2025 15:30:28 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Aug-2025 16:40:02 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[02-Aug-2025 11:01:32 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[02-Aug-2025 11:32:28 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_v...' at line 1
+[02-Aug-2025 15:08:33 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[02-Aug-2025 15:08:33 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: 1, Accounts: 1
+[02-Aug-2025 15:08:43 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[02-Aug-2025 15:34:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[02-Aug-2025 15:34:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: 39, Accounts: 1

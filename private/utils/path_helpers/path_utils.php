@@ -40,7 +40,11 @@ if (!function_exists('get_base_url')) {
      * @return string Base URL của ứng dụng
      */
     function get_base_url($include_protocol = true) {
-        // Trước tiên kiểm tra nếu SITE_URL đã được định nghĩa trong config
+        // If running in CLI, no HTTP_HOST available
+        if (php_sapi_name() === 'cli' || empty($_SERVER['HTTP_HOST'])) {
+            return '';
+        }
+        // If SITE_URL defined, use it
         if (defined('SITE_URL')) {
             return rtrim(SITE_URL, '/');
         }

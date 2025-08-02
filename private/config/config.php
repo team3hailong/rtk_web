@@ -8,9 +8,11 @@ require_once dirname(__DIR__) . '/utils/path_helpers/bootstrap.php';
 // Load session middleware
 require_once dirname(__DIR__) . '/utils/session_middleware.php';
 
+// Load Cloudinary configuration (Lấy từ phiên bản mới)
+require_once __DIR__ . '/cloudinary.php';
+
 // Thiết lập múi giờ mặc định là +7 (Asia/Ho_Chi_Minh)
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-
 
 // RTK API credentials
 define('RTK_API_URL', env('RTK_API_URL', 'http://rtk.taikhoandodac.vn:8090/openapi/broadcast/users'));
@@ -18,7 +20,7 @@ define('RTK_API_ACCESS_KEY', env('RTK_API_ACCESS_KEY', 'TxfJxeX7wuU7XOPU'));
 define('RTK_API_SECRET_KEY', env('RTK_API_SECRET_KEY', 'NZbVkrJ5e5SDcP0R'));
 define('RTK_API_SIGN_METHOD', env('RTK_API_SIGN_METHOD', 'HmacSHA256'));
 
-// Email Configuration 
+// Email Configuration
 define('SMTP_HOST', env('SMTP_HOST', 'smtp.gmail.com'));
 define('SMTP_PORT', env('SMTP_PORT', 587));
 define('SMTP_USERNAME', env('SMTP_USERNAME', 'dovannguyen2005bv@gmail.com'));
@@ -28,7 +30,7 @@ define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
 
 // Site Configuration
 define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
-define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
+define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn'); // Lấy từ phiên bản cũ (HEAD)
 
 // Environment and error handling settings
 define('APP_ENV', env('APP_ENV', 'production'));
@@ -44,6 +46,7 @@ if (!APP_DEBUG) {
         header('Location: ' . SITE_URL . '/public/pages/error.php');
         exit;
     });
+    
     set_exception_handler(function($e) {
         // Log the full error details to the error log file
         error_log("Uncaught Exception: " . $e->getMessage() . "\n" . $e->getTraceAsString());
@@ -53,14 +56,12 @@ if (!APP_DEBUG) {
             session_start();
         }
         $_SESSION['error_message'] = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau hoặc liên hệ quản trị viên.';
-        // Optionally log minimal context if needed for user session, e.g., error ID
 
         // Redirect to a generic error page without exposing details in URL
-        // Ensure SITE_URL is defined and correct
         if (defined('SITE_URL')) {
             header('Location: ' . SITE_URL . '/public/pages/error.php');
         } else {
-            // Fallback if SITE_URL is not defined (should not happen ideally)
+            // Fallback if SITE_URL is not defined
             header('Location: /public/pages/error.php');
         }
         exit;

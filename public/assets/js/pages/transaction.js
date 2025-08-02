@@ -49,8 +49,17 @@ function showTransactionDetails(txData) {
     }    // Show payment proof image link if available
     if (txData.payment_image) {
         paymentProofSection.style.display = 'block';
-        // Sử dụng view_image.php để hiển thị ảnh một cách an toàn
-        modalTxPaymentImageLink.href = `/public/handlers/view_image.php?file=${txData.payment_image}`;
+        
+        // Check if it's a Cloudinary URL or local file
+        if (txData.payment_image.includes('cloudinary.com')) {
+            // For Cloudinary URLs, link directly
+            modalTxPaymentImageLink.href = txData.payment_image;
+            modalTxPaymentImageLink.target = '_blank';
+        } else {
+            // For local files, use view_image.php handler
+            modalTxPaymentImageLink.href = `/public/handlers/view_image.php?file=${txData.payment_image}`;
+            modalTxPaymentImageLink.target = '_self';
+        }
     } else {
         paymentProofSection.style.display = 'none';
     }

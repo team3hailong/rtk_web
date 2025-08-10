@@ -92,6 +92,28 @@ $verified_total_price = $payment_data['verified_total_price'];
 // Store base price data in session
 $_SESSION['payment_data'] = $payment_data;
 
+// Check if current voucher has auto_approve enabled
+$has_auto_approve_voucher = false;
+if (isset($_SESSION[$sessionKey]['voucher_id'])) {
+    try {
+        require_once $project_root_path . '/private/classes/Database.php';
+        $db = new Database();
+        $conn = $db->getConnection();
+        
+        $sql = "SELECT auto_approve FROM voucher WHERE id = :voucher_id AND is_active = 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':voucher_id', $_SESSION[$sessionKey]['voucher_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $voucher_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($voucher_data && $voucher_data['auto_approve'] == 1) {
+            $has_auto_approve_voucher = true;
+        }
+    } catch (Exception $e) {
+        error_log("Error checking auto-approve voucher: " . $e->getMessage());
+    }
+}
+
 // Recalculate final price if a voucher is applied
 if (isset($_SESSION[$sessionKey]['voucher_code'])) {
     $base_subtotal = $payment_data['base_price_from_registration'] * $payment_data['quantity'];
@@ -104,6 +126,10 @@ if (isset($_SESSION[$sessionKey]['voucher_code'])) {
     $sessionDataKey = $is_renewal ? 'amount' : 'total_price';
     $_SESSION[$sessionKey][$sessionDataKey] = $final_price;
     $_SESSION[$sessionKey]['discounted_subtotal'] = $discounted_subtotal;
+    // Ensure auto-approve flow & other actions see the discounted total instead of the original price
+    if (isset($_SESSION['payment_data'])) {
+        $_SESSION['payment_data']['verified_total_price'] = $final_price;
+    }
     
     $verified_total_price = $final_price;
 }
@@ -218,18 +244,27 @@ include $project_root_path . '/private/includes/header.php';
                 <!-- Payment Section: Logic hiển thị động -->
                 <div id="payment-method-container">
 
-                    <!-- Giao diện cho đơn hàng MIỄN PHÍ (giá <= 0) -->
+                    <!-- Giao diện cho đơn hàng được duyệt tự động-->
                     <section id="free-order-confirmation-section" class="payment-qr-section" style="display: <?php echo ($verified_total_price <= 0) ? 'block' : 'none'; ?>;">
                         <h3>Hoàn tất đơn hàng</h3>
                         <div class="free-order-notice">
-                            <p>Do áp dụng mã giảm giá, tổng thanh toán của bạn là <strong style="color: var(--success-600);">0 đ</strong>.</p>
-                            <p>Vui lòng nhấn nút bên dưới để hoàn tất đăng ký và kích hoạt tài khoản của bạn ngay lập tức.</p>
+                            <p>Do áp dụng mã giảm giá, tổng thanh toán của bạn là <strong style="color: var(--success-600);"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>.</p>
+                            <?php if ($has_auto_approve_voucher): ?>
+                                <p>Voucher của bạn hỗ trợ <strong style="color: var(--success-600);">duyệt tự động</strong>. Vui lòng nhấn nút bên dưới để hoàn tất đăng ký và kích hoạt tài khoản ngay lập tức.</p>
+                            <?php else: ?>
+                                <p>Vui lòng nhấn nút bên dưới để hoàn tất đăng ký và kích hoạt tài khoản của bạn ngay lập tức.</p>
+                            <?php endif; ?>
                         </div>
-                        <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_free_order" method="POST" style="margin-top: 2rem;">
+                        <?php
+                        // Determine which action to use based on voucher type
+                        $action_to_use = $has_auto_approve_voucher ? 'process_auto_approve_order' : 'process_free_order';
+                        $button_text = $has_auto_approve_voucher ? 'Hoàn tất đăng ký (Duyệt tự động)' : 'Hoàn tất đăng ký miễn phí';
+                        ?>
+                        <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=<?php echo $action_to_use; ?>" method="POST" style="margin-top: 2rem;">
                             <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
                             <?php echo generate_csrf_input(); ?>
                             <button type="submit" class="btn btn-complete-free-order">
-                                Hoàn tất đăng ký miễn phí
+                                <?php echo htmlspecialchars($button_text); ?>
                             </button>
                         </form>
                     </section>
@@ -237,6 +272,15 @@ include $project_root_path . '/private/includes/header.php';
                     <!-- Giao diện cho đơn hàng CÓ TÍNH PHÍ (giá > 0) -->
                     <section id="payment-qr-code-section" class="payment-qr-section" style="display: <?php echo ($verified_total_price > 0) ? 'block' : 'none'; ?>;">
                         <h3>Quét mã để thanh toán</h3>
+                        <?php if ($has_auto_approve_voucher): ?>
+                            <div style="background: #e8f5e8; border: 1px solid #c3e6c3; border-radius: 5px; padding: 1rem; margin-bottom: 1rem;">
+                                <p style="margin: 0; color: #2d5a2d; font-weight: 500;">
+                                    <i class="fas fa-check-circle" style="color: var(--success-600);"></i>
+                                    Voucher của bạn hỗ trợ <strong>duyệt tự động</strong>. 
+                                    Sau khi thanh toán, đơn hàng sẽ được duyệt tự động trong vòng vài phút.
+                                </p>
+                            </div>
+                        <?php endif; ?>
                         <p style="font-size: var(--font-size-sm); color: var(--gray-600); margin-bottom: 1rem;">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR.</p>
                         <div id="qrcode">
                             <img src="<?php echo htmlspecialchars($vietqr_image_url ?? ''); ?>" alt="VietQR Code" style="display: block; width: 100%; height: auto; object-fit: contain;">

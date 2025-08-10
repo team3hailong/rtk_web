@@ -89,49 +89,29 @@ if (isset($_COOKIE['cf_clearance'])) {
 	$browserHeaders[] = 'Cookie: cf_clearance=' . $_COOKIE['cf_clearance'];
 }
 
-$attempts = 2;
 $responseBody = null;
 $httpCode = 0;
 $curlError = '';
 $lastInfo = [];
-for ($i = 1; $i <= $attempts; $i++) {
-	$curl = curl_init($cronUrl);
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($curl, CURLOPT_HTTPGET, true);
-	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-	curl_setopt($curl, CURLOPT_TIMEOUT, 45);
-	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // adjust for production if needed
-	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($curl, CURLOPT_HTTPHEADER, $browserHeaders);
-	// Accept compressed responses
-	curl_setopt($curl, CURLOPT_ENCODING, '');
-	$responseBody = curl_exec($curl);
-	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-	$curlError = curl_error($curl);
-	$lastInfo = curl_getinfo($curl);
-	curl_close($curl);
-	if (!$curlError && $httpCode === 200) {
-		break; // success
-	}
-	// small delay before retry
-	usleep(200000); // 200ms
-}
-
-// Increase timeouts to avoid 10s limit and allow remote processing
-curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10); // seconds to connect
-curl_setopt($curl, CURLOPT_TIMEOUT, 45);        // total seconds allowed
-
-// For development or if admin SSL uses self-signed certs, you can relax SSL checks.
-// Prefer enabling strict checks in production.
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+$curl = curl_init($cronUrl);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false); // avoid redirect delays (Cloudflare)
+curl_setopt($curl, CURLOPT_HTTPGET, true);
+// Short timeouts: goal is to trigger remote job, not wait for full processing
+curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
+curl_setopt($curl, CURLOPT_TIMEOUT, 4);
+// Force IPv4 + HTTP/1.1 to bypass potential IPv6 / HTTP2 stalls
+if (defined('CURL_IPRESOLVE_V4')) curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+if (defined('CURL_HTTP_VERSION_1_1')) curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // adjust for production if needed
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-
-// Identify request
-curl_setopt($curl, CURLOPT_HTTPHEADER, [
-	'Accept: application/json, */*',
-	'User-Agent: rtk_web-auto-approve/1.0 (GET)'
-]);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $browserHeaders);
+curl_setopt($curl, CURLOPT_ENCODING, '');
+$responseBody = curl_exec($curl);
+$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+$curlError = curl_error($curl);
+$lastInfo = curl_getinfo($curl);
+curl_close($curl);
 
 // Determine if allow_url_fopen is enabled (avoid warnings if disabled on server)
 $allowUrlFopen = (bool)ini_get('allow_url_fopen');
@@ -172,7 +152,8 @@ if (is_string($responseBody)) {
 }
 
 // Basic success heuristic
-$ok = ($httpCode >= 200 && $httpCode < 300);
+// Accept HTTP 2xx OR (fire-and-forget) a successfully opened connection even if no body yet
+$ok = ($httpCode >= 200 && $httpCode < 300) || ($httpCode === 0 && !empty($lastInfo['pretransfer_time']));
 if (!$ok && is_array($parsed)) {
 	$ok = ($parsed['success'] ?? false) || in_array(strtolower((string)($parsed['status'] ?? '')), ['ok', 'success', 'done'], true);
 }

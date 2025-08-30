@@ -45,6 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const voucherInfo = section.querySelector('.voucher-info');
             const totalPriceDisplay = document.querySelector('.summary-total strong');
             
+            // New variable for "Giá trị đơn hàng"
+            let orderValueDisplay = null;
+            const allSummaryItems = document.querySelectorAll('.payment-summary .summary-item');
+            allSummaryItems.forEach(item => {
+                const span = item.querySelector('span');
+                if (span && span.textContent && span.textContent.trim() === 'Giá trị đơn hàng:') {
+                    orderValueDisplay = item.querySelector('strong');
+                }
+            });
+            
             // Xử lý sự kiện áp dụng voucher
             if (applyBtn && voucherInput) {
                 applyBtn.addEventListener('click', function() {
@@ -66,12 +76,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     const formData = new FormData();
                     formData.append('voucher_code', voucherCode);
                     
-                    // Lấy giá hiện tại từ hiển thị
-                    const displayedPrice = totalPriceDisplay ? 
-                        parseFloat(totalPriceDisplay.textContent.replace(/[^\d]/g, '')) : 
-                        currentPrice;
-                        
-                    formData.append('order_amount', displayedPrice || currentPrice);
+                    // Lấy giá trị số từ orderValueDisplay.textContent
+                    let orderAmountForVoucher = 0;
+                    if (orderValueDisplay && orderValueDisplay.textContent) {
+                        const cleanedPrice = orderValueDisplay.textContent.replace(/\./g, '').replace(' đ', '').trim();
+                        orderAmountForVoucher = parseFloat(cleanedPrice);
+                    } else {
+                        console.error("Could not determine order amount from orderValueDisplay. Falling back to basePrice for voucher calculation.");
+                        orderAmountForVoucher = basePrice; 
+                    }
+                                        
+                    formData.append('order_amount', orderAmountForVoucher);
                     formData.append('context', isRenewal ? 'renewal' : 'purchase');
                     formData.append('csrf_token', JS_CSRF_TOKEN);
                     
@@ -114,19 +129,27 @@ document.addEventListener('DOMContentLoaded', function() {
                                 discountInfo.textContent = discountMessage;
                             }
                             
+                            // Calculate final price including VAT
+                            const subtotalAfterDiscount = parseFloat(data.data.new_amount);
+                            let finalTotalPriceWithVAT = subtotalAfterDiscount;
+                            if (vatValue > 0) { // vatValue is JS_VAT_VALUE
+                                const calculatedVat = orderAmountForVoucher * (vatValue / 100);
+                                finalTotalPriceWithVAT = subtotalAfterDiscount + calculatedVat;
+                            }
+                            
                             // Cập nhật tổng tiền
                             if (totalPriceDisplay) {
-                                totalPriceDisplay.textContent = formatCurrency(data.data.new_amount);
+                                totalPriceDisplay.textContent = formatCurrency(finalTotalPriceWithVAT);
                             }
                             
                             // Cập nhật số tiền trong phần thông tin thanh toán
                             const paymentAmountElement = document.getElementById('payment-amount');
                             if (paymentAmountElement) {
-                                paymentAmountElement.textContent = formatCurrency(data.data.new_amount);
+                                paymentAmountElement.textContent = formatCurrency(finalTotalPriceWithVAT);
                             }
                             
                             // Cập nhật mã QR
-                            updateQRCode(data.data.new_amount);
+                            updateQRCode(finalTotalPriceWithVAT);
                             
                             // Hiển thị box voucher và ẩn form nhập
                             if (voucherInfo) {
@@ -136,7 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             voucherInput.value = '';
                             voucherInput.style.display = 'none';
                             applyBtn.style.display = 'none';
-                            
+                            // Reload page to reflect updated transaction amount
+                            window.location.reload();
                         } else {
                             // Voucher không hợp lệ
                             if (voucherStatus) {
@@ -194,22 +218,32 @@ document.addEventListener('DOMContentLoaded', function() {
                                 applyBtn.style.display = '';
                             }
                             
+                            // Calculate final price including VAT when removing voucher
+                            const originalAmountPreVAT = parseFloat(data.data.original_amount);
+                            let originalTotalPriceWithVAT = originalAmountPreVAT;
+                            if (vatValue > 0) { // vatValue is JS_VAT_VALUE
+                                const calculatedVat = originalAmountPreVAT * (vatValue / 100);
+                                originalTotalPriceWithVAT = originalAmountPreVAT + calculatedVat;
+                            }
+
                             // Cập nhật tổng tiền về giá ban đầu
                             if (totalPriceDisplay) {
-                                totalPriceDisplay.textContent = formatCurrency(data.data.original_amount);
+                                totalPriceDisplay.textContent = formatCurrency(originalTotalPriceWithVAT);
                             }
                             
                             // Cập nhật số tiền trong phần thông tin thanh toán
                             const paymentAmountElement = document.getElementById('payment-amount');
                             if (paymentAmountElement) {
-                                paymentAmountElement.textContent = formatCurrency(data.data.original_amount);
+                                paymentAmountElement.textContent = formatCurrency(originalTotalPriceWithVAT);
                             }
                             
                             // Cập nhật mã QR
-                            updateQRCode(data.data.original_amount);
+                            updateQRCode(originalTotalPriceWithVAT);
                             
                             // Reset voucher ID
                             appliedVoucherId = null;
+                            // Reload page to reflect removal of voucher
+                            window.location.reload();
                         } else {
                             if (voucherStatus) {
                                 voucherStatus.textContent = data.message;

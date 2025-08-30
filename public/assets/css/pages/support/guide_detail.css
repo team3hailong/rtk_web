@@ -39,6 +39,12 @@
   line-height: 1.7; 
 }
 
+/* Ensure guide content can scroll horizontally */
+.guide-content {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .guide-error {
   color: #c00;
   font-size: 1.2em;
@@ -51,6 +57,39 @@
 
 .guide-back-container {
   margin-top: 32px;
+}
+
+/* Responsive table styling: restore table display and collapse borders */
+.guide-content table {
+  display: table;
+  white-space: normal;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  table-layout: auto;
+}
+
+.guide-content table td,
+.guide-content table th {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  min-width: 120px;
+}
+
+/* Ensure images are responsive */
+.guide-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+/* Đảm bảo mọi ảnh trong nội dung không vượt quá khung */
+.guide-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Responsive styles */
@@ -76,38 +115,4 @@
     font-size: 1em;
     line-height: 1.6;
   }
-}
-
-/* Ensure tables are responsive */
-.guide-content table {
-  width: 100%;
-  overflow-x: auto;
-  display: block;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-  border-collapse: collapse;
-  margin: 1em 0;
-}
-
-.guide-content table td,
-.guide-content table th {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  min-width: 120px;
-}
-
-/* Ensure images are responsive */
-.guide-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 1em auto;
-}
-
-/* Đảm bảo mọi ảnh trong nội dung không vượt quá khung */
-.guide-content img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
 }

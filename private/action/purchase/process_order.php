@@ -94,7 +94,35 @@ try {
     // Ensure final price is 0 if it's a trial package
     if ($is_trial_package) {
         $final_total_price = 0;
-    }    // --- Calculate Start and End Dates (Example: using package duration text) ---
+        $vat_amount = 0; 
+        // $calculated_subtotal = 0; // Original subtotal, can be left for reference or zeroed.
+    } else {
+        // If NOT a trial package, check for and apply voucher monetary discounts
+        // $_SESSION['order']['total_price'] should be the subtotal AFTER discount, PRE-VAT
+        // $_SESSION['order']['voucher_discount'] is the amount of discount
+        if (isset($_SESSION['order']['voucher_id']) && 
+            isset($_SESSION['order']['total_price']) && // This is the new subtotal (pre-VAT) after discount
+            isset($_SESSION['order']['voucher_discount']) && 
+            (float)$_SESSION['order']['voucher_discount'] > 0) {
+            
+            $subtotal_after_discount = (float)$_SESSION['order']['total_price'];
+            // Ensure it's not negative
+            if ($subtotal_after_discount < 0) $subtotal_after_discount = 0;
+
+            // Recalculate VAT on the new discounted subtotal
+            // $vat_percent is already determined (0 or 10 based on company type)
+            if ($purchase_type === 'company') { 
+                $vat_amount = round($subtotal_after_discount * ($vat_percent / 100), 2);
+            } else {
+                $vat_amount = 0; 
+            }
+            
+            // Update final total price after discount and new VAT
+            $final_total_price = $subtotal_after_discount + $vat_amount;
+        }
+    }
+    
+    // --- Calculate Start and End Dates (Example: using package duration text) ---
     $start_time = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
     $end_time = clone $start_time;
     if (preg_match('/(\d+)\s*(Năm|Tháng|Ngày)/iu', $package['duration_text'], $matches)) {

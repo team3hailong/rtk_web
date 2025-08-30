@@ -639,7 +639,7 @@ class Referral {
             // Get user's monthly rank
             $monthlyStmt = $this->conn->prepare("
                 SELECT 
-                    COUNT(*) + 1 as rank
+                    COUNT(*) + 1 as `rank`
                 FROM 
                     user_ranking
                 WHERE 
@@ -665,7 +665,7 @@ class Referral {
             // Get user's total rank
             $totalStmt = $this->conn->prepare("
                 SELECT 
-                    COUNT(*) + 1 as rank
+                    COUNT(*) + 1 as `rank`
                 FROM 
                     user_ranking
                 WHERE 

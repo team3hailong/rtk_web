@@ -113,63 +113,17 @@ $curlError = curl_error($curl);
 $lastInfo = curl_getinfo($curl);
 curl_close($curl);
 
-// Determine if allow_url_fopen is enabled (avoid warnings if disabled on server)
-$allowUrlFopen = (bool)ini_get('allow_url_fopen');
-
-// Fallback: try file_get_contents if cURL failed or got non-200 and allow_url_fopen is enabled
-if (($curlError || $httpCode !== 200) && $allowUrlFopen && function_exists('file_get_contents')) {
-	try {
-		$ctx = stream_context_create([
-			'http' => [
-				'method' => 'GET',
-				'header' => implode("\r\n", [
-					'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-					'Accept: application/json, text/plain, */*'
-				])
-			]
-		]);
-		$altResponse = @file_get_contents($cronUrl, false, $ctx);
-		if ($altResponse !== false && empty($responseBody)) {
-			$responseBody = $altResponse;
-			$httpCode = 200; // treat as success if content returned
-		}
-	} catch (Throwable $e) {
-		error_log('[AUTO_APPROVE] file_get_contents fallback failed: ' . $e->getMessage());
-	}
-}
-
-if ($curlError && $httpCode !== 200) {
-	error_log('[AUTO_APPROVE] cURL error: ' . $curlError . ' | HTTP: ' . $httpCode . ' | URL=' . $cronUrl);
-}
-
-// Try to parse JSON; if not JSON, treat as plain text
-$parsed = null;
+// Only consider success when JSON response has success=true; no fallback
+$decoded = null;
 if (is_string($responseBody)) {
 	$decoded = json_decode($responseBody, true);
-	if (json_last_error() === JSON_ERROR_NONE) {
-		$parsed = $decoded;
-	}
 }
-
-// Basic success heuristic
-// Accept HTTP 2xx OR (fire-and-forget) a successfully opened connection even if no body yet
-$ok = ($httpCode >= 200 && $httpCode < 300) || ($httpCode === 0 && !empty($lastInfo['pretransfer_time']));
-if (!$ok && is_array($parsed)) {
-	$ok = ($parsed['success'] ?? false) || in_array(strtolower((string)($parsed['status'] ?? '')), ['ok', 'success', 'done'], true);
-}
-if (!$ok && is_string($responseBody)) {
-	$lc = strtolower($responseBody);
-	$ok = (strpos($lc, 'success') !== false) || (strpos($lc, 'ok') !== false) || (strpos($lc, 'done') !== false);
-}
-
-if ($ok) {
-	// Redirect to processing page; it can poll/refresh until the account is active
-	header('Location: ' . BASE_URL . '/public/pages/purchase/order_processing.php');
+if (is_array($decoded) && isset($decoded['success']) && $decoded['success'] === true) {
+	header('Location: ' . BASE_URL . '/public/pages/purchase/success.php');
 	exit;
 }
-
 // Log response for debugging then redirect with error
-error_log('[AUTO_APPROVE] Cron response (HTTP ' . $httpCode . ') url=' . $cronUrl . ' info=' . json_encode($lastInfo) . ' body=' . substr((string)$responseBody, 0, 1000));
+error_log('[AUTO_APPROVE] Cron response invalid or unsuccessful: ' . var_export($responseBody, true));
 header('Location: ' . BASE_URL . '/public/pages/purchase/payment.php?error=auto_approve_failed');
 exit;
 

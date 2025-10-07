@@ -1,0 +1,44 @@
+# ✅ CẬP NHẬT - Click đơn giản chọn nhiều tỉnh
+
+## 🎯 Thay đổi
+- ❌ **Trước:** Phải giữ Ctrl + Click
+- ✅ **Sau:** Chỉ cần Click để chọn/bỏ chọn
+
+## 📁 Files đã sửa
+1. `public/pages/purchase/details.php` - Thêm `size="10"`, update text
+2. `public/assets/js/pages/purchase/details.js` - Thêm click handler
+3. `public/assets/css/pages/purchase/details.css` - Thêm icon ✓ và style
+4. `public/tools/test_multiple_provinces.html` - Cập nhật test page
+
+## 🚀 Test ngay
+```
+http://localhost/02062025_user_web/public/tools/test_multiple_provinces.html
+```
+
+## 💡 Cách hoạt động
+```javascript
+// Khi click vào option
+select.addEventListener('mousedown', function(e) {
+    e.preventDefault(); // Chặn behavior mặc định
+    option.selected = !option.selected; // Toggle
+});
+```
+
+## 🎨 Visual
+- **Chưa chọn:** Nền trắng
+- **Hover:** Nền xanh nhạt (#f0f4ff)
+- **Đã chọn:** ✓ + Nền gradient xanh lá + Text trắng đậm
+
+## ✅ Ưu điểm
+- ✅ Dễ dàng trên mobile
+- ✅ Trực quan hơn
+- ✅ Không cần học cách dùng
+- ✅ Cross-browser compatible
+
+## 📝 Note
+- Backend không thay đổi
+- Vẫn submit `location_id[]` array như cũ
+- Keyboard navigation vẫn hoạt động bình thường
+
+---
+**Ngày:** 07/10/2025

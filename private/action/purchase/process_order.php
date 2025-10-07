@@ -40,13 +40,24 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $user_id = $_SESSION['user_id'];
 $package_id = filter_input(INPUT_POST, 'package_id', FILTER_VALIDATE_INT);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
-$location_id = filter_input(INPUT_POST, 'location_id', FILTER_VALIDATE_INT);
+
+// Nhận mảng location_id (có thể chọn nhiều tỉnh)
+$location_ids = isset($_POST['location_id']) && is_array($_POST['location_id']) ? $_POST['location_id'] : [];
+// Lọc và chuyển sang số nguyên
+$location_ids = array_filter(array_map('intval', $location_ids), function($id) { return $id > 0; });
+
+// Tỉnh đầu tiên là tỉnh chính (location_id)
+$location_id = !empty($location_ids) ? $location_ids[0] : null;
+
+// Tất cả các tỉnh được chọn sẽ lưu vào selected_provinces dạng JSON
+$selected_provinces_json = !empty($location_ids) ? json_encode(array_values($location_ids)) : null;
+
 $purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_DEFAULT); // Lấy purchase_type, replaced FILTER_SANITIZE_STRING
 
 // --- Validate Input ---
-if (!$package_id || !$quantity || $quantity < 1 || !$location_id || !in_array($purchase_type, ['individual', 'company'])) { // Validate purchase_type
+if (!$package_id || !$quantity || $quantity < 1 || !$location_id || empty($location_ids) || !in_array($purchase_type, ['individual', 'company'])) { // Validate purchase_type
      // Log the specific missing fields if needed
-     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}, PurchaseType: {$purchase_type}");
+     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}, SelectedProvinces: " . ($selected_provinces_json ?: 'NULL') . ", PurchaseType: {$purchase_type}");
      header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=missing_data');
      exit;
 }
@@ -155,12 +166,13 @@ try {
     $conn->beginTransaction();
 
     // 1. Insert into Registration
-    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at)
-                VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
+    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, selected_provinces, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at)
+                VALUES (:user_id, :package_id, :location_id, :selected_provinces, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
     $stmt_reg = $conn->prepare($sql_reg);
     $stmt_reg->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_reg->bindParam(':package_id', $package_id, PDO::PARAM_INT);
     $stmt_reg->bindParam(':location_id', $location_id, PDO::PARAM_INT);
+    $stmt_reg->bindParam(':selected_provinces', $selected_provinces_json, PDO::PARAM_STR); // Lưu JSON array các tỉnh
     $stmt_reg->bindParam(':num_account', $quantity, PDO::PARAM_INT);
     $stmt_reg->bindParam(':start_time', $start_time_str, PDO::PARAM_STR);
     $stmt_reg->bindParam(':end_time', $end_time_str, PDO::PARAM_STR);

@@ -97,6 +97,39 @@ total-price-display span {
     background-color: #059669; /* Darker green on hover */
 }
 
+/* CSS cho multiple select tỉnh/thành phố */
+.form-control[multiple] {
+    height: auto;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.form-control[multiple] option {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.form-control[multiple] option:hover {
+    background-color: #f0f4ff;
+}
+
+.form-control[multiple] option:checked {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    font-weight: 600;
+}
+
+/* Thêm icon check cho option đã chọn */
+.form-control[multiple] option:checked::before {
+    content: '✓ ';
+    font-weight: bold;
+    margin-right: 5px;
+}
+
 @media (max-width: 768px) {
     .content-wrapper {
         padding: 1rem !important;

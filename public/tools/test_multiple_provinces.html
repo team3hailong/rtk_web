@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Multiple Province Selection</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .helper-text {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        select[multiple] {
+            height: auto;
+            cursor: pointer;
+        }
+        
+        select[multiple] option {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        select[multiple] option:hover {
+            background-color: #f0f4ff;
+        }
+        
+        select[multiple] option:checked {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        select[multiple] option:checked::before {
+            content: '✓ ';
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+        
+        .result-box.show {
+            display: block;
+        }
+        
+        .result-box h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .result-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #667eea;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .primary-badge {
+            background: #10B981;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            select[multiple] {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Test Multiple Province Selection</h1>
+        <p class="subtitle">Kiểm tra chức năng chọn nhiều tỉnh/thành phố</p>
+        
+        <form id="test-form">
+            <div class="form-group">
+                <label for="provinces">
+                    Chọn Tỉnh/Thành phố sử dụng:
+                    <small style="color: #999; font-weight: normal;">(Có thể chọn nhiều tỉnh)</small>
+                </label>
+                <select id="provinces" name="location_id[]" multiple required size="10">
+                    <option value="21">Hà Nội</option>
+                    <option value="30">Hải Phòng</option>
+                    <option value="40">Nghệ An</option>
+                    <option value="42">Đà Nẵng</option>
+                    <option value="50">TP. Hồ Chí Minh</option>
+                    <option value="60">Cần Thơ</option>
+                    <option value="70">Bình Dương</option>
+                    <option value="80">Đồng Nai</option>
+                    <option value="90">Khánh Hòa</option>
+                    <option value="100">Lâm Đồng</option>
+                </select>
+                <small class="helper-text">
+                    💡 <strong>Hướng dẫn:</strong> Click để chọn/bỏ chọn tỉnh (không cần giữ Ctrl).<br>
+                    🎯 Tỉnh đầu tiên bạn chọn sẽ được dùng làm tỉnh chính cho tài khoản.
+                </small>
+            </div>
+            
+            <button type="submit">Xem kết quả</button>
+        </form>
+        
+        <div id="result" class="result-box">
+            <h3>📊 Kết quả:</h3>
+            
+            <div class="result-item">
+                <div class="result-label">Tỉnh chính (location_id):</div>
+                <div class="result-value" id="primary-province"></div>
+            </div>
+            
+            <div class="result-item">
+                <div class="result-label">Tất cả các tỉnh đã chọn (selected_provinces):</div>
+                <div class="result-value" id="selected-provinces-json"></div>
+            </div>
+            
+            <div class="result-item">
+                <div class="result-label">Hiển thị:</div>
+                <div id="provinces-display"></div>
+            </div>
+            
+            <div class="result-item">
+                <div class="result-label">SQL INSERT sẽ là:</div>
+                <div class="result-value" id="sql-example" style="white-space: pre-wrap;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('test-form');
+        const select = document.getElementById('provinces');
+        const resultBox = document.getElementById('result');
+        
+        // Cho phép chọn/bỏ chọn nhiều option bằng click thông thường (không cần Ctrl)
+        select.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            const option = e.target;
+            if (option.tagName === 'OPTION') {
+                // Toggle selection
+                option.selected = !option.selected;
+                // Trigger change event
+                select.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        // Prevent default behavior of select
+        select.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+        
+        // Tạo map tên tỉnh
+        const provinceNames = {
+            '21': 'Hà Nội',
+            '30': 'Hải Phòng',
+            '40': 'Nghệ An',
+            '42': 'Đà Nẵng',
+            '50': 'TP. Hồ Chí Minh',
+            '60': 'Cần Thơ',
+            '70': 'Bình Dương',
+            '80': 'Đồng Nai',
+            '90': 'Khánh Hòa',
+            '100': 'Lâm Đồng'
+        };
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedOptions = Array.from(select.selectedOptions);
+            
+            if (selectedOptions.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 tỉnh!');
+                return;
+            }
+            
+            // Lấy array các location_id
+            const locationIds = selectedOptions.map(opt => parseInt(opt.value));
+            
+            // Tỉnh đầu tiên là tỉnh chính
+            const primaryId = locationIds[0];
+            const primaryName = provinceNames[primaryId];
+            
+            // JSON array cho selected_provinces
+            const selectedProvincesJson = JSON.stringify(locationIds);
+            
+            // Hiển thị kết quả
+            document.getElementById('primary-province').textContent = 
+                `${primaryId} - ${primaryName}`;
+            
+            document.getElementById('selected-provinces-json').textContent = 
+                selectedProvincesJson;
+            
+            // Hiển thị badges
+            let displayHtml = '';
+            locationIds.forEach((id, index) => {
+                const badgeClass = (index === 0) ? 'badge primary-badge' : 'badge';
+                const label = (index === 0) ? '(Chính)' : '';
+                displayHtml += `<span class="${badgeClass}">${provinceNames[id]} ${label}</span>`;
+            });
+            document.getElementById('provinces-display').innerHTML = displayHtml;
+            
+            // Hiển thị SQL example
+            const sqlExample = `INSERT INTO registration (
+    user_id, 
+    package_id, 
+    location_id, 
+    selected_provinces, 
+    ...
+) VALUES (
+    123,              -- user_id
+    5,                -- package_id
+    ${primaryId},              -- location_id (tỉnh chính)
+    '${selectedProvincesJson}', -- selected_provinces
+    ...
+)`;
+            
+            document.getElementById('sql-example').textContent = sqlExample;
+            
+            // Hiện result box
+            resultBox.classList.add('show');
+            
+            // Scroll to result
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>

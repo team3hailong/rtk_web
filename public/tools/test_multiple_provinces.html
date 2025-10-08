@@ -75,34 +75,66 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        select[multiple] {
-            height: auto;
-            cursor: pointer;
+        .provinces-checkbox-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
         }
         
-        select[multiple] option {
+        .province-checkbox-label {
+            display: flex;
+            align-items: center;
             padding: 12px 15px;
+            margin: 0;
             border-radius: 6px;
-            margin-bottom: 3px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease;
             user-select: none;
         }
         
-        select[multiple] option:hover {
+        .province-checkbox-label:hover {
             background-color: #f0f4ff;
         }
         
-        select[multiple] option:checked {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
+        .province-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #667eea;
+            flex-shrink: 0;
         }
         
-        select[multiple] option:checked::before {
-            content: '✓ ';
-            font-weight: bold;
-            margin-right: 5px;
+        .province-name {
+            font-size: 15px;
+            color: #333;
+            flex-grow: 1;
+        }
+        
+        .province-checkbox:checked + .province-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .provinces-checkbox-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .provinces-checkbox-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .provinces-checkbox-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+        
+        .provinces-checkbox-container::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
         }
         
         button {
@@ -198,24 +230,54 @@
         
         <form id="test-form">
             <div class="form-group">
-                <label for="provinces">
+                <label>
                     Chọn Tỉnh/Thành phố sử dụng:
                     <small style="color: #999; font-weight: normal;">(Có thể chọn nhiều tỉnh)</small>
                 </label>
-                <select id="provinces" name="location_id[]" multiple required size="10">
-                    <option value="21">Hà Nội</option>
-                    <option value="30">Hải Phòng</option>
-                    <option value="40">Nghệ An</option>
-                    <option value="42">Đà Nẵng</option>
-                    <option value="50">TP. Hồ Chí Minh</option>
-                    <option value="60">Cần Thơ</option>
-                    <option value="70">Bình Dương</option>
-                    <option value="80">Đồng Nai</option>
-                    <option value="90">Khánh Hòa</option>
-                    <option value="100">Lâm Đồng</option>
-                </select>
+                <div class="provinces-checkbox-container" id="provinces">
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="21" class="province-checkbox">
+                        <span class="province-name">Hà Nội</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="30" class="province-checkbox">
+                        <span class="province-name">Hải Phòng</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="40" class="province-checkbox">
+                        <span class="province-name">Nghệ An</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="42" class="province-checkbox">
+                        <span class="province-name">Đà Nẵng</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="50" class="province-checkbox">
+                        <span class="province-name">TP. Hồ Chí Minh</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="60" class="province-checkbox">
+                        <span class="province-name">Cần Thơ</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="70" class="province-checkbox">
+                        <span class="province-name">Bình Dương</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="80" class="province-checkbox">
+                        <span class="province-name">Đồng Nai</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="90" class="province-checkbox">
+                        <span class="province-name">Khánh Hòa</span>
+                    </label>
+                    <label class="province-checkbox-label">
+                        <input type="checkbox" name="location_id[]" value="100" class="province-checkbox">
+                        <span class="province-name">Lâm Đồng</span>
+                    </label>
+                </div>
                 <small class="helper-text">
-                    💡 <strong>Hướng dẫn:</strong> Click để chọn/bỏ chọn tỉnh (không cần giữ Ctrl).<br>
+                    💡 <strong>Hướng dẫn:</strong> Click để chọn/bỏ chọn tỉnh.<br>
                     🎯 Tỉnh đầu tiên bạn chọn sẽ được dùng làm tỉnh chính cho tài khoản.
                 </small>
             </div>
@@ -250,25 +312,8 @@
     
     <script>
         const form = document.getElementById('test-form');
-        const select = document.getElementById('provinces');
+        const provincesContainer = document.getElementById('provinces');
         const resultBox = document.getElementById('result');
-        
-        // Cho phép chọn/bỏ chọn nhiều option bằng click thông thường (không cần Ctrl)
-        select.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            const option = e.target;
-            if (option.tagName === 'OPTION') {
-                // Toggle selection
-                option.selected = !option.selected;
-                // Trigger change event
-                select.dispatchEvent(new Event('change'));
-            }
-        });
-        
-        // Prevent default behavior of select
-        select.addEventListener('click', function(e) {
-            e.preventDefault();
-        });
         
         // Tạo map tên tỉnh
         const provinceNames = {
@@ -287,15 +332,15 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const selectedOptions = Array.from(select.selectedOptions);
+            const selectedCheckboxes = provincesContainer.querySelectorAll('input[type="checkbox"]:checked');
             
-            if (selectedOptions.length === 0) {
+            if (selectedCheckboxes.length === 0) {
                 alert('Vui lòng chọn ít nhất 1 tỉnh!');
                 return;
             }
             
             // Lấy array các location_id
-            const locationIds = selectedOptions.map(opt => parseInt(opt.value));
+            const locationIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.value));
             
             // Tỉnh đầu tiên là tỉnh chính
             const primaryId = locationIds[0];

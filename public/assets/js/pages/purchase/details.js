@@ -23,35 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const form = document.getElementById('details-form');
-    const locationSelect = document.getElementById('location_id');
-    
-    // Cho phép chọn/bỏ chọn nhiều option bằng click thông thường (không cần Ctrl)
-    if (locationSelect) {
-        locationSelect.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            const option = e.target;
-            if (option.tagName === 'OPTION') {
-                // Toggle selection
-                option.selected = !option.selected;
-                // Trigger change event
-                locationSelect.dispatchEvent(new Event('change'));
-            }
-        });
-        
-        // Prevent default behavior of select
-        locationSelect.addEventListener('click', function(e) {
-            e.preventDefault();
-        });
-    }
+    const provincesContainer = document.getElementById('provinces-container');
     
     form.addEventListener('submit', function(event) {
         // Kiểm tra xem có chọn ít nhất 1 tỉnh không
-        const selectedOptions = Array.from(locationSelect.selectedOptions);
-        if (selectedOptions.length === 0) {
-            alert('Vui lòng chọn ít nhất 1 Tỉnh/Thành phố sử dụng.');
-            event.preventDefault();
-            locationSelect.focus();
-            return;
+        if (provincesContainer) {
+            const selectedCheckboxes = provincesContainer.querySelectorAll('input[type="checkbox"]:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 Tỉnh/Thành phố sử dụng.');
+                event.preventDefault();
+                provincesContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
         }
         if (quantityInput) {
             const currentQuantity = parseInt(quantityInput.value);

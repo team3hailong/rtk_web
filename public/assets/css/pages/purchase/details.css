@@ -97,37 +97,68 @@ total-price-display span {
     background-color: #059669; /* Darker green on hover */
 }
 
-/* CSS cho multiple select tỉnh/thành phố */
-.form-control[multiple] {
-    height: auto;
+/* CSS cho checkbox list tỉnh/thành phố */
+.provinces-checkbox-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-md);
     padding: 0.5rem;
-    cursor: pointer;
+    background: white;
 }
 
-.form-control[multiple] option {
+.province-checkbox-label {
+    display: flex;
+    align-items: center;
     padding: 0.75rem 1rem;
+    margin: 0;
     border-radius: 6px;
-    margin-bottom: 3px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
     user-select: none;
 }
 
-.form-control[multiple] option:hover {
+.province-checkbox-label:hover {
     background-color: #f0f4ff;
 }
 
-.form-control[multiple] option:checked {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    font-weight: 600;
+.province-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+    accent-color: #10B981;
+    flex-shrink: 0;
 }
 
-/* Thêm icon check cho option đã chọn */
-.form-control[multiple] option:checked::before {
-    content: '✓ ';
-    font-weight: bold;
-    margin-right: 5px;
+.province-name {
+    font-size: 15px;
+    color: var(--gray-700);
+    flex-grow: 1;
+}
+
+.province-checkbox:checked + .province-name {
+    font-weight: 600;
+    color: #10B981;
+}
+
+/* Scrollbar styling */
+.provinces-checkbox-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-thumb:hover {
+    background: #059669;
 }
 
 @media (max-width: 768px) {

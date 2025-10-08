@@ -114,16 +114,20 @@ include $project_root_path . '/private/includes/header.php';
 
             <!-- Chọn Tỉnh/Thành phố -->
             <div class="form-group">
-                <label for="location_id">Tỉnh/Thành phố sử dụng: <small style="color: #666;">(Có thể chọn nhiều tỉnh)</small></label>
-                <select id="location_id" name="location_id[]" class="form-control" multiple required size="10">
+                <label>Tỉnh/Thành phố sử dụng: <small style="color: #666;">(Có thể chọn nhiều tỉnh)</small></label>
+                <div class="provinces-checkbox-container" id="provinces-container">
                     <?php foreach ($provinces as $province): ?>
-                        <option value="<?php echo htmlspecialchars($province['id']); ?>">
-                            <?php echo htmlspecialchars($province['province']); ?>
-                        </option>
+                        <label class="province-checkbox-label">
+                            <input type="checkbox" 
+                                   name="location_id[]" 
+                                   value="<?php echo htmlspecialchars($province['id']); ?>"
+                                   class="province-checkbox">
+                            <span class="province-name"><?php echo htmlspecialchars($province['province']); ?></span>
+                        </label>
                     <?php endforeach; ?>
-                </select>
+                </div>
                 <small style="color: #666; display: block; margin-top: 5px;">
-                    ✓ Click để chọn/bỏ chọn tỉnh (không cần giữ Ctrl). Tỉnh đầu tiên bạn chọn sẽ là tỉnh chính.
+                    ✓ Click để chọn/bỏ chọn tỉnh. Tỉnh đầu tiên bạn chọn sẽ là tỉnh chính.
                 </small>
             </div>
 

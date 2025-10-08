@@ -66,22 +66,41 @@ class Voucher {
         }
         
         // Kiểm tra điều kiện địa điểm nếu được chỉ định
-        if ($voucher['location_id'] !== null && $locationId !== null && $voucher['location_id'] != $locationId) {
-            // Lấy thông tin tên tỉnh/thành phố
-            try {
-                $provinceName = '';
-                $stmt = $pdo->prepare("SELECT province FROM location WHERE id = :id");
-                $stmt->bindParam(':id', $voucher['location_id'], PDO::PARAM_INT);
-                $stmt->execute();
-                $locationInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($locationInfo) {
-                    $provinceName = $locationInfo['province'];
+        // Bây giờ xét với selected_provinces thay vì chỉ location_id
+        if ($voucher['location_id'] !== null && $locationId !== null) {
+            // Nếu locationId là JSON string (selected_provinces), parse nó
+            $selectedProvinceIds = [];
+            if (is_string($locationId) && (substr($locationId, 0, 1) === '[' || substr($locationId, 0, 1) === '{')) {
+                // It's JSON
+                $decoded = json_decode($locationId, true);
+                if (is_array($decoded)) {
+                    $selectedProvinceIds = $decoded;
                 }
-                
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực: ' . $provinceName];
-            } catch (Exception $e) {
-                error_log("Error fetching location info for voucher validation: " . $e->getMessage());
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực cụ thể'];
+            } else {
+                // It's single location ID
+                $selectedProvinceIds = [$locationId];
+            }
+            
+            // Kiểm tra xem voucher location_id có nằm trong danh sách selected_provinces không
+            $isValidLocation = in_array($voucher['location_id'], $selectedProvinceIds);
+            
+            if (!$isValidLocation) {
+                // Lấy thông tin tên tỉnh/thành phố
+                try {
+                    $provinceName = '';
+                    $stmt = $pdo->prepare("SELECT province FROM location WHERE id = :id");
+                    $stmt->bindParam(':id', $voucher['location_id'], PDO::PARAM_INT);
+                    $stmt->execute();
+                    $locationInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($locationInfo) {
+                        $provinceName = $locationInfo['province'];
+                    }
+                    
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực: ' . $provinceName];
+                } catch (Exception $e) {
+                    error_log("Error fetching location info for voucher validation: " . $e->getMessage());
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực cụ thể'];
+                }
             }
         }
         

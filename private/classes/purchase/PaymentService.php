@@ -29,7 +29,7 @@ class PaymentService {
         // Chuyển logic từ payment_helper.php vào đây
         try {
             // --- Fetch Registration Details ---
-            $stmt = $this->conn->prepare("SELECT id, package_id, location_id, num_account, total_price, base_price, vat_percent, vat_amount FROM registration WHERE id = :id AND user_id = :user_id AND status = 'pending'");
+            $stmt = $this->conn->prepare("SELECT id, package_id, location_id, selected_provinces, num_account, total_price, base_price, vat_percent, vat_amount FROM registration WHERE id = :id AND user_id = :user_id AND status = 'pending'");
             $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
             $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -58,13 +58,36 @@ class PaymentService {
             $package_stmt->execute();
             $package_details = $package_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $location_stmt = $this->conn->prepare("SELECT province FROM location WHERE id = :id");
-            $location_stmt->bindParam(':id', $registration_details['location_id'], PDO::PARAM_INT);
-            $location_stmt->execute();
-            $location_details = $location_stmt->fetch(PDO::FETCH_ASSOC);
+            // --- Fetch Province Names from selected_provinces ---
+            $provinces_display = '';
+            $selected_provinces_json = $registration_details['selected_provinces'];
+            
+            if (!empty($selected_provinces_json)) {
+                $province_ids = json_decode($selected_provinces_json, true);
+                if (is_array($province_ids) && !empty($province_ids)) {
+                    $placeholders = implode(',', array_fill(0, count($province_ids), '?'));
+                    $location_stmt = $this->conn->prepare("SELECT province FROM location WHERE id IN ($placeholders) ORDER BY FIELD(id, $placeholders)");
+                    $params = array_merge($province_ids, $province_ids); // For both IN clause and ORDER BY FIELD
+                    $location_stmt->execute($params);
+                    $provinces = $location_stmt->fetchAll(PDO::FETCH_COLUMN);
+                    
+                    if (!empty($provinces)) {
+                        $provinces_display = implode(', ', $provinces);
+                    }
+                }
+            }
+            
+            // Fallback to location_id if selected_provinces is empty
+            if (empty($provinces_display)) {
+                $location_stmt = $this->conn->prepare("SELECT province FROM location WHERE id = :id");
+                $location_stmt->bindParam(':id', $registration_details['location_id'], PDO::PARAM_INT);
+                $location_stmt->execute();
+                $location_details = $location_stmt->fetch(PDO::FETCH_ASSOC);
+                $provinces_display = $location_details['province'] ?? 'N/A';
+            }
 
-            if (!$package_details || !$location_details) {
-                error_log("PaymentService: Could not fetch package or location details for registration ID $registration_id.");
+            if (!$package_details) {
+                error_log("PaymentService: Could not fetch package details for registration ID $registration_id.");
                 return ['success' => false, 'error' => 'data_fetch_error'];
             }
 
@@ -74,7 +97,9 @@ class PaymentService {
                     'registration_id' => $registration_details['id'],
                     'package_name' => $package_details['name'],
                     'quantity' => $registration_details['num_account'],
-                    'province' => $location_details['province'],
+                    'province' => $provinces_display, // Bây giờ là chuỗi tất cả các tỉnh
+                    'selected_provinces' => $selected_provinces_json, // Thêm field này cho voucher validation
+                    'location_id' => $registration_details['location_id'], // Giữ lại cho compatibility
                     'verified_total_price' => $verified_total_price,
                     'base_price_from_registration' => $registration_details['base_price'],
                     'vat_percent_from_registration' => $registration_details['vat_percent'],

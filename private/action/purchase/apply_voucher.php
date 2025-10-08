@@ -103,12 +103,13 @@ try {
         $registration_id = $_SESSION['pending_registration_id'];
         try {
             $conn = $db->getConnection();
-            $stmt = $conn->prepare("SELECT package_id, location_id, num_account FROM registration WHERE id = ?");
+            $stmt = $conn->prepare("SELECT package_id, location_id, selected_provinces, num_account FROM registration WHERE id = ?");
             $stmt->execute([$registration_id]);
             $regInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($regInfo) {
                 $packageId = $regInfo['package_id'];
-                $locationId = $regInfo['location_id'];
+                // Sử dụng selected_provinces thay vì location_id
+                $locationId = !empty($regInfo['selected_provinces']) ? $regInfo['selected_provinces'] : $regInfo['location_id'];
                 $numSurveyAccounts = $regInfo['num_account'];
             }
         } catch (Exception $e) {

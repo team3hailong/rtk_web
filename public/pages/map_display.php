@@ -37,8 +37,30 @@ include $project_root_path . '/private/includes/header.php';
                 <div class="popup-content">
                     <h4>Bắt đầu đo khoảng cách</h4>
                     <button id="ruler-from-current" class="ruler-btn">Dùng vị trí hiện tại</button>
-                    <button id="ruler-from-map" class="ruler-btn">Chọn trên bản đồ</button>
+                    <button id="ruler-from-input" class="ruler-btn">Nhập địa chỉ/tọa độ</button>
                     <button id="ruler-cancel" class="ruler-btn cancel-btn">Hủy</button>
+                </div>
+            </div>
+            
+            <!-- *** POPUP NHẬP TỌA ĐỘ/ĐỊA CHỈ *** -->
+            <div id="coordinate-input-popup" class="ruler-choice-popup hidden">
+                <div class="popup-content">
+                    <h4>Nhập địa chỉ hoặc tọa độ</h4>
+                    <div class="input-group">
+                        <label>Địa chỉ:</label>
+                        <input type="text" id="address-input" placeholder="VD: Hà Nội, Việt Nam" class="coordinate-input">
+                        <button id="search-address-btn" class="ruler-btn">Tìm kiếm</button>
+                    </div>
+                    <div class="input-separator">HOẶC</div>
+                    <div class="input-group">
+                        <label>Tọa độ (Latitude, Longitude):</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="lat-input" placeholder="VD: 21.0285" class="coordinate-input" style="flex: 1;">
+                            <input type="text" id="lng-input" placeholder="VD: 105.8542" class="coordinate-input" style="flex: 1;">
+                        </div>
+                        <button id="use-coordinates-btn" class="ruler-btn">Sử dụng tọa độ</button>
+                    </div>
+                    <button id="coordinate-cancel" class="ruler-btn cancel-btn">Hủy</button>
                 </div>
             </div>
             

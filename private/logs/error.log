@@ -242,3 +242,7 @@
 [08-Oct-2025 22:14:27 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 11, 19, 27], Accounts: 2
 [08-Oct-2025 22:14:36 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
 [08-Oct-2025 22:14:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 11, 19, 27], Accounts: 2
+[16-Oct-2025 16:22:58 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[16-Oct-2025 16:22:58 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 1
+[16-Oct-2025 16:24:00 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
+[16-Oct-2025 16:24:00 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2

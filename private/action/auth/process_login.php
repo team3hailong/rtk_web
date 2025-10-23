@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/session_config.php';
 require_once __DIR__ . '/../../utils/error_handler.php';
 require_once __DIR__ . '/../../classes/DeviceTracker.php';
 
@@ -60,15 +61,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $token = bin2hex(random_bytes(32));
                             $hash = password_hash($token, PASSWORD_DEFAULT);
                             
-                            // Lưu token vào database
-                            $expiry = date('Y-m-d H:i:s', strtotime('+30 days'));
+                            // Lưu token vào database với thời gian từ session_config.php
+                            $expiry = date('Y-m-d H:i:s', time() + REMEMBER_ME_DURATION);
                             $remember_stmt = $conn->prepare("INSERT INTO remember_tokens (user_id, token, expiry) VALUES (?, ?, ?)");
                             $remember_stmt->bind_param("iss", $user['id'], $hash, $expiry);
                             $remember_stmt->execute();
                             $remember_stmt->close();
                             
-                            // Lưu token vào cookie (30 ngày)
-                            setcookie('remember_token', $user['id'] . ':' . $token, time() + 30 * 24 * 60 * 60, '/', '', false, true);
+                            // Lưu token vào cookie với thời gian từ session_config.php
+                            setcookie('remember_token', $user['id'] . ':' . $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
                         }                        // Ghi log hoạt động đăng nhập
                         // Log successful login
                         $notify_content = 'Người dùng ' . $user['username'] . ' đã đăng nhập vào hệ thống';

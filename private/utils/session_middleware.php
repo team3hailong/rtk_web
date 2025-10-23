@@ -1,21 +1,38 @@
 <?php
+// Load cấu hình session
+require_once dirname(__DIR__) . '/config/session_config.php';
+
 /**
  * Session Middleware - Kiểm tra và quản lý tính hợp lệ của session
  * 
  * File này cung cấp các hàm để kiểm tra thời gian hoạt động của session
  * và tự động đăng xuất nếu session hết hạn.
+ * 
+ * CẤU HÌNH THỜI GIAN SESSION:
+ * - Session lifetime: 30 ngày (2,592,000 giây)
+ * - Inactive timeout: 7 ngày (604,800 giây)
+ * - Remember Me: 30 ngày
  */
 
 /**
  * Khởi tạo session với thời gian hết hạn được cấu hình
  * Gọi hàm này thay thế cho session_start() ở các trang
+ * 
+ * Session sẽ tồn tại 30 ngày và chỉ logout nếu không hoạt động trong 7 ngày
  */
 function init_session() {
     // Chỉ đặt cấu hình session khi chưa được khởi tạo
     if (session_status() === PHP_SESSION_NONE) {
-        // Cấu hình thời gian session (2 giờ = 7200 giây)
-        ini_set('session.gc_maxlifetime', 7200);
-        session_set_cookie_params(7200);
+        // Cấu hình thời gian session từ file session_config.php
+        ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
+        session_set_cookie_params([
+            'lifetime' => SESSION_LIFETIME,
+            'path' => '/',
+            'domain' => '',
+            'secure' => false, // Đặt true nếu dùng HTTPS
+            'httponly' => true, // Bảo mật: không cho JavaScript truy cập cookie
+            'samesite' => 'Lax' // Bảo vệ CSRF
+        ]);
         
         // Khởi tạo session
         session_start();
@@ -82,7 +99,7 @@ function check_remember_me() {
                         // Tạo token mới và cập nhật cookie (để tăng bảo mật)
                         $new_token = bin2hex(random_bytes(32));
                         $new_hash = password_hash($new_token, PASSWORD_DEFAULT);
-                        $expiry = date('Y-m-d H:i:s', strtotime('+30 days'));
+                        $expiry = date('Y-m-d H:i:s', time() + REMEMBER_ME_DURATION);
                         
                         $update_stmt = $conn->prepare("UPDATE remember_tokens SET token = ?, expiry = ? WHERE user_id = ?");
                         $update_stmt->bind_param("ssi", $new_hash, $expiry, $user_id);
@@ -90,7 +107,7 @@ function check_remember_me() {
                         $update_stmt->close();
                         
                         // Cập nhật cookie với token mới
-                        setcookie('remember_token', $user_id . ':' . $new_token, time() + 30 * 24 * 60 * 60, '/', '', false, true);
+                        setcookie('remember_token', $user_id . ':' . $new_token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
                     }
                 }
                 
@@ -117,8 +134,8 @@ function verify_session() {
         return;
     }
     
-    // Thời gian không hoạt động tối đa (30 phút = 1800 giây)
-    $inactive_timeout = 1800; 
+    // Thời gian không hoạt động tối đa từ file session_config.php
+    $inactive_timeout = SESSION_INACTIVE_TIMEOUT; 
     
     // Tính thời gian không hoạt động
     $inactive_time = time() - $_SESSION['last_activity'];

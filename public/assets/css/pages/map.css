@@ -7,7 +7,41 @@
     --gray-800: #343a40;
 }
 
-#map {height: 500px; max-height: calc(100vh - 200px); width: 100%; border-radius: 0.375rem; border: 1px solid #e9ecef; background-color: var(--gray-100);}
+/* 
+  Làm cho layout chính (gồm sidebar và content)
+  chiếm toàn bộ chiều cao màn hình.
+*/
+.dashboard-wrapper {
+    display: flex;
+    height: 100vh; /* Quan trọng: Chiếm 100% chiều cao của màn hình xem */
+}
+
+/* 
+  Làm cho khu vực nội dung chính co giãn linh hoạt
+*/
+main.content-wrapper {
+    display: flex;
+    flex-direction: column; /* Sắp xếp các phần tử (tiêu đề, bản đồ) theo chiều dọc */
+    flex-grow: 1; /* Cho phép nó chiếm hết không gian chiều rộng còn lại */
+    overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài (dù trong trường hợp này không cần) */
+}
+
+/* 
+  Làm cho thẻ chứa bản đồ giãn ra để lấp đầy không gian còn lại
+*/
+#map-container {
+    position: relative;
+    flex-grow: 1; /* Quan trọng: Thẻ này sẽ giãn ra và lấp đầy không gian trống */
+    display: flex; /* Giúp #map bên trong có thể dùng height: 100% */
+}
+#map {
+    height: 100%;
+
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #e9ecef;
+    background-color: var(--gray-100);
+}
 #map-container { position: relative; }
 
 /* Styles cho các thành phần điều khiển và chú thích */
@@ -72,13 +106,9 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    #map { height: 550px; max-height: calc(100vh - 220px); }
     .map-controls { bottom: 10px; top: auto; left: 10px; right: 10px; width: auto; transform: none; flex-direction: row; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
     .map-type-btn { flex: 1 1 calc(50% - 4px); margin: 0; padding: 10px 5px; font-size: 0.8rem; }
     .map-legend { top: 10px; right: 10px; bottom: auto; left: auto; max-width: 160px; font-size: 10px; padding: 8px; }
     .ruler-choice-popup { width: 90%; }
 }
 
-@media (max-width: 480px) {
-    #map { height: 450px; max-height: calc(100vh - 250px); }
-}

@@ -246,3 +246,5 @@
 [16-Oct-2025 16:22:58 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 1
 [16-Oct-2025 16:24:00 Asia/Ho_Chi_Minh] Using base price from payment_data: 2000000
 [16-Oct-2025 16:24:00 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2
+[24-Oct-2025 15:02:29 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\
+                (user_id, action, entity_type, entity_id, old_values, new_val' at line 1

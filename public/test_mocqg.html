@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Tìm Mốc</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        pre { background: #fff; padding: 10px; border: 1px solid #ddd; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test API Tìm Mốc Quốc Gia</h1>
+        
+        <div>
+            <h3>Test 1: Từ tọa độ Hà Nội (21.028511, 105.804817)</h3>
+            <button onclick="testAPI1()">Test API</button>
+        </div>
+        
+        <div>
+            <h3>Test 2: Từ tọa độ Đà Nẵng (16.047079, 108.206230)</h3>
+            <button onclick="testAPI2()">Test API</button>
+        </div>
+        
+        <div>
+            <h3>Test 3: Kiểm tra file API tồn tại</h3>
+            <button onclick="checkFile()">Kiểm tra</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+    
+    <script>
+        const resultDiv = document.getElementById('result');
+        
+        function showResult(title, data) {
+            resultDiv.innerHTML = `<h4>${title}</h4><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+        
+        async function testAPI1() {
+            try {
+                const url = '/api/map/get_nearby_mocqg.php?lat=21.028511&lng=105.804817&radius=50';
+                resultDiv.innerHTML = '<p>Đang gọi API: ' + url + '</p>';
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                showResult('Test 1 - Kết quả từ Hà Nội', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: data
+                });
+            } catch (error) {
+                showResult('Test 1 - Lỗi', { error: error.message });
+            }
+        }
+        
+        async function testAPI2() {
+            try {
+                const url = '/api/map/get_nearby_mocqg.php?lat=16.047079&lng=108.206230&radius=50';
+                resultDiv.innerHTML = '<p>Đang gọi API: ' + url + '</p>';
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                showResult('Test 2 - Kết quả từ Đà Nẵng', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: data
+                });
+            } catch (error) {
+                showResult('Test 2 - Lỗi', { error: error.message });
+            }
+        }
+        
+        async function checkFile() {
+            try {
+                const url = '/api/map/get_nearby_mocqg.php';
+                resultDiv.innerHTML = '<p>Đang kiểm tra file: ' + url + '</p>';
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                showResult('Kiểm tra file', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    contentType: response.headers.get('content-type'),
+                    preview: text.substring(0, 500)
+                });
+            } catch (error) {
+                showResult('Kiểm tra file - Lỗi', { error: error.message });
+            }
+        }
+        
+        // Hiển thị thông tin môi trường
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Current URL:', window.location.href);
+            console.log('Origin:', window.location.origin);
+        });
+    </script>
+</body>
+</html>

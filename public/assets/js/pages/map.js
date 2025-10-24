@@ -453,6 +453,261 @@ document.addEventListener('DOMContentLoaded', function () {
             this.textContent = "Bản đồ vệ tinh";
         }
     });
+
+    // --- CHỨC NĂNG TÌM MỐC QG ---
+    const mocqgPopup = document.getElementById('mocqg-popup');
+    const btnMocqgFromCurrent = document.getElementById('mocqg-from-current');
+    const btnMocqgFromInput = document.getElementById('mocqg-from-input');
+    const btnMocqgCancel = document.getElementById('mocqg-cancel');
+    
+    const mocqgCoordinatePopup = document.getElementById('mocqg-coordinate-popup');
+    const mocqgLatInput = document.getElementById('mocqg-lat-input');
+    const mocqgLngInput = document.getElementById('mocqg-lng-input');
+    const mocqgRadiusInput = document.getElementById('mocqg-radius-input');
+    const btnMocqgSearch = document.getElementById('mocqg-search-btn');
+    const btnMocqgCoordinateCancel = document.getElementById('mocqg-coordinate-cancel');
+    
+    const mocqgResultPopup = document.getElementById('mocqg-result-popup');
+    const mocqgResultContent = document.getElementById('mocqg-result-content');
+    const btnMocqgResultClose = document.getElementById('mocqg-result-close');
+    
+    let mocqgMarkers = []; // Lưu các markers của mốc
+    let mocqgCircle = null; // Vòng tròn bán kính tìm kiếm
+    
+    // Hàm xóa các markers và circle của mốc
+    function clearMocqgMarkers() {
+        mocqgMarkers.forEach(marker => map.removeLayer(marker));
+        mocqgMarkers = [];
+        if (mocqgCircle) {
+            map.removeLayer(mocqgCircle);
+            mocqgCircle = null;
+        }
+    }
+    
+    // Hàm hiển thị kết quả tìm mốc
+    function displayMocqgResults(data) {
+        clearMocqgMarkers();
+        
+        const { center, radius_km, count, mocqg_list } = data;
+        
+        // Vẽ vòng tròn bán kính tìm kiếm
+        mocqgCircle = L.circle([center.lat, center.lng], {
+            radius: radius_km * 1000, // Convert km to meters
+            color: '#FF6B6B',
+            fillColor: '#FF6B6B',
+            fillOpacity: 0.1,
+            weight: 2,
+            dashArray: '10, 5'
+        }).addTo(map);
+        
+        // Đánh dấu tâm tìm kiếm
+        const centerIcon = L.divIcon({
+            className: 'mocqg-center-marker',
+            html: '<div style="background: #FF6B6B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+        });
+        const centerMarker = L.marker([center.lat, center.lng], { icon: centerIcon })
+            .addTo(map)
+            .bindPopup('<b>Vị trí tìm kiếm</b>');
+        mocqgMarkers.push(centerMarker);
+        
+        // Hiển thị các mốc tìm được
+        if (count > 0) {
+            mocqg_list.forEach((mocqg, index) => {
+                const mocqgIcon = L.divIcon({
+                    className: 'mocqg-marker',
+                    html: `<div style="background: #4CAF50; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3); white-space: nowrap;">
+                            📍 ${mocqg.ten_moc}
+                           </div>`,
+                    iconSize: [null, null],
+                    iconAnchor: [0, 0]
+                });
+                
+                const marker = L.marker([mocqg.lat, mocqg.lng], { icon: mocqgIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 220px;">
+                            <h4 style="margin: 0 0 10px 0; color: #4CAF50;">📍 ${mocqg.ten_moc}</h4>
+                            <div style="margin: 5px 0; font-size: 0.95em;"><b>WGS-84:</b> ${mocqg.lat.toFixed(6)}, ${mocqg.lng.toFixed(6)}, ${mocqg.height !== undefined && mocqg.height !== null ? mocqg.height : '-'}</div>
+                            <div style="margin: 5px 0; font-size: 0.95em;"><b>VN-2000:</b> ${mocqg.vn2000_x ?? '-'}, ${mocqg.vn2000_y ?? '-'}, ${mocqg.vn2000_z ?? '-'} </div>
+                            <div style="margin: 5px 0;"><b>Khoảng cách:</b> <span style="color: #FF6B6B; font-weight: bold;">${mocqg.distance_km} km</span></div>
+                        </div>
+                    `);
+                    
+                mocqgMarkers.push(marker);
+                
+                // Vẽ đường nối từ tâm đến mốc
+                const line = L.polyline([
+                    [center.lat, center.lng],
+                    [mocqg.lat, mocqg.lng]
+                ], {
+                    color: '#4CAF50',
+                    weight: 2,
+                    opacity: 0.6,
+                    dashArray: '5, 5'
+                }).addTo(map);
+                mocqgMarkers.push(line);
+            });
+            
+            // Fit bounds để hiển thị tất cả
+            const bounds = L.latLngBounds(mocqg_list.map(m => [m.lat, m.lng]));
+            bounds.extend([center.lat, center.lng]);
+            map.fitBounds(bounds, { padding: [50, 50] });
+        } else {
+            map.setView([center.lat, center.lng], 10);
+        }
+        
+        // Hiển thị popup kết quả
+        let resultHTML = `
+            <div style="padding: 10px;">
+                <p style="margin-bottom: 10px;"><b>Tìm thấy ${count} mốc</b> trong bán kính <b>${radius_km} km</b></p>
+        `;
+        
+        if (count > 0) {
+            resultHTML += '<div style="margin-top: 15px;">';
+            mocqg_list.forEach((mocqg, index) => {
+                resultHTML += `
+                    <div style="padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+                        <div style="font-weight: bold; color: #4CAF50; margin-bottom: 5px;">
+                            ${index + 1}. ${mocqg.ten_moc}
+                        </div>
+                        <div style="font-size: 0.95em; color: #333; margin-bottom: 3px;">
+                            <b>WGS-84:</b> ${mocqg.lat.toFixed(6)}, ${mocqg.lng.toFixed(6)}
+                        </div>
+                        <div style="font-size: 0.95em; color: #333; margin-bottom: 3px;">
+                            <b>VN-2000:</b> ${mocqg.vn2000_x ?? '-'}, ${mocqg.vn2000_y ?? '-'}, ${mocqg.vn2000_z ?? '-'}
+                        </div>
+                        <div style="color: #FF6B6B; font-weight: bold; margin-top: 5px;">
+                            📏 Khoảng cách: ${mocqg.distance_km} km
+                        </div>
+                    </div>
+                `;
+            });
+            resultHTML += '</div>';
+        } else {
+            resultHTML += '<p style="color: #999; font-style: italic;">Không tìm thấy mốc nào trong phạm vi này.</p>';
+        }
+        
+        resultHTML += '</div>';
+        mocqgResultContent.innerHTML = resultHTML;
+        mocqgResultPopup.classList.remove('hidden');
+    }
+    
+    // Hàm gọi API tìm mốc
+    async function searchNearbyMocqg(lat, lng, radius = 50) {
+        try {
+            // Sử dụng đường dẫn đầy đủ bao gồm /public/
+            const apiUrl = window.baseUrl && window.basePath 
+                ? `${window.baseUrl}${window.basePath}/api/map/get_nearby_mocqg.php`
+                : `/public/api/map/get_nearby_mocqg.php`;
+            
+            const response = await fetch(`${apiUrl}?lat=${lat}&lng=${lng}&radius=${radius}`);
+            
+            // Kiểm tra response status
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                displayMocqgResults(result.data);
+            } else {
+                alert('Lỗi: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Không thể tìm kiếm mốc. Vui lòng thử lại.\nLỗi: ' + error.message);
+        }
+    }
+    
+    // Nút "Tìm mốc" trên map
+    document.getElementById('findNearbyMocqg').addEventListener('click', function() {
+        if (isRulerModeActive) deactivateRulerMode();
+        mocqgPopup.classList.remove('hidden');
+    });
+    
+    // Dùng vị trí hiện tại
+    btnMocqgFromCurrent.addEventListener('click', function() {
+        mocqgPopup.classList.add('hidden');
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            searchNearbyMocqg(lat, lng, 50);
+        }, () => {
+            alert('Không thể lấy vị trí của bạn. Vui lòng cho phép truy cập vị trí.');
+        });
+    });
+    
+    // Nhập tọa độ
+    btnMocqgFromInput.addEventListener('click', function() {
+        mocqgPopup.classList.add('hidden');
+        mocqgCoordinatePopup.classList.remove('hidden');
+    });
+    
+    // Hủy popup chọn
+    btnMocqgCancel.addEventListener('click', function() {
+        mocqgPopup.classList.add('hidden');
+    });
+    
+    // Tìm kiếm với tọa độ đã nhập
+    btnMocqgSearch.addEventListener('click', function() {
+        const lat = parseFloat(mocqgLatInput.value);
+        const lng = parseFloat(mocqgLngInput.value);
+        const radius = parseFloat(mocqgRadiusInput.value) || 50;
+        
+        if (isNaN(lat) || isNaN(lng)) {
+            alert('Vui lòng nhập tọa độ hợp lệ');
+            return;
+        }
+        
+        if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+            alert('Tọa độ không hợp lệ. Latitude: -90 đến 90, Longitude: -180 đến 180');
+            return;
+        }
+        
+        mocqgCoordinatePopup.classList.add('hidden');
+        mocqgLatInput.value = '';
+        mocqgLngInput.value = '';
+        mocqgRadiusInput.value = '50';
+        
+        searchNearbyMocqg(lat, lng, radius);
+    });
+    
+    // Hủy popup nhập tọa độ
+    btnMocqgCoordinateCancel.addEventListener('click', function() {
+        mocqgCoordinatePopup.classList.add('hidden');
+        mocqgLatInput.value = '';
+        mocqgLngInput.value = '';
+        mocqgRadiusInput.value = '50';
+    });
+    
+    // Đóng popup kết quả
+    btnMocqgResultClose.addEventListener('click', function() {
+        mocqgResultPopup.classList.add('hidden');
+    });
+
+    // Nút X đóng popup
+    document.getElementById('mocqg-result-x').addEventListener('click', function() {
+        mocqgResultPopup.classList.add('hidden');
+    });
+    
+    // Hỗ trợ nhấn Enter
+    mocqgLatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') mocqgLngInput.focus();
+    });
+    
+    mocqgLngInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') mocqgRadiusInput.focus();
+    });
+    
+    mocqgRadiusInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') btnMocqgSearch.click();
+    });
+    // --- KẾT THÚC CHỨC NĂNG TÌM MỐC QG ---
     
     // --- HIỂN THỊ CÁC TRẠM VÀ CÁC THÀNH PHẦN TĨNH ---
     const MIN_ZOOM_LABELS = 8, MAX_ZOOM_LABELS = 15;

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test RTK Account Handler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+        }
+        .error {
+            border-left-color: #f44336;
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test RTK Account Handler - JSON Request</h1>
+    <p>Trang này test xem handler có nhận đúng JSON request không</p>
+
+    <!-- Test 1: Validate Accounts -->
+    <div class="test-section">
+        <h2>Test 1: Validate Accounts (JSON Request)</h2>
+        <div class="input-group">
+            <label>Username 1:</label>
+            <input type="text" id="username1" placeholder="Nhập tên đăng nhập" value="test_user1">
+        </div>
+        <div class="input-group">
+            <label>Password 1:</label>
+            <input type="password" id="password1" placeholder="Nhập mật khẩu" value="test_pass1">
+        </div>
+        <div class="input-group">
+            <label>Username 2:</label>
+            <input type="text" id="username2" placeholder="Nhập tên đăng nhập" value="test_user2">
+        </div>
+        <div class="input-group">
+            <label>Password 2:</label>
+            <input type="password" id="password2" placeholder="Nhập mật khẩu" value="test_pass2">
+        </div>
+        <button onclick="testValidateAccounts()">Gửi Request JSON</button>
+        <div id="result1" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Test 2: Check Action Recognition -->
+    <div class="test-section">
+        <h2>Test 2: Test Action Recognition</h2>
+        <p>Gửi request với action khác nhau để test switch-case</p>
+        <button onclick="testAction('validate_accounts')">Test: validate_accounts</button>
+        <button onclick="testAction('change_password')">Test: change_password</button>
+        <button onclick="testAction('invalid_action')">Test: invalid_action (lỗi)</button>
+        <div id="result2" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin;
+        const handlerUrl = `${baseUrl}/public/handlers/rtk_account_handlers.php`;
+
+        async function testValidateAccounts() {
+            const username1 = document.getElementById('username1').value;
+            const password1 = document.getElementById('password1').value;
+            const username2 = document.getElementById('username2').value;
+            const password2 = document.getElementById('password2').value;
+
+            const accounts = [];
+            if (username1 && password1) {
+                accounts.push({ username: username1, password: password1 });
+            }
+            if (username2 && password2) {
+                accounts.push({ username: username2, password: password2 });
+            }
+
+            if (accounts.length === 0) {
+                alert('Vui lòng nhập ít nhất một tài khoản');
+                return;
+            }
+
+            const payload = {
+                action: 'validate_accounts',
+                accounts: accounts
+            };
+
+            showLoading('result1', 'Đang gửi request...');
+
+            try {
+                const response = await fetch(handlerUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                showResult('result1', payload, data, response.ok);
+            } catch (error) {
+                showError('result1', error.message);
+            }
+        }
+
+        async function testAction(action) {
+            const payload = {
+                action: action,
+                accounts: [
+                    { username: 'test1', password: 'pass1' }
+                ],
+                account_id: '123',
+                new_password: 'newpass123'
+            };
+
+            showLoading('result2', `Đang test action: ${action}...`);
+
+            try {
+                const response = await fetch(handlerUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                showResult('result2', payload, data, response.ok);
+            } catch (error) {
+                showError('result2', error.message);
+            }
+        }
+
+        function showLoading(elementId, message) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = `<p>⏳ ${message}</p>`;
+        }
+
+        function showResult(elementId, request, response, success) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.style.display = 'block';
+            resultDiv.className = success ? 'result' : 'result error';
+            
+            resultDiv.innerHTML = `
+                <h3>${success ? '✅ Success' : '❌ Error'}</h3>
+                <h4>Request Payload:</h4>
+                <pre>${JSON.stringify(request, null, 2)}</pre>
+                <h4>Response:</h4>
+                <pre>${JSON.stringify(response, null, 2)}</pre>
+            `;
+        }
+
+        function showError(elementId, errorMessage) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result error';
+            resultDiv.innerHTML = `
+                <h3>❌ Network Error</h3>
+                <p>${errorMessage}</p>
+            `;
+        }
+    </script>
+
+    <div class="test-section">
+        <h2>📝 Ghi chú</h2>
+        <ul>
+            <li><strong>Content-Type:</strong> application/json (gửi dữ liệu dưới dạng JSON)</li>
+            <li><strong>Handler:</strong> /public/handlers/rtk_account_handlers.php</li>
+            <li><strong>Lỗi cũ:</strong> "Hành động không hợp lệ" - do handler không đọc được action từ JSON</li>
+            <li><strong>Sửa:</strong> Đọc từ php://input và decode JSON trước khi kiểm tra action</li>
+        </ul>
+    </div>
+</body>
+</html>

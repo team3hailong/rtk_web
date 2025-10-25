@@ -73,8 +73,8 @@ class RtkAccount {
                     th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
                 JOIN registration r ON sa.registration_id = r.id
-                JOIN package p ON r.package_id = p.id
-                JOIN location l ON r.location_id = l.id
+                LEFT JOIN package p ON r.package_id = p.id
+                LEFT JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
 
@@ -115,7 +115,7 @@ class RtkAccount {
                 // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
                 if (!empty($account['sa_start_time'])) {
                     $account['effective_start_time'] = $account['sa_start_time'];
-                } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                } else if (!empty($account['package_name']) && strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
 
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
@@ -214,8 +214,8 @@ class RtkAccount {
                     th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
                 JOIN registration r ON sa.registration_id = r.id
-                JOIN package p ON r.package_id = p.id
-                JOIN location l ON r.location_id = l.id
+                LEFT JOIN package p ON r.package_id = p.id
+                LEFT JOIN location l ON r.location_id = l.id
                 LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
                 LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
@@ -251,7 +251,7 @@ class RtkAccount {
                 // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
                 if (!empty($account['sa_start_time'])) {
                     $account['effective_start_time'] = $account['sa_start_time'];
-                } else if (strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                } else if (!empty($account['package_name']) && strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
@@ -416,6 +416,7 @@ class RtkAccount {
     
     /**
      * Update the ownership of an account by setting the user_id in the registration table
+     * Also restore the account if it was soft-deleted
      * 
      * @param int $registrationId The registration ID to update
      * @param int $userId The new user ID (owner)
@@ -423,6 +424,10 @@ class RtkAccount {
      */
     public function updateAccountOwnership($registrationId, $userId) {
         try {
+            // Start transaction
+            $this->conn->beginTransaction();
+            
+            // Update registration table with new owner
             $sql = "UPDATE registration 
                    SET user_id = :user_id, updated_at = NOW() 
                    WHERE id = :registration_id";
@@ -430,10 +435,28 @@ class RtkAccount {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->bindParam(':registration_id', $registrationId, PDO::PARAM_INT);
+            $stmt->execute();
             
-            return $stmt->execute();
+            // Restore account if it was soft-deleted (set deleted_at to NULL)
+            $sql2 = "UPDATE survey_account 
+                    SET deleted_at = NULL, updated_at = NOW() 
+                    WHERE registration_id = :registration_id";
+            
+            $stmt2 = $this->conn->prepare($sql2);
+            $stmt2->bindParam(':registration_id', $registrationId, PDO::PARAM_INT);
+            $stmt2->execute();
+            
+            // Commit transaction
+            $this->conn->commit();
+            
+            error_log("Successfully updated ownership for registration_id={$registrationId} to user_id={$userId}");
+            return true;
 
         } catch (PDOException $e) {
+            // Rollback on error
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
             error_log("Error updating RTK account ownership: " . $e->getMessage());
             return false;
         }

@@ -328,15 +328,30 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
+                // Show detailed message
+                let message = data.message || '';
+                
+                // Add details for invalid accounts
+                if (data.invalid_count > 0) {
+                    const invalidAccounts = data.results.filter(r => !r.valid).map(r => r.username);
+                    message += '\n\nTài khoản không hợp lệ:\n- ' + invalidAccounts.join('\n- ');
+                }
+                
+                // Check if there are accounts requiring confirmation
                 const toConfirm = data.results.find(r => r.requires_confirmation);
+                
                 if (toConfirm) {
                     closeModal('update-survey-account-modal');
                     document.getElementById('otp-registration-id').value = toConfirm.registration_id;
                     openModal('otp-confirm-modal');
                 } else {
-                    alert(`Cập nhật thành công cho ${data.updated_count} tài khoản!`);
-                    if (data.updated_count > 0) window.location.reload();
-                    else closeModal('update-survey-account-modal');
+                    alert(message);
+                    // Reload if any accounts were updated
+                    if (data.updated_count > 0) {
+                        window.location.reload();
+                    } else {
+                        closeModal('update-survey-account-modal');
+                    }
                 }
             } else {
                 alert(data.message || 'Có lỗi xảy ra.');

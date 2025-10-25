@@ -80,8 +80,8 @@ function log_activity($conn, $user_id, $action, $entity_type, $entity_id, $old_v
         if ($notify_content === null && $new_values_json) {
             $notify_content = log_activity_generate_notify_content($action, $entity_type, $new_values);
         }
-        $sql = "INSERT INTO activity_logs \
-                (user_id, action, entity_type, entity_id, old_values, new_values, notify_content, ip_address, user_agent, created_at) \
+        $sql = "INSERT INTO activity_logs 
+                (user_id, action, entity_type, entity_id, old_values, new_values, notify_content, ip_address, user_agent, created_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         if ($stmt) {

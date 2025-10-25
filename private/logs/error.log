@@ -1,5 +1,1 @@
-[25-Oct-2025 10:03:09 Asia/Ho_Chi_Minh] Uncaught Exception: json_decode(): Argument #1 ($json) must be of type string, array given
-#0 C:\laragon\www\02062025_user_web\public\handlers\rtk_account_handlers.php(63): json_decode(Array, true)
-#1 C:\laragon\www\02062025_user_web\public\handlers\rtk_account_handlers.php(37): validateAccountCredentials(Object(RtkAccount))
-#2 {main}
-[25-Oct-2025 10:08:08 Asia/Ho_Chi_Minh] PHP Error [2]: Trying to access array offset on false in C:\laragon\www\02062025_user_web\public\handlers\rtk_account_handlers.php on line 99
+[25-Oct-2025 11:00:38 Asia/Ho_Chi_Minh] Successfully updated ownership for registration_id=1 to user_id=92

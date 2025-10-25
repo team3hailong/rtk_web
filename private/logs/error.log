@@ -1,1 +1,11 @@
 [25-Oct-2025 11:00:38 Asia/Ho_Chi_Minh] Successfully updated ownership for registration_id=1 to user_id=92
+[25-Oct-2025 11:12:20 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 405 - {"timestamp":1761365540939,"status":405,"error":"Method Not Allowed","message":"","path":"\/openapi\/broadcast\/users"}
+[25-Oct-2025 11:12:20 Asia/Ho_Chi_Minh] Update password failed on RTK API: HTTP Error: 405
+[25-Oct-2025 11:19:17 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 401 - {"code":"CGBAS01000004","msg":"Not logged in or login expired"}
+[25-Oct-2025 11:19:17 Asia/Ho_Chi_Minh] Update password failed on RTK API: Not logged in or login expired
+[25-Oct-2025 11:21:33 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 405 - {"timestamp":1761366093213,"status":405,"error":"Method Not Allowed","message":"","path":"\/openapi\/broadcast\/users"}
+[25-Oct-2025 11:21:33 Asia/Ho_Chi_Minh] Update password failed on RTK API: HTTP Error: 405
+[25-Oct-2025 11:22:55 Asia/Ho_Chi_Minh] RTK API Success (Update Password): Username=admin2, RTK_ID=1940783543215144962
+[25-Oct-2025 11:22:55 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)
+[25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] RTK API Success (Update Password): Username=admin2, RTK_ID=1940783543215144962
+[25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)

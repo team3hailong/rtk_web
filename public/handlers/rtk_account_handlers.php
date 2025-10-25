@@ -227,13 +227,27 @@ function changeAccountPassword($rtkAccountManager, $requestData = null) {
         exit;
     }
     
-    // Update password in database
+    // Validate password strength (optional)
+    if (strlen($newPassword) < 6) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Mật khẩu phải có ít nhất 6 ký tự']);
+        exit;
+    }
+    
+    // Update password in database AND RTK system
     $success = $rtkAccountManager->updatePassword($accountId, $newPassword);
+    
+    $message = '';
+    if ($success) {
+        $message = 'Đổi mật khẩu thành công!';
+    } else {
+        $message = 'Không thể đổi mật khẩu. Vui lòng kiểm tra log để biết chi tiết.';
+    }
     
     header('Content-Type: application/json');
     echo json_encode([
         'success' => $success,
-        'message' => $success ? 'Đổi mật khẩu thành công' : 'Không thể đổi mật khẩu'
+        'message' => $message
     ]);
     exit;
 }

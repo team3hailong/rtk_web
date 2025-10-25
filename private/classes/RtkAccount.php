@@ -370,8 +370,75 @@ class RtkAccount {
             error_log("Error fetching RTK account details: " . $e->getMessage());
             return null;
         }
-    }    public function updatePassword($accountId, $newPassword) {
+    }    
+    
+    /**
+     * Update password for RTK account
+     * Updates both local database and remote RTK system
+     * 
+     * @param int $accountId The account ID in local database
+     * @param string $newPassword The new password
+     * @return bool True if update succeeded, false otherwise
+     */
+    public function updatePassword($accountId, $newPassword) {
         try {
+            // Get full account data from database including RTK user ID
+            $sqlGet = "SELECT 
+                        sa.id as rtk_user_id,
+                        sa.username_acc,
+                        sa.start_time,
+                        sa.end_time,
+                        sa.enabled,
+                        sa.concurrent_user as numOnline,
+                        sa.caster,
+                        sa.user_type,
+                        sa.regionIds,
+                        sa.customerBizType,
+                        sa.area
+                    FROM survey_account sa 
+                    WHERE sa.id = :account_id";
+                    
+            $stmtGet = $this->conn->prepare($sqlGet);
+            $stmtGet->bindParam(':account_id', $accountId);
+            $stmtGet->execute();
+            $account = $stmtGet->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$account) {
+                error_log("Update password failed: Account ID {$accountId} not found");
+                return false;
+            }
+            
+            $rtkUserId = $account['rtk_user_id'];
+            $username = $account['username_acc'];
+            
+            // Convert datetime to timestamp (milliseconds)
+            $startTime = $account['start_time'] ? strtotime($account['start_time']) * 1000 : null;
+            $endTime = $account['end_time'] ? strtotime($account['end_time']) * 1000 : null;
+            
+            // Prepare account data for API
+            $accountData = [
+                'startTime' => (string)$startTime,
+                'endTime' => (string)$endTime,
+                'enabled' => (int)$account['enabled'],
+                'numOnline' => (int)($account['numOnline'] ?? 1),
+                'customerBizType' => (int)($account['customerBizType'] ?? 1),
+                'casterIds' => [],
+                'regionIds' => $account['regionIds'] ? [(int)$account['regionIds']] : [],
+                'mountIds' => []
+            ];
+            
+            // Step 1: Update password on remote RTK system via API
+            require_once PROJECT_ROOT_PATH . '/private/api/rtk_system/account_api.php';
+            
+            $apiResult = updateRtkAccountPassword($rtkUserId, $username, $newPassword, $accountData);
+            
+            if (!$apiResult['success']) {
+                error_log("Update password failed on RTK API: " . ($apiResult['error'] ?? 'Unknown error'));
+                // Return false - don't update local DB if API failed
+                return false;
+            }
+            
+            // Step 2: Update password in local database only if API succeeded
             $sql = "UPDATE survey_account 
                    SET password_acc = :password, updated_at = NOW() 
                    WHERE id = :account_id";
@@ -380,7 +447,15 @@ class RtkAccount {
             $stmt->bindParam(':password', $newPassword);
             $stmt->bindParam(':account_id', $accountId);
             
-            return $stmt->execute();
+            $localSuccess = $stmt->execute();
+            
+            if ($localSuccess) {
+                error_log("Password updated successfully for account: {$username} (ID: {$accountId}, RTK_ID: {$rtkUserId})");
+            } else {
+                error_log("Password updated on RTK API but failed to update local DB for: {$username}");
+            }
+            
+            return $localSuccess;
 
         } catch (PDOException $e) {
             error_log("Error updating RTK account password: " . $e->getMessage());

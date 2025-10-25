@@ -134,16 +134,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         // Execute the update
         $stmt->execute();
           // Log activity
-        $notify_content = 'Cập nhật thông tin hồ sơ người dùng: ' . $username;
-        $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, new_values, notify_content, created_at) 
-                   VALUES (:user_id, 'update', 'user', :entity_id, :new_values, :notify_content, NOW())";
-        $stmt_log = $pdo->prepare($sql_log);
-        $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
-        $profile_details = json_encode(["username" => $username, "email" => $email, "phone" => $phone], JSON_UNESCAPED_UNICODE);
-        $stmt_log->bindParam(':new_values', $profile_details, PDO::PARAM_STR);
-        $stmt_log->bindParam(':notify_content', $notify_content, PDO::PARAM_STR);
-        $stmt_log->execute();
+    $notify_content = 'Cập nhật thông tin hồ sơ người dùng: ' . $username;
+    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, old_values, new_values, notify_content, created_at) 
+           VALUES (:user_id, 'update', 'user', :entity_id, :old_values, :new_values, :notify_content, NOW())";
+    $stmt_log = $pdo->prepare($sql_log);
+    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_log->bindParam(':entity_id', $user_id, PDO::PARAM_INT);
+    // Nếu muốn lưu giá trị cũ, có thể fetch từ DB, ở đây để NULL
+    $old_profile_details = null;
+    $stmt_log->bindParam(':old_values', $old_profile_details, PDO::PARAM_NULL);
+    $profile_details = json_encode(["username" => $username, "email" => $email, "phone" => $phone], JSON_UNESCAPED_UNICODE);
+    $stmt_log->bindParam(':new_values', $profile_details, PDO::PARAM_STR);
+    $stmt_log->bindParam(':notify_content', $notify_content, PDO::PARAM_STR);
+    $stmt_log->execute();
 
         // After successful update, fetch fresh user data
         $result = fetchUserData($user_id);

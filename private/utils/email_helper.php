@@ -35,27 +35,23 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         $mail->Subject = 'Xác nhận Email - RTK Web';
         
         // Sửa lại link để trỏ đến file auth folder
-        $verificationLink = SITE_URL . "/public/pages/auth/verify-email.php?token=" . $verificationToken;
+    $verificationLink = BASE_URL . "/public/pages/auth/verify-email.php?token=" . $verificationToken;
         
         $mail->Body = <<<HTML
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #2e7d32;">Xin chào {$username}!</h2>
-                <p>Cảm ơn bạn đã đăng ký tài khoản tại RTK Web. Để hoàn tất quá trình đăng ký, vui lòng xác nhận địa chỉ email của bạn bằng cách nhấp vào nút bên dưới:</p>
-                
+                <h2 style="color: #2e7d32;">Chào {$username},</h2>
+                <p>Cảm ơn bạn đã đăng ký tài khoản tại <b>RTK Web</b>!</p>
+                <p>Để hoàn tất đăng ký, vui lòng xác thực email bằng cách nhấn vào nút bên dưới:</p>
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="{$verificationLink}" style="background-color: #4caf50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    <a href="{$verificationLink}" style="background-color: #4caf50; color: white; padding: 14px 32px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">
                         Xác nhận Email
                     </a>
                 </div>
-                
-                <p>Hoặc bạn có thể copy và paste đường link sau vào trình duyệt:</p>
+                <p>Nếu nút không hoạt động, hãy copy và dán đường link sau vào trình duyệt:</p>
                 <p style="word-break: break-all; color: #666;">{$verificationLink}</p>
-                
-                <p>Link xác nhận này sẽ hết hạn sau 24 giờ.</p>
-                
-                <p style="color: #666; font-size: 0.9em; margin-top: 30px;">
-                    Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.
-                </p>
+                <p style="margin-top: 24px; color: #e57373; font-weight: bold;">Lưu ý: Link xác nhận chỉ có hiệu lực trong 24 giờ.</p>
+                <hr style="margin: 32px 0;">
+                <p style="color: #666; font-size: 0.95em;">Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>
             </div>
 HTML;
 

@@ -136,25 +136,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
             }            $stmt_settings->close();
 
             // Tạo mã OTP để xác thực email
-            require_once __DIR__ . '/../../utils/otp_helper.php';
-            require_once __DIR__ . '/../../utils/email_helper.php';
-              $otpResult = create_email_verification_otp($conn, $email);
-            
-            if ($otpResult['success']) {
-                // Gửi email với mã OTP
-                $emailSent = sendVerificationOTP($email, $username, $otpResult['otp']);
-                
-                if ($emailSent) {
-                    // Lưu thời gian gửi OTP vào session để kiểm soát việc gửi lại
-                    $_SESSION['last_email_otp_sent'] = time();
-                } else {
-                    // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
-                    error_log("Failed to send verification OTP email to: $email");
-                }
-            } else {
-                // Log lỗi nhưng không throw exception vì user vẫn được tạo thành công
-                error_log("Failed to create verification OTP for: $email - " . ($otpResult['message'] ?? 'Unknown error'));
-            }// Commit transaction nếu mọi thứ thành công
+            // Tạo token xác thực email
+            $token = bin2hex(random_bytes(32));
+            $updateTokenSql = "UPDATE user SET email_verify_token = ? WHERE id = ?";
+            $stmtToken = $conn->prepare($updateTokenSql);
+            if ($stmtToken) {
+                $stmtToken->bind_param("si", $token, $user_id);
+                $stmtToken->execute();
+                $stmtToken->close();
+            }
+
+            // Lấy BASE_URL từ config
+            require_once __DIR__ . '/../../config/config.php';
+            $verifyLink = BASE_URL . "/public/pages/auth/verify-email.php?token=" . urlencode($token);
+            $emailSent = sendVerificationEmail($email, $username, $token);
+            if (!$emailSent) {
+                error_log("Failed to send verification email to: $email");
+            }
             $conn->commit();
             
             // Lưu thông tin thiết bị và IP
@@ -228,7 +226,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
             $_SESSION['verify_email'] = $email;
             
             // Chuyển hướng đến trang nhập OTP
-            header("Location: ../../../public/pages/auth/verify-email-otp.php");
+            header("Location: ../../../public/pages/auth/verify-email-check.php");
             exit();} catch (Exception $e) {
             // Rollback transaction nếu có lỗi
             $conn->rollback();
@@ -250,6 +248,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
         header("Location: ../../../public/pages/auth/register.php");
         exit();
     }
+        // Chuyển hướng đến trang thông báo kiểm tra email xác thực
+        header(BASE_URL . "/public/pages/auth/verify-email-check.php");
+        exit();
 } else {
     // Nếu không phải POST request, chuyển hướng về trang đăng ký
     header("Location: ../../../public/pages/auth/register.php");

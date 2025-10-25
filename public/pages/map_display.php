@@ -70,7 +70,6 @@ include $project_root_path . '/private/includes/header.php';
                     <h4>Tìm mốc quốc gia</h4>
                     <p style="margin-bottom: 15px; color: #666;">Tìm các mốc trong bán kính 50km từ vị trí hiện tại</p>
                     <button id="mocqg-from-current" class="ruler-btn">Dùng vị trí hiện tại</button>
-                    <button id="mocqg-from-input" class="ruler-btn">Nhập tọa độ</button>
                     <button id="mocqg-cancel" class="ruler-btn cancel-btn">Hủy</button>
                 </div>
             </div>

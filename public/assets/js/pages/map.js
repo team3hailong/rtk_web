@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Map script loaded');
     // --- KHỞI TẠO MAP VÀ CÁC THÀNH PHẦN CƠ BẢN ---
-    const map = L.map('map').setView([16.0, 106.0], 10);
+    const map = L.map('map').setView([16.0, 106.0], 6);
     const normalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'});
     const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: '© Esri'});
     normalLayer.addTo(map);

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('Map script loaded');
     // --- KHỞI TẠO MAP VÀ CÁC THÀNH PHẦN CƠ BẢN ---
-    const map = L.map('map').setView([16.0, 106.0], 6);
+    const map = L.map('map').setView([16.0, 106.0], 10);
     const normalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'});
     const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: '© Esri'});
     normalLayer.addTo(map);
@@ -457,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- CHỨC NĂNG TÌM MỐC QG ---
     const mocqgPopup = document.getElementById('mocqg-popup');
     const btnMocqgFromCurrent = document.getElementById('mocqg-from-current');
-    const btnMocqgFromInput = document.getElementById('mocqg-from-input');
+    // const btnMocqgFromInput = document.getElementById('mocqg-from-input'); // Bỏ chức năng nhập tọa độ
     const btnMocqgCancel = document.getElementById('mocqg-cancel');
     
     const mocqgCoordinatePopup = document.getElementById('mocqg-coordinate-popup');
@@ -642,11 +643,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
-    // Nhập tọa độ
-    btnMocqgFromInput.addEventListener('click', function() {
-        mocqgPopup.classList.add('hidden');
-        mocqgCoordinatePopup.classList.remove('hidden');
-    });
+    // Nhập tọa độ - Bỏ chức năng
+    // btnMocqgFromInput.addEventListener('click', function() {
+    //     mocqgPopup.classList.add('hidden');
+    //     mocqgCoordinatePopup.classList.remove('hidden');
+    // });
     
     // Hủy popup chọn
     btnMocqgCancel.addEventListener('click', function() {
@@ -714,14 +715,17 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateLabelsZoomVisibility() { map.getContainer().classList.toggle('show-station-labels', map.getZoom() >= MIN_ZOOM_LABELS && map.getZoom() <= MAX_ZOOM_LABELS); }
     map.on('zoomend', updateLabelsZoomVisibility);
     
+    console.log('Stations data:', window.stationsData);
     enrichedStations = window.stationsData
         .filter(station => station.lat && station.long && station.status != 0 && station.status != -1)
         .map(station => {
             station._latlng = L.latLng(parseFloat(station.lat), parseFloat(station.long));
             return station;
         });
+    console.log('Enriched stations:', enrichedStations);
 
     enrichedStations.forEach(station => {
+        console.log('Adding circle for station:', station.station_name, 'at', station._latlng);
         let circleColor = '#3cb043';
         if (station.status == 3) circleColor = '#e74c3c';
         else if (window.userAccessibleStationsData.includes(station.id)) circleColor = '#3498db';

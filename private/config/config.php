@@ -27,7 +27,7 @@ define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', 'dovannguyen2005bv@gmail.com'))
 define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
 
 // Site Configuration
-define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
+// define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
 define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
 
 // Environment and error handling settings
@@ -41,7 +41,7 @@ if (!APP_DEBUG) {
     // Convert PHP errors to log entries and show friendly error page
     set_error_handler(function($severity, $message, $file, $line) {
         error_log("PHP Error [{$severity}]: {$message} in {$file} on line {$line}");
-        header('Location: ' . SITE_URL . '/public/pages/error.php');
+        header('Location: ' . get_base_url() . '/public/pages/error.php');
         exit;
     });
     set_exception_handler(function($e) {
@@ -57,12 +57,7 @@ if (!APP_DEBUG) {
 
         // Redirect to a generic error page without exposing details in URL
         // Ensure SITE_URL is defined and correct
-        if (defined('SITE_URL')) {
-            header('Location: ' . SITE_URL . '/public/pages/error.php');
-        } else {
-            // Fallback if SITE_URL is not defined (should not happen ideally)
-            header('Location: /public/pages/error.php');
-        }
+        header('Location: ' . get_base_url() . '/public/pages/error.php');
         exit;
     });
 }

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Map script loaded');
     // --- KHỞI TẠO MAP VÀ CÁC THÀNH PHẦN CƠ BẢN ---
     const map = L.map('map').setView([16.0, 106.0], 6);
     const normalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'});
@@ -725,7 +724,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Enriched stations:', enrichedStations);
 
     enrichedStations.forEach(station => {
-        console.log('Adding circle for station:', station.station_name, 'at', station._latlng);
+
         let circleColor = '#3cb043';
         if (station.status == 3) circleColor = '#e74c3c';
         else if (window.userAccessibleStationsData.includes(station.id)) circleColor = '#3498db';

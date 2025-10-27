@@ -1,6 +1,8 @@
 <?php
 // filepath: e:\Application\laragon\www\surveying_account\public\pages\auth\register.php
-session_start(); // Bắt đầu session để lưu trữ thông báo
+require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session(); // Bắt đầu session để lưu trữ thông báo
 
 // Hiển thị thông báo lỗi nếu có
 $errors = $_SESSION['errors'] ?? [];

@@ -1,7 +1,9 @@
 <?php
 // Handler for exporting retail invoices (Hóa đơn bán lẻ) instantly
-session_start();
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
+
 require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
 require_once PROJECT_ROOT_PATH . '/private/classes/invoice/RetailInvoiceService.php';
 

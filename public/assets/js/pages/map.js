@@ -714,14 +714,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateLabelsZoomVisibility() { map.getContainer().classList.toggle('show-station-labels', map.getZoom() >= MIN_ZOOM_LABELS && map.getZoom() <= MAX_ZOOM_LABELS); }
     map.on('zoomend', updateLabelsZoomVisibility);
     
-    console.log('Stations data:', window.stationsData);
+
     enrichedStations = window.stationsData
         .filter(station => station.lat && station.long && station.status != 0 && station.status != -1)
         .map(station => {
             station._latlng = L.latLng(parseFloat(station.lat), parseFloat(station.long));
             return station;
         });
-    console.log('Enriched stations:', enrichedStations);
+
 
     enrichedStations.forEach(station => {
 

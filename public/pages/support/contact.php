@@ -1,8 +1,8 @@
 <?php
-session_start();
-
 // --- Require file config - includes path helpers ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+init_session();
 
 // --- Use path constants defined by path_helpers ---
 $base_url = BASE_URL;

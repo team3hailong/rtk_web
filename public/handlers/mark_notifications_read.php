@@ -1,9 +1,8 @@
 <?php
 // Handler to mark notifications as read
-session_start();
-
-// Require configuration file
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {

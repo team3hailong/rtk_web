@@ -54,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];
+                        $_SESSION['last_activity'] = time();
                         
                         // Xử lý chức năng ghi nhớ đăng nhập
                         if ($remember) {

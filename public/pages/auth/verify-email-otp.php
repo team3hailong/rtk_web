@@ -1,6 +1,7 @@
 <?php
-session_start();
 require_once __DIR__ . '/../../../private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
 
 // Initialize variables
 $email = $_SESSION['verify_email'] ?? '';

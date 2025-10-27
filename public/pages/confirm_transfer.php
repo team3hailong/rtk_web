@@ -1,6 +1,8 @@
 <?php
-session_start();
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: ' . BASE_URL . '/public/pages/auth/login.php');
     exit;

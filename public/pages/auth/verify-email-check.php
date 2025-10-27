@@ -1,7 +1,9 @@
 <?php
-session_start();
 $project_root_path = dirname(dirname(dirname(dirname(__FILE__))));
 require_once $project_root_path . '/private/config/config.php';
+require_once $project_root_path . '/private/utils/session_middleware.php';
+init_session();
+
 $base_url = BASE_URL;
 ?>
 <!DOCTYPE html>

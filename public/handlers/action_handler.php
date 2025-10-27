@@ -5,7 +5,10 @@
  * This file acts as a bridge between public requests and private actions
  * It validates the request and then forwards to the appropriate private file
  */
-session_start();
+
+// Load session middleware
+require_once dirname(dirname(__DIR__)) . '/private/utils/session_middleware.php';
+init_session();
 
 // --- Define root paths ---
 $project_root_path = dirname(dirname(__DIR__)); // Go up two levels from /public/handlers

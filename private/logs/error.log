@@ -9,3 +9,6 @@
 [25-Oct-2025 11:22:55 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)
 [25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] RTK API Success (Update Password): Username=admin2, RTK_ID=1940783543215144962
 [25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)
+[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Error [2]: ini_set(): Session ini settings cannot be changed after headers have already been sent in C:\laragon\www\02062025_user_web\private\utils\session_middleware.php on line 27
+[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Warning:  Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
+[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\private\config\config.php on line 44

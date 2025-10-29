@@ -12,7 +12,7 @@ Hệ thống đã được cập nhật để kéo dài thời gian phiên đăn
 
 ### 2. **Thời gian không hoạt động (Inactive Timeout)**
 - **Trước đây**: 30 phút (1,800 giây)
-- **Hiện tại**: **7 ngày** (604,800 giây)
+- **Hiện tại**: **30 ngày** (2,592,000 giây)
 
 ### 3. **Thời gian Remember Me**
 - Giữ nguyên: 30 ngày
@@ -24,9 +24,9 @@ Hệ thống đã được cập nhật để kéo dài thời gian phiên đăn
 - Sau 30 ngày, người dùng sẽ phải đăng nhập lại bất kể có hoạt động hay không
 
 ### Inactive Timeout (Thời gian không hoạt động)
-- Người dùng chỉ bị logout nếu **không có hoạt động nào trong 7 ngày liên tục**
+- Người dùng chỉ bị logout nếu **không có hoạt động nào trong 30 ngày liên tục**
 - Mỗi lần truy cập/thao tác sẽ reset lại bộ đếm thời gian
-- Nếu trong 7 ngày có bất kỳ hoạt động nào, phiên đăng nhập sẽ được duy trì
+- Nếu trong 30 ngày có bất kỳ hoạt động nào, phiên đăng nhập sẽ được duy trì
 
 ### Remember Me
 - Nếu người dùng chọn "Ghi nhớ đăng nhập", họ sẽ tự động đăng nhập lại trong vòng 30 ngày
@@ -70,7 +70,7 @@ define('SESSION_INACTIVE_TIMEOUT', 2 * 24 * 60 * 60); // 2 ngày
 ### Production (Sản xuất) - **Đang áp dụng**
 ```php
 define('SESSION_LIFETIME', 30 * 24 * 60 * 60);     // 30 ngày
-define('SESSION_INACTIVE_TIMEOUT', 7 * 24 * 60 * 60);  // 7 ngày
+define('SESSION_INACTIVE_TIMEOUT', 30 * 24 * 60 * 60);  // 30 ngày
 ```
 
 ### High Security (Bảo mật cao)
@@ -95,7 +95,7 @@ Sau khi cập nhật, bạn có thể kiểm tra:
 1. Đăng nhập vào hệ thống
 2. Để máy không hoạt động vài giờ
 3. Quay lại và kiểm tra - bạn vẫn đăng nhập
-4. Chỉ logout nếu không hoạt động trong 7 ngày
+4. Chỉ logout nếu không hoạt động trong 30 ngày
 
 ## Files đã cập nhật
 
@@ -105,4 +105,4 @@ Sau khi cập nhật, bạn có thể kiểm tra:
 
 ## Ngày cập nhật
 
-23/10/2025
+29/10/2025

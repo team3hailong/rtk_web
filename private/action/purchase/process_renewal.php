@@ -166,23 +166,11 @@ try {
         $stmt_ag = $conn->prepare("INSERT INTO account_groups (registration_id, survey_account_id) VALUES (?, ?)");
         $stmt_ag->execute([$registration_id, $account_id]);
     }
-      // 3. Tạo một giao dịch duy nhất cho việc gia hạn
-    // Kiểm tra xem có voucher đã được áp dụng không
-    $voucher_id = null;
-    if (isset($_SESSION['renewal']['voucher_id'])) {
-        $voucher_id = $_SESSION['renewal']['voucher_id'];
-    }
-      if ($voucher_id) {
-        $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                                 VALUES (?, ?, ?, 'renewal', ?, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())");
-        $stmt_th->execute([$registration_id, $user_id, $voucher_id, $total_price]);
-    } else {
-        $stmt_th = $conn->prepare("INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at) 
-                                 VALUES (?, ?, 'renewal', ?, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())");
-        $stmt_th->execute([$registration_id, $user_id, $total_price]);
-    }
     
-    $transaction_id = $conn->lastInsertId();
+    // NOTE: Transaction History sẽ được tạo sau khi:
+    // - Upload proof thành công (upload_payment_proof.php)
+    // - Hoặc hoàn tất đơn hàng không cần proof (complete_order_without_proof.php)
+    // Không tạo transaction ở đây để tránh tạo giao dịch khi user chưa hoàn tất thanh toán
     
     $conn->commit();
     

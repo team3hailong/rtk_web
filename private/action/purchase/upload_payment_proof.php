@@ -122,8 +122,8 @@ try {
     // Check if registration belongs to the user
     if (!$paymentProofService->registrationBelongsToUser($registration_id, $user_id)) {
         throw new Exception('Access denied. You do not own this registration.');
-    }// Find and update the transaction history record instead of the payment table
-    $sql_find_transaction = "SELECT id, voucher_id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
+    }// Find transaction history record or create if not exists
+    $sql_find_transaction = "SELECT id, voucher_id, status FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id";
     $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_find->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -131,10 +131,63 @@ try {
     $transaction = $stmt_find->fetch(PDO::FETCH_ASSOC);
 
     if (!$transaction) {
-        throw new Exception('No pending transaction found for this registration.');
+        // Tạo transaction record mới khi upload proof (cho trường hợp cần upload proof)
+        $sessionKey = (isset($_SESSION['is_renewal']) && $_SESSION['is_renewal']) ? 'renewal' : 'order';
+        
+        // Get registration details
+        $sql_reg = "SELECT package_id, location_id, num_account, total_price FROM registration WHERE id = :registration_id AND user_id = :user_id";
+        $stmt_reg = $conn->prepare($sql_reg);
+        $stmt_reg->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+        $stmt_reg->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_reg->execute();
+        $registration = $stmt_reg->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$registration) {
+            throw new Exception('Registration not found.');
+        }
+        
+        // Calculate final amount (lấy từ session hoặc registration total_price)
+        $total_price = (float)$registration['total_price'];
+        
+        // Lấy voucher info từ session (có thể null nếu không áp dụng voucher)
+        $voucher_id = isset($_SESSION[$sessionKey]) && isset($_SESSION[$sessionKey]['voucher_id']) 
+                      ? $_SESSION[$sessionKey]['voucher_id'] 
+                      : null;
+        
+        $discount_amount = isset($_SESSION[$sessionKey]) && isset($_SESSION[$sessionKey]['voucher_discount']) 
+                           ? $_SESSION[$sessionKey]['voucher_discount'] 
+                           : 0;
+        
+        $final_amount = max(0, $total_price - $discount_amount);
+        
+        // Xác định transaction_type
+        $transaction_type = $sessionKey === 'renewal' ? 'renewal' : 'purchase';
+        $payment_method = 'Chuyển khoản ngân hàng';
+        
+        // Insert new transaction (chỉ các cột có trong bảng transaction_history)
+        $sql_insert = "INSERT INTO transaction_history 
+                       (user_id, registration_id, voucher_id, transaction_type, 
+                        amount, status, payment_method, payment_confirmed, 
+                        created_at, updated_at) 
+                       VALUES 
+                       (:user_id, :registration_id, :voucher_id, :transaction_type, 
+                        :amount, 'pending', :payment_method, 0, 
+                        NOW(), NOW())";
+        
+        $stmt_insert = $conn->prepare($sql_insert);
+        $stmt_insert->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':transaction_type', $transaction_type, PDO::PARAM_STR);
+        $stmt_insert->bindParam(':amount', $final_amount, PDO::PARAM_STR);
+        $stmt_insert->bindParam(':payment_method', $payment_method, PDO::PARAM_STR);
+        $stmt_insert->execute();
+        
+        $transaction_id = $conn->lastInsertId();
+    } else {
+        $transaction_id = $transaction['id'];
+        $voucher_id = $transaction['voucher_id'];
     }
-      $transaction_id = $transaction['id'];
-    $voucher_id = $transaction['voucher_id'];
 
     // Update transaction record with payment image
     $sql_update = "UPDATE transaction_history 

@@ -69,3 +69,59 @@
 [01-Nov-2025 11:32:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
 [01-Nov-2025 11:32:30 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
 [01-Nov-2025 11:32:30 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
+[01-Nov-2025 11:33:45 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 11:33:45 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
+[01-Nov-2025 11:34:34 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 11:34:34 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
+[01-Nov-2025 11:34:38 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 11:40:03 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 11:40:03 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
+[01-Nov-2025 11:40:09 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 14:30:43 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 14:30:43 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
+[01-Nov-2025 14:33:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 14:33:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3, 4], Accounts: 5
+[01-Nov-2025 14:34:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
+[01-Nov-2025 14:34:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
+[01-Nov-2025 14:34:07 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 14:39:52 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 14:39:52 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
+[01-Nov-2025 14:39:56 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4, 5], Accounts: 2
+[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (800000) vs DB (1600000) for registration ID 10368.
+[01-Nov-2025 14:47:09 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 1600000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 2, 3, 4], Accounts: 3
+[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (800000) vs DB (2400000) for registration ID 10369.
+[01-Nov-2025 14:49:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2400000, Discount: 2400000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 14:50:11 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $conn in C:\laragon\www\02062025_user_web\private\action\purchase\upload_payment_proof.php on line 184
+[01-Nov-2025 14:59:26 Asia/Ho_Chi_Minh] Using base price from payment_data: 2400000
+[01-Nov-2025 14:59:26 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [5], Accounts: 20
+[01-Nov-2025 14:59:59 Asia/Ho_Chi_Minh] Using base price from payment_data: 40000000
+[01-Nov-2025 14:59:59 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 2
+[01-Nov-2025 15:03:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 15:03:46 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: [2, 3], Accounts: 3
+[01-Nov-2025 15:04:01 Asia/Ho_Chi_Minh] Using base price from payment_data: 18000000
+[01-Nov-2025 15:04:01 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: [2, 3], Accounts: 1
+[01-Nov-2025 15:04:20 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
+[01-Nov-2025 15:04:20 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2
+[01-Nov-2025 15:04:31 Asia/Ho_Chi_Minh] Database error uploading payment proof: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'package_id' in 'field list'
+[01-Nov-2025 15:04:34 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
+[01-Nov-2025 15:04:34 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2
+[01-Nov-2025 15:06:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
+[01-Nov-2025 15:06:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2, 3], Accounts: 131
+[01-Nov-2025 15:06:16 Asia/Ho_Chi_Minh] Voucher calculation: Original: 104800000, Discount: 104800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 15:06:20 Asia/Ho_Chi_Minh] Error completing order without proof: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'package_id' in 'field list'
+[01-Nov-2025 15:10:41 Asia/Ho_Chi_Minh] Using base price from payment_data: 104800000
+[01-Nov-2025 15:10:41 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 2
+[01-Nov-2025 15:11:07 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
+[01-Nov-2025 15:11:07 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 4
+[01-Nov-2025 15:11:12 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8000000, Discount: 8000000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 15:11:16 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $voucher_code in C:\laragon\www\02062025_user_web\private\action\purchase\complete_order_without_proof.php on line 168
+[01-Nov-2025 15:23:27 Asia/Ho_Chi_Minh] Using base price from payment_data: 8800000
+[01-Nov-2025 15:23:27 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 11
+[01-Nov-2025 15:23:30 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8800000, Discount: 8800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] Using base price from payment_data: 8800000
+[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
+[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10379.

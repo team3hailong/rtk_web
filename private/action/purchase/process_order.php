@@ -187,33 +187,12 @@ try {
     $registration_id = $conn->lastInsertId();
     if (!$registration_id) {
         throw new Exception("Failed to create registration record.");
-    }    // 2. Insert into Transaction History
-    // Kiểm tra xem có voucher được áp dụng không
-    $voucher_id = null;
-    if (isset($_SESSION['order']['voucher_id'])) {
-        $voucher_id = $_SESSION['order']['voucher_id'];
     }
-      if ($voucher_id) {
-        $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, :voucher_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())";
-        $stmt_trans = $conn->prepare($sql_trans);
-        $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
-    } else {
-        $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())"; // Set default payment method
-        $stmt_trans = $conn->prepare($sql_trans);
-        $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
-    }
-    $stmt_trans->execute();
 
-    if ($stmt_trans->rowCount() == 0) {
-         throw new Exception("Failed to create transaction history record.");
-    }
+    // NOTE: Transaction History sẽ được tạo sau khi:
+    // - Upload proof thành công (upload_payment_proof.php)
+    // - Hoặc hoàn tất đơn hàng không cần proof (complete_order_without_proof.php)
+    // Không tạo transaction ở đây để tránh tạo giao dịch khi user chưa hoàn tất thanh toán
 
     // Commit Transaction
     $conn->commit();    // Log user purchase action with detailed information similar to renewal process

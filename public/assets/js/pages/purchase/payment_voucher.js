@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetHref = this.getAttribute('href');
-            if (confirm('Bạn có chắc chắn muốn rời khỏi trang thanh toán? Mã giảm giá đã áp dụng sẽ bị xóa.')) {
+            if (confirm('Bạn có chắc chắn muốn rời khỏi trang thanh toán? Giao dịch hiện tại sẽ bị hủy.')) {
                 // Đặt window.isProgrammaticNavigation = true để không kích hoạt beacon
                 // vì chúng ta sẽ tự xóa voucher và điều hướng
                 window.isProgrammaticNavigation = true;

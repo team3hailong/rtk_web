@@ -92,25 +92,30 @@ $verified_total_price = $payment_data['verified_total_price'];
 // Store base price data in session
 $_SESSION['payment_data'] = $payment_data;
 
-// Check if current voucher has auto_approve enabled
+// Check if current voucher has auto_approve enabled and need_upload_proof
 $has_auto_approve_voucher = false;
+$need_upload_proof = true; // Default: cần upload proof
 if (isset($_SESSION[$sessionKey]['voucher_id'])) {
     try {
         require_once $project_root_path . '/private/classes/Database.php';
         $db = new Database();
         $conn = $db->getConnection();
         
-        $sql = "SELECT auto_approve FROM voucher WHERE id = :voucher_id AND is_active = 1";
+        $sql = "SELECT auto_approve, need_upload_proof FROM voucher WHERE id = :voucher_id AND is_active = 1";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':voucher_id', $_SESSION[$sessionKey]['voucher_id'], PDO::PARAM_INT);
         $stmt->execute();
         
         $voucher_data = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($voucher_data && $voucher_data['auto_approve'] == 1) {
-            $has_auto_approve_voucher = true;
+        if ($voucher_data) {
+            if ($voucher_data['auto_approve'] == 1) {
+                $has_auto_approve_voucher = true;
+            }
+            // Lấy thông tin need_upload_proof từ voucher
+            $need_upload_proof = isset($voucher_data['need_upload_proof']) ? (bool)$voucher_data['need_upload_proof'] : true;
         }
     } catch (Exception $e) {
-        error_log("Error checking auto-approve voucher: " . $e->getMessage());
+        error_log("Error checking voucher properties: " . $e->getMessage());
     }
 }
 
@@ -280,108 +285,111 @@ include $project_root_path . '/private/includes/header.php';
                     <!-- Step 2: Quét mã thanh toán -->
                     <section class="wizard-section" data-section="2">
                         <div class="section-card">
-                            <!-- Free order confirmation -->
-                            <div id="free-order-confirmation-section" style="display: <?php echo ($verified_total_price <= 0) ? 'block' : 'none'; ?>;">
-                                <h3 class="section-title">
-                                    <i class="fas fa-check-circle" style="color: var(--success-600);"></i>
-                                    Hoàn tất đơn hàng
-                                </h3>
-                                <div class="section-content">
-                                    <div class="free-order-notice">
-                                        <p>Do áp dụng mã giảm giá, tổng thanh toán của bạn là <strong style="color: var(--success-600);"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>.</p>
+                            <!-- Payment instructions (for all cases) -->
+                            <div id="payment-qr-code-section">
+                                <?php if ($verified_total_price <= 0): ?>
+                                    <!-- Free order - skip payment -->
+                                    <h3 class="section-title">
+                                        <i class="fas fa-check-circle" style="color: var(--success-600);"></i>
+                                        Xác nhận đơn hàng
+                                    </h3>
+                                    <div class="section-content">
+                                        <div class="free-order-notice">
+                                            <p>Do áp dụng mã giảm giá, tổng thanh toán của bạn là <strong style="color: var(--success-600);"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>.</p>
+                                            <?php if ($has_auto_approve_voucher): ?>
+                                                <p>Voucher của bạn hỗ trợ <strong style="color: var(--success-600);">duyệt tự động</strong>. Vui lòng tiếp tục để hoàn tất đăng ký.</p>
+                                            <?php else: ?>
+                                                <p>Vui lòng tiếp tục để hoàn tất đăng ký.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <!-- Paid order - show QR code -->
+                                    <h3 class="section-title">
+                                        <i class="fas fa-qrcode"></i>
+                                        Quét mã để thanh toán
+                                    </h3>
+                                    <div class="section-content">
                                         <?php if ($has_auto_approve_voucher): ?>
-                                            <p>Voucher của bạn hỗ trợ <strong style="color: var(--success-600);">duyệt tự động</strong>. Đơn hàng sẽ được kích hoạt ngay lập tức.</p>
-                                        <?php else: ?>
-                                            <p>Đơn hàng của bạn sẽ được kích hoạt ngay lập tức.</p>
+                                            <div class="auto-approve-notice">
+                                                <i class="fas fa-check-circle"></i>
+                                                <span>Voucher của bạn hỗ trợ <strong>duyệt tự động</strong>. Đơn hàng sẽ được duyệt tự động sau khi thanh toán.</span>
+                                            </div>
                                         <?php endif; ?>
+                                        <p class="section-description">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR để quét mã thanh toán.</p>
+                                        <div class="qr-container">
+                                            <div id="qrcode">
+                                                <img src="<?php echo htmlspecialchars($vietqr_image_url ?? ''); ?>" alt="VietQR Code">
+                                            </div>
+                                        </div>
+                                        <div class="bank-details">
+                                            <h4><i class="fas fa-university"></i> Thông tin chuyển khoản</h4>
+                                            <div class="bank-info-grid">
+                                                <div class="bank-info-item">
+                                                    <span class="label">Ngân hàng:</span>
+                                                    <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : 'N/A'; ?></strong>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Số tài khoản:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong>
+                                                        <button class="copy-btn" data-copy-target="#account-number"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Chủ tài khoản:</span>
+                                                    <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Số tiền:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="payment-amount" class="highlight-amount"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                                                        <button class="copy-btn" data-copy-target="#payment-amount"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="bank-info-item full-width">
+                                                    <span class="label">Nội dung CK:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong>
+                                                        <button class="copy-btn" data-copy-target="#payment-description"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="payment-note"><i class="fas fa-exclamation-circle"></i> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản để được xử lý tự động.</p>
+                                        </div>
                                     </div>
-                                    <?php
-                                    $action_to_use = $has_auto_approve_voucher ? 'process_auto_approve_order' : 'process_free_order';
-                                    $button_text = $has_auto_approve_voucher ? 'Hoàn tất đăng ký (Duyệt tự động)' : 'Hoàn tất đăng ký miễn phí';
-                                    ?>
-                                    <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=<?php echo $action_to_use; ?>" method="POST">
-                                        <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
-                                        <?php echo generate_csrf_input(); ?>
-                                        <button type="submit" class="btn btn-success btn-wizard">
-                                            <i class="fas fa-check"></i> <?php echo htmlspecialchars($button_text); ?>
+                                <?php endif; ?>
+                                <div class="section-actions">
+                                    <button type="button" class="btn btn-secondary btn-wizard btn-prev" onclick="goToStep(1)">
+                                        <i class="fas fa-arrow-left"></i> Quay lại
+                                    </button>
+                                    
+                                    <?php if ($need_upload_proof): ?>
+                                        <!-- Cần upload proof → Chuyển sang step 3 -->
+                                        <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(3)">
+                                            <?php if ($verified_total_price <= 0): ?>
+                                                Tiếp tục <i class="fas fa-arrow-right"></i>
+                                            <?php else: ?>
+                                                Đã thanh toán <i class="fas fa-arrow-right"></i>
+                                            <?php endif; ?>
                                         </button>
-                                    </form>
-                                </div>
-                                <div class="section-actions">
-                                    <button type="button" class="btn btn-secondary btn-wizard btn-prev" onclick="goToStep(1)">
-                                        <i class="fas fa-arrow-left"></i> Quay lại
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Paid order QR code -->
-                            <div id="payment-qr-code-section" style="display: <?php echo ($verified_total_price > 0) ? 'block' : 'none'; ?>;">
-                                <h3 class="section-title">
-                                    <i class="fas fa-qrcode"></i>
-                                    Quét mã để thanh toán
-                                </h3>
-                                <div class="section-content">
-                                    <?php if ($has_auto_approve_voucher): ?>
-                                        <div class="auto-approve-notice">
-                                            <i class="fas fa-check-circle"></i>
-                                            <span>Voucher của bạn hỗ trợ <strong>duyệt tự động</strong>. Đơn hàng sẽ được duyệt tự động sau khi thanh toán.</span>
-                                        </div>
+                                    <?php else: ?>
+                                        <!-- Không cần upload proof → Submit trực tiếp tạo giao dịch -->
+                                        <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=complete_order_without_proof" method="POST" style="display: inline;">
+                                            <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
+                                            <?php echo generate_csrf_input(); ?>
+                                            <button type="submit" class="btn btn-success btn-wizard">
+                                                <i class="fas fa-check"></i> Hoàn tất đăng ký
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
-                                    <p class="section-description">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR để quét mã thanh toán.</p>
-                                    <div class="qr-container">
-                                        <div id="qrcode">
-                                            <img src="<?php echo htmlspecialchars($vietqr_image_url ?? ''); ?>" alt="VietQR Code">
-                                        </div>
-                                    </div>
-                                    <div class="bank-details">
-                                        <h4><i class="fas fa-university"></i> Thông tin chuyển khoản</h4>
-                                        <div class="bank-info-grid">
-                                            <div class="bank-info-item">
-                                                <span class="label">Ngân hàng:</span>
-                                                <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : 'N/A'; ?></strong>
-                                            </div>
-                                            <div class="bank-info-item">
-                                                <span class="label">Số tài khoản:</span>
-                                                <div class="copyable-field">
-                                                    <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong>
-                                                    <button class="copy-btn" data-copy-target="#account-number"><i class="fas fa-copy"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="bank-info-item">
-                                                <span class="label">Chủ tài khoản:</span>
-                                                <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong>
-                                            </div>
-                                            <div class="bank-info-item">
-                                                <span class="label">Số tiền:</span>
-                                                <div class="copyable-field">
-                                                    <strong id="payment-amount" class="highlight-amount"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
-                                                    <button class="copy-btn" data-copy-target="#payment-amount"><i class="fas fa-copy"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="bank-info-item full-width">
-                                                <span class="label">Nội dung CK:</span>
-                                                <div class="copyable-field">
-                                                    <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong>
-                                                    <button class="copy-btn" data-copy-target="#payment-description"><i class="fas fa-copy"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p class="payment-note"><i class="fas fa-exclamation-circle"></i> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản để được xử lý tự động.</p>
-                                    </div>
-                                </div>
-                                <div class="section-actions">
-                                    <button type="button" class="btn btn-secondary btn-wizard btn-prev" onclick="goToStep(1)">
-                                        <i class="fas fa-arrow-left"></i> Quay lại
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(3)">
-                                        Đã thanh toán <i class="fas fa-arrow-right"></i>
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Step 3: Upload ảnh minh chứng -->
+                    <!-- Step 3: Upload ảnh minh chứng (chỉ hiện khi cần upload proof) -->
+                    <?php if ($need_upload_proof): ?>
                     <section class="wizard-section" data-section="3">
                         <div class="section-card">
                             <h3 class="section-title">
@@ -436,7 +444,8 @@ include $project_root_path . '/private/includes/header.php';
                             </div>
                         </div>
                     </section>
-                <?php endif; ?>
+                    <?php endif; // end if ($need_upload_proof) ?>
+                <?php endif; // end if (!$is_trial) ?>
             </div>
         </div>
     </main>

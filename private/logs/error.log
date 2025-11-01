@@ -74,3 +74,24 @@
 [01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: DBN002 for registration_id: 10390
 [01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"DBN002","password":"0999999999","rtk_user_id":"1984558126577426433"}],"error":null}
 [01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10390
+[01-Nov-2025 16:52:32 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 16:52:32 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [18, 27], Accounts: 1
+[01-Nov-2025 16:53:34 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Auto-approve enabled for voucher 35, setting status=completed
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Starting auto account creation for registration 10391
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10391
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10391,"user_id":92,"package_id":1,"location_id":18,"selected_provinces":"[18, 27]","num_account":1,"start_time":"2025-11-01 16:52:32","end_time":"2025-12-01 16:52:32","status":"pending"}
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [18,27]
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["22","26","27","4","53"]
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: DBN
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Last username: DBN002, Next number: 3
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: DBN003
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=DBN003, password=0999999999 (phone), customerName=Khách hàng, customerPhone=0999999999, startTime=1761990752000 (2025-11-01 16:52:32), endTime=1764582752000 (2025-12-01 16:52:32)
+[01-Nov-2025 16:53:42 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["22","26","27","4","53"],"name":"DBN003","userPwd":"0999999999","customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","startTime":1761990752000,"endTime":1764582752000}
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"1984559472936427522","name":"DBN003","userPwd":"0999999999","startTime":1761990752000,"endTime":1764582752000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["22","26","27","4","53"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""}}
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"1984559472936427522","name":"DBN003","userPwd":"0999999999","startTime":1761990752000,"endTime":1764582752000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["22","26","27","4","53"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""},"error":null}
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 1984559472936427522
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: DBN003 for registration_id: 10391
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"DBN003","password":"0999999999","rtk_user_id":"1984559472936427522"}],"error":null}
+[01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10391

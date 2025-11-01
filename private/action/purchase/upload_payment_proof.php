@@ -189,13 +189,37 @@ try {
         $voucher_id = $transaction['voucher_id'];
     }
 
+    // Check if voucher has auto_approve enabled
+    $auto_approve = false;
+    if ($voucher_id) {
+        $sql_voucher = "SELECT auto_approve FROM voucher WHERE id = :voucher_id";
+        $stmt_voucher = $conn->prepare($sql_voucher);
+        $stmt_voucher->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
+        $stmt_voucher->execute();
+        $voucher = $stmt_voucher->fetch(PDO::FETCH_ASSOC);
+        $auto_approve = $voucher && $voucher['auto_approve'] == 1;
+    }
+
     // Update transaction record with payment image
-    $sql_update = "UPDATE transaction_history 
-                   SET payment_image = :payment_image, 
-                       payment_confirmed = 0, 
-                       payment_confirmed_at = NULL, 
-                       updated_at = NOW() 
-                   WHERE id = :transaction_id";
+    // If auto_approve, set status='completed' and payment_confirmed=1
+    if ($auto_approve) {
+        $sql_update = "UPDATE transaction_history 
+                       SET payment_image = :payment_image, 
+                           status = 'completed',
+                           payment_confirmed = 1, 
+                           payment_confirmed_at = NOW(), 
+                           updated_at = NOW() 
+                       WHERE id = :transaction_id";
+        error_log("[UPLOAD_PROOF] Auto-approve enabled for voucher $voucher_id, setting status=completed");
+    } else {
+        $sql_update = "UPDATE transaction_history 
+                       SET payment_image = :payment_image, 
+                           payment_confirmed = 0, 
+                           payment_confirmed_at = NULL, 
+                           updated_at = NOW() 
+                       WHERE id = :transaction_id";
+    }
+    
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
     $stmt_update->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
@@ -217,6 +241,24 @@ try {
     }
 
     $conn->commit(); // Commit transaction
+
+    // If auto_approve, create accounts automatically
+    if ($auto_approve) {
+        error_log("[UPLOAD_PROOF] Starting auto account creation for registration $registration_id");
+        
+        require_once $project_root_path . '/private/classes/purchase/AutoAccountCreator.php';
+        $accountCreator = new AutoAccountCreator();
+        
+        $result = $accountCreator->createAccountsForRegistration($registration_id);
+        error_log("[UPLOAD_PROOF] createAccountsForRegistration result: " . json_encode($result));
+        
+        if (!$result['success']) {
+            error_log("[AUTO_ACCOUNT] Failed to create accounts for registration $registration_id: " . $result['error']);
+            // Không throw exception, vẫn cho hoàn tất upload
+        } else {
+            error_log("[AUTO_ACCOUNT] Successfully created " . count($result['accounts']) . " accounts for registration $registration_id");
+        }
+    }
 
     // Success Response
     $response['success'] = true;

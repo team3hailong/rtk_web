@@ -1,4 +1,8 @@
 // Script JS để xử lý các chức năng voucher, sao chép và xác nhận chuyển trang
+
+// Biến cờ global để quản lý việc điều hướng (có thể truy cập từ các file JS khác)
+window.isProgrammaticNavigation = false;
+
 document.addEventListener('DOMContentLoaded', function() {
     // --- Lấy các biến toàn cục từ PHP ---
     const isTrial = typeof JS_IS_TRIAL !== 'undefined' ? JS_IS_TRIAL : false;
@@ -6,9 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const baseUrl = typeof JS_BASE_URL !== 'undefined' ? JS_BASE_URL : '';
     const csrfToken = typeof JS_CSRF_TOKEN !== 'undefined' ? JS_CSRF_TOKEN : '';
     const currentPrice = typeof JS_CURRENT_PRICE !== 'undefined' ? JS_CURRENT_PRICE : 0;
-
-    // Biến cờ để quản lý việc điều hướng
-    let isProgrammaticNavigation = false;
 
     // --- Xử lý Voucher (chỉ chạy nếu không phải gói dùng thử) ---
     if (!isTrial) {
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.status) {
                         voucherStatus.textContent = data.message;
                         voucherStatus.className = 'voucher-status success';
-                        isProgrammaticNavigation = true;
+                        window.isProgrammaticNavigation = true;
                         setTimeout(() => { window.location.reload(); }, 1000);
                     } else {
                         voucherStatus.textContent = data.message || 'Mã giảm giá không hợp lệ.';
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status) {
-                        isProgrammaticNavigation = true;
+                        window.isProgrammaticNavigation = true;
                         window.location.reload();
                     } else {
                         alert(data.message || 'Không thể xóa mã giảm giá. Vui lòng thử lại.');
@@ -121,7 +122,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', function() {
-            isProgrammaticNavigation = true;
+            window.isProgrammaticNavigation = true;
+        });
+    });
+    
+    // Đánh dấu khi click vào nút "Hoàn tất đăng ký" (Free/Auto-approve order)
+    const freeOrderForms = document.querySelectorAll('form[action*="process_free_order"], form[action*="process_auto_approve_order"]');
+    freeOrderForms.forEach(form => {
+        form.addEventListener('submit', function() {
+            window.isProgrammaticNavigation = true;
         });
     });
 
@@ -131,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const targetHref = this.getAttribute('data-href');
             if (confirm('Bạn xác nhận đã hoàn tất thanh toán và muốn tải lên minh chứng?')) {
-                isProgrammaticNavigation = true;
+                window.isProgrammaticNavigation = true;
                 window.location.href = targetHref;
             }
         });
@@ -146,9 +155,9 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const targetHref = this.getAttribute('href');
             if (confirm('Bạn có chắc chắn muốn rời khỏi trang thanh toán? Mã giảm giá đã áp dụng sẽ bị xóa.')) {
-                // Đặt isProgrammaticNavigation = true để không kích hoạt beacon
+                // Đặt window.isProgrammaticNavigation = true để không kích hoạt beacon
                 // vì chúng ta sẽ tự xóa voucher và điều hướng
-                isProgrammaticNavigation = true;
+                window.isProgrammaticNavigation = true;
                 
                 // Gửi yêu cầu xóa voucher trước khi điều hướng
                 const formData = new FormData();
@@ -169,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sự kiện beforeunload sẽ xử lý các trường hợp còn lại: đóng tab, gõ URL mới, back/forward
     window.addEventListener('beforeunload', function(e) {
         // Chỉ chạy logic dọn dẹp và cảnh báo nếu đây là một hành động thoát trang không mong muốn
-        if (!isProgrammaticNavigation) {
+        if (!window.isProgrammaticNavigation) {
             const voucherInfo = document.getElementById('voucher-info');
             // Chỉ xóa voucher nếu nó đang được áp dụng
             if (voucherInfo && window.getComputedStyle(voucherInfo).display !== 'none') {

@@ -88,6 +88,9 @@ function createRtkAccount(array $accountData): array {
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
 
+        // Log request data
+        error_log("[RTK_API] Creating account with data: " . json_encode($accountData));
+
         $response = curl_exec($ch);
 
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -97,12 +100,13 @@ function createRtkAccount(array $accountData): array {
         curl_close($ch);
 
         if ($curlError) {
-
+            error_log("[RTK_API] cURL Error: $curlError");
             return [ 'success' => false, 'data' => null, 'error' => "cURL Error: $curlError" ];
 
         }
 
         $responseData = json_decode($response, true);
+        error_log("[RTK_API] Response HTTP $httpCode: " . json_encode($responseData));
 
         if ($httpCode >= 200 && $httpCode < 300 && isset($responseData['code']) && 
 

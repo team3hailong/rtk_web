@@ -1,127 +1,76 @@
-[25-Oct-2025 11:00:38 Asia/Ho_Chi_Minh] Successfully updated ownership for registration_id=1 to user_id=92
-[25-Oct-2025 11:12:20 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 405 - {"timestamp":1761365540939,"status":405,"error":"Method Not Allowed","message":"","path":"\/openapi\/broadcast\/users"}
-[25-Oct-2025 11:12:20 Asia/Ho_Chi_Minh] Update password failed on RTK API: HTTP Error: 405
-[25-Oct-2025 11:19:17 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 401 - {"code":"CGBAS01000004","msg":"Not logged in or login expired"}
-[25-Oct-2025 11:19:17 Asia/Ho_Chi_Minh] Update password failed on RTK API: Not logged in or login expired
-[25-Oct-2025 11:21:33 Asia/Ho_Chi_Minh] RTK API Failed (Update Password): HTTP 405 - {"timestamp":1761366093213,"status":405,"error":"Method Not Allowed","message":"","path":"\/openapi\/broadcast\/users"}
-[25-Oct-2025 11:21:33 Asia/Ho_Chi_Minh] Update password failed on RTK API: HTTP Error: 405
-[25-Oct-2025 11:22:55 Asia/Ho_Chi_Minh] RTK API Success (Update Password): Username=admin2, RTK_ID=1940783543215144962
-[25-Oct-2025 11:22:55 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)
-[25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] RTK API Success (Update Password): Username=admin2, RTK_ID=1940783543215144962
-[25-Oct-2025 11:23:52 Asia/Ho_Chi_Minh] Password updated successfully for account: admin2 (ID: 1940783543215144962, RTK_ID: 1940783543215144962)
-[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Error [2]: ini_set(): Session ini settings cannot be changed after headers have already been sent in C:\laragon\www\02062025_user_web\private\utils\session_middleware.php on line 27
-[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Warning:  Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
-[29-Oct-2025 14:07:07 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\private\config\config.php on line 44
-[29-Oct-2025 14:21:17 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
-                FROM 
-                    user_ranking
-                W' at line 2
-[01-Nov-2025 09:40:46 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
-                FROM 
-                    user_ranking
-                W' at line 2
-[01-Nov-2025 09:41:28 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
-                FROM 
-                    user_ranking
-                W' at line 2
-[01-Nov-2025 09:42:17 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 09:42:17 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
-[01-Nov-2025 09:45:42 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 09:45:42 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
-[01-Nov-2025 09:46:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 09:46:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
-[01-Nov-2025 09:46:21 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 09:46:21 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
-[01-Nov-2025 09:49:00 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 09:49:01 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
-[01-Nov-2025 09:49:02 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 10:39:28 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 10:39:28 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
-[01-Nov-2025 10:44:26 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 10:44:26 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
-[01-Nov-2025 10:50:25 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 10:50:25 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
-[01-Nov-2025 10:50:35 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 10:50:53 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 10:50:53 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
-[01-Nov-2025 11:03:36 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:03:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 1
-[01-Nov-2025 11:04:43 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:04:43 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 1
-[01-Nov-2025 11:07:18 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:07:18 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 1
-[01-Nov-2025 11:10:17 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:10:17 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 1
-[01-Nov-2025 11:12:38 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:12:38 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 15], Accounts: 2
-[01-Nov-2025 11:17:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 11:17:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 15], Accounts: 2
-[01-Nov-2025 11:18:48 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 11:18:48 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 3], Accounts: 1
-[01-Nov-2025 11:18:53 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 11:20:51 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:20:51 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 2, 3], Accounts: 1
-[01-Nov-2025 11:20:51 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10361.
-[01-Nov-2025 11:26:21 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 11:32:16 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:32:16 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
-[01-Nov-2025 11:32:17 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10362.
-[01-Nov-2025 11:32:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 11:32:30 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:32:30 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
-[01-Nov-2025 11:33:45 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:33:45 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
-[01-Nov-2025 11:34:34 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:34:34 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
-[01-Nov-2025 11:34:38 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 11:40:03 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 11:40:03 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
-[01-Nov-2025 11:40:09 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 14:30:43 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 14:30:43 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
-[01-Nov-2025 14:33:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 14:33:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3, 4], Accounts: 5
-[01-Nov-2025 14:34:04 Asia/Ho_Chi_Minh] Using base price from payment_data: 10000000
-[01-Nov-2025 14:34:04 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
-[01-Nov-2025 14:34:07 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 14:39:52 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 14:39:52 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
-[01-Nov-2025 14:39:56 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
-[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4, 5], Accounts: 2
-[01-Nov-2025 14:46:19 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (800000) vs DB (1600000) for registration ID 10368.
-[01-Nov-2025 14:47:09 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 1600000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 2, 3, 4], Accounts: 3
-[01-Nov-2025 14:49:19 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (800000) vs DB (2400000) for registration ID 10369.
-[01-Nov-2025 14:49:27 Asia/Ho_Chi_Minh] Voucher calculation: Original: 2400000, Discount: 2400000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 14:50:11 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $conn in C:\laragon\www\02062025_user_web\private\action\purchase\upload_payment_proof.php on line 184
-[01-Nov-2025 14:59:26 Asia/Ho_Chi_Minh] Using base price from payment_data: 2400000
-[01-Nov-2025 14:59:26 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [5], Accounts: 20
-[01-Nov-2025 14:59:59 Asia/Ho_Chi_Minh] Using base price from payment_data: 40000000
-[01-Nov-2025 14:59:59 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 2
-[01-Nov-2025 15:03:46 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
-[01-Nov-2025 15:03:46 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: [2, 3], Accounts: 3
-[01-Nov-2025 15:04:01 Asia/Ho_Chi_Minh] Using base price from payment_data: 18000000
-[01-Nov-2025 15:04:01 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 4, Location: [2, 3], Accounts: 1
-[01-Nov-2025 15:04:20 Asia/Ho_Chi_Minh] Using base price from payment_data: 6000000
-[01-Nov-2025 15:04:20 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2
-[01-Nov-2025 15:04:31 Asia/Ho_Chi_Minh] Database error uploading payment proof: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'package_id' in 'field list'
-[01-Nov-2025 15:04:34 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
-[01-Nov-2025 15:04:34 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [1, 2, 3], Accounts: 2
-[01-Nov-2025 15:06:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
-[01-Nov-2025 15:06:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2, 3], Accounts: 131
-[01-Nov-2025 15:06:16 Asia/Ho_Chi_Minh] Voucher calculation: Original: 104800000, Discount: 104800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 15:06:20 Asia/Ho_Chi_Minh] Error completing order without proof: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'package_id' in 'field list'
-[01-Nov-2025 15:10:41 Asia/Ho_Chi_Minh] Using base price from payment_data: 104800000
-[01-Nov-2025 15:10:41 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 2
-[01-Nov-2025 15:11:07 Asia/Ho_Chi_Minh] Using base price from payment_data: 4000000
-[01-Nov-2025 15:11:07 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 2, Location: [2, 3, 4], Accounts: 4
-[01-Nov-2025 15:11:12 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8000000, Discount: 8000000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 15:11:16 Asia/Ho_Chi_Minh] PHP Error [2]: Undefined variable $voucher_code in C:\laragon\www\02062025_user_web\private\action\purchase\complete_order_without_proof.php on line 168
-[01-Nov-2025 15:23:27 Asia/Ho_Chi_Minh] Using base price from payment_data: 8800000
-[01-Nov-2025 15:23:27 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [2], Accounts: 11
-[01-Nov-2025 15:23:30 Asia/Ho_Chi_Minh] Voucher calculation: Original: 8800000, Discount: 8800000, New Amount: 0, Type: percentage_discount
-[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] Using base price from payment_data: 8800000
-[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3, 4], Accounts: 1
-[01-Nov-2025 15:25:31 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10379.
+[01-Nov-2025 16:38:05 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 16:38:05 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [14], Accounts: 1
+[01-Nov-2025 16:38:12 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10387, user_id: 92
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 35
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=GIAM100PC, need_upload_proof=, auto_approve=1
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled, status=completed
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10365, status: completed
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10387
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10387
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10387,"user_id":92,"package_id":1,"location_id":14,"selected_provinces":"[14]","num_account":1,"start_time":"2025-11-01 16:38:05","end_time":"2025-12-01 16:38:05","status":"pending"}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [14]
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: []
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: CBG
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] No existing username found, starting from 001
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: CBG001
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=CBG001, startTime=1761989885000 (2025-11-01 16:38:05), endTime=1764581885000 (2025-12-01 16:38:05)
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":[],"name":"CBG001","userPwd":"j4QhXlZY%mKL","startTime":1761989885000,"endTime":1764581885000}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"1984555587073155074","name":"CBG001","userPwd":"j4QhXlZY%mKL","startTime":1761989885000,"endTime":1764581885000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":null,"mountNames":null,"customerBizType":1,"customerName":null,"customerPhone":null,"customerCompany":""}}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"1984555587073155074","name":"CBG001","userPwd":"j4QhXlZY%mKL","startTime":1761989885000,"endTime":1764581885000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":null,"mountNames":null,"customerBizType":1,"customerName":null,"customerPhone":null,"customerCompany":""},"error":null}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 1984555587073155074
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: CBG001 for registration_id: 10387
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"CBG001","password":"j4QhXlZY%mKL","rtk_user_id":"1984555587073155074"}],"error":null}
+[01-Nov-2025 16:38:16 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10387
+[01-Nov-2025 16:44:45 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 16:44:45 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [15], Accounts: 1
+[01-Nov-2025 16:44:53 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10388, user_id: 92
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 35
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=GIAM100PC, need_upload_proof=, auto_approve=1
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled, status=completed
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10366, status: completed
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10388
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10388
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10388,"user_id":92,"package_id":1,"location_id":15,"selected_provinces":"[15]","num_account":1,"start_time":"2025-11-01 16:44:45","end_time":"2025-12-01 16:44:45","status":"pending"}
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [15]
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: []
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: DNG
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'fullname' in 'field list'
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":false,"accounts":[],"error":"SQLSTATE[42S22]: Column not found: 1054 Unknown column 'fullname' in 'field list'"}
+[01-Nov-2025 16:44:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Failed to create accounts for registration 10388: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'fullname' in 'field list'
+[01-Nov-2025 16:47:55 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 16:47:55 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 4, 18], Accounts: 1
+[01-Nov-2025 16:48:13 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 16:48:13 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [18, 27], Accounts: 1
+[01-Nov-2025 16:48:17 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10390, user_id: 92
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 35
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=GIAM100PC, need_upload_proof=, auto_approve=1
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled, status=completed
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10367, status: completed
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10390
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10390
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10390,"user_id":92,"package_id":1,"location_id":18,"selected_provinces":"[18, 27]","num_account":1,"start_time":"2025-11-01 16:48:13","end_time":"2025-12-01 16:48:13","status":"pending"}
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [18,27]
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["22","26","27","4","53"]
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: DBN
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Last username: DBN001, Next number: 2
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: DBN002
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=DBN002, password=0999999999 (phone), customerName=Khách hàng, customerPhone=0999999999, startTime=1761990493000 (2025-11-01 16:48:13), endTime=1764582493000 (2025-12-01 16:48:13)
+[01-Nov-2025 16:48:21 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["22","26","27","4","53"],"name":"DBN002","userPwd":"0999999999","customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","startTime":1761990493000,"endTime":1764582493000}
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"1984558126577426433","name":"DBN002","userPwd":"0999999999","startTime":1761990493000,"endTime":1764582493000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["22","26","27","4","53"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""}}
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"1984558126577426433","name":"DBN002","userPwd":"0999999999","startTime":1761990493000,"endTime":1764582493000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["22","26","27","4","53"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""},"error":null}
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 1984558126577426433
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: DBN002 for registration_id: 10390
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"DBN002","password":"0999999999","rtk_user_id":"1984558126577426433"}],"error":null}
+[01-Nov-2025 16:48:22 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10390

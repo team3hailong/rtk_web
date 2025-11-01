@@ -10,6 +10,7 @@ require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Database.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Transaction.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/Referral.php';
+require_once dirname(dirname(dirname(__DIR__))) . '/private/classes/purchase/AutoAccountCreator.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/private/utils/security_helper.php';
 
 // Anyone can access this endpoint (no verification needed)
@@ -57,10 +58,32 @@ try {
         $registration_id = $stmt->fetchColumn();
         
         if ($registration_id) {
-            // Update registration status to active
-            $stmt = $pdo->prepare("UPDATE registration SET status = 'active', updated_at = NOW() WHERE id = :id AND status = 'pending'");
-            $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
-            $stmt->execute();
+            // Kiểm tra xem registration đã có tài khoản chưa
+            $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM account_groups WHERE registration_id = :id");
+            $stmt_check->bindParam(':id', $registration_id, PDO::PARAM_INT);
+            $stmt_check->execute();
+            $account_exists = $stmt_check->fetchColumn() > 0;
+            
+            if (!$account_exists) {
+                // Tự động tạo tài khoản
+                $accountCreator = new AutoAccountCreator();
+                $result = $accountCreator->createAccountsForRegistration($registration_id);
+                
+                if ($result['success']) {
+                    error_log("[AUTO_ACCOUNT] Successfully created accounts for registration $registration_id via update_status");
+                } else {
+                    error_log("[AUTO_ACCOUNT] Failed to create accounts for registration $registration_id: " . $result['error']);
+                    // Update registration status to active manually nếu tạo tài khoản thất bại
+                    $stmt = $pdo->prepare("UPDATE registration SET status = 'active', updated_at = NOW() WHERE id = :id AND status = 'pending'");
+                    $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
+                    $stmt->execute();
+                }
+            } else {
+                // Đã có tài khoản rồi, chỉ cập nhật status
+                $stmt = $pdo->prepare("UPDATE registration SET status = 'active', updated_at = NOW() WHERE id = :id AND status = 'pending'");
+                $stmt->bindParam(':id', $registration_id, PDO::PARAM_INT);
+                $stmt->execute();
+            }
         }
           // Process referral commission if this is a completed transaction with confirmed payment
         try {            // Only calculate commission if status is completed

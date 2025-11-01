@@ -1,5 +1,6 @@
 <?php
 // Kiểm tra xem session đã được start chưa trước khi gọi
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -8,6 +9,14 @@ require_once __DIR__ . '/../../config/session_config.php';
 require_once __DIR__ . '/../../utils/error_handler.php';
 require_once __DIR__ . '/../../classes/DeviceTracker.php';
 
+// Tạo kết nối PDO duy nhất cho toàn bộ quá trình
+$dsn = "mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+try {
+    $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Kết nối PDO thất bại: " . $e->getMessage());
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email'] ?? '');
@@ -29,20 +38,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // --- Nếu không có lỗi validation cơ bản ---
     if ($login_error === null) {
-        // Chuẩn bị câu lệnh để lấy thông tin user dựa trên email
-        $sql = "SELECT id, username, password, email_verified FROM user WHERE email = ? AND deleted_at IS NULL";        $stmt = $conn->prepare($sql);
-
-        if ($stmt === false) {
-            log_error($conn, 'auth', "Login prepare statement failed: " . $conn->error, null, null);
-            $login_error = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.";
-        } else {
-            $stmt->bind_param("s", $email);
+        try {
+            $stmt = $pdo->prepare("SELECT id, username, password, email_verified FROM user WHERE email = :email AND deleted_at IS NULL");
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
-            $result = $stmt->get_result();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($result->num_rows === 1) {
-                $user = $result->fetch_assoc();
-
+            if ($user) {
                 // Xác thực mật khẩu
                 if (password_verify($password, $user['password'])) {
                     // Kiểm tra xem email đã được xác thực chưa
@@ -55,50 +57,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['user_id'] = $user['id'];
                         $_SESSION['username'] = $user['username'];
                         $_SESSION['last_activity'] = time();
-                        
+
                         // Xử lý chức năng ghi nhớ đăng nhập
                         if ($remember) {
-                            // Tạo token ngẫu nhiên để lưu vào cookie và database
                             $token = bin2hex(random_bytes(32));
                             $hash = password_hash($token, PASSWORD_DEFAULT);
-                            
-                            // Lưu token vào database với thời gian từ session_config.php
                             $expiry = date('Y-m-d H:i:s', time() + REMEMBER_ME_DURATION);
-                            $remember_stmt = $conn->prepare("INSERT INTO remember_tokens (user_id, token, expiry) VALUES (?, ?, ?)");
-                            $remember_stmt->bind_param("iss", $user['id'], $hash, $expiry);
+                            $remember_stmt = $pdo->prepare("INSERT INTO remember_tokens (user_id, token, expiry) VALUES (:user_id, :token, :expiry)");
+                            $remember_stmt->bindParam(':user_id', $user['id']);
+                            $remember_stmt->bindParam(':token', $hash);
+                            $remember_stmt->bindParam(':expiry', $expiry);
                             $remember_stmt->execute();
-                            $remember_stmt->close();
-                            
-                            // Lưu token vào cookie với thời gian từ session_config.php
+                            // Lưu token vào cookie
                             setcookie('remember_token', $user['id'] . ':' . $token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
-                        }                        // Ghi log hoạt động đăng nhập
-                        // Log successful login
+                        }
+
+                        // Ghi log hoạt động đăng nhập
                         $notify_content = 'Người dùng ' . $user['username'] . ' đã đăng nhập vào hệ thống';
-                        log_activity($conn, $user['id'], 'login', 'user', $user['id'], null, [
+                        log_activity($pdo, $user['id'], 'login', 'user', $user['id'], null, [
                             'login_time' => date('Y-m-d H:i:s'),
                             'user_agent' => $user_agent
                         ], $notify_content);
-                          // Lưu thông tin thiết bị và IP
+
+                        // Lưu thông tin thiết bị và IP
                         try {
-                            // Tạo kết nối PDO để sử dụng DeviceTracker
-                            $dsn = "mysql:host=".DB_SERVER.";dbname=".DB_NAME.";charset=utf8mb4";
-                            $pdo = new PDO($dsn, DB_USERNAME, DB_PASSWORD);
-                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                            
-                            // Khởi tạo DeviceTracker và lưu thông tin thiết bị
                             $deviceTracker = new DeviceTracker($pdo);
                             $deviceTracker->trackUserDevice($user['id'], $device_fingerprint, $ip_address, $user_agent);
-                            
-                            // Lưu thông tin vào session để sử dụng cho kiểm tra trial
                             $_SESSION['device_fingerprint'] = $device_fingerprint;
                             $_SESSION['ip_address'] = $ip_address;
                         } catch (Exception $e) {
                             error_log("Error tracking device: " . $e->getMessage());
                         }
 
-                        // Đóng statement và kết nối
-                        $stmt->close();
-                        $conn->close();
+                        // Đóng statement
+                        $stmt = null;
+                        $remember_stmt = null;
 
                         header("Location: ../../../public/pages/dashboard.php");
                         exit();
@@ -109,18 +102,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $login_error = "Email hoặc mật khẩu không chính xác.";
             }
-            $stmt->close();
+        } catch (PDOException $e) {
+            error_log("PDO Error: " . $e->getMessage());
+            $login_error = "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.";
         }
     }
 
     if ($login_error !== null) {
         $_SESSION['login_error'] = $login_error;
-        $conn->close();
         header("Location: ../../../public/pages/auth/login.php");
         exit();
     }
-
-    $conn->close();
 } else {
     header("Location: ../../../public/pages/auth/login.php");
     exit();

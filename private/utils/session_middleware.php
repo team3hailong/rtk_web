@@ -53,68 +53,88 @@ function init_session() {
 function check_remember_me() {
     // Kiểm tra xem có cookie remember_token không
     if (isset($_COOKIE['remember_token'])) {
-        // Parse cookie để lấy user_id và token
-        list($user_id, $token) = explode(':', $_COOKIE['remember_token'], 2);
-        
-        // Nếu có user_id và token hợp lệ
-        if ($user_id && $token) {
+        // 1. Kiểm tra định dạng cookie trước khi xử lý
+        $cookie_parts = explode(':', $_COOKIE['remember_token'], 2); // Thêm limit = 2
+        if (count($cookie_parts) === 2) {
+            $user_id = $cookie_parts[0];
+            $token_from_cookie = $cookie_parts[1];
+
             require_once __DIR__ . '/../config/database.php';
+
+            // 2. Truy vấn DB một cách an toàn
+            $sql = "SELECT token FROM remember_tokens WHERE user_id = ? AND expiry > NOW()";
+            $stmt = $conn->prepare($sql);
             
-            // Chuẩn bị câu lệnh để lấy token từ database
-            $stmt = $conn->prepare("
-                SELECT u.id, u.username, u.email, rt.token 
-                FROM remember_tokens rt
-                JOIN user u ON rt.user_id = u.id
-                WHERE rt.user_id = ? AND rt.expiry > NOW()
-            ");
-            
+            // 3. Thêm kiểm tra prepare statement
             if ($stmt) {
                 $stmt->bind_param("i", $user_id);
                 $stmt->execute();
                 $result = $stmt->get_result();
-                
-                if ($result->num_rows === 1) {
-                    $row = $result->fetch_assoc();
-                    
-                    // Xác thực token
-                    if (password_verify($token, $row['token'])) {
-                        // Đăng nhập tự động
-                        $_SESSION['user_id'] = $row['id'];
-                        $_SESSION['username'] = $row['username'];
-                        $_SESSION['last_activity'] = time();
-                        
-                        // Lưu log hoạt động
-                        try {
-                            // Lưu log hoạt động đăng nhập tự động
-                            require_once __DIR__ . '/../utils/error_handler.php';
-                            $notify_content = 'Người dùng ' . $row['username'] . ' đã đăng nhập tự động qua "Ghi nhớ đăng nhập"';
-                            log_activity($conn, $row['id'], 'auto_login', 'user', $row['id'], null, [
-                                'login_time' => date('Y-m-d H:i:s'),
-                                'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
-                            ], $notify_content);
-                        } catch (Exception $e) {
-                            error_log("Error logging auto-login: " . $e->getMessage());
+
+                // 4. Lặp qua các token (một user có thể có nhiều token) và kiểm tra
+                while ($row = $result->fetch_assoc()) {
+                    $hashed_token_from_db = $row['token'];
+
+                    if (password_verify($token_from_cookie, $hashed_token_from_db)) {
+                        // Token hợp lệ! Đăng nhập cho người dùng
+                        // Lấy thông tin user một cách an toàn
+                        $user_stmt = $conn->prepare("SELECT id, username FROM user WHERE id = ? AND deleted_at IS NULL");
+                        if ($user_stmt) {
+                            $user_stmt->bind_param("i", $user_id);
+                            $user_stmt->execute();
+                            $user_result = $user_stmt->get_result();
+
+                            if ($user = $user_result->fetch_assoc()) {
+                                 session_regenerate_id(true);
+                                 $_SESSION['user_id'] = $user['id'];
+                                 $_SESSION['username'] = $user['username'];
+                                 $_SESSION['last_activity'] = time();
+                                 
+                                 // Lưu log hoạt động
+                                 try {
+                                     require_once __DIR__ . '/../utils/error_handler.php';
+                                     $notify_content = 'Người dùng ' . $user['username'] . ' đã đăng nhập tự động qua "Ghi nhớ đăng nhập"';
+                                     log_activity($conn, $user['id'], 'auto_login', 'user', $user['id'], null, [
+                                         'login_time' => date('Y-m-d H:i:s'),
+                                         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
+                                     ], $notify_content);
+                                 } catch (Exception $e) {
+                                     error_log("Error logging auto-login: " . $e->getMessage());
+                                 }
+                                 
+                                 // Tạo token mới và cập nhật cookie (để tăng bảo mật)
+                                 $new_token = bin2hex(random_bytes(32));
+                                 $new_hash = password_hash($new_token, PASSWORD_DEFAULT);
+                                 $expiry = date('Y-m-d H:i:s', time() + REMEMBER_ME_DURATION);
+                                 
+                                 $update_stmt = $conn->prepare("UPDATE remember_tokens SET token = ?, expiry = ? WHERE user_id = ?");
+                                 if ($update_stmt) {
+                                     $update_stmt->bind_param("ssi", $new_hash, $expiry, $user_id);
+                                     $update_stmt->execute();
+                                     $update_stmt->close();
+                                 }
+                                 
+                                 // Cập nhật cookie với token mới
+                                 setcookie('remember_token', $user_id . ':' . $new_token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                            }
+                            $user_stmt->close();
                         }
                         
-                        // Tạo token mới và cập nhật cookie (để tăng bảo mật)
-                        $new_token = bin2hex(random_bytes(32));
-                        $new_hash = password_hash($new_token, PASSWORD_DEFAULT);
-                        $expiry = date('Y-m-d H:i:s', time() + REMEMBER_ME_DURATION);
-                        
-                        $update_stmt = $conn->prepare("UPDATE remember_tokens SET token = ?, expiry = ? WHERE user_id = ?");
-                        $update_stmt->bind_param("ssi", $new_hash, $expiry, $user_id);
-                        $update_stmt->execute();
-                        $update_stmt->close();
-                        
-                        // Cập nhật cookie với token mới
-                        setcookie('remember_token', $user_id . ':' . $new_token, time() + REMEMBER_ME_DURATION, '/', '', false, true);
+                        // Thoát khỏi vòng lặp sau khi tìm thấy token hợp lệ
+                        break;
                     }
                 }
-                
                 $stmt->close();
             }
             
             $conn->close();
+        }
+        
+        // 5. Nếu sau tất cả các bước trên mà vẫn chưa đăng nhập được
+        // (do cookie sai, token hết hạn/không khớp), hãy xóa cookie hỏng đi.
+        // Điều này cực kỳ quan trọng để ngăn lỗi lặp lại.
+        if (!isset($_SESSION['user_id'])) {
+            setcookie('remember_token', '', time() - 3600, '/', '', false, true); // Xóa cookie
         }
     }
 }

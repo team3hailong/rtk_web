@@ -16,3 +16,22 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[01-Nov-2025 09:40:46 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[01-Nov-2025 09:41:28 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2
+[01-Nov-2025 09:42:17 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 09:42:17 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
+[01-Nov-2025 09:45:42 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 09:45:42 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
+[01-Nov-2025 09:46:10 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 09:46:10 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 2
+[01-Nov-2025 09:46:21 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[01-Nov-2025 09:46:21 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
+[01-Nov-2025 09:49:00 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[01-Nov-2025 09:49:01 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [4], Accounts: 1
+[01-Nov-2025 09:49:02 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount

@@ -82,22 +82,20 @@ function log_activity($conn, $user_id, $action, $entity_type, $entity_id, $old_v
         }
         $sql = "INSERT INTO activity_logs 
                 (user_id, action, entity_type, entity_id, old_values, new_values, notify_content, ip_address, user_agent, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+                VALUES (:user_id, :action, :entity_type, :entity_id, :old_values, :new_values, :notify_content, :ip_address, :user_agent, NOW())";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
-            $stmt->bind_param("issssssss", 
-                $user_id, 
-                $action, 
-                $entity_type, 
-                $entity_id, 
-                $old_values_json, 
-                $new_values_json, 
-                $notify_content, 
-                $ip_address, 
-                $user_agent
-            );
-            $result = $stmt->execute();
-            $stmt->close();
+            $result = $stmt->execute([
+                ':user_id' => $user_id,
+                ':action' => $action,
+                ':entity_type' => $entity_type,
+                ':entity_id' => $entity_id,
+                ':old_values' => $old_values_json,
+                ':new_values' => $new_values_json,
+                ':notify_content' => $notify_content,
+                ':ip_address' => $ip_address,
+                ':user_agent' => $user_agent
+            ]);
             return $result;
         }
     } catch (Exception $e) {

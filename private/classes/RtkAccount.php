@@ -63,19 +63,23 @@ class RtkAccount {
                     p.duration_text,
                     DATEDIFF(r.end_time, r.start_time) as duration_days,
                     l.province,
-                    GROUP_CONCAT(
-                        DISTINCT JSON_OBJECT(
-                            'mountpoint', mp.mountpoint,
-                            'ip', mp.ip,
-                            'port', mp.port
-                        ) SEPARATOR '|'
+                    r.selected_provinces,
+                    (
+                        SELECT GROUP_CONCAT(
+                            DISTINCT JSON_OBJECT(
+                                'mountpoint', mp2.mountpoint,
+                                'ip', mp2.ip,
+                                'port', mp2.port
+                            ) SEPARATOR '|'
+                        )
+                        FROM mount_point mp2
+                        WHERE FIND_IN_SET(mp2.location_id, REPLACE(REPLACE(REPLACE(r.selected_provinces, '[', ''), ']', ''), ' ', ''))
                     ) as mountpoints_json,
                     th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
                 JOIN registration r ON sa.registration_id = r.id
                 LEFT JOIN package p ON r.package_id = p.id
                 LEFT JOIN location l ON r.location_id = l.id
-                LEFT JOIN mount_point mp ON l.id = mp.location_id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
 
                 LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
@@ -84,7 +88,7 @@ class RtkAccount {
                 $statusCondition
                 GROUP BY sa.id, sa.username_acc, sa.password_acc, sa.enabled, sa.start_time, sa.end_time, sa.concurrent_user,
                          r.start_time, r.end_time, r.status, r.package_id, p.name, 
-                         p.duration_text, l.province, th.payment_confirmed_at, r.location_id
+                         p.duration_text, l.province, th.payment_confirmed_at, r.location_id, r.selected_provinces
                 ORDER BY sa.created_at DESC
                 LIMIT :start, :per_page";
 

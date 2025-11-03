@@ -447,6 +447,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // --- Lock/Unlock Account Handler ---
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-lock')) {
+            const button = e.target.closest('.btn-lock');
+            const accountId = button.dataset.accountId;
+            const currentEnabled = button.dataset.enabled === '1';
+            const action = currentEnabled ? 'lock' : 'unlock';
+            const actionText = currentEnabled ? 'khóa' : 'mở khóa';
+            
+            if (!confirm(`Bạn có chắc chắn muốn ${actionText} tài khoản này?`)) {
+                return;
+            }
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+            
+            fetch(`${baseUrl}/public/handlers/toggle_account_lock.php`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `account_id=${accountId}&action=${action}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || `Đã ${actionText} tài khoản thành công!`);
+                    window.location.reload();
+                } else {
+                    alert(data.error || `Không thể ${actionText} tài khoản.`);
+                    button.disabled = false;
+                    const newEnabled = !currentEnabled;
+                    button.innerHTML = `<i class="fas fa-${newEnabled ? 'lock' : 'unlock'}"></i> ${newEnabled ? 'Khóa' : 'Mở khóa'}`;
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert(`Lỗi kết nối khi ${actionText} tài khoản.`);
+                button.disabled = false;
+                const newEnabled = !currentEnabled;
+                button.innerHTML = `<i class="fas fa-${newEnabled ? 'lock' : 'unlock'}"></i> ${newEnabled ? 'Khóa' : 'Mở khóa'}`;
+            });
+        }
+    });
+
     // --- Initialization ---
     updateActionButtonsState();
     updatePaginationInfo(document.querySelectorAll('.accounts-table tbody tr[data-search-terms]').length);

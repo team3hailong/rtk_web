@@ -95,3 +95,52 @@
 [01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: DBN003 for registration_id: 10391
 [01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"DBN003","password":"0999999999","rtk_user_id":"1984559472936427522"}],"error":null}
 [01-Nov-2025 16:53:44 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10391
+[03-Nov-2025 14:39:59 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[03-Nov-2025 14:39:59 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1, 2, 7], Accounts: 2
+[03-Nov-2025 14:39:59 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (800000) vs DB (1600000) for registration ID 10392.
+[03-Nov-2025 14:40:04 Asia/Ho_Chi_Minh] Voucher calculation: Original: 1600000, Discount: 1600000, New Amount: 0, Type: percentage_discount
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Auto-approve enabled for voucher 35, setting status=completed
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Starting auto account creation for registration 10392
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10392
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10392,"user_id":92,"package_id":1,"location_id":1,"selected_provinces":"[1, 2, 7]","num_account":2,"start_time":"2025-11-03 14:39:59","end_time":"2025-12-03 14:39:59","status":"pending"}
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [1,2,7]
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["63","71","78","86"]
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: AGG
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Last username: AGG002, Next number: 3
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: AGG003
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=AGG003, password=0999999999 (phone), customerName=Khách hàng, customerPhone=0999999999, startTime=1762155599000 (2025-11-03 14:39:59), endTime=1764747599000 (2025-12-03 14:39:59)
+[03-Nov-2025 14:40:17 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["63","71","78","86"],"name":"AGG003","userPwd":"0999999999","customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","startTime":1762155599000,"endTime":1764747599000}
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"CGBAS20000024","traceId":null,"msg":"User name exist","data":null}
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":false,"data":{"code":"CGBAS20000024","traceId":null,"msg":"User name exist","data":null},"error":"User name exist"}
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Error: User name exist
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Data: {"code":"CGBAS20000024","traceId":null,"msg":"User name exist","data":null}
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Error: Failed to create RTK account: User name exist
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] createAccountsForRegistration result: {"success":false,"accounts":[],"error":"Failed to create RTK account: User name exist"}
+[03-Nov-2025 14:40:18 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Failed to create accounts for registration 10392: Failed to create RTK account: User name exist
+[03-Nov-2025 14:48:45 Asia/Ho_Chi_Minh] Using base price from payment_data: 1600000
+[03-Nov-2025 14:48:45 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [21, 22, 24], Accounts: 1
+[03-Nov-2025 14:48:45 Asia/Ho_Chi_Minh] PaymentService: Price mismatch session (0) vs DB (800000) for registration ID 10393.
+[03-Nov-2025 14:48:59 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Auto-approve enabled for voucher 35, setting status=completed
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] Starting auto account creation for registration 10393
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10393
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10393,"user_id":92,"package_id":1,"location_id":21,"selected_provinces":"[21, 22, 24]","num_account":1,"start_time":"2025-11-03 14:48:45","end_time":"2025-12-03 14:48:45","status":"pending"}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [21,22,24]
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["23","28","39","45","59"]
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: GLI
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] No existing username found, starting from 001
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: GLI001
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=GLI001, password=0999999999 (phone), customerName=Khách hàng, customerPhone=0999999999, startTime=1762156125000 (2025-11-03 14:48:45), endTime=1764748125000 (2025-12-03 14:48:45)
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["23","28","39","45","59"],"name":"GLI001","userPwd":"0999999999","customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","startTime":1762156125000,"endTime":1764748125000}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"1985253196599361537","name":"GLI001","userPwd":"0999999999","startTime":1762156125000,"endTime":1764748125000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["23","28","39","45","59"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""}}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"1985253196599361537","name":"GLI001","userPwd":"0999999999","startTime":1762156125000,"endTime":1764748125000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["23","28","39","45","59"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""},"error":null}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 1985253196599361537
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: GLI001 for registration_id: 10393
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [UPLOAD_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"GLI001","password":"0999999999","rtk_user_id":"1985253196599361537"}],"error":null}
+[03-Nov-2025 14:50:20 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10393
+[03-Nov-2025 15:00:19 Asia/Ho_Chi_Minh] Error fetching user rankings: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rank
+                FROM 
+                    user_ranking
+                W' at line 2

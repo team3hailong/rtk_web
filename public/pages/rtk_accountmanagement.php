@@ -188,10 +188,11 @@ function getPaginationUrl($page, $perPage, $filter) {
                         <thead>
                             <tr>
                                 <th class="select-column">Chọn</th>
-                                <th>Tên đăng nhập</th>
+                                <th>IP/Tên miền</th>
+                                <th>Port</th>
+                                <th>Trạm</th>
+                                <th>Tên tài khoản</th>
                                 <th>Mật khẩu</th>
-                                <th>Tỉnh/TP</th>
-                                <th>Thời gian bắt đầu</th>
                                 <th>Thời hạn đến</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
@@ -200,7 +201,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                         <tbody>
                             <?php if (empty($accounts)): ?>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="9">
                                         <div class="empty-state">
                                             <i class="fas fa-user-circle"></i>
                                             <p>Chưa có tài khoản nào</p>
@@ -242,15 +243,39 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             'package_id' => $account['package_id'] ?? 0
                                         ];
                                         $account_json = htmlspecialchars(json_encode($account_details), ENT_QUOTES, 'UTF-8');
+                                        
+                                        // Lấy tất cả mount points
+                                        $mountpoints = $account['mountpoints'] ?? [];
+                                        $mountpoints_count = count($mountpoints);
+                                        
+                                        // Lấy IP và Port từ mount point đầu tiên (vì tất cả đều giống nhau)
+                                        $first_mp = $mountpoints_count > 0 ? $mountpoints[0] : null;
+                                        $ip = $first_mp ? ($first_mp['ip'] ?? 'N/A') : 'N/A';
+                                        $port = $first_mp ? ($first_mp['port'] ?? 'N/A') : 'N/A';
+                                        
+                                        // Gộp tất cả tên trạm
+                                        $station_names = array_map(function($mp) {
+                                            return $mp['mountpoint'] ?? '';
+                                        }, $mountpoints);
+                                        $station_names = array_filter($station_names);
+                                        $stations_display = implode(', ', $station_names);
+                                        $stations_title = $stations_display; // Để hiển thị tooltip đầy đủ
                                     ?>
                                     <tr data-status="<?php echo htmlspecialchars($data_status); ?>" data-search-terms="<?php echo htmlspecialchars($search_terms); ?>" data-remaining-days="<?php echo $remaining_days; ?>">
                                         <td class="select-column">
                                             <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox" data-package-id="<?php echo $account['package_id']; ?>">
                                         </td>
+                                        <td><?php echo htmlspecialchars($ip); ?></td>
+                                        <td><?php echo htmlspecialchars($port); ?></td>
+                                        <td class="stations-cell" title="<?php echo htmlspecialchars($stations_title); ?>">
+                                            <?php if (!empty($stations_display)): ?>
+                                                <?php echo htmlspecialchars($stations_display); ?>
+                                            <?php else: ?>
+                                                <span style="color: #999;">Chưa có trạm</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                         <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($account['province'] ?? 'N/A'); ?></td>
-                                        <td><?php echo format_date_display($account['effective_start_time']); ?></td>
                                         <td>
                                             <?php echo format_date_display($account['effective_end_time']); ?>
                                             <?php if ($days_diff_data['remaining'] !== null): ?>
@@ -265,11 +290,15 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             </span>
                                         </td>
                                         <td class="actions">
-                                            <button type="button" class="action-button btn-details" title="Xem chi tiết" onclick='showAccountDetails(<?php echo $account_json; ?>)'>
-                                                <i class="fas fa-eye"></i> <span class="action-text">Chi tiết</span>
+                                            <button type="button" class="action-button btn-details" onclick='showAccountDetails(<?php echo $account_json; ?>)'>
+                                                <i class="fas fa-eye"></i> Xem thêm
                                             </button>
-                                            <button type="button" class="action-button btn-change-password" title="Đổi mật khẩu" onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
-                                                <i class="fas fa-key"></i> <span class="action-text">Đổi MK</span>
+                                            <button type="button" class="action-button btn-change-password" onclick='showChangePasswordModal(<?php echo $account_json; ?>)'>
+                                                <i class="fas fa-key"></i> Đổi MK
+                                            </button>
+                                            <button type="button" class="action-button btn-lock" data-account-id="<?php echo $account['id']; ?>" data-enabled="<?php echo $account['enabled']; ?>">
+                                                <i class="fas fa-<?php echo $account['enabled'] ? 'lock' : 'unlock'; ?>"></i> 
+                                                <?php echo $account['enabled'] ? 'Khóa' : 'Mở khóa'; ?>
                                             </button>
                                         </td>
                                     </tr>

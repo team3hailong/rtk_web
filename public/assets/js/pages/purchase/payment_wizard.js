@@ -317,8 +317,9 @@ function submitProof() {
                         progressText.textContent = 'Upload hoàn tất!';
                     }
                     setTimeout(() => {
-                        // Redirect to success page or transaction page
-                        window.location.href = JS_BASE_URL + '/public/pages/transaction.php?success=proof_uploaded';
+                        // Redirect to success page with auto_approved flag
+                        const autoApproved = response.auto_approved ? '&auto_approved=1' : '';
+                        window.location.href = JS_BASE_URL + '/public/pages/purchase/success.php?registration_id=' + JS_REGISTRATION_ID + autoApproved;
                     }, 1500);
                 } else {
                     showUploadStatus(response.message || 'Có lỗi xảy ra khi upload. Vui lòng thử lại.', 'error');
@@ -329,7 +330,7 @@ function submitProof() {
                 if (xhr.responseText.includes('success') || xhr.responseText.includes('thành công')) {
                     showUploadStatus('Upload thành công! Đang chuyển hướng...', 'success');
                     setTimeout(() => {
-                        window.location.href = JS_BASE_URL + '/public/pages/transaction.php?success=proof_uploaded';
+                        window.location.href = JS_BASE_URL + '/public/pages/purchase/success.php?registration_id=' + JS_REGISTRATION_ID;
                     }, 1500);
                 } else {
                     showUploadStatus('Có lỗi xảy ra. Vui lòng thử lại.', 'error');

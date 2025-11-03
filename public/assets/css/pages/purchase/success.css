@@ -1,5 +1,14 @@
 /* Success Page Styling */
 
+/* Center content wrapper on success page */
+.dashboard-wrapper .content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px); /* Subtract header/nav height */
+    padding: 1rem;
+}
+
 /* Success Icon */
 .success-icon {
     content: '✔';
@@ -14,12 +23,15 @@
 /* Success Container */
 .success-container {
     max-width: 600px;
+    width: 100%;
     margin: 0 auto;
     padding: 2rem;
     background-color: #fff;
     border-radius: var(--rounded-lg);
     box-shadow: var(--shadow-md);
     text-align: center;
+    overflow: hidden; /* Prevent child elements from overflowing */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .success-container h2 {
@@ -45,6 +57,9 @@
     text-decoration: none;
     font-weight: var(--font-medium);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 100%; /* Prevent button from exceeding container */
+    box-sizing: border-box;
+    word-wrap: break-word; /* Break long text if needed */
 }
 
 .success-container .btn:hover {
@@ -77,6 +92,42 @@
     align-items: center;
     justify-content: center;
     animation: checkmark 0.5s ease-in-out;
+}
+
+/* Success Message Boxes */
+.success-message-box {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    text-align: left;
+}
+
+.success-message-box.auto-approved {
+    background-color: #fffbeb;
+    border-color: #fcd34d;
+}
+
+.success-message-box.pending {
+    background-color: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.success-message-box strong {
+    display: block;
+    font-size: 1.05em;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.success-message-box p {
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
 }
 
 .success-checkmark i {
@@ -130,6 +181,8 @@
     gap: 1rem;
     flex-wrap: wrap;
     margin-top: 1.5rem;
+    width: 100%; /* Ensure it doesn't exceed container width */
+    box-sizing: border-box;
 }
 
 .btn-primary {
@@ -168,11 +221,105 @@
     border: 1px solid var(--primary-600); /* Giữ viền */
 }
 
+/* RTK Guide Section */
+.rtk-guide-section {
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    text-align: center;
+    width: 100%; /* Ensure it doesn't exceed container width */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.rtk-guide-section .guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.rtk-guide-section .guide-header i {
+    font-size: 1.5rem;
+    color: #0284c7;
+}
+
+.rtk-guide-section .guide-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0c4a6e;
+    margin: 0;
+}
+
+.rtk-guide-section .guide-description {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.btn-guide {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background-color: #0ea5e9;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+    max-width: 100%; /* Prevent button from exceeding parent width */
+    box-sizing: border-box;
+}
+
+.btn-guide:hover {
+    background-color: #0284c7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
+}
+
+.btn-guide i {
+    font-size: 1.1rem;
+}
+
 /* Responsive adjustments for mobile */
 @media (max-width: 768px) {
+    .dashboard-wrapper .content-wrapper {
+        min-height: calc(100vh - 60px); /* Smaller header on mobile */
+        padding: 0.75rem;
+        align-items: flex-start; /* Allow scrolling if content is too tall */
+        padding-top: 2rem; /* Add some top spacing */
+    }
+    
     .success-container {
         padding: 1.5rem;
-        margin: 1rem;
+        margin: 0 auto;
+    }
+    
+    .rtk-guide-section {
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+    }
+    
+    .rtk-guide-section .guide-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .rtk-guide-section .guide-description {
+        font-size: 0.9rem;
+    }
+    
+    .btn-guide {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem 1.5rem;
     }
     
     .success-checkmark {
@@ -213,9 +360,15 @@
 }
 
 @media (max-width: 480px) {
+    .dashboard-wrapper .content-wrapper {
+        padding: 0.5rem;
+        padding-top: 1.5rem;
+        min-height: calc(100vh - 50px);
+    }
+    
     .success-container {
         padding: 1rem;
-        margin: 0.5rem;
+        margin: 0 auto;
     }
     
     .order-details {
@@ -235,5 +388,23 @@
     
     .success-checkmark i {
         font-size: 30px;
+    }
+    
+    .rtk-guide-section {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .rtk-guide-section .guide-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .rtk-guide-section .guide-header h3 {
+        font-size: 1rem;
+    }
+    
+    .rtk-guide-section .guide-description {
+        font-size: 0.85rem;
     }
 }

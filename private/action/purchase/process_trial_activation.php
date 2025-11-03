@@ -175,8 +175,13 @@ try {
     log_trial('Kích hoạt thành công', $user_id, $registration_id, 'success', ['username' => $username, 'start' => $start, 'end' => $end]);
     $_SESSION['success'] = "Kích hoạt thành công! Tài khoản RTK của bạn đã được tạo.";
     
-    // Redirect to packages page to show the disabled trial button with countdown
-    header('Location: ' . BASE_URL . '/public/pages/purchase/packages.php?trial_activated=true');
+    // Redirect to success page with trial flag and transaction ID
+    $transaction_id = $transaction['id'] ?? null;
+    if ($transaction_id) {
+        header('Location: ' . BASE_URL . '/public/pages/purchase/success.php?transaction_id=' . $transaction_id . '&is_trial=1&auto_approved=1');
+    } else {
+        header('Location: ' . BASE_URL . '/public/pages/purchase/success.php?registration_id=' . $registration_id . '&is_trial=1&auto_approved=1');
+    }
     exit;
 
 } catch (Exception $e) {

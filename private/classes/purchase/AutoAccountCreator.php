@@ -44,11 +44,30 @@ class AutoAccountCreator {
             error_log("[AUTO_ACCOUNT] Package info: " . json_encode($package));
 
             // 3. Lấy danh sách location_id từ selected_provinces
-            $selected_provinces = json_decode($registration['selected_provinces'], true);
-            if (!is_array($selected_provinces) || empty($selected_provinces)) {
-                error_log("[AUTO_ACCOUNT] No provinces selected in registration");
-                throw new Exception('No provinces selected.');
+            // Handle cases where selected_provinces may be NULL or invalid JSON.
+            $selected_provinces_raw = $registration['selected_provinces'] ?? null;
+            $selected_provinces = [];
+
+            if (!empty($selected_provinces_raw)) {
+                $decoded = json_decode($selected_provinces_raw, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded) && !empty($decoded)) {
+                    $selected_provinces = $decoded;
+                } else {
+                    error_log("[AUTO_ACCOUNT] selected_provinces present but json_decode failed: " . json_last_error_msg() . ". Raw: " . var_export($selected_provinces_raw, true));
+                }
             }
+
+            // If still empty, fall back to single location_id from registration
+            if (empty($selected_provinces)) {
+                if (!empty($registration['location_id'])) {
+                    $selected_provinces = [(int)$registration['location_id']];
+                    error_log("[AUTO_ACCOUNT] Fallback to location_id: " . $registration['location_id']);
+                } else {
+                    error_log("[AUTO_ACCOUNT] No provinces selected and no location_id available in registration");
+                    throw new Exception('No provinces selected.');
+                }
+            }
+
             error_log("[AUTO_ACCOUNT] Selected provinces: " . json_encode($selected_provinces));
 
             // 4. Lấy tất cả mount_point.id cho các location_id đã chọn (loại trùng)

@@ -5,6 +5,17 @@
  * Processes requests for the purchase success page
  */
 
+// Define project root path if not already defined
+if (!defined('PROJECT_ROOT_PATH')) {
+    $project_root_path = dirname(dirname(dirname(__DIR__)));
+    define('PROJECT_ROOT_PATH', $project_root_path);
+}
+
+// Load config if needed
+if (!defined('BASE_URL')) {
+    require_once PROJECT_ROOT_PATH . '/private/config/config.php';
+}
+
 // Basic validation and security checks
 if (!isset($_SESSION['user_id'])) {
     // If not logged in, redirect to login page

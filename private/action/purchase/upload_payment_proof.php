@@ -264,6 +264,7 @@ try {
     $response['success'] = true;
     unset($response['error']);
     $response['message'] = 'Proof uploaded successfully.';
+    $response['auto_approved'] = $auto_approve; // Thêm thông tin auto_approve
 
 } catch (PDOException $e) {
     if ($conn && $conn->inTransaction()) {

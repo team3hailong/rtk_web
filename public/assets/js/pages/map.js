@@ -742,4 +742,106 @@ document.addEventListener('DOMContentLoaded', function () {
     L.marker([10.0, 114.0], {icon: islandLabel('Quần đảo Trường Sa'), interactive: false}).addTo(map);
 
     updateLabelsZoomVisibility();
+
+    // --- HIỂN THỊ NGƯỜI DÙNG ONLINE ---
+    let onlineUserMarkers = [];
+
+    function getStatusClass(status) {
+        if (status === -1) return 'status-invalid';
+        if (status === 5) return 'status-float';
+        if (status === 4) return 'status-fixed';
+        return 'status-single';
+    }
+
+    function getStatusText(status) {
+        if (status === -1) return 'Invalid';
+        if (status === 5) return 'Float';
+        if (status === 4) return 'Fixed';
+        return 'Single';
+    }
+
+    function clearOnlineUserMarkers() {
+        onlineUserMarkers.forEach(marker => map.removeLayer(marker));
+        onlineUserMarkers = [];
+    }
+
+    function findStationByMountName(mountName) {
+        return enrichedStations.find(station => 
+            station.mountpoint === mountName || station.station_name === mountName
+        );
+    }
+
+    function updateOnlineUsers() {
+        fetch(window.basePath + '/handlers/get_online_users.php')
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.error('Failed to fetch online users:', data.error);
+                    return;
+                }
+
+                clearOnlineUserMarkers();
+
+                if (!data.records || data.records.length === 0) {
+                    console.log('No online users found');
+                    return;
+                }
+
+                data.records.forEach(record => {
+                    const userName = record.userName;
+                    const mountName = record.mountName;
+                    const status = record.status;
+
+                    // Tìm trạm tương ứng với mountName
+                    const station = findStationByMountName(mountName);
+                    
+                    if (!station || !station._latlng) {
+                        console.warn('Station not found for mountName:', mountName);
+                        return;
+                    }
+
+                    // Tạo icon với màu sắc theo status
+                    const statusClass = getStatusClass(status);
+                    const iconHtml = `
+                        <div class="online-user-label">${userName}</div>
+                        <div class="online-user-icon ${statusClass}"></div>
+                    `;
+
+                    const customIcon = L.divIcon({
+                        className: 'online-user-marker',
+                        html: iconHtml,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+
+                    // Tạo marker tại vị trí của trạm
+                    const marker = L.marker(station._latlng, { icon: customIcon }).addTo(map);
+
+                    // Tạo popup với thông tin chi tiết
+                    const popupContent = `
+                        <div class="online-user-popup">
+                            <div class="popup-title">${userName}</div>
+                            <div class="popup-info">
+                                <strong>Trạm:</strong> ${mountName}<br>
+                                <strong>Trạng thái:</strong> ${getStatusText(status)}
+                            </div>
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent);
+                    onlineUserMarkers.push(marker);
+                });
+
+                console.log(`Updated ${data.records.length} online users on map`);
+            })
+            .catch(error => {
+                console.error('Error fetching online users:', error);
+            });
+    }
+
+    // Gọi lần đầu
+    updateOnlineUsers();
+
+    // Gọi lại mỗi 5 giây
+    setInterval(updateOnlineUsers, 5000);
 });

@@ -104,6 +104,80 @@ main.content-wrapper {
     pointer-events: none !important;
 }
 
+/* --- STYLES CHO ONLINE USERS --- */
+.online-user-marker {
+    background-color: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+}
+
+.online-user-icon {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.online-user-icon:hover {
+    transform: scale(1.2);
+}
+
+.online-user-icon.status-fixed {
+    background-color: #4CAF50;
+}
+
+.online-user-icon.status-float {
+    background-color: #FFC107;
+}
+
+.online-user-icon.status-single {
+    background-color: #F44336;
+}
+
+.online-user-icon.status-invalid {
+    background-color: #9E9E9E;
+}
+
+.online-user-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.online-user-popup {
+    min-width: 200px;
+}
+
+.online-user-popup .popup-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.online-user-popup .popup-info {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.online-user-popup .popup-info strong {
+    color: #555;
+}
+
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     /* Điều chỉnh dashboard wrapper để map không cần scroll */

@@ -1,0 +1,43 @@
+﻿
+Warning: Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
+
+Warning: Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
+================================================================================
+TEST RTK ONLINE USERS API - FINAL VERSION
+================================================================================
+
+Configuration:
+  RTK_API_URL: http://rtk.taikhoandodac.vn:8090/openapi/broadcast/users
+  Base URL sáº½ Ä‘Æ°á»£c trĂ­ch xuáº¥t tá»± Ä‘á»™ng
+
+--------------------------------------------------------------------------------
+
+TEST 1: Gá»i API vá»›i Authentication (useAuth=true)
+--------------------------------------------------------------------------------
+[âœ“] ThĂ nh cĂ´ng vá»›i Authentication!
+
+  Total: 37 users
+  Records: 10
+
+Record Ä‘áº§u tiĂªn:
+  - Username: HNI015
+  - Mount: MienBac
+  - Status: -1
+
+================================================================================
+
+TEST 2: Gá»i API khĂ´ng Authentication (useAuth=false)
+--------------------------------------------------------------------------------
+[âœ—] Lá»—i khĂ´ng Authentication:
+  HTTP Error
+
+================================================================================
+
+Káº¾T LUáº¬N:
+--------------------------------------------------------------------------------
+[âœ“] API hoáº¡t Ä‘á»™ng vá»›i Authentication
+    â†’ Sá»­ dá»¥ng: getRtkOnlineUsers($page, $size, $status, true)
+
+================================================================================
+TEST HOĂ€N Táº¤T
+================================================================================

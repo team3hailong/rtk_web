@@ -82,21 +82,26 @@
 .accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 130px; min-width: 130px; } /* IP */
 .accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { width: 90px; min-width: 90px; } /* Port */
 .accounts-table th:nth-child(4), .accounts-table td:nth-child(4) { 
-    width: 220px; 
-    min-width: 220px;
+    width: 200px; 
+    min-width: 180px;
+    max-width: 250px;
 } /* Trạm */
 
 .accounts-table td.stations-cell {
-    line-height: 1.5;
+    line-height: 1.4;
     word-break: break-word;
     white-space: normal;
-    padding: 0.9rem 0.75rem;
+    padding: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.85rem;
 }
 .accounts-table th:nth-child(5), .accounts-table td:nth-child(5) { width: 130px; min-width: 130px; } /* Tên tài khoản */
 .accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 130px; min-width: 130px; word-break: break-all; } /* Mật khẩu */
 .accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 140px; min-width: 140px; } /* Thời hạn đến */
-.accounts-table th:nth-child(8), .accounts-table td:nth-child(8) { width: 120px; min-width: 120px; text-align: center; } /* Trạng thái */
-.accounts-table th:nth-child(9), .accounts-table td:nth-child(9) { 
+.accounts-table th:nth-child(8), .accounts-table td:nth-child(8) { width: 100px; min-width: 100px; text-align: center; } /* Hướng dẫn */
+.accounts-table th:nth-child(9), .accounts-table td:nth-child(9) { width: 120px; min-width: 120px; text-align: center; } /* Trạng thái */
+.accounts-table th:nth-child(10), .accounts-table td:nth-child(10) { 
     width: 240px; 
     min-width: 240px;
     white-space: normal;
@@ -155,6 +160,38 @@
 .btn-lock:hover { 
     background-color: #fef3c7; 
     border-color: #d97706; 
+}
+
+/* Guide link button */
+.guide-column {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+}
+
+.btn-guide-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.75rem;
+    background-color: #0ea5e9;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+.btn-guide-link:hover {
+    background-color: #0284c7;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+}
+
+.btn-guide-link i {
+    font-size: 0.9rem;
 }
 
 /* --- Status & Time --- */

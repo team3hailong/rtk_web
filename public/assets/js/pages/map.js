@@ -726,7 +726,9 @@ document.addEventListener('DOMContentLoaded', function () {
     enrichedStations.forEach(station => {
 
         let circleColor = '#3cb043';
-        if (station.status == 3) circleColor = '#e74c3c';
+        if (station.status == 2 || station.status == 3) {
+        circleColor = '#e74c3c'; // Chuyển thành màu đỏ nếu status là 2 hoặc 3
+} 
         else if (window.userAccessibleStationsData.includes(station.id)) circleColor = '#3498db';
         const circle = L.circle(station._latlng, { radius: 20 * 1000, color: circleColor, fillColor: circleColor, fillOpacity: 0.3, weight: 1 }).addTo(map);
         circles.push(circle);

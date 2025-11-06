@@ -266,7 +266,6 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 0.875rem 1.75rem;
-    background-color: #0ea5e9;
     color: white;
     border-radius: 8px;
     text-decoration: none;
@@ -280,9 +279,7 @@
 }
 
 .btn-guide:hover {
-    background-color: #0284c7;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.3);
 }
 
 .btn-guide i {

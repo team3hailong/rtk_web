@@ -194,6 +194,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                 <th>Tên tài khoản</th>
                                 <th>Mật khẩu</th>
                                 <th>Thời hạn đến</th>
+                                <th>Hướng dẫn</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
                             </tr>
@@ -201,7 +202,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                         <tbody>
                             <?php if (empty($accounts)): ?>
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="10">
                                         <div class="empty-state">
                                             <i class="fas fa-user-circle"></i>
                                             <p>Chưa có tài khoản nào</p>
@@ -258,8 +259,17 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             return $mp['mountpoint'] ?? '';
                                         }, $mountpoints);
                                         $station_names = array_filter($station_names);
-                                        $stations_display = implode(', ', $station_names);
-                                        $stations_title = $stations_display; // Để hiển thị tooltip đầy đủ
+                                        
+                                        // Giới hạn hiển thị 3 trạm đầu tiên, phần còn lại hiển thị trong tooltip
+                                        $stations_title = implode(', ', $station_names); // Full list for tooltip
+                                        $total_stations = count($station_names);
+                                        
+                                        if ($total_stations > 3) {
+                                            $visible_stations = array_slice($station_names, 0, 3);
+                                            $stations_display = implode(', ', $visible_stations) . ' +' . ($total_stations - 3);
+                                        } else {
+                                            $stations_display = implode(', ', $station_names);
+                                        }
                                     ?>
                                     <tr data-status="<?php echo htmlspecialchars($data_status); ?>" data-search-terms="<?php echo htmlspecialchars($search_terms); ?>" data-remaining-days="<?php echo $remaining_days; ?>">
                                         <td class="select-column">
@@ -283,6 +293,13 @@ function getPaginationUrl($page, $perPage, $filter) {
                                             <?php elseif ($days_diff_data['expired'] !== null): ?>
                                                 <span class="time-expired">(Quá hạn <?php echo $days_diff_data['expired']; ?> ngày)</span>
                                             <?php endif; ?>
+                                        </td>
+                                        <td class="guide-column">
+                                            <a href="<?php echo $base_url; ?>/public/pages/support/guide.php?topic=&keyword=sử+dụng+máy" 
+                                               class="btn-guide-link" 
+                                               title="Xem hướng dẫn sử dụng máy">
+                                                <i class="fas fa-book-open"></i> Xem
+                                            </a>
                                         </td>
                                         <td class="status">
                                             <span class="status-badge status-<?php echo htmlspecialchars($data_status); ?>">

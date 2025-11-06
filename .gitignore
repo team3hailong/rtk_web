@@ -12,6 +12,7 @@ vendor/
 composer.phar
 
 # File logs và dữ liệu tạm
+/private/logs/
 /private/logs/*.log
 /public/uploads/payment_proofs/*
 !/public/uploads/payment_proofs/.gitkeep

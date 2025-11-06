@@ -106,6 +106,37 @@ main.content-wrapper {
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
+    /* Điều chỉnh dashboard wrapper để map không cần scroll */
+    .dashboard-wrapper {
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height - trừ đi taskbar/address bar trên mobile */
+        flex-direction: column; /* Chuyển sang layout dọc trên mobile */
+    }
+    
+    /* Loại bỏ padding/margin không cần thiết trên mobile */
+    main.content-wrapper {
+        padding: 0.5rem;
+        padding-top: 60px; /* Thêm khoảng trống cho hamburger menu ở trên */
+        overflow: hidden; /* Ngăn scroll trên mobile */
+        width: 100%; /* Đảm bảo chiếm full width */
+    }
+    
+    /* Ẩn hoặc thu nhỏ tiêu đề để tiết kiệm không gian */
+    main.content-wrapper h2 {
+        margin-bottom: 0.25rem;
+    }
+    
+    main.content-wrapper > p {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Đảm bảo map container chiếm toàn bộ không gian còn lại */
+    #map-container {
+        flex-grow: 1;
+        min-height: 0; /* Quan trọng: cho phép flex shrink */
+    }
+    
     .map-controls { bottom: 10px; top: auto; left: 10px; right: 10px; width: auto; transform: none; flex-direction: row; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
     .map-type-btn { flex: 1 1 calc(50% - 4px); margin: 0; padding: 10px 5px; font-size: 0.8rem; }
     .map-legend { top: 10px; right: 10px; bottom: auto; left: auto; max-width: 160px; font-size: 10px; padding: 8px; }

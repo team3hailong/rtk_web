@@ -309,3 +309,19 @@
 [03-Nov-2025 15:49:36 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [21, 54], Accounts: 1
 [03-Nov-2025 15:59:06 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
 [03-Nov-2025 15:59:06 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [3], Accounts: 1
+[06-Nov-2025 16:00:52 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\public\tools\test_online_users_api.php on line 11
+[06-Nov-2025 16:00:52 Asia/Ho_Chi_Minh] PHP Warning:  Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
+[06-Nov-2025 16:00:52 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\private\config\config.php on line 44
+[06-Nov-2025 16:02:04 Asia/Ho_Chi_Minh] PHP Error [2]: Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\public\tools\test_online_users_api.php on line 11
+[06-Nov-2025 16:02:04 Asia/Ho_Chi_Minh] PHP Warning:  Undefined array key "HTTP_HOST" in C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php on line 52
+[06-Nov-2025 16:02:04 Asia/Ho_Chi_Minh] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\laragon\www\02062025_user_web\private\utils\path_helpers\path_utils.php:52) in C:\laragon\www\02062025_user_web\private\config\config.php on line 44
+[06-Nov-2025 16:27:50 Asia/Ho_Chi_Minh] [RTK_API] Getting online users - Page: 1, Size: 100
+[06-Nov-2025 16:27:50 Asia/Ho_Chi_Minh] [RTK_API] Getting online users - Page: 1, Size: 100000
+[06-Nov-2025 16:33:02 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 10
+[06-Nov-2025 16:33:02 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 10 records
+[06-Nov-2025 16:33:02 Asia/Ho_Chi_Minh] [RTK_API] Getting online users WITHOUT AUTH - Page: 1, Size: 10
+[06-Nov-2025 16:33:02 Asia/Ho_Chi_Minh] [RTK_API] HTTP Error: 500
+[06-Nov-2025 16:33:14 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 10
+[06-Nov-2025 16:33:14 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 10 records
+[06-Nov-2025 16:33:14 Asia/Ho_Chi_Minh] [RTK_API] Getting online users WITHOUT AUTH - Page: 1, Size: 10
+[06-Nov-2025 16:33:14 Asia/Ho_Chi_Minh] [RTK_API] HTTP Error: 500

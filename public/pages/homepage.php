@@ -107,8 +107,14 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             </div>
             <div class="hero-video-container">
                 <div class="video-wrapper">
-                    <iframe width="560" height="315" 
-                            src="https://www.youtube.com/embed/1iwxmjCUk8Y" 
+                    <div class="video-controls">
+                        <button id="autoplay-toggle" class="autoplay-btn active" title="Tắt autoplay">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Autoplay ON</span>
+                        </button>
+                    </div>
+                    <iframe id="hero-video" width="560" height="315" 
+                            src="https://www.youtube.com/embed/1iwxmjCUk8Y?autoplay=1&mute=1&loop=1&playlist=1iwxmjCUk8Y" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -380,6 +386,44 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
             </div>
         </div>
     </footer>    <!-- JavaScript -->
+    <script>
+        // Autoplay toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const autoplayBtn = document.getElementById('autoplay-toggle');
+            const videoIframe = document.getElementById('hero-video');
+            
+            if (!autoplayBtn || !videoIframe) return;
+            
+            // Check saved autoplay state
+            const autoplayEnabled = localStorage.getItem('heroVideoAutoplay') !== 'false'; // Default true
+            
+            // Set initial state
+            updateAutoplayState(autoplayEnabled);
+            
+            // Toggle event listener
+            autoplayBtn.addEventListener('click', function() {
+                const newState = !autoplayBtn.classList.contains('active');
+                updateAutoplayState(newState);
+                localStorage.setItem('heroVideoAutoplay', newState);
+            });
+            
+            function updateAutoplayState(enabled) {
+                const baseUrl = 'https://www.youtube.com/embed/1iwxmjCUk8Y';
+                
+                if (enabled) {
+                    autoplayBtn.classList.add('active');
+                    autoplayBtn.querySelector('span').textContent = 'Autoplay ON';
+                    autoplayBtn.setAttribute('title', 'Tắt autoplay');
+                    videoIframe.src = baseUrl + '?autoplay=1&mute=1&loop=1&playlist=1iwxmjCUk8Y';
+                } else {
+                    autoplayBtn.classList.remove('active');
+                    autoplayBtn.querySelector('span').textContent = 'Autoplay OFF';
+                    autoplayBtn.setAttribute('title', 'Bật autoplay');
+                    videoIframe.src = baseUrl;
+                }
+            }
+        });
+    </script>
     <script src="<?php echo $base_path; ?>/assets/js/home.js"></script>
 </body>
 </html>

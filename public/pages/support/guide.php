@@ -30,7 +30,6 @@ $pagination = $result['pagination'];
 
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/support/guide.css" />
 
 <div class="dashboard-wrapper">
@@ -60,11 +59,14 @@ include $project_root_path . '/private/includes/header.php';
                 <?php foreach ($articles as $article): ?>
                     <div class="guide-item" tabindex="0" onclick="window.location.href='guide_detail.php?slug=<?php echo urlencode($article['slug']); ?>'">
                         <div class="guide-item-content">
-                            <?php if (!empty($article['thumbnail'])): ?>
-                                <img class="guide-thumb"
-                                     src="<?php echo $admin_site   . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
-                                     alt="Thumbnail">
-                            <?php endif; ?>
+                            <?php
+                            $thumbnail_src = !empty($article['thumbnail']) 
+                                ? $admin_site . '/public/uploads/guide/' . basename($article['thumbnail'])
+                                : get_default_guide_thumbnail();
+                            ?>
+                            <img class="guide-thumb"
+                                 src="<?php echo $thumbnail_src; ?>"
+                                 alt="Thumbnail">
                             <div class="guide-item-text">
                                 <div class="guide-title">
                                     <a href="guide_detail.php?slug=<?php echo urlencode($article['slug']); ?>">

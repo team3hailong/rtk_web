@@ -105,27 +105,17 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                     <a href="#features" class="btn btn-secondary">Khám phá tính năng</a>
                 </div>
             </div>
-            <div class="hero-info-container">
-                <h2>Chất lượng tài khoản đo đạc</h2>
-                <div class="hero-stats">
-                    <div class="hero-stat-item">
-                        <div class="stat-icon"><i class="fas fa-users"></i></div>
-                        <div class="stat-number">1000+</div>
-                        <div class="stat-text">Khách hàng đã sử dụng</div>
-                    </div>
-                    <div class="hero-stat-item">
-                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="stat-number">95%</div>
-                        <div class="stat-text">Tỉ lệ hài lòng</div>
-                    </div>
-                    <div class="hero-stat-item">
-                        <div class="stat-icon"><i class="fas fa-headset"></i></div>
-                        <div class="stat-number">Tận tâm</div>
-                        <div class="stat-text">Hỗ trợ cá nhân</div>
-                    </div>
-                </div>
-                <div class="hero-action">
-                    <a href="#features" class="btn-hero-action">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
+            <div class="hero-video-container">
+                <div class="video-wrapper">
+                    <iframe width="560" height="315" 
+                            src="https://www.youtube.com/embed/1iwxmjCUk8Y" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            webkitallowfullscreen
+                            mozallowfullscreen>
+                    </iframe>
                 </div>
             </div>
         </div>

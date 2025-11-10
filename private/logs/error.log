@@ -69,3 +69,7 @@
 [06-Nov-2025 23:31:57 Asia/Ho_Chi_Minh] [STATION_CONTROL] Headers: {"X-Nonce":"891f1c0160b9c1d2bf23519aae4abcb7","X-Access-Key":"TxfJxeX7wuU7XOPU","X-Sign-Method":"HmacSHA256","X-Timestamp":"1762446717940","Sign":"fa944261f58e7fc3afaf83b7d3f44bcaa76408e0fbc3b5f15fff7e1e16ebbdb5","Content-Type":"application\/json"}
 [06-Nov-2025 23:31:58 Asia/Ho_Chi_Minh] [STATION_CONTROL] Response code: 200
 [06-Nov-2025 23:31:58 Asia/Ho_Chi_Minh] [STATION_CONTROL] Response: {"code":"SUCCESS","traceId":null,"msg":null,"data":true}
+[10-Nov-2025 14:26:19 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[10-Nov-2025 14:26:20 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[10-Nov-2025 14:26:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[10-Nov-2025 14:26:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records

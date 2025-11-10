@@ -91,3 +91,18 @@ function get_guide_article_by_slug($pdo, $slug) {
     $stmt->execute([':slug' => $slug]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+/**
+ * Get default thumbnail for guide articles
+ * 
+ * @return string Data URL of default SVG thumbnail
+ */
+function get_default_guide_thumbnail() {
+    // Create SVG with main green background and white "No Thumbnail" text
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="130" height="90" viewBox="0 0 130 90">
+        <rect width="130" height="90" fill="#27ae60"/>
+        <text x="65" y="50" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">No Thumbnail</text>
+    </svg>';
+    
+    return 'data:image/svg+xml;base64,' . base64_encode($svg);
+}

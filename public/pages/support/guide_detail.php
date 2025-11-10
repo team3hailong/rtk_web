@@ -21,7 +21,6 @@ if ($slug) {
 }
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/support/guide_detail.css" />
 
 <div class="dashboard-wrapper">

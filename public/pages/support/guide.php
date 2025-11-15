@@ -61,7 +61,7 @@ include $project_root_path . '/private/includes/header.php';
                         <div class="guide-item-content">
                             <?php
                             $thumbnail_src = !empty($article['thumbnail']) 
-                                ? $admin_site . '/public/uploads/guide/' . basename($article['thumbnail'])
+                                ? "https://res.cloudinary.com/dlv6xgmri/image/upload/v1754707630/rtk_web_admin/guide/" . basename($article['thumbnail'])
                                 : get_default_guide_thumbnail();
                             ?>
                             <img class="guide-thumb"

@@ -72,8 +72,9 @@ class RtkAccount {
                                 'port', mp2.port
                             ) SEPARATOR '|'
                         )
-                        FROM mount_point mp2
-                        WHERE FIND_IN_SET(mp2.location_id, REPLACE(REPLACE(REPLACE(r.selected_provinces, '[', ''), ']', ''), ' ', ''))
+                            FROM mount_point mp2
+                            JOIN mount_point_location mpl2 ON mp2.id = mpl2.mount_point_id
+                            WHERE FIND_IN_SET(mpl2.location_id, REPLACE(REPLACE(REPLACE(r.selected_provinces, '[', ''), ']', ''), ' ', ''))
                     ) as mountpoints_json,
                     th.payment_confirmed_at as confirmed_at
                 FROM survey_account sa
@@ -115,17 +116,14 @@ class RtkAccount {
                 }
                 unset($account['mountpoints_json']);
 
-
                 // Ưu tiên sử dụng thời gian từ bảng survey_account nếu có
                 if (!empty($account['sa_start_time'])) {
                     $account['effective_start_time'] = $account['sa_start_time'];
                 } else if (!empty($account['package_name']) && strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
-
                     $account['effective_start_time'] = $account['start_time'];
                 } else {
                     $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
                 }
-
 
                 $tz = new DateTimeZone('Asia/Ho_Chi_Minh');
                 
@@ -133,7 +131,6 @@ class RtkAccount {
                 if (!empty($account['sa_end_time'])) {
                     $account['effective_end_time'] = $account['sa_end_time'];
                 } else if ($account['confirmed_at']) {
-
                     $start = new DateTime($account['effective_start_time']);
                     $start->setTimezone($tz);
                     $start->add(new DateInterval('P' . $account['duration_days'] . 'D'));
@@ -220,7 +217,8 @@ class RtkAccount {
                 JOIN registration r ON sa.registration_id = r.id
                 LEFT JOIN package p ON r.package_id = p.id
                 LEFT JOIN location l ON r.location_id = l.id
-                LEFT JOIN mount_point mp ON l.id = mp.location_id
+                LEFT JOIN mount_point_location mpl ON l.id = mpl.location_id
+                LEFT JOIN mount_point mp ON mpl.mount_point_id = mp.id
                 LEFT JOIN transaction_history th ON r.id = th.registration_id AND th.status = 'completed'
                 LEFT JOIN account_groups ag ON sa.id = ag.survey_account_id
                 WHERE r.user_id = :user_id 
@@ -314,13 +312,14 @@ class RtkAccount {
 
     private function getStationsForAccount($accountId) {
         try {
-            $sql = "SELECT s.* 
-                   FROM station s
-                   JOIN mount_point mp ON s.mountpoint_id = mp.id
-                   JOIN location l ON mp.location_id = l.id
-                   JOIN registration r ON l.id = r.location_id
-                   JOIN survey_account sa ON r.id = sa.registration_id
-                   WHERE sa.id = :account_id";
+                 $sql = "SELECT s.* 
+                     FROM station s
+                     JOIN mount_point mp ON s.mountpoint_id = mp.id
+                     JOIN mount_point_location mpl ON mp.id = mpl.mount_point_id
+                     JOIN location l ON mpl.location_id = l.id
+                     JOIN registration r ON l.id = r.location_id
+                     JOIN survey_account sa ON r.id = sa.registration_id
+                     WHERE sa.id = :account_id";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':account_id', $accountId, PDO::PARAM_STR);
@@ -435,13 +434,13 @@ class RtkAccount {
             require_once PROJECT_ROOT_PATH . '/private/api/rtk_system/account_api.php';
             
             $apiResult = updateRtkAccountPassword($rtkUserId, $username, $newPassword, $accountData);
-            
-            if (!$apiResult['success']) {
-                error_log("Update password failed on RTK API: " . ($apiResult['error'] ?? 'Unknown error'));
-                // Return false - don't update local DB if API failed
-                return false;
-            }
-            
+                if (!empty($account['sa_start_time'])) {
+                    $account['effective_start_time'] = $account['sa_start_time'];
+                } else if (!empty($account['package_name']) && strpos(strtolower($account['package_name']), 'dùng thử') !== false) {
+                    $account['effective_start_time'] = $account['start_time'];
+                } else {
+                    $account['effective_start_time'] = $account['confirmed_at'] ?? $account['start_time'];
+                }
             // Step 2: Update password in local database only if API succeeded
             $sql = "UPDATE survey_account 
                    SET password_acc = :password, updated_at = NOW() 

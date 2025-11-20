@@ -537,3 +537,462 @@
 [15-Nov-2025 09:57:46 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 46 records
 [15-Nov-2025 09:57:52 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
 [15-Nov-2025 09:57:52 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 09:57:56 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:57:56 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 09:58:01 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:58:01 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 09:58:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:58:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 09:58:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:58:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 09:59:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:59:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[15-Nov-2025 09:59:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 09:59:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[15-Nov-2025 10:00:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:00:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:00:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:00:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:01:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:01:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:01:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:01:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:02:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:02:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:02:31 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:31 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:02:39 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:39 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:02:44 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:44 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:02:50 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:50 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:02:55 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:02:55 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:03:00 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:00 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:05 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:05 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:10 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:10 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:15 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:15 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:20 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:20 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:25 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:25 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:30 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:45 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:45 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:45 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:47 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:47 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:03:49 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:03:49 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:04:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:04:15 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:04:15 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:04:15 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:05:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:05:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:05:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:05:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:06:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:06:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:06:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:06:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:07:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:07:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 54 records
+[15-Nov-2025 10:07:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:07:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 54 records
+[15-Nov-2025 10:08:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:08:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:08:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:08:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:09:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:09:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:09:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:09:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:10:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:10:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:10:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:10:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:11:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[15-Nov-2025 10:11:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[15-Nov-2025 10:11:23 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:23 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:25 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:25 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:28 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:28 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:38 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:43 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:43 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:11:48 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:48 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:11:53 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:53 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:11:58 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:11:58 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:03 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:07 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:13 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:13 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:18 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:18 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:23 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:23 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:12:28 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:28 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:12:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:38 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:43 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:43 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:48 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:48 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:12:53 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:12:53 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:13:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:13:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:14:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:14:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:15:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:15:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:16:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:16:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:17:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:17:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:18:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:18:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:19:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:19:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:20:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:20:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:21:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:21:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:22:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:22:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 53 records
+[15-Nov-2025 10:23:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:23:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:24:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:24:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:25:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:25:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:26:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:26:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:27:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:27:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:28:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:28:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:29:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:29:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:30:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:30:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:31:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:31:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:32:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:32:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:33:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:33:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:34:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:34:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 52 records
+[15-Nov-2025 10:35:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:35:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 55 records
+[15-Nov-2025 10:36:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:36:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 54 records
+[15-Nov-2025 10:37:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:37:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 57 records
+[15-Nov-2025 10:38:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:38:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 54 records
+[15-Nov-2025 10:39:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:39:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 55 records
+[15-Nov-2025 10:40:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:40:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 54 records
+[15-Nov-2025 10:41:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:41:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:42:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:42:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[15-Nov-2025 10:43:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:43:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[15-Nov-2025 10:44:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:44:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 49 records
+[15-Nov-2025 10:45:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:45:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[15-Nov-2025 10:46:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:46:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[15-Nov-2025 10:47:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:47:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[15-Nov-2025 10:48:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:48:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[15-Nov-2025 10:49:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:49:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[15-Nov-2025 10:50:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:50:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 43 records
+[15-Nov-2025 10:51:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:51:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 41 records
+[15-Nov-2025 10:52:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:52:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 41 records
+[15-Nov-2025 10:53:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:53:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 40 records
+[15-Nov-2025 10:54:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:54:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 42 records
+[15-Nov-2025 10:55:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:55:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 41 records
+[15-Nov-2025 10:56:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:56:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[15-Nov-2025 10:57:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:57:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[15-Nov-2025 10:58:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 10:58:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[15-Nov-2025 11:47:49 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:47:50 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:47:53 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:47:53 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:47:58 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:47:58 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:03 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:03 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:07 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:07 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:13 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:13 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:19 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:19 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:24 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:24 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:29 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:29 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:39 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:39 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:44 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:44 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:49 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:49 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:54 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:54 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:48:59 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:48:59 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:09 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:09 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:14 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:14 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:35 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:35 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:40 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:40 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:46 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:46 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:51 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:51 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:49:55 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:49:55 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 26 records
+[15-Nov-2025 11:50:01 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:01 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 25 records
+[15-Nov-2025 11:50:06 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:06 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 24 records
+[15-Nov-2025 11:50:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:11 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:11 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:16 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:16 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:20 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:20 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:21 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:21 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:26 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:27 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 23 records
+[15-Nov-2025 11:50:31 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:31 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:50:37 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:37 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:50:42 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:42 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:50:47 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:47 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:50:52 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:52 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:50:57 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:50:57 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:02 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:02 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:07 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:07 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:12 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:12 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:17 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:17 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 22 records
+[15-Nov-2025 11:51:22 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:22 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:27 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:27 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:32 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:32 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:47 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:47 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:48 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:48 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:54 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:54 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:51:56 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:51:56 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:01 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:01 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:07 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:07 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:12 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:12 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:17 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:17 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:22 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:22 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:27 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:27 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:32 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:32 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:37 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:37 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:42 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:42 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:47 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:47 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:52 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:52 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:52:57 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:52:57 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 21 records
+[15-Nov-2025 11:53:41 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:41 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[15-Nov-2025 11:53:42 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:42 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[15-Nov-2025 11:53:47 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:47 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[15-Nov-2025 11:53:52 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:52 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[15-Nov-2025 11:53:57 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:53:57 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 20 records
+[15-Nov-2025 11:54:02 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:03 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:07 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:12 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:12 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:17 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:18 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:22 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:23 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:28 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:28 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 19 records
+[15-Nov-2025 11:54:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:38 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:42 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:42 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:43 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:43 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:49 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:49 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:54 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:54 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:54:59 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:54:59 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:08 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:08 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:09 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:09 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:14 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:14 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:19 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:19 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:24 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:24 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:29 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:29 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:39 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:39 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[15-Nov-2025 11:55:44 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[15-Nov-2025 11:55:44 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 18 records
+[18-Nov-2025 16:23:50 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[18-Nov-2025 16:23:50 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 2 records
+[18-Nov-2025 16:26:22 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[18-Nov-2025 16:26:22 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [63], Accounts: 1
+[18-Nov-2025 16:27:52 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 800000, New Amount: 0, Type: percentage_discount
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10410, user_id: 92
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 23
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=GIAM100, need_upload_proof=, auto_approve=1
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled, status=completed
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10383, status: completed
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10410
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10410
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10410,"user_id":92,"package_id":1,"location_id":63,"selected_provinces":"[63]","num_account":1,"start_time":"2025-11-18 16:26:22","end_time":"2025-12-18 16:26:22","status":"pending"}
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [63]
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["10","11","12","21","24","7","79","8","9"]
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: YBI
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Last username: YBI540, Next number: 541
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: YBI541
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=YBI541, password=0999999999 (phone), customerName=Khách hàng, customerPhone=0999999999, startTime=1763457982000 (2025-11-18 16:26:22), endTime=1766049982000 (2025-12-18 16:26:22)
+[18-Nov-2025 16:27:56 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["10","11","12","21","24","7","79","8","9"],"name":"YBI541","userPwd":"0999999999","customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","startTime":1763457982000,"endTime":1766049982000}
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"1990713574988865538","name":"YBI541","userPwd":"0999999999","startTime":1763457982000,"endTime":1766049982000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["10","11","12","21","24","7","79","8","9"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""}}
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"1990713574988865538","name":"YBI541","userPwd":"0999999999","startTime":1763457982000,"endTime":1766049982000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":["10","11","12","21","24","7","79","8","9"],"mountNames":null,"customerBizType":1,"customerName":"Kh\u00e1ch h\u00e0ng","customerPhone":"0999999999","customerCompany":""},"error":null}
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 1990713574988865538
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: YBI541 for registration_id: 10410
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"YBI541","password":"0999999999","rtk_user_id":"1990713574988865538"}],"error":null}
+[18-Nov-2025 16:27:57 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10410
+[20-Nov-2025 09:59:38 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[20-Nov-2025 09:59:38 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
+[20-Nov-2025 10:06:35 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[20-Nov-2025 10:06:35 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1
+[20-Nov-2025 10:07:32 Asia/Ho_Chi_Minh] Using base price from payment_data: 800000
+[20-Nov-2025 10:07:32 Asia/Ho_Chi_Minh] Auto Voucher: Found registration info - Package: 1, Location: [1], Accounts: 1

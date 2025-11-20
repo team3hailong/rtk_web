@@ -236,16 +236,21 @@ class AutoAccountCreator {
             return [];
         }
 
+        // Lấy mount_point.id dựa trên bảng liên kết mount_point_location
         $placeholders = implode(',', array_fill(0, count($location_ids), '?'));
-        $sql = "SELECT DISTINCT id FROM mount_point WHERE location_id IN ($placeholders)";
+        $sql = "SELECT DISTINCT mp.id 
+                FROM mount_point mp
+                JOIN mount_point_location mpl ON mp.id = mpl.mount_point_id
+                WHERE mpl.location_id IN ($placeholders)";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($location_ids);
-        
+
         $mount_ids = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $mount_ids[] = $row['id'];
         }
-        
+
         return $mount_ids;
     }
 

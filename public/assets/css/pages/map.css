@@ -103,7 +103,7 @@ main.content-wrapper {
 
 /* --- STYLES CHO RULER VÀ HIỆU ỨNG "HÍT" (SNAP) --- */
 .ruler-marker { font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-.station-marker { font-size: 28px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+.station-marker { font-size: 20px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
 .ruler-tooltip { background-color: rgba(0, 0, 0, 0.75); color: white; border: 1px solid transparent; font-weight: bold; border-radius: 4px; padding: 4px 8px; transition: all 0.1s ease-in-out; }
 .ruler-tooltip.snapped { color: var(--danger-color); background-color: white; border-color: var(--danger-color); }
 .leaflet-polyline.snapped { stroke-dasharray: none !important; }
@@ -117,19 +117,51 @@ main.content-wrapper {
 .online-user-marker {
     background-color: transparent;
     border: none;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
 }
 
 .online-user-icon {
     position: relative;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    border: 3px solid white;
+    border: 2px solid white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     cursor: pointer;
     transition: transform 0.2s;
+}
+
+/* Robust fallbacks: sometimes hosting setups/other CSS can override or remove styles.
+   Force basic visible circle styles for markers and legend dots so they don't disappear. */
+.online-user-marker, .online-user-icon, .legend-color {
+    display: inline-block !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    opacity: 1 !important;
+}
+
+.legend-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; border: 1px solid rgba(0,0,0,0.08); }
+
+/* For Leaflet SVG markers — ensure SVG circles are filled and visible */
+.leaflet-marker-icon svg circle,
+.leaflet-marker-icon circle,
+.leaflet-overlay-pane svg circle {
+    fill: currentColor !important;
+    stroke: none !important;
+    opacity: 1 !important;
+}
+
+/* Additional safety: when map is in a special mode, interactive elements may be disabled;
+   don't hide visuals accidentally. */
+#map.ruler-mode-active .online-user-icon,
+#map .online-user-icon {
+    pointer-events: auto !important;
+    visibility: visible !important;
 }
 
 .online-user-icon:hover {

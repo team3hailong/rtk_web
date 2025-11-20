@@ -222,6 +222,13 @@ include $project_root_path . '/private/includes/header.php';
                                     <div class="info-row"><span>Tỉnh/Thành phố:</span><strong><?php echo htmlspecialchars($payment_data['province']); ?></strong></div>
                                 <?php endif; ?>
                                 
+                                <?php if (defined('SHOW_GLOBAL_DISCOUNT') && SHOW_GLOBAL_DISCOUNT === 'yes'): ?>
+                                    <div class="global-discount-payment-note" role="note" aria-live="polite">
+                                        <strong>Ưu đãi:</strong>
+                                        Mỗi người sử dụng Voucher <strong><?php echo htmlspecialchars(GLOBAL_DISCOUNT_CODE); ?></strong>tối đa 1 lần, áp dụng giảm 100% cho gói 3 tháng. Hãy chia sẻ cho bạn bè, người thân để cùng nhận ưu đãi này
+                                    </div>
+                                <?php endif; ?>
+
                                 <div class="voucher-section">
                                     <h4><i class="fas fa-ticket-alt"></i> Mã giảm giá</h4>
                                     <div class="voucher-form">

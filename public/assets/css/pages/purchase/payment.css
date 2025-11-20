@@ -267,6 +267,21 @@
     border-radius: var(--rounded-md);
 }
 
+/* Notice shown on payment page when GLOBAL_DISCOUNT is enabled */
+.global-discount-payment-note {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(90deg, #fff9db 0%, #fff4c2 100%);
+    border: 1px solid rgba(250, 204, 21, 0.18);
+    color: #7c4a00;
+    border-radius: var(--rounded-sm);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.global-discount-payment-note strong { font-weight: 700; margin-right: 6px; }
+
 .voucher-section h4 {
     font-size: 0.9375rem;
     font-weight: 600;

@@ -38,8 +38,6 @@ if (!isset($_SESSION['user_id'])) {
 
 }
 
-
-
 // --- User Info (Example) ---
 
 $user_id = $_SESSION['user_id']; // Get user ID
@@ -159,10 +157,21 @@ include $project_root_path . '/private/includes/header.php';
 ?>
 
 
+        <?php if (defined('SHOW_GLOBAL_DISCOUNT') && SHOW_GLOBAL_DISCOUNT === 'yes'): ?>
+            <div id="globalDiscountBanner" class="global-discount-banner" role="region" aria-label="Chương trình ưu đãi">
+                <div class="gdb-emoji">🎉</div>
+                <div class="gdb-text">Chương trình trải nghiệm sử dụng tài khoản RTK<br>Nhập mã <strong id="gdb-code"><?php echo htmlspecialchars(GLOBAL_DISCOUNT_CODE); ?></strong> để nhận ưu đãi giảm 100% cho gói 3 tháng!</div>
+                <button class="gdb-close" aria-label="Đóng">&times;</button>
+            </div>
+        <?php endif; ?>
+
 
 <!-- Page-specific CSS -->
 
 <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/pages/purchase/packages.css">
+<link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/components/global-discount-banner.css">
+<!-- Global Discount Banner JS (separate file) -->
+<script src="<?php echo $base_path; ?>/assets/js/components/global-discount-banner.js"></script>
 
 
 

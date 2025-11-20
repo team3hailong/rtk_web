@@ -1,0 +1,65 @@
+/* Styles for Global Discount Banner */
+.global-discount-banner {
+    position: fixed;
+    top: 12px; /* small gap from top to avoid sticking to browser chrome */
+    /* left and width are set by JS to satisfy exact calculation requirements */
+    z-index: 1200;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #fffaf0 0%, #fff4e6 50%, #fff0f2 100%);
+    border: 1px solid rgba(17,24,39,0.06);
+    box-shadow: 0 8px 30px rgba(15,23,42,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial);
+    color: #0f172a;
+    transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.global-discount-banner .gdb-emoji{
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.global-discount-banner .gdb-text{
+    font-size: 1rem;
+    line-height: 1.35;
+    /* allow the text area to shrink and wrap inside flex container */
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.global-discount-banner .gdb-text strong{
+    color: #b91c1c; /* accent color for code */
+    background: rgba(185,28,28,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.global-discount-banner .gdb-close{
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: rgba(17,24,39,0.8);
+    padding: 6px 8px;
+    line-height: 1;
+    border-radius: 6px;
+}
+
+@media (max-width: 767px){
+    .global-discount-banner{
+        left: 12px !important;
+        width: calc(100vw - 24px - 6px) !important; /* keep small extra gap for scrollbar variance */
+        padding-left: 12px;
+        padding-right: 12px;
+        border-radius: 10px;
+        top: 10px;
+    }
+}
+

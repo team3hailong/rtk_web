@@ -30,6 +30,12 @@ define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
 // define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
 define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
 
+// Global discount configuration
+// `GLOBAL_DISCOUNT_CODE`: Mã giảm giá toàn cục (string)
+// `SHOW_GLOBAL_DISCOUNT`: "yes" hoặc "no"
+define('GLOBAL_DISCOUNT_CODE', env('GLOBAL_DISCOUNT_CODE', ''));
+define('SHOW_GLOBAL_DISCOUNT', env('SHOW_GLOBAL_DISCOUNT', 'no'));
+
 // Environment and error handling settings
 define('APP_ENV', env('APP_ENV', 'production'));
 define('APP_DEBUG', APP_ENV === 'development');

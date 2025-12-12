@@ -71,6 +71,52 @@
 
 /* --- Table Styles --- */
 .accounts-table-wrapper { overflow-x: auto; background: white; border-radius: var(--rounded-lg); border: 1px solid var(--table-border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.table-scroll-hint { display: none; margin-bottom: 0.5rem; background: linear-gradient(90deg, rgba(33,150,243,0.08), rgba(33,150,243,0.03)); border: 1px solid rgba(33,150,243,0.12); color: var(--primary-600); padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 600; font-size: 0.95rem; text-align: center; }
+
+/* Scroll indicator overlay at bottom-right of table to hint horizontal scrollability */
+.accounts-table-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    bottom: 8px;
+    width: 48px;
+    height: 24px;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(0,0,0,0.06));
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    opacity: 0; /* shown by JS on overflow */
+    transform: translateY(6px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+/* Small animated handle inside hint area */
+.accounts-table-scroll-handle {
+    position: absolute;
+    right: 18px;
+    bottom: 12px;
+    width: 36px;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0.18));
+    border-radius: 999px;
+    opacity: 0;
+    transform: translateX(0);
+    transition: opacity 0.28s ease, transform 0.5s ease;
+}
+
+/* Persistent custom horizontal scrollbar under the table */
+.accounts-table-scrollbar { width: 100%; box-sizing: border-box; padding: 6px 12px 0 12px; }
+.accounts-table-scrollbar-track { position: relative; height: 9px; background: rgba(0,0,0,0.06); border-radius: 999px; overflow: hidden; }
+.accounts-table-scrollbar-thumb { position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 7px; width: 80px; background: linear-gradient(90deg, var(--primary-600), var(--primary-500)); border-radius: 999px; box-shadow: 0 2px 6px rgba(0,0,0,0.12); cursor: grab; touch-action: none; }
+.accounts-table-scrollbar-thumb:active { cursor: grabbing; }
+
+/* accessibility focus style */
+.accounts-table-scrollbar-thumb:focus { outline: 3px solid rgba(33,150,243,0.18); }
+
+/* Hide native overflow scrollbar but keep scrolling behavior (for consistent look) */
+.accounts-table-wrapper::-webkit-scrollbar { height: 8px; }
+.accounts-table-wrapper::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 999px; }
+.accounts-table-wrapper { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) rgba(0,0,0,0.03); }
 .accounts-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .accounts-table th, .accounts-table td { padding: 0.9rem 0.75rem; text-align: left; border-bottom: 1px solid var(--table-border-color); font-size: var(--font-size-sm); vertical-align: middle; }
 .accounts-table th { background: var(--gray-100); font-weight: var(--font-semibold); color: var(--gray-600); white-space: nowrap; }
@@ -79,9 +125,24 @@
 
 /* Column widths */
 .select-column { width: 50px !important; text-align: center !important; }
-.accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 130px; min-width: 130px; } /* IP */
-.accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { width: 90px; min-width: 90px; } /* Port */
-.accounts-table th:nth-child(4), .accounts-table td:nth-child(4) { 
+/* Column widths (updated order)
+   1: Chọn
+   2: Tên tài khoản
+   3: Mật khẩu
+   4: IP/Tên miền
+   5: Port
+   6: Thời hạn đến
+   7: Trạm
+   8: Hướng dẫn
+   9: Trạng thái
+   10: Hành động
+*/
+.accounts-table th:nth-child(2), .accounts-table td:nth-child(2) { width: 130px; min-width: 130px; } /* Tên tài khoản */
+.accounts-table th:nth-child(3), .accounts-table td:nth-child(3) { width: 130px; min-width: 130px; word-break: break-all; } /* Mật khẩu */
+.accounts-table th:nth-child(4), .accounts-table td:nth-child(4) { width: 130px; min-width: 130px; } /* IP */
+.accounts-table th:nth-child(5), .accounts-table td:nth-child(5) { width: 90px; min-width: 90px; } /* Port */
+.accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 140px; min-width: 140px; } /* Thời hạn đến */
+.accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { 
     width: 200px; 
     min-width: 180px;
     max-width: 250px;
@@ -96,9 +157,6 @@
     text-overflow: ellipsis;
     font-size: 0.85rem;
 }
-.accounts-table th:nth-child(5), .accounts-table td:nth-child(5) { width: 130px; min-width: 130px; } /* Tên tài khoản */
-.accounts-table th:nth-child(6), .accounts-table td:nth-child(6) { width: 130px; min-width: 130px; word-break: break-all; } /* Mật khẩu */
-.accounts-table th:nth-child(7), .accounts-table td:nth-child(7) { width: 140px; min-width: 140px; } /* Thời hạn đến */
 .accounts-table th:nth-child(8), .accounts-table td:nth-child(8) { width: 100px; min-width: 100px; text-align: center; } /* Hướng dẫn */
 .accounts-table th:nth-child(9), .accounts-table td:nth-child(9) { width: 120px; min-width: 120px; text-align: center; } /* Trạng thái */
 .accounts-table th:nth-child(10), .accounts-table td:nth-child(10) { 
@@ -297,4 +355,11 @@
     .search-buttons-container { flex-direction: column; }
     .action-button span { display: none; }
     .accounts-table th, .accounts-table td { padding: 0.7rem 0.5rem; font-size: var(--font-size-xs); }
+    .table-scroll-hint { display: block; }
+    .accounts-table-wrapper::after { opacity: 1; transform: translateY(0); }
+    .accounts-table-scroll-handle { opacity: 1; transform: translateX(-6px); }
 }
+
+/* Desktop: show hint when table is overflowed (JS will toggle .overflowing class) */
+.accounts-table-wrapper.overflowing::after { opacity: 1; transform: translateY(0); }
+.accounts-table-wrapper.overflowing .accounts-table-scroll-handle { opacity: 1; transform: translateX(-6px); }

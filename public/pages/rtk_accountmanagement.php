@@ -183,17 +183,24 @@ function getPaginationUrl($page, $perPage, $filter) {
             </div>
             
             <form id="export-form" method="post" action="<?php echo $base_url; ?>/public/handlers/export_rtk_accounts.php">
+                <!-- Scroll hint for narrow screens: informs users the table is horizontally scrollable -->
+                <div class="table-scroll-hint" role="note" aria-hidden="false">Kéo sang phải để xem thông tin tài khoản</div>
                 <div class="accounts-table-wrapper">
+                    <div class="accounts-table-scrollbar" aria-hidden="true">
+                        <div class="accounts-table-scrollbar-track">
+                            <div class="accounts-table-scrollbar-thumb" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+                        </div>
+                    </div>
                     <table class="accounts-table">
                         <thead>
                             <tr>
                                 <th class="select-column">Chọn</th>
-                                <th>IP/Tên miền</th>
-                                <th>Port</th>
-                                <th>Trạm</th>
                                 <th>Tên tài khoản</th>
                                 <th>Mật khẩu</th>
+                                <th>IP/Tên miền</th>
+                                <th>Port</th>
                                 <th>Thời hạn đến</th>
+                                <th>Trạm</th>
                                 <th>Hướng dẫn</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
@@ -275,23 +282,23 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         <td class="select-column">
                                             <input type="checkbox" name="selected_accounts[]" value="<?php echo $account['id']; ?>" class="account-checkbox" data-package-id="<?php echo $account['package_id']; ?>">
                                         </td>
-                                        <td><?php echo htmlspecialchars($ip); ?></td>
-                                        <td><?php echo htmlspecialchars($port); ?></td>
-                                        <td class="stations-cell" title="<?php echo htmlspecialchars($stations_title); ?>">
-                                            <?php if (!empty($stations_display)): ?>
-                                                <?php echo htmlspecialchars($stations_display); ?>
-                                            <?php else: ?>
-                                                <span style="color: #999;">Chưa có trạm</span>
-                                            <?php endif; ?>
-                                        </td>
                                         <td><?php echo htmlspecialchars($account['username_acc'] ?? 'N/A'); ?></td>
                                         <td><?php echo htmlspecialchars($account['password_acc'] ?? 'N/A'); ?></td>
+                                        <td><?php echo htmlspecialchars($ip); ?></td>
+                                        <td><?php echo htmlspecialchars($port); ?></td>
                                         <td>
                                             <?php echo format_date_display($account['effective_end_time']); ?>
                                             <?php if ($days_diff_data['remaining'] !== null): ?>
                                                 <span class="time-remaining">(Còn <?php echo $days_diff_data['remaining']; ?> ngày)</span>
                                             <?php elseif ($days_diff_data['expired'] !== null): ?>
                                                 <span class="time-expired">(Quá hạn <?php echo $days_diff_data['expired']; ?> ngày)</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="stations-cell" title="<?php echo htmlspecialchars($stations_title); ?>">
+                                            <?php if (!empty($stations_display)): ?>
+                                                <?php echo htmlspecialchars($stations_display); ?>
+                                            <?php else: ?>
+                                                <span style="color: #999;">Chưa có trạm</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="guide-column">

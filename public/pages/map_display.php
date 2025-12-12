@@ -119,11 +119,6 @@ include $project_root_path . '/private/includes/header.php';
                 <div class="legend-item"><div class="legend-color green-station"></div><div>Trạm đang hoạt động</div></div>
                 <div class="legend-item"><div class="legend-color blue-station"></div><div>Trạm bạn có quyền truy cập</div></div>
                 <div class="legend-item"><div class="legend-color red-station"></div><div>Trạm không hoạt động</div></div>
-                <div class="legend-title" style="margin-top: 10px;">Người dùng online:</div>
-                <div class="legend-item"><div class="legend-color" style="background-color: #4CAF50;"></div><div>Fixed</div></div>
-                <div class="legend-item"><div class="legend-color" style="background-color: #FFC107;"></div><div>Float</div></div>
-                <div class="legend-item"><div class="legend-color" style="background-color: #F44336;"></div><div>Single</div></div>
-                <div class="legend-item"><div class="legend-color" style="background-color: #9E9E9E;"></div><div>Invalid</div></div>
             </div>
         </div>
     </main>

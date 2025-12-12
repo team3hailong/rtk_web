@@ -4,6 +4,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- State Variables ---
     let currentStatusFilter = paginationConfig.currentFilter || 'all';
+    // --- Horizontal Scroll Hint Logic ---
+    (function(){
+        // Helper: show a temporary hint and the scroll handle when horizontal overflow is present
     let currentSearchTerm = '';
     let currentRemainingTimeFilter = 'all';
 
@@ -489,6 +492,97 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // --- Initialization ---
+    })();
+
+    // --- Custom persistent scrollbar sync & drag support ---
+    (function(){
+        function initCustomScrollbar(){
+            var wrapper = document.querySelector('.accounts-table-wrapper');
+            if(!wrapper) return;
+            var table = wrapper.querySelector('.accounts-table');
+            var track = wrapper.querySelector('.accounts-table-scrollbar-track');
+            var thumb = wrapper.querySelector('.accounts-table-scrollbar-thumb');
+            if(!track || !thumb || !table) return;
+
+            function updateThumb(){
+                var visible = wrapper.clientWidth;
+                var total = wrapper.scrollWidth;
+                if(total <= visible){
+                    thumb.style.display = 'none';
+                    track.style.opacity = '0.4';
+                    return;
+                }
+                thumb.style.display = '';
+                var ratio = visible / total;
+                var thumbWidth = Math.max(32, Math.floor(track.clientWidth * ratio));
+                thumb.style.width = thumbWidth + 'px';
+                var maxOffset = track.clientWidth - thumbWidth;
+                var left = Math.round((wrapper.scrollLeft / (total - visible)) * maxOffset) || 0;
+                thumb.style.left = left + 'px';
+                var percent = Math.round((wrapper.scrollLeft / (total - visible)) * 100) || 0;
+                thumb.setAttribute('aria-valuenow', percent);
+            }
+
+            var dragging = false;
+            var dragStartX = 0;
+            var startLeft = 0;
+
+            thumb.addEventListener('pointerdown', function(e){
+                e.preventDefault();
+                thumb.setPointerCapture && thumb.setPointerCapture(e.pointerId);
+                dragging = true;
+                dragStartX = e.clientX;
+                startLeft = parseInt(thumb.style.left || 0, 10) || 0;
+                thumb.classList.add('dragging');
+            });
+
+            document.addEventListener('pointermove', function(e){
+                if(!dragging) return;
+                var dx = e.clientX - dragStartX;
+                var maxOffset = track.clientWidth - thumb.clientWidth;
+                var newLeft = Math.max(0, Math.min(maxOffset, startLeft + dx));
+                thumb.style.left = newLeft + 'px';
+                var scrollRatio = maxOffset > 0 ? newLeft / maxOffset : 0;
+                wrapper.scrollLeft = Math.round(scrollRatio * (wrapper.scrollWidth - wrapper.clientWidth));
+                var percent = Math.round(scrollRatio * 100);
+                thumb.setAttribute('aria-valuenow', percent);
+            });
+
+            document.addEventListener('pointerup', function(e){
+                if(!dragging) return;
+                dragging = false;
+                try{ thumb.releasePointerCapture && thumb.releasePointerCapture(e.pointerId); }catch(e){}
+                thumb.classList.remove('dragging');
+            });
+
+            track.addEventListener('click', function(e){
+                if(e.target === thumb) return;
+                var rect = track.getBoundingClientRect();
+                var clickX = e.clientX - rect.left;
+                var thumbHalf = thumb.clientWidth / 2;
+                var newLeft = Math.max(0, Math.min(track.clientWidth - thumb.clientWidth, clickX - thumbHalf));
+                var scrollRatio = (track.clientWidth - thumb.clientWidth) > 0 ? newLeft / (track.clientWidth - thumb.clientWidth) : 0;
+                wrapper.scrollLeft = Math.round(scrollRatio * (wrapper.scrollWidth - wrapper.clientWidth));
+                updateThumb();
+            });
+
+            // Sync on scroll, wheel, touchmove and resize (cover different input types)
+            wrapper.addEventListener('scroll', function(){ updateThumb(); });
+            wrapper.addEventListener('wheel', function(){ setTimeout(updateThumb, 10); });
+            wrapper.addEventListener('touchmove', function(){ setTimeout(updateThumb, 10); }, {passive: true});
+            // Also listen to scroll events on the table (some browsers may dispatch differently)
+            table.addEventListener('scroll', function(){ updateThumb(); });
+            window.addEventListener('resize', function(){ updateThumb(); });
+
+            // initial
+            setTimeout(updateThumb, 60);
+        }
+
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCustomScrollbar);
+        else initCustomScrollbar();
+    })();
 
     // --- Initialization ---
     updateActionButtonsState();

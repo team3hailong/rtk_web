@@ -112,8 +112,41 @@ include $project_root_path . '/private/includes/header.php';
             <!-- Chọn Tỉnh/Thành phố -->
             <div class="form-group">
                 <label>Tỉnh/Thành phố sử dụng: <small style="color: #666;">(Có thể chọn nhiều tỉnh)</small></label>
+                <div style="display:flex; gap:8px; align-items:center; margin:6px 0 10px 0;">
+                    <button type="button" id="btn-select-all-provinces" class="btn-small">Chọn tất cả</button>
+                    <button type="button" id="btn-deselect-all-provinces" class="btn-small">Bỏ chọn tất cả</button>
+                </div>
                 <div class="provinces-checkbox-container" id="provinces-container">
-                    <?php foreach ($provinces as $province): ?>
+                    <?php
+                    // Priority provinces to show first (central municipalities)
+                    $priority = ['Hà Nội', 'Hải Phòng', 'Đà Nẵng', 'TP Hồ Chí Minh', 'Cần Thơ'];
+                    $priority_list = [];
+                    $others = [];
+                    foreach ($provinces as $p) {
+                        if (in_array($p['province'], $priority, true)) {
+                            $priority_list[] = $p;
+                        } else {
+                            $others[] = $p;
+                        }
+                    }
+                    // Sort priority_list by the manual order of $priority
+                    usort($priority_list, function($a, $b) use ($priority) {
+                        return array_search($a['province'], $priority) - array_search($b['province'], $priority);
+                    });
+                    // Sort others alphabetically using locale-aware collation (Vietnamese) when available
+                    if (class_exists('Collator')) {
+                        $coll = collator_create('vi_VN') ?: collator_create('root');
+                        usort($others, function($a, $b) use ($coll) {
+                            return collator_compare($coll, $a['province'], $b['province']);
+                        });
+                    } else {
+                        usort($others, function($a, $b) {
+                            return strcmp(mb_strtolower($a['province']), mb_strtolower($b['province']));
+                        });
+                    }
+                    $ordered = array_merge($priority_list, $others);
+
+                    foreach ($ordered as $province): ?>
                         <label class="province-checkbox-label">
                             <input type="checkbox" 
                                    name="location_id[]" 
@@ -124,7 +157,7 @@ include $project_root_path . '/private/includes/header.php';
                     <?php endforeach; ?>
                 </div>
                 <small style="color: #666; display: block; margin-top: 5px;">
-                    ✓ Click để chọn/bỏ chọn tỉnh. Tỉnh đầu tiên bạn chọn sẽ là tỉnh chính.
+                    ✓ Click để chọn/bỏ chọn tỉnh. Tỉnh đầu tiên bạn chọn sẽ là tỉnh chính. Chọn "Tất cả" sẽ chọn mọi tỉnh hiện có (gửi đầy đủ ID khi submit).
                 </small>
             </div>
 
@@ -176,6 +209,52 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // --- Provinces select-all logic ---
+    (function(){
+        const btnSelectAll = document.getElementById('btn-select-all-provinces');
+        const btnDeselectAll = document.getElementById('btn-deselect-all-provinces');
+        const displayAllCheckbox = document.getElementById('province-select-all-display');
+        const provinceCheckboxes = Array.from(document.querySelectorAll('.province-checkbox'));
+        const form = document.getElementById('details-form');
+
+        function setAll(checked){
+            provinceCheckboxes.forEach(cb => cb.checked = checked);
+            if(displayAllCheckbox) displayAllCheckbox.checked = checked;
+        }
+
+        btnSelectAll && btnSelectAll.addEventListener('click', function(){ setAll(true); });
+        btnDeselectAll && btnDeselectAll.addEventListener('click', function(){ setAll(false); });
+
+        if(displayAllCheckbox){
+            displayAllCheckbox.addEventListener('change', function(){ setAll(this.checked); });
+        }
+
+        // If user manually unchecks any -> uncheck displayAllCheckbox
+        provinceCheckboxes.forEach(cb => cb.addEventListener('change', function(){
+            if(!this.checked && displayAllCheckbox && displayAllCheckbox.checked){
+                displayAllCheckbox.checked = false;
+            }
+        }));
+
+        // On submit: if displayAllCheckbox is checked, ensure all province ids sent (they already will be because we set all checked).
+        // But to be safe (in case some checkboxes disabled), add hidden inputs for any missing ids.
+        form && form.addEventListener('submit', function(e){
+            if(displayAllCheckbox && displayAllCheckbox.checked){
+                // ensure all province ids present as inputs
+                const existing = Array.from(document.querySelectorAll('input[name="location_id[]"]')).map(i => i.value);
+                provinceCheckboxes.forEach(cb => {
+                    if(!existing.includes(cb.value)){
+                        const hidden = document.createElement('input');
+                        hidden.type = 'hidden';
+                        hidden.name = 'location_id[]';
+                        hidden.value = cb.value;
+                        form.appendChild(hidden);
+                    }
+                });
+            }
+        });
+    })();
 });
 </script>
 

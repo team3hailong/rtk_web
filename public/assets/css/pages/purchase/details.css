@@ -142,6 +142,20 @@ total-price-display span {
     color: #10B981;
 }
 
+/* Small utility button used on details page */
+.btn-small {
+    background: #f1f5f9;
+    border: 1px solid var(--gray-300);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+.btn-small:hover { background: #eef2ff; }
+
+.provinces-checkbox-container .province-checkbox-label { gap: 8px; }
+
 /* Scrollbar styling */
 .provinces-checkbox-container::-webkit-scrollbar {
     width: 8px;

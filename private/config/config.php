@@ -36,6 +36,10 @@ define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
 define('GLOBAL_DISCOUNT_CODE', env('GLOBAL_DISCOUNT_CODE', ''));
 define('SHOW_GLOBAL_DISCOUNT', env('SHOW_GLOBAL_DISCOUNT', 'no'));
 
+// Toggle to disable the Kinh Tuyến Trục popup without removing files.
+// Set DISABLE_KINH_TUYEN_TRUC_POPUP=true in the environment to disable.
+define('DISABLE_KINH_TUYEN_TRUC_POPUP', env('DISABLE_KINH_TUYEN_TRUC_POPUP', 'true') === 'true');
+
 // Environment and error handling settings
 define('APP_ENV', env('APP_ENV', 'production'));
 define('APP_DEBUG', APP_ENV === 'development');

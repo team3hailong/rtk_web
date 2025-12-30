@@ -312,3 +312,177 @@ textarea.form-control {
         margin-bottom: 0.25rem;
     }
 }
+
+/* =========================================
+   QR Code Section Styles (UPDATED)
+   ========================================= */
+.qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.qr-section h3 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.qr-wrapper {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex; /* Căn giữa ảnh */
+    align-items: center;
+    justify-content: center;
+    /* Đảm bảo khung có kích thước ngay cả khi ảnh chưa load */
+    min-width: 220px;
+    min-height: 220px; 
+}
+
+.qr-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Thêm class loading nếu cần xử lý JS */
+.qr-loading {
+    opacity: 0.5;
+}
+
+.qr-desc {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+    max-width: 90%;
+    line-height: 1.5;
+}
+
+.qr-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-qr-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    flex: 1;
+    min-width: 110px; 
+}
+
+.btn-qr-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-qr-action i {
+    font-size: 1.1rem;
+}
+
+/* Button Colors */
+.btn-share { color: #0068ff; background-color: #e7f5ff; border-color: #b3d7ff; }
+.btn-share:hover { background-color: #cce5ff; }
+
+.btn-copy { color: #28a745; background-color: #d4edda; border-color: #c3e6cb; }
+.btn-copy:hover { background-color: #c3e6cb; }
+
+.btn-download { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+.btn-download:hover { background-color: #ffeeba; }
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+    .qr-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .btn-qr-action {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+}
+/* Mặc định ẩn thanh Tab trên Desktop */
+.mobile-tabs-nav {
+    display: none;
+}
+
+/* Chỉ hiện và xử lý Tab trên màn hình nhỏ (Mobile/Tablet dọc) */
+@media (max-width: 767px) {
+    /* 1. Thanh điều hướng Tabs */
+    .mobile-tabs-nav {
+        display: flex;
+        background-color: #f1f3f5;
+        border-radius: 8px;
+        padding: 4px;
+        margin-bottom: 1.5rem;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 10px 15px;
+        border: none;
+        background: transparent;
+        color: #666;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    /* Trạng thái Tab đang chọn */
+    .tab-btn.active {
+        background-color: #fff;
+        color: #4caf50; /* Màu xanh lá chủ đạo */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* 2. Điều chỉnh Grid container để hỗ trợ ẩn/hiện */
+    .support-grid {
+        display: block; /* Hủy bỏ grid trên mobile để dễ ẩn hiện */
+        gap: 0;
+    }
+
+    /* 3. Logic ẩn hiện nội dung */
+    .tab-content {
+        display: none; /* Mặc định ẩn hết */
+        animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+        display: block; /* Chỉ hiện cái nào có class active */
+    }
+    
+    /* Tinh chỉnh lại chiều cao QR section trên mobile cho gọn */
+    .qr-section {
+        min-height: 400px;
+    }
+}
+
+/* Animation nhẹ nhàng */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

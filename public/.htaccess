@@ -17,3 +17,4 @@ php_value max_input_time 300
 
 # Tắt tính năng output_buffering cho upload file lớn
 php_value output_buffering Off
+

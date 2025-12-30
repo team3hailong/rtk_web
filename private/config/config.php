@@ -25,9 +25,22 @@ define('SMTP_USERNAME', env('SMTP_USERNAME', 'dovannguyen2005bv@gmail.com'));
 define('SMTP_PASSWORD', env('SMTP_PASSWORD', 'qbut ryan pedr aawk'));
 define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', 'dovannguyen2005bv@gmail.com'));
 define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
+// Optional explicit SMTP security and auth flags. Use env variables to override.
+// Examples: SMTP_SECURE=ssl | tls | starttls ; SMTP_AUTH=true|false ; SMTP_DEBUG=0|1|2|3
+define('SMTP_SECURE', env('SMTP_SECURE', ''));
+define('SMTP_AUTH', env('SMTP_AUTH', 'true') === 'true');
+define('SMTP_DEBUG', (int) env('SMTP_DEBUG', 0));
 
 // Site Configuration
-// define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
+// Define SITE_URL for link generation. If not set in env, derive from base URL helper.
+if (!defined('SITE_URL')) {
+    $site_url_candidate = env('SITE_URL', '');
+    if (empty($site_url_candidate)) {
+        // get_base_url is provided by utils/path_helpers/bootstrap.php
+        $site_url_candidate = function_exists('get_base_url') ? get_base_url() : 'http://localhost';
+    }
+    define('SITE_URL', rtrim($site_url_candidate, '/'));
+}
 define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
 
 // Global discount configuration

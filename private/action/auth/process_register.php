@@ -135,23 +135,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                  throw new Exception("Lỗi khi thêm cài đặt người dùng: " . $stmt_settings->error);
             }            $stmt_settings->close();
 
-            // Tạo mã OTP để xác thực email
-            // Tạo token xác thực email
-            $token = bin2hex(random_bytes(32));
-            $updateTokenSql = "UPDATE user SET email_verify_token = ? WHERE id = ?";
-            $stmtToken = $conn->prepare($updateTokenSql);
-            if ($stmtToken) {
-                $stmtToken->bind_param("si", $token, $user_id);
-                $stmtToken->execute();
-                $stmtToken->close();
-            }
-
-            // Lấy BASE_URL từ config
-            require_once __DIR__ . '/../../config/config.php';
-            $verifyLink = BASE_URL . "/public/pages/auth/verify-email.php?token=" . urlencode($token);
-            $emailSent = sendVerificationEmail($email, $username, $token);
-            if (!$emailSent) {
-                error_log("Failed to send verification email to: $email");
+            // Mark email as verified immediately (temporary bypass of email verification)
+            $stmtVerify = $conn->prepare("UPDATE user SET email_verified = 1, email_verify_token = NULL WHERE id = ?");
+            if ($stmtVerify) {
+                $stmtVerify->bind_param("i", $user_id);
+                $stmtVerify->execute();
+                $stmtVerify->close();
             }
             $conn->commit();
             
@@ -221,13 +210,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {    // Lấy và làm sạch dữ li�
                     }
                 }
             }
-              // Xóa dữ liệu form khỏi session và lưu email để xác thực
+            // Xóa dữ liệu form khỏi session
             unset($_SESSION['form_data']);
-            $_SESSION['verify_email'] = $email;
-            
-            // Chuyển hướng đến trang nhập OTP
-            header("Location: ../../../public/pages/auth/verify-email-check.php");
-            exit();} catch (Exception $e) {
+
+            // Tự động đăng nhập người dùng vừa đăng ký
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['username'] = $username;
+
+            // Chuyển hướng thẳng về trang chủ (đã đăng nhập)
+            require_once __DIR__ . '/../../config/config.php';
+            header("Location: " . BASE_URL . "/public/index.php");
+            exit();
+        } catch (Exception $e) {
             // Rollback transaction nếu có lỗi
             $conn->rollback();
             

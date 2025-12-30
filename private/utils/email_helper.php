@@ -13,18 +13,30 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -117,13 +129,26 @@ function sendPasswordResetEmail($userEmail, $username, $resetToken) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Sử dụng SSL thay vì STARTTLS
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
+        } else {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // fallback to SSL
+        }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -229,18 +254,30 @@ function sendVerificationOTP($userEmail, $username, $otpCode) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -331,18 +368,30 @@ function sendPasswordResetOTP($userEmail, $username, $otpCode) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -433,18 +482,30 @@ function sendSurveyAccountLinkNotification($userEmail, $username, $surveyUserNam
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Use SSL for port 465, otherwise STARTTLS
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0;
+        $mail->SMTPDebug = SMTP_DEBUG;
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);

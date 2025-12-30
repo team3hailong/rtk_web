@@ -144,6 +144,20 @@ $base_url = BASE_URL;
 
             </form>
 
+            <div class="social-login">
+                <div class="social-separator">Hoặc tiếp tục với</div>
+                <div class="social-buttons">
+                    <a href="<?php echo $base_url; ?>/public/handlers/auth_callback.php?provider=google" class="btn-social">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        Google
+                    </a>
+                    <a href="<?php echo $base_url; ?>/public/handlers/auth_callback.php?provider=facebook" class="btn-social">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" alt="Facebook">
+                        Facebook
+                    </a>
+                </div>
+            </div>
+
         </div>
 
         <div class="register-link">

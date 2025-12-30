@@ -570,21 +570,76 @@ body {
 
 
 .info-message {
-
     background-color: #e3f2fd;
-
     color: #1565c0;
-
     padding: 10px;
-
     border-radius: 5px;
-
     margin-bottom: 15px;
-
     border: 1px solid #90caf9;
-
     font-size: 0.9rem;
-
     text-align: center;
+}
 
+/* Social Login Styles */
+.social-login {
+    margin-top: 25px;
+    width: 100%;
+    max-width: 350px;
+}
+
+.social-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #999;
+}
+
+.social-separator::before,
+.social-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+}
+
+.social-separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.social-separator:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9em;
+}
+
+.btn-social:hover {
+    background: #f9f9f9;
+    border-color: #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-social img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
 }

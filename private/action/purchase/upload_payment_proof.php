@@ -189,6 +189,16 @@ try {
         $voucher_id = $transaction['voucher_id'];
     }
 
+    // Lấy final_amount từ transaction để kiểm tra điều kiện auto-approve
+    $sql_get_amount = "SELECT amount FROM transaction_history WHERE id = :transaction_id";
+    $stmt_get_amount = $conn->prepare($sql_get_amount);
+    $stmt_get_amount->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+    $stmt_get_amount->execute();
+    $transaction_amount_row = $stmt_get_amount->fetch(PDO::FETCH_ASSOC);
+    $final_amount = $transaction_amount_row ? (float)$transaction_amount_row['amount'] : 0;
+
+    error_log("[UPLOAD_PROOF] Transaction amount: $final_amount");
+
     // Check if voucher has auto_approve enabled
     $auto_approve = false;
     if ($voucher_id) {
@@ -200,9 +210,12 @@ try {
         $auto_approve = $voucher && $voucher['auto_approve'] == 1;
     }
 
+    // YÊU CẦU MỚI: Auto-approve chỉ khi auto_approve = 1 VÀ final_amount = 0
+    $should_auto_approve = ($auto_approve && $final_amount == 0);
+
     // Update transaction record with payment image
-    // If auto_approve, set status='completed' and payment_confirmed=1
-    if ($auto_approve) {
+    // If should_auto_approve, set status='completed' and payment_confirmed=1
+    if ($should_auto_approve) {
         $sql_update = "UPDATE transaction_history 
                        SET payment_image = :payment_image, 
                            status = 'completed',
@@ -210,7 +223,7 @@ try {
                            payment_confirmed_at = NOW(), 
                            updated_at = NOW() 
                        WHERE id = :transaction_id";
-        error_log("[UPLOAD_PROOF] Auto-approve enabled for voucher $voucher_id, setting status=completed");
+        error_log("[UPLOAD_PROOF] Auto-approve enabled AND final_amount=0, setting status=completed");
     } else {
         $sql_update = "UPDATE transaction_history 
                        SET payment_image = :payment_image, 
@@ -218,6 +231,12 @@ try {
                            payment_confirmed_at = NULL, 
                            updated_at = NOW() 
                        WHERE id = :transaction_id";
+        
+        if ($auto_approve && $final_amount > 0) {
+            error_log("[UPLOAD_PROOF] Auto-approve enabled but final_amount=$final_amount > 0, status=pending");
+        } else {
+            error_log("[UPLOAD_PROOF] Auto-approve disabled or conditions not met, status=pending");
+        }
     }
     
     $stmt_update = $conn->prepare($sql_update);
@@ -242,8 +261,8 @@ try {
 
     $conn->commit(); // Commit transaction
 
-    // If auto_approve, create accounts automatically
-    if ($auto_approve) {
+    // If should_auto_approve, create accounts automatically
+    if ($should_auto_approve) {
         error_log("[UPLOAD_PROOF] Starting auto account creation for registration $registration_id");
         
         require_once $project_root_path . '/private/classes/purchase/AutoAccountCreator.php';
@@ -264,7 +283,7 @@ try {
     $response['success'] = true;
     unset($response['error']);
     $response['message'] = 'Proof uploaded successfully.';
-    $response['auto_approved'] = $auto_approve; // Thêm thông tin auto_approve
+    $response['auto_approved'] = $should_auto_approve; // Thêm thông tin should_auto_approve
 
 } catch (PDOException $e) {
     if ($conn && $conn->inTransaction()) {

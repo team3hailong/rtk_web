@@ -108,7 +108,8 @@ if (isset($_SESSION[$sessionKey]['voucher_id'])) {
         
         $voucher_data = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($voucher_data) {
-            if ($voucher_data['auto_approve'] == 1) {
+            // YÊU CẦU MỚI: Chỉ cho phép auto-approve khi auto_approve = 1 VÀ verified_total_price = 0
+            if ($voucher_data['auto_approve'] == 1 && $verified_total_price == 0) {
                 $has_auto_approve_voucher = true;
             }
             // Lấy thông tin need_upload_proof từ voucher
@@ -371,17 +372,8 @@ include $project_root_path . '/private/includes/header.php';
                                         <i class="fas fa-arrow-left"></i> Quay lại
                                     </button>
                                     
-                                    <?php if ($need_upload_proof): ?>
-                                        <!-- Cần upload proof → Chuyển sang step 3 -->
-                                        <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(3)">
-                                            <?php if ($verified_total_price <= 0): ?>
-                                                Tiếp tục <i class="fas fa-arrow-right"></i>
-                                            <?php else: ?>
-                                                Đã thanh toán <i class="fas fa-arrow-right"></i>
-                                            <?php endif; ?>
-                                        </button>
-                                    <?php else: ?>
-                                        <!-- Không cần upload proof → Submit trực tiếp tạo giao dịch -->
+                                    <?php if ($verified_total_price <= 0 && !$need_upload_proof): ?>
+                                        <!-- Giao dịch = 0 đồng VÀ voucher không cần upload proof → Submit trực tiếp -->
                                         <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=complete_order_without_proof" method="POST" style="display: inline;">
                                             <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
                                             <?php echo generate_csrf_input(); ?>
@@ -389,14 +381,23 @@ include $project_root_path . '/private/includes/header.php';
                                                 <i class="fas fa-check"></i> Hoàn tất đăng ký
                                             </button>
                                         </form>
+                                    <?php else: ?>
+                                        <!-- Tất cả trường hợp khác: giao dịch > 0 HOẶC cần upload proof → Chuyển sang step 3 -->
+                                        <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(3)">
+                                            <?php if ($verified_total_price <= 0): ?>
+                                                Tiếp tục <i class="fas fa-arrow-right"></i>
+                                            <?php else: ?>
+                                                Đã thanh toán <i class="fas fa-arrow-right"></i>
+                                            <?php endif; ?>
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Step 3: Upload ảnh minh chứng (chỉ hiện khi cần upload proof) -->
-                    <?php if ($need_upload_proof): ?>
+                    <!-- Step 3: Upload ảnh minh chứng -->
+                    <!-- Hiển thị cho TẤT CẢ trường hợp: giao dịch > 0 hoặc cần upload proof -->
                     <section class="wizard-section" data-section="3">
                         <div class="section-card">
                             <h3 class="section-title">
@@ -451,7 +452,6 @@ include $project_root_path . '/private/includes/header.php';
                             </div>
                         </div>
                     </section>
-                    <?php endif; // end if ($need_upload_proof) ?>
                 <?php endif; // end if (!$is_trial) ?>
             </div>
         </div>

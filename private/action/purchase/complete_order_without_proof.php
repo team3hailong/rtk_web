@@ -110,6 +110,8 @@ try {
     $discount_amount = $_SESSION[$sessionKey]['voucher_discount'] ?? 0;
     $final_amount = max(0, $total_price - $discount_amount);
 
+    error_log("[COMPLETE_WITHOUT_PROOF] Amount calculation: total=$total_price, discount=$discount_amount, final=$final_amount");
+
     // Check if transaction already exists
     $sql_check = "SELECT id FROM transaction_history 
                   WHERE registration_id = :registration_id AND user_id = :user_id";
@@ -147,17 +149,24 @@ try {
     $stmt_transaction->bindParam(':amount', $final_amount, PDO::PARAM_STR);
     $stmt_transaction->bindParam(':payment_method', $payment_method, PDO::PARAM_STR);
 
-    // Nếu auto_approve = 1, tự động xác nhận thanh toán và set status = 'completed'
-    if ($auto_approve) {
-        $status = 'completed'; // Thay đổi từ 'approved' thành 'completed'
+    // YÊU CẦU MỚI: Auto-approve chỉ khi auto_approve = 1 VÀ final_amount = 0
+    $should_auto_approve = ($auto_approve && $final_amount == 0);
+    
+    if ($should_auto_approve) {
+        $status = 'completed';
         $payment_confirmed = 1;
         $payment_confirmed_at = date('Y-m-d H:i:s');
-        error_log("[COMPLETE_WITHOUT_PROOF] Auto-approve enabled, status=completed");
+        error_log("[COMPLETE_WITHOUT_PROOF] Auto-approve enabled AND final_amount=0, status=completed");
     } else {
         $status = 'pending';
         $payment_confirmed = 0;
         $payment_confirmed_at = null;
-        error_log("[COMPLETE_WITHOUT_PROOF] Auto-approve disabled, status=pending");
+        
+        if ($auto_approve && $final_amount > 0) {
+            error_log("[COMPLETE_WITHOUT_PROOF] Auto-approve enabled but final_amount=$final_amount > 0, status=pending");
+        } else {
+            error_log("[COMPLETE_WITHOUT_PROOF] Auto-approve disabled or conditions not met, status=pending");
+        }
     }
 
     $stmt_transaction->bindParam(':status', $status, PDO::PARAM_STR);
@@ -168,8 +177,8 @@ try {
     $transaction_id = $conn->lastInsertId();
     error_log("[COMPLETE_WITHOUT_PROOF] Transaction created with ID: $transaction_id, status: $status");
 
-    // Nếu auto_approve, tự động tạo tài khoản
-    if ($auto_approve) {
+    // Nếu should_auto_approve = true, tự động tạo tài khoản
+    if ($should_auto_approve) {
         error_log("[COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration $registration_id");
         
         // Commit transaction trước để đảm bảo dữ liệu đã được lưu

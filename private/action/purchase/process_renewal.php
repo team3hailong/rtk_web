@@ -1,4 +1,4 @@
-    <?php
+<?php
 session_start();
 $project_root_path = dirname(dirname(dirname(__DIR__)));
 require_once $project_root_path . '/private/config/config.php';

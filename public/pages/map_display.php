@@ -28,7 +28,7 @@ include $project_root_path . '/private/includes/header.php';
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
     <main class="content-wrapper">
         <h2 class="text-2xl font-semibold mb-4">Bản đồ trạm đo đạc</h2>
-        <p class="text-gray-600 mb-4">Trạng thái trạm sẽ được cập nhật liên tục mỗi 5 phút</p>
+        <p class="text-gray-600 mb-4">Trạng thái trạm sẽ được cập nhật liên tục mỗi 30 giây</p>
         <div id="map-container">
             <div id="map"><p>Đang tải bản đồ...</p></div>
 

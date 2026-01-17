@@ -842,6 +842,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Gọi lần đầu
     updateOnlineUsers();
 
-    // Gọi lại mỗi 5 giây
-    setInterval(updateOnlineUsers, 5000);
+    // Gọi lại mỗi 30 giây
+    setInterval(updateOnlineUsers, 30000);
 });

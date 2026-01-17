@@ -238,7 +238,7 @@ main.content-wrapper {
     
     /* Ẩn hoặc thu nhỏ tiêu đề để tiết kiệm không gian */
     /* Trên mobile ẩn tiêu đề và mô tả ngắn (ví dụ: "Bản đồ trạm đo đạc" và
-       "Trạng thái trạm sẽ được cập nhật liên tục mỗi 5 phút") để tránh chiếm
+       "Trạng thái trạm sẽ được cập nhật liên tục mỗi 30 giây") để tránh chiếm
        không gian và bị che bởi thanh điều hướng. Nếu muốn giữ nhưng ẩn về mặt
        trực quan cho assistive tech, chuyển sang .visually-hidden thay vì display:none. */
     main.content-wrapper h2,

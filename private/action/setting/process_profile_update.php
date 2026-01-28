@@ -81,8 +81,27 @@ if (empty($username)) {
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors[] = "Địa chỉ email không hợp lệ.";
 }
-if (!empty($phone) && !preg_match('/^[0-9]{10,11}$/', $phone)) {
-    $errors[] = "Số điện thoại không hợp lệ (phải có 10-11 chữ số).";
+
+// Validation số điện thoại - BẮT BUỘC
+if (empty($phone)) {
+    $errors[] = "Số điện thoại không được để trống.";
+} else {
+    // Kiểm tra chỉ chứa số
+    if (!preg_match('/^[0-9]+$/', $phone)) {
+        $errors[] = "Số điện thoại chỉ được chứa chữ số.";
+    }
+    // Kiểm tra độ dài 10-11 số
+    elseif (strlen($phone) < 10 || strlen($phone) > 11) {
+        $errors[] = "Số điện thoại phải có 10-11 chữ số.";
+    }
+    // Kiểm tra bắt đầu bằng 0
+    elseif (!preg_match('/^0/', $phone)) {
+        $errors[] = "Số điện thoại phải bắt đầu bằng số 0.";
+    }
+    // Kiểm tra định dạng số điện thoại Việt Nam
+    elseif (!preg_match('/^(0[3|5|7|8|9])+([0-9]{8})$|^(0[2|4|6])+([0-9]{9})$/', $phone)) {
+        $errors[] = "Số điện thoại không đúng định dạng Việt Nam.";
+    }
 }
 
 if (!empty($errors)) {
@@ -153,6 +172,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         if (isset($result['data'])) {
             $_SESSION['user_data'] = $result['data']; // Update session data
             $_SESSION['profile_message'] = "Hồ sơ đã được cập nhật thành công.";
+            
+            // Kiểm tra nếu có redirect_after_update trong session
+            if (isset($_SESSION['redirect_after_update'])) {
+                $redirect_url = $_SESSION['redirect_after_update'];
+                unset($_SESSION['redirect_after_update']);
+                header('Location: ' . $redirect_url);
+                exit;
+            }
         } else {
             // Handle case where fetching updated data fails, though unlikely after successful update
              $_SESSION['profile_error'] = $result['error'] ?? 'Không thể tải lại dữ liệu người dùng sau khi cập nhật.';

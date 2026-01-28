@@ -277,6 +277,88 @@ try {
         } else {
             error_log("[AUTO_ACCOUNT] Successfully created " . count($result['accounts']) . " accounts for registration $registration_id");
         }
+
+        // Ghi log vào activity_logs khi giao dịch hoàn thành
+        try {
+            $sessionKey = (isset($_SESSION['is_renewal']) && $_SESSION['is_renewal']) ? 'renewal' : 'order';
+            $is_renewal = ($sessionKey === 'renewal');
+            
+            // Lấy thông tin registration
+            $sql_reg_info = "SELECT r.package_id, r.num_account, r.total_price, p.name as package_name, l.province 
+                             FROM registration r 
+                             LEFT JOIN package p ON r.package_id = p.id 
+                             LEFT JOIN location l ON r.location_id = l.id 
+                             WHERE r.id = :registration_id";
+            $stmt_reg_info = $conn->prepare($sql_reg_info);
+            $stmt_reg_info->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+            $stmt_reg_info->execute();
+            $reg_info = $stmt_reg_info->fetch(PDO::FETCH_ASSOC);
+            
+            if ($is_renewal) {
+                // Lấy thông tin tài khoản được gia hạn
+                $sql_accounts = "SELECT ra.username, ra.id 
+                                FROM account_groups ag 
+                                JOIN rtk_account ra ON ag.account_id = ra.id 
+                                WHERE ag.registration_id = :registration_id";
+                $stmt_accounts = $conn->prepare($sql_accounts);
+                $stmt_accounts->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+                $stmt_accounts->execute();
+                $accounts = $stmt_accounts->fetchAll(PDO::FETCH_ASSOC);
+                
+                $account_usernames = array_column($accounts, 'username');
+                $notify_content = 'Giao dịch gia hạn hoàn thành cho ' . count($accounts) . ' tài khoản: ' . implode(', ', $account_usernames);
+                
+                $log_data = [
+                    'transaction_id' => $transaction_id,
+                    'registration_id' => $registration_id,
+                    'transaction_type' => 'renewal',
+                    'package' => $reg_info['package_name'] ?? '',
+                    'province' => $reg_info['province'] ?? '',
+                    'amount' => $final_amount,
+                    'renewed_accounts' => $account_usernames,
+                    'total_accounts' => count($accounts),
+                    'auto_approved' => true
+                ];
+                $action = 'transaction_renewal_completed';
+            } else {
+                // Lấy thông tin tài khoản được tạo
+                $created_accounts = $result['success'] ? $result['accounts'] : [];
+                $account_usernames = array_column($created_accounts, 'username');
+                
+                $notify_content = 'Giao dịch mua mới hoàn thành, tạo ' . count($created_accounts) . ' tài khoản: ' . implode(', ', $account_usernames);
+                
+                $log_data = [
+                    'transaction_id' => $transaction_id,
+                    'registration_id' => $registration_id,
+                    'transaction_type' => 'purchase',
+                    'package' => $reg_info['package_name'] ?? '',
+                    'province' => $reg_info['province'] ?? '',
+                    'amount' => $final_amount,
+                    'created_accounts' => $account_usernames,
+                    'total_accounts' => count($created_accounts),
+                    'auto_approved' => true
+                ];
+                $action = 'transaction_purchase_completed';
+            }
+            
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+            $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+            $new_values = json_encode($log_data, JSON_UNESCAPED_UNICODE);
+            
+            $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                        VALUES (:user_id, :action, 'transaction', :entity_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
+            $stmt_log = $conn->prepare($sql_log);
+            $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmt_log->bindParam(':entity_id', $transaction_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':ip_address', $ip_address);
+            $stmt_log->bindParam(':user_agent', $user_agent);
+            $stmt_log->bindParam(':new_values', $new_values);
+            $stmt_log->bindParam(':notify_content', $notify_content);
+            $stmt_log->execute();
+        } catch (Exception $e) {
+            error_log("Error logging transaction completion: " . $e->getMessage());
+        }
     }
 
     // Success Response

@@ -38,6 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // --- Get Data from POST ---
 $user_id = $_SESSION['user_id'];
+
+// --- Kiểm tra số điện thoại (security check) ---
+$db_check = new Database();
+$conn_check = $db_check->getConnection();
+$stmt_check = $conn_check->prepare("SELECT phone FROM user WHERE id = :user_id");
+$stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check->execute();
+$user_phone = $stmt_check->fetchColumn();
+
+if (empty($user_phone)) {
+    $_SESSION['error_message'] = 'Vui lòng cập nhật số điện thoại trước khi mua gói dịch vụ.';
+    header('Location: ' . $base_url . '/public/pages/setting/profile.php?require_phone=1');
+    exit;
+}
+
 $package_id = filter_input(INPUT_POST, 'package_id', FILTER_VALIDATE_INT);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
 
@@ -195,38 +210,12 @@ try {
     // Không tạo transaction ở đây để tránh tạo giao dịch khi user chưa hoàn tất thanh toán
 
     // Commit Transaction
-    $conn->commit();    // Log user purchase action with detailed information similar to renewal process
-    $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
-    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    
-    // Get location details to include province name instead of just ID
-    $location_obj = new Location();
-    $location_details = $location_obj->getLocationById($location_id);
-    $province_name = $location_details ? $location_details['province'] : '';
-    $location_obj->closeConnection();
-    
-    // Create detailed log data similar to renewal process
-    $log_data = json_encode([
-        'registration_id' => $registration_id,
-        'selected_accounts' => [$quantity], // For new purchase, it's the quantity
-        'total_price' => $final_total_price,
-        'package' => $package['name'],
-        'location' => $province_name // Include province name for better readability
-    ], JSON_UNESCAPED_UNICODE); // Ensure proper Vietnamese character encoding
-    
-    $notify_content = 'Mua gói dịch vụ: ' . $package['name'] . ' - Số lượng: ' . $quantity;
-    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
-                VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
-    $stmt_log = $conn->prepare($sql_log);
-    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_log->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-    $stmt_log->bindParam(':ip_address', $ip_address);
-    $stmt_log->bindParam(':user_agent', $user_agent);
-    $stmt_log->bindParam(':new_values', $log_data);
-    $stmt_log->bindParam(':notify_content', $notify_content);
-    $stmt_log->execute();
+    $conn->commit();
 
-    // Sau khi ghi nhật ký hoạt động, đánh dấu voucher thiết bị đã sử dụng để tránh tái sử dụng
+    // NOTE: Activity log sẽ được ghi khi giao dịch hoàn thành (transaction completed)
+    // Không ghi log ở đây để tránh ghi log khi user chưa hoàn tất thanh toán
+    
+    // Sau khi commit transaction, đánh dấu voucher thiết bị đã sử dụng để tránh tái sử dụng
     if (isset($_SESSION['device_fingerprint']) && isset($_SESSION['order']['voucher_id'])) {
         try {
             $voucherObj->markDeviceVoucherUsed(

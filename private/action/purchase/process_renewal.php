@@ -17,6 +17,20 @@ if (!isset($_SESSION['user_id'])) {
 }
 $user_id = $_SESSION['user_id'];
 
+// --- Kiểm tra số điện thoại (security check) ---
+$db_check = new Database();
+$conn_check = $db_check->getConnection();
+$stmt_check = $conn_check->prepare("SELECT phone FROM user WHERE id = :user_id");
+$stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check->execute();
+$user_phone = $stmt_check->fetchColumn();
+
+if (empty($user_phone)) {
+    $_SESSION['error_message'] = 'Vui lòng cập nhật số điện thoại trước khi gia hạn gói dịch vụ.';
+    header('Location: ' . $base_url . '/public/pages/setting/profile.php?require_phone=1');
+    exit;
+}
+
 // $purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_SANITIZE_STRING);
 $purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_DEFAULT);
 if (!in_array($purchase_type, ['individual', 'company'])) {
@@ -194,28 +208,9 @@ try {
         'package_name' => $package['name'],
         'purchase_type' => $purchase_type
     ];
-      // Log renewal request với đầy đủ thông tin
-    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-    $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    
-    // Lấy thông tin tỉnh/thành phố từ location_id
-    $location_obj = new Location();
-    $location_details = $location_obj->getLocationById($location_id);
-    $province_name = $location_details ? $location_details['province'] : '';
-    $location_obj->closeConnection();
-    
-    // Tạo log data với đầy đủ thông tin và đảm bảo không lỗi font tiếng Việt
-    $log_data = json_encode([
-        'registration_id' => $registration_id,
-        'selected_accounts' => $selected_accounts,
-        'total_price' => $total_price,
-        'package' => $package['name'],
-        'location' => $province_name // Thêm thông tin tỉnh/thành phố
-    ], JSON_UNESCAPED_UNICODE); // Sử dụng JSON_UNESCAPED_UNICODE để tránh lỗi font tiếng Việt
-    $notify_content = 'Yêu cầu gia hạn gói dịch vụ cho đăng ký #' . $registration_id . ' - Gói: ' . $package['name'];
-    $stmt_log = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
-                              VALUES (?, 'renewal_request', 'registration', ?, ?, ?, ?, ?, NOW())");
-    $stmt_log->execute([$user_id, $registration_id, $ip, $ua, $log_data, $notify_content]);
+
+    // NOTE: Activity log sẽ được ghi khi giao dịch hoàn thành (transaction completed)
+    // Không ghi log ở đây để tránh ghi log khi user chưa hoàn tất thanh toán
     
     header('Location: ' . $base_url . '/public/pages/purchase/payment.php');
     exit;

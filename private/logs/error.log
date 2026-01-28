@@ -2657,3 +2657,149 @@
                 FROM 
                     user_ranking
                 W' at line 2
+[17-Jan-2026 10:39:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:39:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[17-Jan-2026 10:40:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:40:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[17-Jan-2026 10:40:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:40:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[17-Jan-2026 10:41:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:41:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 50 records
+[17-Jan-2026 10:41:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:41:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 51 records
+[17-Jan-2026 10:42:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:42:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 47 records
+[17-Jan-2026 10:43:16 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:43:16 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[17-Jan-2026 10:43:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:43:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[17-Jan-2026 10:44:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:44:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 48 records
+[17-Jan-2026 10:44:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:44:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 44 records
+[17-Jan-2026 10:45:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:45:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 45 records
+[17-Jan-2026 10:46:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:46:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 41 records
+[17-Jan-2026 10:47:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:47:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[17-Jan-2026 10:48:20 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:48:20 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[17-Jan-2026 10:48:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:48:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[17-Jan-2026 10:49:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:49:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 37 records
+[17-Jan-2026 10:49:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:49:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[17-Jan-2026 10:50:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:50:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[17-Jan-2026 10:51:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:51:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[17-Jan-2026 10:51:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:51:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[17-Jan-2026 10:52:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:52:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[17-Jan-2026 10:53:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:53:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 40 records
+[17-Jan-2026 10:54:33 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:54:33 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 39 records
+[17-Jan-2026 10:55:28 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:55:28 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 38 records
+[17-Jan-2026 10:55:34 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:55:34 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 40 records
+[17-Jan-2026 10:56:04 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[17-Jan-2026 10:56:04 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 40 records
+[28-Jan-2026 16:00:52 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:00:52 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 57 records
+[28-Jan-2026 16:08:48 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 10000000.00, New Amount: 0, Type: fixed_discount
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10728, user_id: 10227
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 1
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=TEST, need_upload_proof=, auto_approve=1
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Amount calculation: total=800000, discount=10000000.00, final=0
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled AND final_amount=0, status=completed
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10592, status: completed
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10728
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10728
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10728,"user_id":10227,"package_id":1,"location_id":27,"selected_provinces":"[27,15]","num_account":1,"start_time":"2026-01-28 16:08:44","end_time":"2026-02-28 16:08:44","status":"pending"}
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [27,15]
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: ["22","26","27","4","53"]
+[28-Jan-2026 16:08:52 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: HPG
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Last username: HPG021, Next number: 22
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: HPG022
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=HPG022, password= (phone), customerName=Do Nguyen, customerPhone=, startTime=1769591324000 (2026-01-28 16:08:44), endTime=1772269724000 (2026-02-28 16:08:44)
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":["22","26","27","4","53"],"name":"HPG022","userPwd":null,"customerName":"Do Nguyen","customerPhone":null,"startTime":1769591324000,"endTime":1772269724000}
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"500","traceId":null,"msg":"User Password  required","data":null}
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":false,"data":{"code":"500","traceId":null,"msg":"User Password  required","data":null},"error":"User Password  required"}
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Error: User Password  required
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Data: {"code":"500","traceId":null,"msg":"User Password  required","data":null}
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Error: Failed to create RTK account: User Password  required
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":false,"accounts":[],"error":"Failed to create RTK account: User Password  required"}
+[28-Jan-2026 16:08:53 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Failed to create accounts for registration 10728: Failed to create RTK account: User Password  required
+[28-Jan-2026 16:10:58 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 10000000.00, New Amount: 0, Type: fixed_discount
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10729, user_id: 10227
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 1
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=TEST, need_upload_proof=, auto_approve=1
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Amount calculation: total=800000, discount=10000000.00, final=0
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled AND final_amount=0, status=completed
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10593, status: completed
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10729
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10729
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10729,"user_id":10227,"package_id":1,"location_id":25,"selected_provinces":"[25]","num_account":1,"start_time":"2026-01-28 16:10:52","end_time":"2026-02-28 16:10:52","status":"pending"}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [25]
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: []
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: HTH
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] No existing username found, starting from 001
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: HTH001
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=HTH001, password= (phone), customerName=Do Nguyen, customerPhone=, startTime=1769591452000 (2026-01-28 16:10:52), endTime=1772269852000 (2026-02-28 16:10:52)
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":[],"name":"HTH001","userPwd":null,"customerName":"Do Nguyen","customerPhone":null,"startTime":1769591452000,"endTime":1772269852000}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"500","traceId":null,"msg":"User Password  required","data":null}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":false,"data":{"code":"500","traceId":null,"msg":"User Password  required","data":null},"error":"User Password  required"}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Error: User Password  required
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Data: {"code":"500","traceId":null,"msg":"User Password  required","data":null}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Error: Failed to create RTK account: User Password  required
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":false,"accounts":[],"error":"Failed to create RTK account: User Password  required"}
+[28-Jan-2026 16:11:02 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Failed to create accounts for registration 10729: Failed to create RTK account: User Password  required
+[28-Jan-2026 16:16:20 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:16:21 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 59 records
+[28-Jan-2026 16:16:22 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:16:22 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 59 records
+[28-Jan-2026 16:16:38 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:16:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 56 records
+[28-Jan-2026 16:17:36 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:17:36 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 58 records
+[28-Jan-2026 16:21:48 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:21:48 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 60 records
+[28-Jan-2026 16:22:11 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[28-Jan-2026 16:22:11 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 60 records
+[28-Jan-2026 16:24:32 Asia/Ho_Chi_Minh] Voucher calculation: Original: 800000, Discount: 10000000.00, New Amount: 0, Type: fixed_discount
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting process for registration_id: 10730, user_id: 10227
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher ID: 1
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Voucher: code=TEST, need_upload_proof=, auto_approve=1
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Amount calculation: total=800000, discount=10000000.00, final=0
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Auto-approve enabled AND final_amount=0, status=completed
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Transaction created with ID: 10594, status: completed
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Starting auto account creation for registration 10730
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] Database transaction committed
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] AutoAccountCreator instantiated
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Starting createAccountsForRegistration for registration_id: 10730
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Registration info: {"id":10730,"user_id":10227,"package_id":1,"location_id":25,"selected_provinces":"[25]","num_account":1,"start_time":"2026-01-28 16:24:25","end_time":"2026-02-28 16:24:25","status":"pending"}
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Package info: {"id":1,"duration_text":"\/ 1 th\u00e1ng"}
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Selected provinces: [25]
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Mount IDs: []
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Province code: HTH
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] No existing username found, starting from 001
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Generated username: HTH001
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Account data: username=HTH001, password=0981190561 (phone), customerName=Do Nguyen, customerPhone=0981190561, startTime=1769592265000 (2026-01-28 16:24:25), endTime=1772270665000 (2026-02-28 16:24:25)
+[28-Jan-2026 16:24:45 Asia/Ho_Chi_Minh] [RTK_API] Creating account with data: {"enabled":1,"numOnline":1,"customerBizType":1,"customerCompany":"","casterIds":[],"regionIds":[],"mountIds":[],"name":"HTH001","userPwd":"0981190561","customerName":"Do Nguyen","customerPhone":"0981190561","startTime":1769592265000,"endTime":1772270665000}
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP 200: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"id":"2016442318927831041","name":"HTH001","userPwd":"0981190561","startTime":1769592265000,"endTime":1772270665000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":null,"mountNames":null,"customerBizType":1,"customerName":"Do Nguyen","customerPhone":"0981190561","customerCompany":""}}
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK API Response: {"success":true,"data":{"id":"2016442318927831041","name":"HTH001","userPwd":"0981190561","startTime":1769592265000,"endTime":1772270665000,"enabled":1,"numOnline":1,"casterIds":null,"regionIds":[],"casterNames":null,"mountIds":null,"mountNames":null,"customerBizType":1,"customerName":"Do Nguyen","customerPhone":"0981190561","customerCompany":""},"error":null}
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] RTK User ID created: 2016442318927831041
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Created account: HTH001 for registration_id: 10730
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [COMPLETE_WITHOUT_PROOF] createAccountsForRegistration result: {"success":true,"accounts":[{"username":"HTH001","password":"0981190561","rtk_user_id":"2016442318927831041"}],"error":null}
+[28-Jan-2026 16:24:55 Asia/Ho_Chi_Minh] [AUTO_ACCOUNT] Successfully created 1 accounts for registration 10730

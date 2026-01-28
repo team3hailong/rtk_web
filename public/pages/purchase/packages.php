@@ -46,6 +46,24 @@ $user_username = $_SESSION['username'] ?? 'Người dùng';
 
 
 
+// --- Kiểm tra số điện thoại ---
+// Người dùng phải có số điện thoại trước khi được phép mua gói
+require_once $project_root_path . '/private/classes/Database.php';
+$db_check = new Database();
+$conn_check = $db_check->getConnection();
+$stmt_check = $conn_check->prepare("SELECT phone FROM user WHERE id = :user_id");
+$stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check->execute();
+$user_phone = $stmt_check->fetchColumn();
+
+if (empty($user_phone)) {
+    // Chưa có số điện thoại, chuyển hướng đến trang cập nhật thông tin
+    $_SESSION['error_message'] = 'Vui lòng cập nhật số điện thoại trước khi mua gói dịch vụ.';
+    $_SESSION['redirect_after_update'] = $base_path . '/pages/purchase/packages.php';
+    header('Location: ' . $base_path . '/pages/setting/profile.php?require_phone=1');
+    exit;
+}
+
 // Initialize PurchaseService
 
 $service = new PurchaseService();

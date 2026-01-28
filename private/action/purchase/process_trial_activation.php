@@ -166,10 +166,44 @@ try {
     log_trial('Đã đánh dấu user_id=' . $user_id . ' và device=' . $device_fingerprint . ' đã dùng trial', 
               $user_id, $registration_id, 'info');
 
-    // 12. Ghi log hoạt động
-    $notify_content = 'Kích hoạt tài khoản dùng thử cho đăng ký #' . $registration_id;
-    $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, notify_content, created_at) VALUES (?, 'trial_activation', 'registration', ?, ?, ?, ?, NOW())");
-    $stmt->execute([$user_id, $registration_id, $ip, $ua, $notify_content]);
+    // 12. Ghi log hoạt động - Transaction completed
+    try {
+        // Lấy thông tin registration và tài khoản được tạo
+        $sql_reg_info = "SELECT r.package_id, r.num_account, r.total_price, p.name as package_name, l.province,
+                         ra.username, ra.id as account_id
+                         FROM registration r 
+                         LEFT JOIN package p ON r.package_id = p.id 
+                         LEFT JOIN location l ON r.location_id = l.id 
+                         LEFT JOIN rtk_account ra ON ra.registration_id = r.id
+                         WHERE r.id = ?";
+        $stmt_reg_info = $conn->prepare($sql_reg_info);
+        $stmt_reg_info->execute([$registration_id]);
+        $account_info = $stmt_reg_info->fetch(PDO::FETCH_ASSOC);
+        
+        $notify_content = 'Giao dịch dùng thử hoàn thành, tạo tài khoản: ' . ($account_info['username'] ?? 'N/A');
+        
+        $log_data = [
+            'transaction_id' => $transaction['id'],
+            'registration_id' => $registration_id,
+            'transaction_type' => 'trial',
+            'package' => $account_info['package_name'] ?? '',
+            'province' => $account_info['province'] ?? '',
+            'amount' => 0,
+            'created_accounts' => [$account_info['username'] ?? 'N/A'],
+            'total_accounts' => 1,
+            'trial_start' => $start,
+            'trial_end' => $end,
+            'auto_approved' => true
+        ];
+        
+        $new_values = json_encode($log_data, JSON_UNESCAPED_UNICODE);
+        
+        $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                                VALUES (?, 'transaction_trial_completed', 'transaction', ?, ?, ?, ?, ?, NOW())");
+        $stmt->execute([$user_id, $transaction['id'], $ip, $ua, $new_values, $notify_content]);
+    } catch (Exception $e) {
+        error_log("Error logging trial activation: " . $e->getMessage());
+    }
 
     $conn->commit();
     log_trial('Kích hoạt thành công', $user_id, $registration_id, 'success', ['username' => $username, 'start' => $start, 'end' => $end]);

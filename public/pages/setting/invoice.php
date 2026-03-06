@@ -14,6 +14,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    header('Location: ' . $base_url . '/public/pages/setting/profile.php');
+    exit;
+}
+
 // --- Include Database and other required files ---
 require_once $project_root_path . '/private/classes/Database.php';
 require_once $project_root_path . '/private/utils/csrf_helper.php';

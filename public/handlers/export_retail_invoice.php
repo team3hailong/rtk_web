@@ -22,6 +22,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Tính năng này hiện không khả dụng.']);
+    exit;
+}
+
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

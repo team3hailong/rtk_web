@@ -49,6 +49,12 @@ define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
 define('GLOBAL_DISCOUNT_CODE', env('GLOBAL_DISCOUNT_CODE', ''));
 define('SHOW_GLOBAL_DISCOUNT', env('SHOW_GLOBAL_DISCOUNT', 'no'));
 
+// ============================================================
+// UI MODE: Ẩn toàn bộ giao diện liên quan đến thanh toán
+// Đặt thành false để hiển thị lại giao diện thanh toán đầy đủ
+// ============================================================
+define('HIDE_PAYMENT_UI', true);
+
 // Toggle to disable the Kinh Tuyến Trục popup without removing files.
 // Set DISABLE_KINH_TUYEN_TRUC_POPUP=true in the environment to disable.
 define('DISABLE_KINH_TUYEN_TRUC_POPUP', env('DISABLE_KINH_TUYEN_TRUC_POPUP', 'true') === 'true');

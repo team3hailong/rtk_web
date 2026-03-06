@@ -6,9 +6,11 @@ $nav_items = [
     // Main Navigation
     ['label' => 'Dashboard', 'icon' => 'fa-tachometer-alt', 'url' => '/pages/dashboard.php', 'active_check' => 'dashboard.php'],
     ['label' => 'Map hiển thị', 'icon' => 'fa-map-marked-alt', 'url' => '/pages/map_display.php', 'active_check' => 'map_display.php'], // Corrected URL
-    ['label' => 'Mua tài khoản', 'icon' => 'fa-shopping-cart', 'url' => '/pages/purchase/packages.php', 'active_check' => 'packages.php'],
+    ['label' => defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI ? 'Đăng ký tài khoản' : 'Mua tài khoản', 'icon' => defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI ? 'fa-user-plus' : 'fa-shopping-cart', 'url' => '/pages/purchase/packages.php', 'active_check' => 'packages.php'],
     ['label' => 'Quản lý tài khoản', 'icon' => 'fa-tasks', 'url' => '/pages/rtk_accountmanagement.php', 'active_check' => 'rtk_accountmanagement.php'], // Assuming this file exists or will be created
-    ['label' => 'Quản lý giao dịch', 'icon' => 'fa-file-invoice-dollar', 'url' => '/pages/transaction.php', 'active_check' => 'transaction.php'], // Assuming this file exists or will be created
+    ...( !(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? [
+        ['label' => 'Quản lý giao dịch', 'icon' => 'fa-file-invoice-dollar', 'url' => '/pages/transaction.php', 'active_check' => 'transaction.php'],
+    ] : [] ),
     ['label' => 'Chương trình giới thiệu', 'icon' => 'fa-users', 'url' => '/pages/referral/dashboard_referal.php', 'active_check' => 'dashboard_referal.php'],
 
     // Trợ giúp section
@@ -19,7 +21,9 @@ $nav_items = [
     // Cài đặt section
     ['type' => 'section', 'label' => 'Cài đặt'],
     ['label' => 'Thông tin cá nhân', 'icon' => 'fa-user-circle', 'url' => '/pages/setting/profile.php', 'active_check' => 'profile.php'],
-    ['label' => 'Thông tin xuất hóa đơn', 'icon' => 'fa-file-alt', 'url' => '/pages/setting/invoice.php', 'active_check' => 'invoice.php'],
+    ...( !(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? [
+        ['label' => 'Thông tin xuất hóa đơn', 'icon' => 'fa-file-alt', 'url' => '/pages/setting/invoice.php', 'active_check' => 'invoice.php'],
+    ] : [] ),
 
     // Logout
     ['type' => 'section', 'label' => 'Tài khoản'],

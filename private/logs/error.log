@@ -2880,3 +2880,8 @@
 [03-Feb-2026 16:56:08 Asia/Ho_Chi_Minh] [RTK_API] Payload: {"ids":["12"]}
 [03-Feb-2026 16:56:13 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP Code: 200
 [03-Feb-2026 16:56:13 Asia/Ho_Chi_Minh] [RTK_API] Response: {"code":"SUCCESS","traceId":null,"msg":null,"data":true}
+[06-Mar-2026 21:29:12 Asia/Ho_Chi_Minh] Failed to log activity: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':user_id, :action, :entity_type, :entity_id, :old_values, :new_values, :notify_c' at line 3
+[06-Mar-2026 21:29:18 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[06-Mar-2026 21:29:18 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
+[06-Mar-2026 21:41:00 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[06-Mar-2026 21:41:00 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records

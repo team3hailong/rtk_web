@@ -13,8 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedCard = document.querySelector('.package-card.selected');
         if (!selectedCard) return;
 
+        // Enable submit button when a package is selected (regardless of price display)
+        if (submitButton) submitButton.disabled = false;
+
+        // Only update price display if elements exist (they are hidden in HIDE_PAYMENT_UI mode)
+        if (!packagePrice || !totalPrice) return;
+
         const price = parseFloat(selectedCard.dataset.packagePrice);
-        const purchaseType = document.querySelector('input[name="purchase_type"]:checked').value;
+        const purchaseTypeEl = document.querySelector('input[name="purchase_type"]:checked');
+        const purchaseType = purchaseTypeEl ? purchaseTypeEl.value : 'individual';
         const currentVatPercent = (purchaseType === 'company') ? vatPercentFromPHP : 0;
 
         const baseTotal = price * accountCount;
@@ -23,7 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         packagePrice.textContent = new Intl.NumberFormat('vi-VN').format(price) + ' đ';
         totalPrice.textContent = new Intl.NumberFormat('vi-VN').format(finalTotal) + ' đ';
-        submitButton.disabled = false;
+        if (selectedPackageName) {
+            selectedPackageName.textContent = selectedCard.querySelector('.package-name').textContent;
+        }
     }
 
     packageCards.forEach(card => {
@@ -31,9 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
             packageCards.forEach(c => c.classList.remove('selected'));
             this.classList.add('selected');
             const packageId = this.dataset.packageId;
-            packageIdInput.value = packageId;
-            selectedPackageName.textContent = this.querySelector('.package-name').textContent;
-            calculateAndDisplayTotal(); // Call the new function
+            if (packageIdInput) packageIdInput.value = packageId;
+            calculateAndDisplayTotal();
         });
     });
 

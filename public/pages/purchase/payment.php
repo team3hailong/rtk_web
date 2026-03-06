@@ -34,6 +34,60 @@ $session_total_price = $_SESSION['pending_total_price'];
 $is_trial = $_SESSION['pending_is_trial'] ?? false;
 $is_renewal = $_SESSION['is_renewal'] ?? false;
 
+// Khi o che do cong khai mien phi: tao transaction pending, admin duyet thu cong
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    // Luon reset session truoc, tranh bi anh huong boi session cu
+    if (!isset($_SESSION['purchase_details'])) {
+        $_SESSION['purchase_details'] = [];
+    }
+    $_SESSION['purchase_success'] = true;
+    $_SESSION['purchase_details']['registration_id'] = $registration_id;
+    $_SESSION['purchase_details']['auto_approved']   = false;
+    $_SESSION['purchase_details']['payment_status']  = 'Chờ xác nhận';
+
+    // Tao transaction pending trong DB
+    require_once $project_root_path . '/private/classes/Database.php';
+    try {
+        $db_hide = new Database();
+        $conn_hide = $db_hide->getConnection();
+        $sessionKey_hide = $is_renewal ? 'renewal' : 'order';
+        $voucher_id_hide = $_SESSION[$sessionKey_hide]['voucher_id'] ?? null;
+
+        $stmt_chk = $conn_hide->prepare(
+            'SELECT id FROM transaction_history WHERE registration_id = :rid AND user_id = :uid'
+        );
+        $stmt_chk->bindValue(':rid', $registration_id, PDO::PARAM_INT);
+        $stmt_chk->bindValue(':uid', $user_id, PDO::PARAM_INT);
+        $stmt_chk->execute();
+
+        if (!$stmt_chk->fetch()) {
+            $tx_type  = $is_renewal ? 'renewal' : 'purchase';
+            $stmt_ins = $conn_hide->prepare(
+                'INSERT INTO transaction_history
+                 (user_id, registration_id, voucher_id, transaction_type, amount, status,
+                  payment_method, payment_confirmed, created_at, updated_at)
+                 VALUES (:uid, :rid, :vid, :type, :amount, \'pending\', \'Chuyển khoản ngân hàng\', 0, NOW(), NOW())'
+            );
+            $stmt_ins->bindValue(':uid',    $user_id,             PDO::PARAM_INT);
+            $stmt_ins->bindValue(':rid',    $registration_id,     PDO::PARAM_INT);
+            $stmt_ins->bindValue(':vid',    $voucher_id_hide,     $voucher_id_hide === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+            $stmt_ins->bindValue(':type',   $tx_type,             PDO::PARAM_STR);
+            $stmt_ins->bindValue(':amount', (float)$session_total_price, PDO::PARAM_STR);
+            $stmt_ins->execute();
+            error_log('[HIDE_PAYMENT_UI] Transaction created: reg=' . $registration_id . ' type=' . $tx_type . ' amount=' . $session_total_price);
+        }
+    } catch (Exception $e) {
+        error_log('[HIDE_PAYMENT_UI] Transaction creation failed: ' . $e->getMessage());
+    }
+
+    $redirect_url = $base_url . '/public/pages/purchase/success.php';
+    if ($is_trial) {
+        $redirect_url .= '?is_trial=1';
+    }
+    header('Location: ' . $redirect_url);
+    exit;
+}
+
 // Create order/renewal session object required by voucher system
 $sessionKey = $is_renewal ? 'renewal' : 'order';
 if ($is_renewal) {

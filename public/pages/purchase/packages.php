@@ -175,7 +175,7 @@ include $project_root_path . '/private/includes/header.php';
 ?>
 
 
-        <?php if (defined('SHOW_GLOBAL_DISCOUNT') && SHOW_GLOBAL_DISCOUNT === 'yes'): ?>
+        <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) && defined('SHOW_GLOBAL_DISCOUNT') && SHOW_GLOBAL_DISCOUNT === 'yes'): ?>
             <div id="globalDiscountBanner" class="global-discount-banner" role="region" aria-label="Chương trình ưu đãi">
                 <div class="gdb-emoji">🎉</div>
                 <div class="gdb-text">Chương trình trải nghiệm sử dụng tài khoản RTK<br>Nhập mã <strong id="gdb-code"><?php echo htmlspecialchars(GLOBAL_DISCOUNT_CODE); ?></strong> để nhận ưu đãi giảm 100% cho gói 3 tháng!</div>
@@ -205,9 +205,9 @@ include $project_root_path . '/private/includes/header.php';
 
     <main class="content-wrapper">
 
-        <h2 class="text-2xl font-semibold mb-4">Mua Gói Tài Khoản</h2>
+        <h2 class="text-2xl font-semibold mb-4"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Đăng Ký Tài Khoản' : 'Mua Gói Tài Khoản'; ?></h2>
 
-        <p class="text-gray-600 mb-6">Chọn gói phù hợp với nhu cầu sử dụng của bạn.</p>
+        <p class="text-gray-600 mb-6"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Chọn gói phù hợp với nhu cầu sử dụng của bạn - hoàn toàn miễn phí.' : 'Chọn gói phù hợp với nhu cầu sử dụng của bạn.'; ?></p>
 
 
 
@@ -286,22 +286,28 @@ include $project_root_path . '/private/includes/header.php';
 
 
                         <div class="package-price">
-
+                            <?php if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI): ?>
+                                <span style="font-size:1.5rem;font-weight:700;color:var(--primary-color);">Miễn phí</span>
+                                <span class="duration"><?php echo htmlspecialchars($package['duration_text']); ?></span>
+                            <?php else: ?>
                             <?php echo number_format($package['price'], 0, ',', '.'); ?>đ
 
                             <span class="duration"><?php echo htmlspecialchars($package['duration_text']); ?></span>
 
+                            <?php endif; ?>
                         </div>
 
 
 
                         <!-- Hiển thị text tiết kiệm nếu có -->
 
+                        <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                         <span class="package-savings">
 
                             <?php echo isset($package['savings_text']) ? htmlspecialchars($package['savings_text']) : '&nbsp;'; ?>
 
-                        </span>                        <ul class="package-features">
+                        </span>
+                        <?php endif; ?>                        <ul class="package-features">
 
                             <?php foreach ($features as $feature): ?>
 
@@ -329,7 +335,7 @@ include $project_root_path . '/private/includes/header.php';
 
                         <?php if ($package['package_id'] !== 'trial_7d'): ?>
 
-                        <div class="purchase-type-selector">
+                        <div class="purchase-type-selector" <?php if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) echo 'style="display:none;"'; ?>>
 
                             <label><input type="radio" name="purchase_type_<?php echo htmlspecialchars($package['package_id']); ?>" value="individual" checked> Cá nhân</label>
 

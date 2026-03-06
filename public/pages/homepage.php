@@ -203,7 +203,11 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
                         <h3><?php echo htmlspecialchars($package['name'] ?? 'Gói dịch vụ'); ?></h3>
 
                         <div class="package-price">
+                            <?php if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI): ?>
+                            <span class="free-label" style="color:#27ae60;font-weight:700;font-size:1.3em;">Miễn phí</span>
+                            <?php else: ?>
                             <?php echo number_format($package['price'] ?? 0, 0, ',', '.'); ?>đ
+                            <?php endif; ?>
                             <span class="duration"><?php echo htmlspecialchars($package['duration_text'] ?? ''); ?></span>
                         </div>
 
@@ -236,7 +240,7 @@ header("Referrer-Policy: strict-origin-when-cross-origin");
         <div class="container">
             <div class="cta-content">
                 <h2>Bắt đầu sử dụng dịch vụ ngay hôm nay</h2>
-                <p>Đăng ký tài khoản, mua gói dịch vụ và trải nghiệm các dịch vụ đo đạc RTK chất lượng cao</p>
+                <p><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Đăng ký tài khoản hoàn toàn miễn phí và trải nghiệm các dịch vụ đo đạc RTK chất lượng cao' : 'Đăng ký tài khoản, mua gói dịch vụ và trải nghiệm các dịch vụ đo đạc RTK chất lượng cao'; ?></p>
                 <div class="cta-buttons">
                     <a href="<?php echo $base_path; ?>/pages/auth/register.php" class="btn btn-primary">Đăng ký ngay</a>
                     <a href="#support" class="btn btn-outline">Liên hệ tư vấn</a>

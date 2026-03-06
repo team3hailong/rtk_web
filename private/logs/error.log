@@ -2885,3 +2885,16 @@
 [06-Mar-2026 21:29:18 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
 [06-Mar-2026 21:41:00 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
 [06-Mar-2026 21:41:00 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
+[06-Mar-2026 22:12:39 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction creation failed: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'payment_method' at row 1
+[06-Mar-2026 22:19:36 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction creation failed: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'payment_method' at row 1
+[06-Mar-2026 22:19:56 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction creation failed: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'payment_method' at row 1
+[06-Mar-2026 22:25:57 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[06-Mar-2026 22:25:57 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
+[06-Mar-2026 22:26:04 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction creation failed: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'payment_method' at row 1
+[06-Mar-2026 22:26:59 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction creation failed: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'payment_method' at row 1
+[06-Mar-2026 22:30:16 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction created: reg=10737 type=purchase amount=2000000
+[06-Mar-2026 22:30:58 Asia/Ho_Chi_Minh] [HIDE_PAYMENT_UI] Transaction created: reg=10738 type=renewal amount=6000000
+[06-Mar-2026 22:31:38 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[06-Mar-2026 22:31:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
+[06-Mar-2026 22:31:40 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
+[06-Mar-2026 22:31:40 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records

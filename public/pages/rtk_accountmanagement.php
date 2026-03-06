@@ -213,7 +213,7 @@ function getPaginationUrl($page, $perPage, $filter) {
                                         <div class="empty-state">
                                             <i class="fas fa-user-circle"></i>
                                             <p>Chưa có tài khoản nào</p>
-                                            <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn">Mua Tài Khoản Ngay</a>
+                                            <a href="<?php echo $base_url; ?>/public/pages/purchase/packages.php" class="buy-now-btn"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Đăng Ký Tài Khoản Ngay' : 'Mua Tài Khoản Ngay'; ?></a>
                                         </div>
                                     </td>
                                 </tr>

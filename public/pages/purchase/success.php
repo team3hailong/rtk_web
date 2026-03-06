@@ -61,7 +61,7 @@ include $project_root_path . '/private/includes/header.php';
                 <i class="fas fa-check"></i>
             </div>
             
-            <?php if(isset($_GET['upload']) && $_GET['upload'] == 'success'): ?>
+            <?php if(!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) && isset($_GET['upload']) && $_GET['upload'] == 'success'): ?>
                 <!-- Upload minh chứng thành công -->
                 <h2>Upload minh chứng thành công!</h2>
                 <p>Cảm ơn bạn đã tải lên minh chứng thanh toán! Chúng tôi đã ghi nhận thông tin và sẽ xác nhận giao dịch của bạn trong thời gian sớm nhất.</p>
@@ -75,7 +75,7 @@ include $project_root_path . '/private/includes/header.php';
                     } elseif ($transaction_type === 'renewal') {
                         echo 'Gia hạn thành công!';
                     } else {
-                        echo 'Mua tài khoản thành công!';
+                        echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Đăng ký tài khoản thành công!' : 'Mua tài khoản thành công!';
                     }
                     ?>
                 </h2>
@@ -100,18 +100,30 @@ include $project_root_path . '/private/includes/header.php';
                 
             <?php else: ?>
                 <!-- Giao dịch bình thường (cần admin duyệt) -->
-                <h2><?php echo $transaction_type === 'renewal' ? 'Đăng ký gia hạn thành công!' : 'Đăng ký mua tài khoản thành công!'; ?></h2>
+                <h2>
+                    <?php
+                    if ($transaction_type === 'renewal') {
+                        echo 'Đăng ký gia hạn thành công!';
+                    } else {
+                        echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Đăng ký tài khoản thành công!' : 'Đăng ký mua tài khoản thành công!';
+                    }
+                    ?>
+                </h2>
                 <div class="success-message-box pending">
                     <i class="fas fa-clock" style="color: #3b82f6; font-size: 1.2em;"></i>
                     <div>
-                        <strong>Đơn hàng đang chờ xác nhận</strong>
+                        <strong>Đăng ký đang chờ xử lý</strong>
                         <p style="margin: 0.5rem 0 0 0; font-size: 0.95em;">
                             <?php if ($transaction_type === 'renewal'): ?>
-                                Yêu cầu gia hạn của bạn đã được ghi nhận. 
-                                Chúng tôi sẽ xác nhận thanh toán và gia hạn tài khoản trong thời gian sớm nhất.
+                                Yêu cầu gia hạn của bạn đã được ghi nhận.
+                                <?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)
+                                    ? 'Chúng tôi sẽ xử lý và gia hạn tài khoản cho bạn trong thời gian sớm nhất.'
+                                    : 'Chúng tôi sẽ xác nhận thanh toán và gia hạn tài khoản trong thời gian sớm nhất.'; ?>
                             <?php else: ?>
-                                Đơn hàng của bạn đã được ghi nhận. 
-                                Chúng tôi sẽ xác nhận thanh toán và tạo tài khoản cho bạn trong thời gian sớm nhất.
+                                Đơn đăng ký của bạn đã được ghi nhận.
+                                <?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)
+                                    ? 'Chúng tôi sẽ xử lý và tạo tài khoản RTK cho bạn trong thời gian sớm nhất.'
+                                    : 'Chúng tôi sẽ xác nhận thanh toán và tạo tài khoản cho bạn trong thời gian sớm nhất.'; ?>
                             <?php endif; ?>
                         </p>
                     </div>
@@ -136,10 +148,12 @@ include $project_root_path . '/private/includes/header.php';
                         <span class="detail-label">Số lượng:</span>
                         <span class="detail-value"><?php echo isset($purchase_details['quantity']) ? htmlspecialchars($purchase_details['quantity']) . ' tài khoản' : 'N/A'; ?></span>
                     </div>
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <div class="detail-row">
                         <span class="detail-label">Số tiền:</span>
                         <span class="detail-value"><?php echo isset($purchase_details['price']) ? number_format($purchase_details['price']) . ' VND' : 'N/A'; ?></span>
                     </div>
+                    <?php endif; ?>
                     <div class="detail-row">
                         <span class="detail-label">Trạng thái:</span>
                         <span class="detail-value"><?php echo isset($purchase_details['payment_status']) ? htmlspecialchars($purchase_details['payment_status']) : 'Đang xử lý'; ?></span>
@@ -161,22 +175,36 @@ include $project_root_path . '/private/includes/header.php';
                     <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-primary">
                         <i class="fas fa-user-circle"></i> Xem tài khoản ngay
                     </a>
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-outline">
                         <i class="fas fa-history"></i> Lịch sử giao dịch
                     </a>
+                    <?php endif; ?>
                 <?php elseif(isset($_GET['upload']) && $_GET['upload'] == 'success'): ?>
                     <!-- Sau khi upload minh chứng -->
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-primary">
                         <i class="fas fa-history"></i> Xem trạng thái đơn hàng
                     </a>
+                    <?php else: ?>
+                    <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-primary">
+                        <i class="fas fa-user-circle"></i> Xem tài khoản ngay
+                    </a>
+                    <?php endif; ?>
                 <?php else: ?>
                     <!-- Giao dịch bình thường: Ưu tiên xem giao dịch -->
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <a href="<?php echo $base_url; ?>/public/pages/transaction.php" class="btn btn-primary">
                         <i class="fas fa-history"></i> Xem trạng thái đơn hàng
                     </a>
                     <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-outline">
                         <i class="fas fa-user-circle"></i> Quản lý tài khoản
                     </a>
+                    <?php else: ?>
+                    <a href="<?php echo $base_url; ?>/public/pages/rtk_accountmanagement.php" class="btn btn-primary">
+                        <i class="fas fa-user-circle"></i> Xem tài khoản ngay
+                    </a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             

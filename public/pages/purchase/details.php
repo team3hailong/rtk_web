@@ -74,7 +74,7 @@ include $project_root_path . '/private/includes/header.php';
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-4">Chi tiết mua hàng</h2>
+        <h2 class="text-2xl font-semibold mb-4"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Thông tin đăng ký' : 'Chi tiết mua hàng'; ?></h2>
 
         <!-- Thay đổi action để trỏ đến action_handler.php thay vì trực tiếp vào process_order.php -->
         <form action="/public/handlers/action_handler.php?module=purchase&action=process_order" method="POST" class="purchase-details-form" id="details-form">
@@ -161,7 +161,7 @@ include $project_root_path . '/private/includes/header.php';
                 </small>
             </div>
 
-            <?php if (!$is_trial_7d_package): // Only show total price display if NOT the trial_7d package ?>
+            <?php if (!$is_trial_7d_package && !(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): // Only show total price display if NOT the trial_7d package and not in free mode ?>
              <!-- Hiển thị tổng tiền (cập nhật bằng JS) -->
             <div class="total-price-display">
                 Tổng cộng: <span id="total-price-view"><?php echo number_format($display_price, 0, ',', '.'); ?>đ</span><span id="vat-text"><?php echo $vat_text; ?></span>
@@ -170,7 +170,7 @@ include $project_root_path . '/private/includes/header.php';
 
             <!-- Nút chuyển đến thanh toán -->
             <div class="form-group" style="margin-top: 2rem; margin-bottom: 0;">
-                <button type="submit" class="btn-submit">Tiếp tục đến Thanh toán</button>
+                <button type="submit" class="btn-submit"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Xác nhận đăng ký' : 'Tiếp tục đến Thanh toán'; ?></button>
             </div>
         </form>
 

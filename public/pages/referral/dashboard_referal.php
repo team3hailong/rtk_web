@@ -63,8 +63,10 @@ require_once $project_root_path . '/private/includes/header.php';
                 <ul class="nav nav-tabs card-header-tabs mb-0" id="referralTabs" role="tablist">
                     <li class="nav-item"><a class="nav-link active" id="referral-link-tab" data-toggle="tab" href="#referral-link" role="tab">Liên kết giới thiệu</a></li>
                     <li class="nav-item"><a class="nav-link" id="referred-users-tab" data-toggle="tab" href="#referred-users" role="tab">Người đã giới thiệu</a></li>
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <li class="nav-item"><a class="nav-link" id="commission-tab" data-toggle="tab" href="#commission" role="tab">Hoa hồng</a></li>
                     <li class="nav-item"><a class="nav-link" id="withdrawal-tab" data-toggle="tab" href="#withdrawal" role="tab">Rút tiền</a></li>
+                    <?php endif; ?>
                     <li class="nav-item"><a class="nav-link" id="ranking-tab" data-toggle="tab" href="#ranking" role="tab">Bảng xếp hạng</a></li>
                 </ul>
             </div>
@@ -75,7 +77,11 @@ require_once $project_root_path . '/private/includes/header.php';
                     <div class="tab-pane fade show active" id="referral-link" role="tabpanel">
                         <h4 class="mb-3">Liên kết giới thiệu của bạn</h4>
                         <div class="alert alert-info">
+                            <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                             <strong>Chính sách hoa hồng:</strong> Bạn sẽ nhận được 5% giá trị thanh toán từ người dùng mà bạn giới thiệu.
+                            <?php else: ?>
+                            <strong>Giới thiệu bạn bè:</strong> Chia sẻ liên kết của bạn để mời bạn bè đăng ký tài khoản RTK miễn phí.
+                            <?php endif; ?>
                         </div>
                         
                         <?php if ($referralCode): ?>
@@ -107,7 +113,7 @@ require_once $project_root_path . '/private/includes/header.php';
                                         <ol>
                                             <li>Sao chép liên kết hoặc mã giới thiệu của bạn.</li>
                                             <li>Chia sẻ cho bạn bè, đồng nghiệp hoặc người quen.</li>
-                                            <li>Khi họ đăng ký và thanh toán, bạn sẽ nhận được hoa hồng 5%.</li>
+                                            <li>Khi họ đăng ký và sử dụng dịch vụ, bạn đã giúp họ truy cập tài khoản RTK!</li>
                                         </ol>
                                     </div>
                                 </div>
@@ -161,6 +167,7 @@ require_once $project_root_path . '/private/includes/header.php';
                         <?php endif; ?>
                     </div>
 
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <!-- Tab 3: Commission -->
                     <div class="tab-pane fade" id="commission" role="tabpanel">
                         <h4 class="mb-4">Hoa hồng nhận được</h4>
@@ -228,6 +235,7 @@ require_once $project_root_path . '/private/includes/header.php';
                             </div>
                         </div>
                     </div>
+                    <?php endif; // HIDE_PAYMENT_UI - end commission + withdrawal tabs ?>
                     
                     <!-- Tab 5: Ranking -->
                     <div class="tab-pane fade" id="ranking" role="tabpanel">
@@ -241,27 +249,25 @@ require_once $project_root_path . '/private/includes/header.php';
                             <div class="rank-tab-buttons"><button class="rank-tab-btn active" data-target="#monthly-ranking">Xếp hạng tháng</button><button class="rank-tab-btn" data-target="#total-ranking">Xếp hạng tổng</button></div>
                             <div class="rank-tab-content-wrapper">
                                 <div class="rank-tab-content active" id="monthly-ranking">
-                                    <div class="table-responsive"><table class="table table-striped table-bordered table-ranking"><thead class="thead-light"><tr><th>Hạng</th><th>Người dùng</th><th>Số GT</th><th>Hoa hồng</th></tr></thead><tbody>
+                                    <div class="table-responsive"><table class="table table-striped table-bordered table-ranking"><thead class="thead-light"><tr><th>Hạng</th><th>Người dùng</th><th>Số GT</th></tr></thead><tbody>
                                         <?php if (!empty($monthlyRankings)): foreach ($monthlyRankings as $index => $rank): ?>
                                             <tr class="<?php echo ($rank['user_id'] == $user_id) ? 'table-primary' : ''; ?>">
                                                 <td data-label="Hạng" class="ranking-number"><?php echo $index + 1; if ($index < 3): ?><i class="fas fa-trophy trophy-icon trophy-<?php echo $index + 1; ?>"></i><?php endif; ?></td>
                                                 <td data-label="Người dùng"><?php echo htmlspecialchars($rank['username']); ?></td>
                                                 <td data-label="Số GT"><?php echo $rank['referral_count']; ?></td>
-                                                <td data-label="Hoa hồng"><?php echo number_format($rank['monthly_commission'], 0, ',', '.'); ?> VNĐ</td>
                                             </tr>
-                                        <?php endforeach; else: ?><tr><td colspan="4" class="text-center">Chưa có dữ liệu.</td></tr><?php endif; ?>
+                                        <?php endforeach; else: ?><tr><td colspan="3" class="text-center">Chưa có dữ liệu.</td></tr><?php endif; ?>
                                     </tbody></table></div>
                                 </div>
                                 <div class="rank-tab-content" id="total-ranking">
-                                    <div class="table-responsive"><table class="table table-striped table-bordered table-ranking"><thead class="thead-light"><tr><th>Hạng</th><th>Người dùng</th><th>Số GT</th><th>Hoa hồng</th></tr></thead><tbody>
+                                    <div class="table-responsive"><table class="table table-striped table-bordered table-ranking"><thead class="thead-light"><tr><th>Hạng</th><th>Người dùng</th><th>Số GT</th></tr></thead><tbody>
                                         <?php if (!empty($totalRankings)): foreach ($totalRankings as $index => $rank): ?>
                                             <tr class="<?php echo ($rank['user_id'] == $user_id) ? 'table-primary' : ''; ?>">
                                                 <td data-label="Hạng" class="ranking-number"><?php echo $index + 1; if ($index < 3): ?><i class="fas fa-trophy trophy-icon trophy-<?php echo $index + 1; ?>"></i><?php endif; ?></td>
                                                 <td data-label="Người dùng"><?php echo htmlspecialchars($rank['username']); ?></td>
                                                 <td data-label="Số GT"><?php echo $rank['referral_count']; ?></td>
-                                                <td data-label="Hoa hồng"><?php echo number_format($rank['total_commission'], 0, ',', '.'); ?> VNĐ</td>
                                             </tr>
-                                        <?php endforeach; else: ?><tr><td colspan="4" class="text-center">Chưa có dữ liệu.</td></tr><?php endif; ?>
+                                        <?php endforeach; else: ?><tr><td colspan="3" class="text-center">Chưa có dữ liệu.</td></tr><?php endif; ?>
                                     </tbody></table></div>
                                 </div>
                             </div>

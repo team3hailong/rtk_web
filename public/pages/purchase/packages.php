@@ -287,12 +287,8 @@ include $project_root_path . '/private/includes/header.php';
 
                         <div class="package-price">
                             <?php if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI): ?>
-                                <span style="font-size:1.5rem;font-weight:700;color:var(--primary-color);">Miễn phí</span>
-                                <span class="duration"><?php echo htmlspecialchars($package['duration_text']); ?></span>
                             <?php else: ?>
-                            <?php echo number_format($package['price'], 0, ',', '.'); ?>đ
-
-                            <span class="duration"><?php echo htmlspecialchars($package['duration_text']); ?></span>
+                            <?php echo number_format($package['price'], 0, ',', '.'); ?>
 
                             <?php endif; ?>
                         </div>

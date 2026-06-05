@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once dirname(__DIR__) . '/config/config.php';
-require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 
 function sendVerificationEmail($userEmail, $username, $verificationToken) {
     global $conn;
@@ -13,18 +13,30 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -35,27 +47,23 @@ function sendVerificationEmail($userEmail, $username, $verificationToken) {
         $mail->Subject = 'Xác nhận Email - RTK Web';
         
         // Sửa lại link để trỏ đến file auth folder
-        $verificationLink = SITE_URL . "/public/pages/auth/verify-email.php?token=" . $verificationToken;
+    $verificationLink = BASE_URL . "/public/pages/auth/verify-email.php?token=" . $verificationToken;
         
         $mail->Body = <<<HTML
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #2e7d32;">Xin chào {$username}!</h2>
-                <p>Cảm ơn bạn đã đăng ký tài khoản tại RTK Web. Để hoàn tất quá trình đăng ký, vui lòng xác nhận địa chỉ email của bạn bằng cách nhấp vào nút bên dưới:</p>
-                
+                <h2 style="color: #2e7d32;">Chào {$username},</h2>
+                <p>Cảm ơn bạn đã đăng ký tài khoản tại <b>RTK Web</b>!</p>
+                <p>Để hoàn tất đăng ký, vui lòng xác thực email bằng cách nhấn vào nút bên dưới:</p>
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="{$verificationLink}" style="background-color: #4caf50; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                    <a href="{$verificationLink}" style="background-color: #4caf50; color: white; padding: 14px 32px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;">
                         Xác nhận Email
                     </a>
                 </div>
-                
-                <p>Hoặc bạn có thể copy và paste đường link sau vào trình duyệt:</p>
+                <p>Nếu nút không hoạt động, hãy copy và dán đường link sau vào trình duyệt:</p>
                 <p style="word-break: break-all; color: #666;">{$verificationLink}</p>
-                
-                <p>Link xác nhận này sẽ hết hạn sau 24 giờ.</p>
-                
-                <p style="color: #666; font-size: 0.9em; margin-top: 30px;">
-                    Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.
-                </p>
+                <p style="margin-top: 24px; color: #e57373; font-weight: bold;">Lưu ý: Link xác nhận chỉ có hiệu lực trong 24 giờ.</p>
+                <hr style="margin: 32px 0;">
+                <p style="color: #666; font-size: 0.95em;">Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>
             </div>
 HTML;
 
@@ -121,13 +129,26 @@ function sendPasswordResetEmail($userEmail, $username, $resetToken) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Sử dụng SSL thay vì STARTTLS
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
+        } else {
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // fallback to SSL
+        }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -233,18 +254,30 @@ function sendVerificationOTP($userEmail, $username, $otpCode) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -335,18 +368,30 @@ function sendPasswordResetOTP($userEmail, $username, $otpCode) {
         // Server settings
         $mail->isSMTP();
         $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = SMTP_AUTH;
         $mail->Username = SMTP_USERNAME;
         $mail->Password = SMTP_PASSWORD;
-        // Chọn phương thức bảo mật phù hợp dựa trên cổng
-        if (SMTP_PORT == 465) {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL cổng 465
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
         } else {
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // TLS cổng 587 
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
         }
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = 0; // Tắt debug mode
+        $mail->SMTPDebug = SMTP_DEBUG; // Debug mode (0 = off)
+        $mail->Debugoutput = 'error_log';
 
         // Recipients
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
@@ -418,5 +463,72 @@ HTML;
         // Ghi chi tiết lỗi vào server log
         error_log("Failed to send password reset OTP to: $userEmail. Error: " . $mail->ErrorInfo . " | Exception: " . $e->getMessage());
         return false; // Báo lỗi
+    }
+}
+
+/**
+ * Send notification email when a survey account is linked to the user
+ *
+ * @param string $userEmail Email of the user
+ * @param string $username Username of the user
+ * @param string $surveyUserName The linked RTK survey account username
+ * @return bool True if sent successfully, false otherwise
+ */
+function sendSurveyAccountLinkNotification($userEmail, $username, $surveyUserName) {
+    global $conn;
+    $mail = new PHPMailer(true);
+
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = SMTP_AUTH;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        // Set security method from config or infer from port
+        if (!empty(SMTP_SECURE)) {
+            $secure = strtolower(SMTP_SECURE);
+            if ($secure === 'ssl' || $secure === 'smtps') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } elseif ($secure === 'tls' || $secure === 'starttls') {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            } else {
+                $mail->SMTPSecure = SMTP_SECURE;
+            }
+        } else {
+            if (SMTP_PORT == 465) {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
+        }
+        $mail->Port = SMTP_PORT;
+        $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = SMTP_DEBUG;
+        $mail->Debugoutput = 'error_log';
+
+        // Recipients
+        $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+        $mail->addAddress($userEmail, $username);
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Xác nhận liên kết tài khoản RTK';
+        $managementLink = SITE_URL . '/public/pages/rtk_accountmanagement.php';
+        $mail->Body = <<<HTML
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #2e7d32;">Xin chào {$username}!</h2>
+    <p>Bạn đã liên kết thành công tài khoản RTK <strong>{$surveyUserName}</strong> vào tài khoản của mình.</p>
+    <p>Vui lòng truy cập <a href="{$managementLink}">trang quản lý tài khoản</a> để xem chi tiết.</p>
+    <p style="color: #666; font-size: 0.9em; margin-top: 30px;">Nếu bạn không thực hiện thao tác này, vui lòng liên hệ bộ phận hỗ trợ.</p>
+</div>
+HTML;
+        $mail->AltBody = "Xin chào {$username}! Bạn đã liên kết thành công tài khoản RTK {$surveyUserName}. Truy cập {$managementLink} để xem chi tiết.";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Failed to send survey account link notification to {$userEmail}. Error: " . $e->getMessage());
+        return false;
     }
 }

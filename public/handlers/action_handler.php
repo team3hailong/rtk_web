@@ -5,7 +5,10 @@
  * This file acts as a bridge between public requests and private actions
  * It validates the request and then forwards to the appropriate private file
  */
-session_start();
+
+// Load session middleware
+require_once dirname(dirname(__DIR__)) . '/private/utils/session_middleware.php';
+init_session();
 
 // --- Define root paths ---
 $project_root_path = dirname(dirname(__DIR__)); // Go up two levels from /public/handlers
@@ -76,6 +79,7 @@ $csrf_exempt_actions = [
     'auth/resend-reset-otp', // Gửi lại OTP reset mật khẩu không cần CSRF
     'purchase/apply_voucher',  // Voucher applications via AJAX
     'purchase/remove_voucher',  // Voucher removal via AJAX
+    'purchase/clear_session_voucher',  // <-- THÊM DÒNG NÀY VÀO
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !in_array("$module/$action", $csrf_exempt_actions)) {

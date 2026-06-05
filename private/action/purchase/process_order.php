@@ -38,15 +38,41 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // --- Get Data from POST ---
 $user_id = $_SESSION['user_id'];
+
+// --- Kiểm tra số điện thoại (security check) ---
+$db_check = new Database();
+$conn_check = $db_check->getConnection();
+$stmt_check = $conn_check->prepare("SELECT phone FROM user WHERE id = :user_id");
+$stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt_check->execute();
+$user_phone = $stmt_check->fetchColumn();
+
+if (empty($user_phone)) {
+    $_SESSION['error_message'] = 'Vui lòng cập nhật số điện thoại trước khi mua gói dịch vụ.';
+    header('Location: ' . $base_url . '/public/pages/setting/profile.php?require_phone=1');
+    exit;
+}
+
 $package_id = filter_input(INPUT_POST, 'package_id', FILTER_VALIDATE_INT);
 $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT);
-$location_id = filter_input(INPUT_POST, 'location_id', FILTER_VALIDATE_INT);
+
+// Nhận mảng location_id (có thể chọn nhiều tỉnh)
+$location_ids = isset($_POST['location_id']) && is_array($_POST['location_id']) ? $_POST['location_id'] : [];
+// Lọc và chuyển sang số nguyên
+$location_ids = array_filter(array_map('intval', $location_ids), function($id) { return $id > 0; });
+
+// Tỉnh đầu tiên là tỉnh chính (location_id)
+$location_id = !empty($location_ids) ? $location_ids[0] : null;
+
+// Tất cả các tỉnh được chọn sẽ lưu vào selected_provinces dạng JSON
+$selected_provinces_json = !empty($location_ids) ? json_encode(array_values($location_ids)) : null;
+
 $purchase_type = filter_input(INPUT_POST, 'purchase_type', FILTER_DEFAULT); // Lấy purchase_type, replaced FILTER_SANITIZE_STRING
 
 // --- Validate Input ---
-if (!$package_id || !$quantity || $quantity < 1 || !$location_id || !in_array($purchase_type, ['individual', 'company'])) { // Validate purchase_type
+if (!$package_id || !$quantity || $quantity < 1 || !$location_id || empty($location_ids) || !in_array($purchase_type, ['individual', 'company'])) { // Validate purchase_type
      // Log the specific missing fields if needed
-     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}, PurchaseType: {$purchase_type}");
+     error_log("Process Order Error: Missing or invalid input. UserID: {$user_id}, PackageID: {$package_id}, Qty: {$quantity}, LocationID: {$location_id}, SelectedProvinces: " . ($selected_provinces_json ?: 'NULL') . ", PurchaseType: {$purchase_type}");
      header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=missing_data');
      exit;
 }
@@ -75,21 +101,38 @@ try {
     if ($is_trial_package) {
         $quantity = 1;
         $base_price = 0; // Ensure price is 0 for trial
+    }    $calculated_subtotal = $base_price * $quantity;
+    $discounted_subtotal = $calculated_subtotal;
+    $discount_amount = 0;
+    
+    // Kiểm tra nếu có voucher giảm giá cần áp dụng vào giá gốc (trước VAT)
+    if (isset($_SESSION['order']['voucher_id']) && isset($_SESSION['order']['voucher_discount'])) {
+        $discount_amount = $_SESSION['order']['voucher_discount'];
+        $discounted_subtotal = $calculated_subtotal - $discount_amount;
+        
+        // Đảm bảo giá sau giảm giá không âm
+        if ($discounted_subtotal < 0) {
+            $discounted_subtotal = 0;
+        }
+        
+        // Lưu thông tin giá gốc và giảm giá để hiển thị trên trang thanh toán
+        $_SESSION['order']['original_subtotal'] = $calculated_subtotal;
+        $_SESSION['order']['discounted_subtotal'] = $discounted_subtotal;
     }
-    $calculated_subtotal = $base_price * $quantity;
-
+    
     // VAT Calculation based on purchase_type
+    // Luôn tính VAT trên giá đã giảm giá (discounted_subtotal)
     $vat_percent = 0;
     $vat_amount = 0;
     $invoice_allowed = 0; // Mặc định không cho phép xuất hóa đơn
 
     if ($purchase_type === 'company' && !$is_trial_package) {
         $vat_percent = 10; // 10% VAT for company
-        $vat_amount = round($calculated_subtotal * ($vat_percent / 100), 2);
+        $vat_amount = round($discounted_subtotal * ($vat_percent / 100), 2); // VAT trên giá đã giảm
         $invoice_allowed = 1; // Cho phép xuất hóa đơn cho công ty
     }
 
-    $final_total_price = $calculated_subtotal + $vat_amount;
+    $final_total_price = $discounted_subtotal + $vat_amount;
 
     // Ensure final price is 0 if it's a trial package
     if ($is_trial_package) {
@@ -138,12 +181,13 @@ try {
     $conn->beginTransaction();
 
     // 1. Insert into Registration
-    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at)
-                VALUES (:user_id, :package_id, :location_id, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
+    $sql_reg = "INSERT INTO registration (user_id, package_id, location_id, selected_provinces, num_account, start_time, end_time, base_price, vat_percent, vat_amount, total_price, status, purchase_type, invoice_allowed, created_at, updated_at)
+                VALUES (:user_id, :package_id, :location_id, :selected_provinces, :num_account, :start_time, :end_time, :base_price, :vat_percent, :vat_amount, :total_price, 'pending', :purchase_type, :invoice_allowed, NOW(), NOW())";
     $stmt_reg = $conn->prepare($sql_reg);
     $stmt_reg->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_reg->bindParam(':package_id', $package_id, PDO::PARAM_INT);
     $stmt_reg->bindParam(':location_id', $location_id, PDO::PARAM_INT);
+    $stmt_reg->bindParam(':selected_provinces', $selected_provinces_json, PDO::PARAM_STR); // Lưu JSON array các tỉnh
     $stmt_reg->bindParam(':num_account', $quantity, PDO::PARAM_INT);
     $stmt_reg->bindParam(':start_time', $start_time_str, PDO::PARAM_STR);
     $stmt_reg->bindParam(':end_time', $end_time_str, PDO::PARAM_STR);
@@ -158,67 +202,20 @@ try {
     $registration_id = $conn->lastInsertId();
     if (!$registration_id) {
         throw new Exception("Failed to create registration record.");
-    }    // 2. Insert into Transaction History
-    // Kiểm tra xem có voucher được áp dụng không
-    $voucher_id = null;
-    if (isset($_SESSION['order']['voucher_id'])) {
-        $voucher_id = $_SESSION['order']['voucher_id'];
     }
-      if ($voucher_id) {
-        $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, voucher_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, :voucher_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())";
-        $stmt_trans = $conn->prepare($sql_trans);
-        $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
-    } else {
-        $sql_trans = "INSERT INTO transaction_history (registration_id, user_id, transaction_type, amount, status, payment_method, created_at, updated_at)
-                      VALUES (:registration_id, :user_id, 'purchase', :amount, 'pending', 'Chuyển khoản ngân hàng', NOW(), NOW())"; // Set default payment method
-        $stmt_trans = $conn->prepare($sql_trans);
-        $stmt_trans->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt_trans->bindParam(':amount', $final_total_price); // Use the potentially adjusted final price
-    }
-    $stmt_trans->execute();
 
-    if ($stmt_trans->rowCount() == 0) {
-         throw new Exception("Failed to create transaction history record.");
-    }
+    // NOTE: Transaction History sẽ được tạo sau khi:
+    // - Upload proof thành công (upload_payment_proof.php)
+    // - Hoặc hoàn tất đơn hàng không cần proof (complete_order_without_proof.php)
+    // Không tạo transaction ở đây để tránh tạo giao dịch khi user chưa hoàn tất thanh toán
 
     // Commit Transaction
-    $conn->commit();    // Log user purchase action with detailed information similar to renewal process
-    $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
-    $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-    
-    // Get location details to include province name instead of just ID
-    $location_obj = new Location();
-    $location_details = $location_obj->getLocationById($location_id);
-    $province_name = $location_details ? $location_details['province'] : '';
-    $location_obj->closeConnection();
-    
-    // Create detailed log data similar to renewal process
-    $log_data = json_encode([
-        'registration_id' => $registration_id,
-        'selected_accounts' => [$quantity], // For new purchase, it's the quantity
-        'total_price' => $final_total_price,
-        'package' => $package['name'],
-        'location' => $province_name // Include province name for better readability
-    ], JSON_UNESCAPED_UNICODE); // Ensure proper Vietnamese character encoding
-    
-    $notify_content = 'Mua gói dịch vụ: ' . $package['name'] . ' - Số lượng: ' . $quantity;
-    $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
-                VALUES (:user_id, 'purchase', 'registration', :registration_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
-    $stmt_log = $conn->prepare($sql_log);
-    $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt_log->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
-    $stmt_log->bindParam(':ip_address', $ip_address);
-    $stmt_log->bindParam(':user_agent', $user_agent);
-    $stmt_log->bindParam(':new_values', $log_data);
-    $stmt_log->bindParam(':notify_content', $notify_content);
-    $stmt_log->execute();
+    $conn->commit();
 
-    // Sau khi ghi nhật ký hoạt động, đánh dấu voucher thiết bị đã sử dụng để tránh tái sử dụng
+    // NOTE: Activity log sẽ được ghi khi giao dịch hoàn thành (transaction completed)
+    // Không ghi log ở đây để tránh ghi log khi user chưa hoàn tất thanh toán
+    
+    // Sau khi commit transaction, đánh dấu voucher thiết bị đã sử dụng để tránh tái sử dụng
     if (isset($_SESSION['device_fingerprint']) && isset($_SESSION['order']['voucher_id'])) {
         try {
             $voucherObj->markDeviceVoucherUsed(

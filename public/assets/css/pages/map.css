@@ -1,174 +1,284 @@
-#map {height: calc(100vh - 120px); width: 100%; border-radius: var(--rounded-md); border: 1px solid var(--gray-200); background-color: var(--gray-100);}
-.map-controls {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
-    background: #fff;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+/* CSS Variables */
+:root {
+    --primary-color: #3498db;
+    --danger-color: #e74c3c;
+    --gray-100: #f1f3f5;
+    --gray-300: #dee2e6;
+    --gray-800: #343a40;
+    /* Safe-area insets for devices with notches / gesture nav bars.
+       Use env() for modern browsers and constant() as a fallback for older iOS.
+       These are used to avoid controls being covered by system UI (home indicator / nav bar).
+    */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 
+  Làm cho layout chính (gồm sidebar và content)
+  chiếm toàn bộ chiều cao màn hình.
+*/
+.dashboard-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    width: auto;
+    height: 100vh; /* Quan trọng: Chiếm 100% chiều cao của màn hình xem */
 }
-.map-type-btn {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-    cursor: pointer;
-    border-radius: 3px;
-    white-space: nowrap;
-    flex: 0 1 auto;
-    text-align: center;
-}
-.map-type-btn.active {background: var(--primary-color);  border-color: var(--primary-color);}
-.station-label div {
-    padding: 3px 5px; 
-    border-radius: 3px; 
-    font-size: 13px; 
-    font-weight: 700; 
-    white-space: nowrap; 
-    color: #000000; 
-    text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white; 
-    background: rgba(255, 255, 255, 0.6);
-}
-.map-legend {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: white;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    font-size: 12px;
-}
-.legend-item {
+
+/* 
+  Làm cho khu vực nội dung chính co giãn linh hoạt
+*/
+main.content-wrapper {
     display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+    flex-direction: column; /* Sắp xếp các phần tử (tiêu đề, bản đồ) theo chiều dọc */
+    flex-grow: 1; /* Cho phép nó chiếm hết không gian chiều rộng còn lại */
+    overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài (dù trong trường hợp này không cần) */
 }
-.legend-color {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-right: 8px;
+
+/* 
+  Làm cho thẻ chứa bản đồ giãn ra để lấp đầy không gian còn lại
+*/
+#map-container {
+    position: relative;
+    flex-grow: 1; /* Quan trọng: Thẻ này sẽ giãn ra và lấp đầy không gian trống */
+    display: flex; /* Giúp #map bên trong có thể dùng height: 100% */
 }
+#map {
+    height: 100%;
+
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #e9ecef;
+    background-color: var(--gray-100);
+    /* Ensure map content isn't hidden behind mobile system navbars (bottom).
+       We add a small extra padding so markers/controls near bottom remain tappable. */
+    padding-bottom: calc(12px + var(--safe-area-inset-bottom));
+}
+#map-container { position: relative; }
+
+/* Styles cho các thành phần điều khiển và chú thích */
+.map-controls, .map-legend {
+    position: absolute;
+    z-index: 800;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.map-controls { top: calc(10px + var(--safe-area-inset-top)); left: 10px; display: flex; flex-direction: column; gap: 8px; }
+.map-legend { bottom: calc(20px + var(--safe-area-inset-bottom)); right: 20px; font-size: 12px; }
+.map-type-btn { padding: 8px 12px; border: 1px solid transparent; background-color: rgba(0, 0, 0, 0.05); color: var(--gray-800); cursor: pointer; border-radius: 6px; font-size: 13px; font-weight: 500; transition: all 0.2s ease-in-out; }
+.map-type-btn:hover { background-color: rgba(0, 0, 0, 0.1); }
+.legend-title { font-weight: bold; margin-bottom: 5px; }
+.legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+.legend-color { width: 15px; height: 15px; border-radius: 50%; margin-right: 8px; }
 .green-station {background-color: #3cb043;}
 .blue-station {background-color: #3498db;}
 .red-station {background-color: #e74c3c;}
-.island-label div {
-    padding: 3px 5px;
-    border-radius: 3px;
-    font-size: 13px;
+.station-label-tooltip { background-color: rgba(255, 255, 255, 0.85); border: none; box-shadow: none; border-radius: 4px; padding: 2px 6px; color: #333; font-size: 12px; font-weight: bold; }
+.station-label-tooltip { display: none; pointer-events: none; }
+.show-station-labels .station-label-tooltip { display: block; }
+
+/* --- STYLES CHO POPUP HTML/CSS --- */
+.ruler-choice-popup {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: white; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1001; text-align: center; transition: opacity 0.2s, visibility 0.2s;
+    max-width: 500px; width: 90%;
+}
+.ruler-choice-popup.hidden { opacity: 0; visibility: hidden; }
+.ruler-choice-popup .popup-content h4 { margin-top: 0; margin-bottom: 15px; font-weight: 600; }
+.ruler-btn { display: block; width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid var(--gray-300); border-radius: 6px; background-color: white; cursor: pointer; font-size: 14px; transition: background-color 0.2s; }
+.ruler-btn:hover { background-color: var(--gray-100); }
+.ruler-btn.cancel-btn { background-color: #f1f1f1; margin-top: 5px; }
+.ruler-btn.cancel-btn:hover { background-color: #e1e1e1; }
+
+/* Styles cho form nhập tọa độ/địa chỉ */
+.input-group { margin-bottom: 15px; text-align: left; }
+.input-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 13px; color: var(--gray-800); }
+.coordinate-input { width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box; }
+.coordinate-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1); }
+.input-separator { margin: 15px 0; font-weight: 600; color: var(--gray-800); position: relative; }
+.input-separator::before, .input-separator::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background-color: var(--gray-300); }
+.input-separator::before { left: 0; }
+.input-separator::after { right: 0; }
+
+/* --- STYLES CHO RULER VÀ HIỆU ỨNG "HÍT" (SNAP) --- */
+.ruler-marker { font-size: 24px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.station-marker { font-size: 20px; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+.ruler-tooltip { background-color: rgba(0, 0, 0, 0.75); color: white; border: 1px solid transparent; font-weight: bold; border-radius: 4px; padding: 4px 8px; transition: all 0.1s ease-in-out; }
+.ruler-tooltip.snapped { color: var(--danger-color); background-color: white; border-color: var(--danger-color); }
+.leaflet-polyline.snapped { stroke-dasharray: none !important; }
+
+/* *** CSS MỚI, QUAN TRỌNG: Xử lý click xuyên qua vòng tròn *** */
+#map.ruler-mode-active .leaflet-interactive {
+    pointer-events: none !important;
+}
+
+/* --- STYLES CHO ONLINE USERS --- */
+.online-user-marker {
+    background-color: transparent;
+    border: none;
+    width: 20px;
+    height: 20px;
+}
+
+.online-user-icon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+/* Robust fallbacks: sometimes hosting setups/other CSS can override or remove styles.
+   Force basic visible circle styles for markers and legend dots so they don't disappear. */
+.online-user-marker, .online-user-icon, .legend-color {
+    display: inline-block !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    box-sizing: border-box !important;
+    border-radius: 50% !important;
+    opacity: 1 !important;
+}
+
+.legend-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; border: 1px solid rgba(0,0,0,0.08); }
+
+/* For Leaflet SVG markers — ensure SVG circles are filled and visible */
+.leaflet-marker-icon svg circle,
+.leaflet-marker-icon circle,
+.leaflet-overlay-pane svg circle {
+    fill: currentColor !important;
+    stroke: none !important;
+    opacity: 1 !important;
+}
+
+/* Additional safety: when map is in a special mode, interactive elements may be disabled;
+   don't hide visuals accidentally. */
+#map.ruler-mode-active .online-user-icon,
+#map .online-user-icon {
+    pointer-events: auto !important;
+    visibility: visible !important;
+}
+
+.online-user-icon:hover {
+    transform: scale(1.2);
+}
+
+.online-user-icon.status-fixed {
+    background-color: #4CAF50;
+}
+
+.online-user-icon.status-float {
+    background-color: #FFC107;
+}
+
+.online-user-icon.status-single {
+    background-color: #F44336;
+}
+
+.online-user-icon.status-invalid {
+    background-color: #9E9E9E;
+}
+
+.online-user-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: bold;
     white-space: nowrap;
-    color: #003366;
-    text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white;
-    background: none;
+    pointer-events: none;
 }
 
-/* Styles for the location button - moved from inline styles */
-#getCurrentLocation {
-    background-color: #3498db;
-    color: white;
-    margin-top: 0;
+.online-user-popup {
+    min-width: 200px;
 }
 
-/* Style for legend title - moved from inline styles */
-.legend-title {
+.online-user-popup .popup-title {
     font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
 }
 
-/* Style for map container loading message */
-#map p {
-    text-align: center;
-    padding-top: 50px;
-    color: var(--gray-500);
+.online-user-popup .popup-info {
+    font-size: 12px;
+    line-height: 1.6;
 }
 
-/* Style for map container */
-#map-container {
-    position: relative;
+.online-user-popup .popup-info strong {
+    color: #555;
 }
 
-/* Responsive styles for mobile devices */
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    #map {
-        height: calc(100vh - 180px); /* Adjust height for mobile */
+    /* Điều chỉnh dashboard wrapper để map không cần scroll */
+    .dashboard-wrapper {
+        height: 100vh;
+        height: 100dvh; /* Dynamic viewport height - trừ đi taskbar/address bar trên mobile */
+        flex-direction: column; /* Chuyển sang layout dọc trên mobile */
     }
     
-    .map-controls {
-        flex-direction: row;
-        top: auto;
-        bottom: 10px;
-        right: 50%;
-        transform: translateX(50%);
-        width: 90%;
-        max-width: 400px;
-        justify-content: center;
+    /* Loại bỏ padding/margin không cần thiết trên mobile */
+    main.content-wrapper {
+        padding: 0.5rem;
+        padding-top: 60px; /* Thêm khoảng trống cho hamburger menu ở trên */
+        overflow: hidden; /* Ngăn scroll trên mobile */
+        width: 100%; /* Đảm bảo chiếm full width */
     }
     
-    .map-type-btn {
-        flex: 1 1 auto;
-        margin: 0;
-        padding: 8px;
-        font-size: 0.9rem;
+    /* Ẩn hoặc thu nhỏ tiêu đề để tiết kiệm không gian */
+    /* Trên mobile ẩn tiêu đề và mô tả ngắn (ví dụ: "Bản đồ trạm đo đạc" và
+       "Trạng thái trạm sẽ được cập nhật liên tục mỗi 30 giây") để tránh chiếm
+       không gian và bị che bởi thanh điều hướng. Nếu muốn giữ nhưng ẩn về mặt
+       trực quan cho assistive tech, chuyển sang .visually-hidden thay vì display:none. */
+    main.content-wrapper h2,
+    main.content-wrapper > p {
+        display: none;
     }
     
-    .map-legend {
-        bottom: 80px; /* Move legend above controls */
-        left: 10px;
-        right: auto;
-        max-width: 160px;
-        font-size: 10px;
-        padding: 8px;
+    /* Đảm bảo map container chiếm toàn bộ không gian còn lại */
+    #map-container {
+        flex-grow: 1;
+        min-height: 0; /* Quan trọng: cho phép flex shrink */
     }
     
-    .legend-color {
-        width: 12px;
-        height: 12px;
-    }
-    
-    .legend-title {
-        font-size: 11px;
-    }
-    
-    .content-wrapper {
-        padding: 1rem 0.5rem;
-    }
-    
-    h2.text-2xl {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    p.text-gray-600 {
-        font-size: 0.875rem;
-        margin-bottom: 0.5rem;
-    }
+     /* On mobile: place controls at the TOP of the map (above the map) so they're easier to reach,
+         and move the legend down to the bottom where controls used to be. Also hide legend text
+         to save space (keep the color dots visible). */
+     .map-controls { top: calc(10px + var(--safe-area-inset-top)); bottom: auto; left: 10px; right: 10px; width: auto; transform: none; flex-direction: row; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+    .map-type-btn { flex: 1 1 calc(50% - 4px); margin: 0; padding: 10px 5px; font-size: 0.8rem; }
+    /* Put legend near the bottom on mobile (where controls were before) */
+    .map-legend { bottom: calc(20px + var(--safe-area-inset-bottom)); top: auto; right: 20px; left: auto; max-width: 160px; font-size: 10px; padding: 8px; }
+    .map-legend .legend-color { display: inline-block; width: 12px; height: 12px; margin-right: 8px; vertical-align: middle; }
+    .ruler-choice-popup { width: 90%; }
 }
 
-/* Additional styles for very small screens */
-@media (max-width: 480px) {
-    #map {
-        height: calc(100vh - 200px);
-    }
-    
-    .map-controls {
-        padding: 5px;
-        gap: 3px;
-    }
-    
-    .map-type-btn {
-        padding: 6px 4px;
-        font-size: 0.8rem;
-    }
-    
-    .map-controls, .map-legend {
-        background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-    }
+/* --- HIDE ONLINE USER LABELS GLOBALLY --- */
+/* Keep the colored dots visible but remove the textual labels for online-user legend items */
+.map-legend .legend-item.legend-online .legend-label { display: none; }
+
+/* Ensure other legend items keep their labels visible and layout works on mobile */
+.map-legend .legend-item { display: flex; align-items: center; gap: 8px; }
+.map-legend .legend-item > div { font-size: 12px; line-height: 1; }
+
+/* Fix: legend icons were rendered at 20x20 due to a global !important rule.
+   Override that specifically for the map legend so dots keep correct aspect ratio. */
+.map-legend .legend-color {
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    border-radius: 50% !important;
+    box-sizing: border-box !important;
 }
+

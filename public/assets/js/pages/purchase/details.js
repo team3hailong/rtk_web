@@ -23,13 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const form = document.getElementById('details-form');
-    const locationSelect = document.getElementById('location_id');
+    const provincesContainer = document.getElementById('provinces-container');
+    
     form.addEventListener('submit', function(event) {
-        if (!locationSelect.value) {
-            alert('Vui lòng chọn Tỉnh/Thành phố sử dụng.');
-            event.preventDefault();
-            locationSelect.focus();
-            return;
+        // Kiểm tra xem có chọn ít nhất 1 tỉnh không
+        if (provincesContainer) {
+            const selectedCheckboxes = provincesContainer.querySelectorAll('input[type="checkbox"]:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 Tỉnh/Thành phố sử dụng.');
+                event.preventDefault();
+                provincesContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
         }
         if (quantityInput) {
             const currentQuantity = parseInt(quantityInput.value);

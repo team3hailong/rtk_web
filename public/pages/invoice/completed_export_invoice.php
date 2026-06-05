@@ -16,6 +16,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    header('Location: ' . $base_url . '/public/pages/dashboard.php');
+    exit;
+}
+
 require_once $project_root_path . '/private/classes/invoice/InvoiceService.php';
 
 $tx_id = isset($_GET['tx_id']) ? intval($_GET['tx_id']) : 0;

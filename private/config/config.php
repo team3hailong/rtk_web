@@ -13,9 +13,9 @@ date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 
 // RTK API credentials
-define('RTK_API_URL', env('RTK_API_URL', 'http://203.171.25.138:8090/openapi/broadcast/users'));
-define('RTK_API_ACCESS_KEY', env('RTK_API_ACCESS_KEY', 'Zb5F6iKUuAISy4qY'));
-define('RTK_API_SECRET_KEY', env('RTK_API_SECRET_KEY', 'KL1KEEJj2s6HA8LB'));
+define('RTK_API_URL', env('RTK_API_URL', 'http://rtk.taikhoandodac.vn:8090/openapi/broadcast/users'));
+define('RTK_API_ACCESS_KEY', env('RTK_API_ACCESS_KEY', 'TxfJxeX7wuU7XOPU'));
+define('RTK_API_SECRET_KEY', env('RTK_API_SECRET_KEY', 'NZbVkrJ5e5SDcP0R'));
 define('RTK_API_SIGN_METHOD', env('RTK_API_SIGN_METHOD', 'HmacSHA256'));
 
 // Email Configuration 
@@ -25,10 +25,39 @@ define('SMTP_USERNAME', env('SMTP_USERNAME', 'dovannguyen2005bv@gmail.com'));
 define('SMTP_PASSWORD', env('SMTP_PASSWORD', 'qbut ryan pedr aawk'));
 define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', 'dovannguyen2005bv@gmail.com'));
 define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'SMTP Mail'));
+// Optional explicit SMTP security and auth flags. Use env variables to override.
+// Examples: SMTP_SECURE=ssl | tls | starttls ; SMTP_AUTH=true|false ; SMTP_DEBUG=0|1|2|3
+define('SMTP_SECURE', env('SMTP_SECURE', ''));
+define('SMTP_AUTH', env('SMTP_AUTH', 'true') === 'true');
+define('SMTP_DEBUG', (int) env('SMTP_DEBUG', 0));
 
 // Site Configuration
-define('SITE_URL', env('SITE_URL', 'http://localhost:3000'));
+// Define SITE_URL for link generation. If not set in env, derive from base URL helper.
+if (!defined('SITE_URL')) {
+    $site_url_candidate = env('SITE_URL', '');
+    if (empty($site_url_candidate)) {
+        // get_base_url is provided by utils/path_helpers/bootstrap.php
+        $site_url_candidate = function_exists('get_base_url') ? get_base_url() : 'http://localhost';
+    }
+    define('SITE_URL', rtrim($site_url_candidate, '/'));
+}
 define('ADMIN_SITE', 'http://quantri.taikhoandodac.vn');
+
+// Global discount configuration
+// `GLOBAL_DISCOUNT_CODE`: Mã giảm giá toàn cục (string)
+// `SHOW_GLOBAL_DISCOUNT`: "yes" hoặc "no"
+define('GLOBAL_DISCOUNT_CODE', env('GLOBAL_DISCOUNT_CODE', ''));
+define('SHOW_GLOBAL_DISCOUNT', env('SHOW_GLOBAL_DISCOUNT', 'no'));
+
+// ============================================================
+// UI MODE: Ẩn toàn bộ giao diện liên quan đến thanh toán
+// Đặt thành false để hiển thị lại giao diện thanh toán đầy đủ
+// ============================================================
+define('HIDE_PAYMENT_UI', true);
+
+// Toggle to disable the Kinh Tuyến Trục popup without removing files.
+// Set DISABLE_KINH_TUYEN_TRUC_POPUP=true in the environment to disable.
+define('DISABLE_KINH_TUYEN_TRUC_POPUP', env('DISABLE_KINH_TUYEN_TRUC_POPUP', 'true') === 'true');
 
 // Environment and error handling settings
 define('APP_ENV', env('APP_ENV', 'production'));
@@ -41,7 +70,7 @@ if (!APP_DEBUG) {
     // Convert PHP errors to log entries and show friendly error page
     set_error_handler(function($severity, $message, $file, $line) {
         error_log("PHP Error [{$severity}]: {$message} in {$file} on line {$line}");
-        header('Location: ' . SITE_URL . '/public/pages/error.php');
+        header('Location: ' . get_base_url() . '/public/pages/error.php');
         exit;
     });
     set_exception_handler(function($e) {
@@ -57,12 +86,7 @@ if (!APP_DEBUG) {
 
         // Redirect to a generic error page without exposing details in URL
         // Ensure SITE_URL is defined and correct
-        if (defined('SITE_URL')) {
-            header('Location: ' . SITE_URL . '/public/pages/error.php');
-        } else {
-            // Fallback if SITE_URL is not defined (should not happen ideally)
-            header('Location: /public/pages/error.php');
-        }
+        header('Location: ' . get_base_url() . '/public/pages/error.php');
         exit;
     });
 }

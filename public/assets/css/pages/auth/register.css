@@ -1,110 +1,255 @@
-/* Styles for Register Page */
+        /* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+    font-family: 'Poppins', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
+    background-color: #00c48dc3;
+    overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+    padding: 20px; /* Add some padding around the container on small screens */
 }
 
-.register-container {
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 450px;
+.container {
+    display: flex;
+    width: 900px; /* Base width for larger screens */
+    max-width: 100%; /* Ensure it doesn't overflow on very large screens */
+    height: 600px; /* Base height for larger screens */
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.register-container h2 {
-    color: #2e7d32; /* Green color */
+/* Left Section: Login Info */
+.login-info-section {
+    flex: 1;
+    background-color: #00C48C; /* Green color from the image */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
     text-align: center;
-    margin-bottom: 25px;
+}
+
+.login-info-section h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.login-info-section p {
+    font-size: 1.1em;
+    font-weight: 400;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 300px; /* Constrain text width */
+}
+
+.login-button {
+    display: inline-block;
+    background-color: #ffffff73;
+    color: #00C48C;
+    padding: 12px 30px;
+    border-radius: 25px;
+    border: 1px solid white; 
+    text-decoration: none;
+    font-size: 1.1em;
     font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:hover {
+    background-color: #e0e0e0c1;
+}
+
+/* Right Section: Registration Form */
+.register-form-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background-color: #fff;
+}
+
+.register-form-section h2 {
+    font-size: 2.2em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.register-form-section form {
+    width: 100%;
+    max-width: 350px; /* Maximum width for the form */
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: 500;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group input[type="password"] {
+.form-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    transition: border-color 0.3s;
+    padding: 15px 20px; /* Increased padding for taller fields */
+    border: none;
+    border-radius: 20px;
+    font-size: 1em;
+    color: #333;
+    background-color: #f0f0f0; /* Light grey background for inputs */
+}
+
+.form-group input::placeholder {
+    color: #a0a0a0;
 }
 
 .form-group input:focus {
-    border-color: #4caf50; /* Green color on focus */
     outline: none;
-}
-
-.form-group.checkbox-group {
-    display: flex;
-    align-items: center;
-}
-
-.form-group.checkbox-group input[type="checkbox"] {
-    margin-right: 10px;
-    width: auto;
-    accent-color: #4caf50; /* Green checkbox */
-}
-
-.company-info {
-    border-left: 3px solid #4caf50;
-    padding-left: 15px;
-    margin-top: 15px;
-    display: none; /* Hide by default */
+    box-shadow: 0 0 0 2px #00C48C; /* Focus highlight */
 }
 
 .btn-register {
-    background-color: #4caf50; /* Green background */
-    color: white;
-    padding: 14px 20px;
+
+    width: 100%; /* Full width for better mobile adaptability */
+    padding: 15px;/* Increased padding for a larger button */
+    background-color: #00C48C;
+    color: #fff;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1.1rem;
+    border-radius: 50px;
+    font-size: 1.2em;
     font-weight: 600;
-    transition: background-color 0.3s;
-    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Space above the button */
 }
 
 .btn-register:hover {
-    background-color: #388e3c; /* Darker green on hover */
+    background-color: #00A37A; /* Slightly darker green on hover */
+    transform: translateY(-2px);
 }
 
-.login-link {
-    text-align: center;
-    margin-top: 20px;
-    color: #555;
+/* --------------------------------------------------- */
+/* MEDIA QUERIES FOR RESPONSIVENESS */
+/* --------------------------------------------------- */
+
+/* For screens smaller than 900px (e.g., tablets in landscape, smaller laptops) */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column; /* Stack sections vertically */
+        width: 90%; /* Occupy 90% of viewport width */
+        height: auto; /* Allow height to adjust based on content */
+        border-radius: 15px; /* Keep consistent border radius */
+    }
+
+    .login-info-section, .register-form-section {
+        flex: none; /* Remove flex sizing to allow full width */
+        width: 100%; /* Take full width */
+        padding: 30px; /* Adjust padding for smaller screens */
+    }
+
+    .login-info-section {
+        border-bottom-left-radius: 0; /* Remove bottom-left radius for stacked layout */
+    }
+
+    .register-form-section {
+        border-top-right-radius: 0; /* Remove top-right radius for stacked layout */
+        border-bottom-left-radius: 15px; /* Add bottom-left radius */
+    }
+
+    .login-info-section h1 {
+        font-size: 2.2em; /* Smaller title */
+        margin-bottom: 15px;
+    }
+
+    .login-info-section p {
+        font-size: 1em; /* Smaller paragraph text */
+        margin-bottom: 25px;
+    }
+
+    .login-button {
+        padding: 10px 25px; /* Slightly smaller button */
+        font-size: 1em;
+    }
+
+    .register-form-section h2 {
+        font-size: 1.8em; /* Smaller heading */
+        margin-bottom: 25px;
+    }
 }
 
-.login-link a {
-    color: #2e7d32; /* Green link */
-    text-decoration: none;
-    font-weight: 500;
+/* For screens smaller than 600px (e.g., mobile devices) */
+@media (max-width: 600px) {
+    body {
+        padding: 15px; /* More padding around the container */
+        overflow-y: auto; /* Allow vertical scrolling on small screens if content overflows */
+    }
+
+    .container {
+        width: 100%; /* Full width on very small screens */
+        border-radius: 10px; /* Slightly less rounded corners */
+        box-shadow: none; /* Remove shadow to make it feel more integrated */
+    }
+
+    .login-info-section, .register-form-section {
+        padding: 25px; /* Further reduce padding */
+    }
+
+    .login-info-section h1 {
+        font-size: 1.8em; /* Even smaller title for mobile */
+        margin-bottom: 10px;
+    }
+
+    .login-info-section p {
+        font-size: 0.9em; /* Smaller paragraph */
+        margin-bottom: 20px;
+    }
+
+    .login-button, .btn-register {
+        padding: 10px 20px; /* Smaller buttons */
+        font-size: 0.95em;
+        border-radius: 20px; /* Slightly less rounded buttons */
+    }
+
+    .register-form-section h2 {
+        font-size: 1.6em; /* Even smaller heading */
+        margin-bottom: 20px;
+    }
+
+    .form-group input {
+        padding: 12px 15px; /* Smaller input fields */
+        font-size: 0.9em;
+    }
+
+    .btn-register {
+        margin-top: 15px;
+    }
 }
 
-.login-link a:hover {
-    text-decoration: underline;
+/* For very small screens (e.g., iPhone 5/SE) if needed */
+@media (max-width: 375px) {
+    .login-info-section h1 {
+        font-size: 1.6em;
+    }
+    .register-form-section h2 {
+        font-size: 1.4em;
+    }
+    .form-group input {
+        padding: 10px 12px;
+    }
 }
 
 .error-message {
@@ -112,7 +257,7 @@ body {
     color: #c62828;
     padding: 10px;
     border-radius: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     border: 1px solid #ef9a9a;
     font-size: 0.9rem;
 }
@@ -134,24 +279,4 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     animation: fadeInPulse 0.5s ease-out;
     line-height: 1.5;
-}
-
-@keyframes fadeInPulse {
-    0% {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    70% {
-        opacity: 1;
-        transform: scale(1.03);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-#countdownTimer {
-    font-weight: bold;
-    color: #1b5e20;
-    font-size: 1.1rem;
 }

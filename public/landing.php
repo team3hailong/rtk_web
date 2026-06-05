@@ -264,7 +264,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
             <div class="testimonials-grid">
                 <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="testimonial-avatar">
-                        <!-- Avatar placeholder -->
+                        <img src="assets/img/landingpage/avatar1.jpg" alt="Avatar 1" class="testimonial-avatar-img">
                     </div>
                     <div class="testimonial-content">
                         <div class="testimonial-rating">
@@ -279,7 +279,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 </div>
                 <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="testimonial-avatar">
-                        <!-- Avatar placeholder -->
+                        <img src="assets/img/landingpage/avatar2.jpg" alt="Avatar 2" class="testimonial-avatar-img">
                     </div>
                     <div class="testimonial-content">
                         <div class="testimonial-rating">
@@ -294,7 +294,7 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
                 </div>
                 <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
                     <div class="testimonial-avatar">
-                        <!-- Avatar placeholder -->
+                        <img src="assets/img/landingpage/avatar3.jpg" alt="Avatar 3" class="testimonial-avatar-img">
                     </div>
                     <div class="testimonial-content">
                         <div class="testimonial-rating">
@@ -340,6 +340,20 @@ $register_url = $base_url . "/public/pages/auth/register.php?voucher=" . $vouche
         // Pass the register URL to JavaScript for QR code generation
         window.registerUrl = "<?php echo $register_url; ?>";
     </script>
-    <script src="assets/js/landing.js"></script>
+    <script src="assets/js/landing.js"></script>    <!-- Zalo Chat Popup -->
+    <div class="zalo-popup">
+        <div id="zaloIcon" class="zalo-icon pulsing-zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" class="zalo-icon-img">
+            <span class="notification-badge">1</span>
+        </div>
+        <div class="zalo-register">
+            <a href="<?php echo $register_url; ?>" class="navbar-cta-button pulse-animation zalo-register-button">Đăng ký ngay</a>
+        </div>
+        <div id="zaloContent" class="zalo-content">
+            <h4>Nhóm hỗ trợ đo đạc Thái Nguyên</h4>
+            <p>Tham gia nhóm để nhận hỗ trợ và giải đáp các vướng mắc về đăng ký tài khoản đo đạc</p>
+            <a href="https://zalo.me/g/djrkof344" target="_blank" class="join-group-button">Tham gia nhóm</a>
+        </div>
+    </div>
 </body>
 </html>

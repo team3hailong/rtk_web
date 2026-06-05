@@ -36,6 +36,8 @@ Liên kết với bảng transaction_history:
 - Người dùng nhập mã voucher trên trang thanh toán
 - Hệ thống kiểm tra tính hợp lệ của voucher (còn hạn, còn lượt sử dụng, đủ giá trị tối thiểu)
 - Nếu hợp lệ, áp dụng voucher vào đơn hàng và lưu thông tin voucher vào session
+- Voucher được áp dụng vào giá gốc trước khi tính thuế VAT (discount-before-VAT)
+- Thứ tự tính toán: Giá gốc -> Áp dụng giảm giá -> Tính VAT -> Tổng thanh toán
 - Hiển thị số tiền đã giảm và cập nhật tổng thanh toán
 - Cập nhật mã QR và thông tin thanh toán
 
@@ -48,6 +50,19 @@ Liên kết với bảng transaction_history:
 - Nếu giao dịch bị hủy hoặc thất bại, voucher không bị tính lượt sử dụng
 
 ## Cách thức thực hiện
+
+### Quy trình tính giá và thuế VAT
+- Giá gốc = (Giá gói dịch vụ) × (Số lượng tài khoản)
+- Giá sau giảm giá = Giá gốc - Giảm giá từ voucher
+- VAT = Giá sau giảm giá × % VAT (nếu là doanh nghiệp)
+- Tổng thanh toán = Giá sau giảm giá + VAT
+
+Ví dụ:
+- Giá gốc: 1,000,000đ
+- Voucher giảm 20%: -200,000đ
+- Giá sau giảm giá: 800,000đ
+- VAT 10%: 80,000đ (tính trên giá đã giảm)
+- Tổng thanh toán: 880,000đ
 
 ### Frontend:
 - Form nhập và xác nhận voucher trên trang thanh toán
@@ -86,6 +101,10 @@ Liên kết với bảng transaction_history:
 5. Tạo các phương thức hỗ trợ quản lý voucher
 6. Reset dữ liệu voucher khi bắt đầu quá trình đăng ký mới hoặc gia hạn
 7. Giới hạn số lần sử dụng voucher cho mỗi người dùng
+8. Áp dụng voucher giảm giá vào giá gốc trước khi tính thuế VAT (04/06/2025)
+   - Thay đổi thứ tự tính toán: giảm giá trước, sau đó mới tính VAT
+   - Cập nhật hiển thị trên trang thanh toán để thể hiện rõ quy trình tính giá
+   - Đảm bảo tính nhất quán giữa quy trình mua mới và gia hạn
 
 ## Cách quản lý voucher
 Quản trị viên có thể tạo và quản lý voucher thông qua giao diện quản trị (cần phát triển thêm). Mỗi voucher có thể được cấu hình với các thông số cụ thể như loại giảm giá, giá trị giảm giá, số lượt sử dụng và thời hạn hiệu lực.

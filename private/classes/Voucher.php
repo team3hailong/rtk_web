@@ -46,42 +46,80 @@ class Voucher {
             return ['status' => false, 'message' => 'Mã voucher đã hết lượt sử dụng'];
         }
           // Kiểm tra điều kiện gói dịch vụ nếu được chỉ định
-        if ($voucher['package_id'] !== null && $packageId !== null && $voucher['package_id'] != $packageId) {
-            // Lấy thông tin tên gói
-            try {
-                $packageName = '';
-                $stmt = $pdo->prepare("SELECT name FROM package WHERE id = :id");
-                $stmt->bindParam(':id', $voucher['package_id'], PDO::PARAM_INT);
-                $stmt->execute();
-                $packageInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($packageInfo) {
-                    $packageName = $packageInfo['name'];
+        // Ưu tiên selected_packages (multi-choice), fallback về package_id (legacy single-choice)
+        $voucherPackages = [];
+        
+        // Kiểm tra selected_packages trước (multi-choice)
+        if (!empty($voucher['selected_packages'])) {
+            $decoded = json_decode($voucher['selected_packages'], true);
+            if (is_array($decoded)) {
+                $voucherPackages = $decoded;
+            }
+        }
+        // Fallback về package_id (single-choice cũ)
+        elseif ($voucher['package_id'] !== null) {
+            $voucherPackages = [$voucher['package_id']];
+        }
+        
+        // Nếu voucher có giới hạn gói và packageId được cung cấp
+        if (!empty($voucherPackages) && $packageId !== null) {
+            // Kiểm tra xem gói đang chọn có nằm trong danh sách cho phép không
+            if (!in_array($packageId, $voucherPackages)) {
+                // Lấy thông tin tên các gói được áp dụng
+                try {
+                    $packageNames = [];
+                    $placeholders = implode(',', array_fill(0, count($voucherPackages), '?'));
+                    $stmt = $pdo->prepare("SELECT name FROM package WHERE id IN ($placeholders)");
+                    $stmt->execute($voucherPackages);
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $packageNames[] = $row['name'];
+                    }
+                    
+                    $packageList = !empty($packageNames) ? implode(', ', $packageNames) : 'các gói cụ thể';
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho gói: ' . $packageList];
+                } catch (Exception $e) {
+                    error_log("Error fetching package info for voucher validation: " . $e->getMessage());
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho các gói dịch vụ cụ thể'];
                 }
-                
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho gói dịch vụ: ' . $packageName];
-            } catch (Exception $e) {
-                error_log("Error fetching package info for voucher validation: " . $e->getMessage());
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho gói dịch vụ cụ thể'];
             }
         }
         
         // Kiểm tra điều kiện địa điểm nếu được chỉ định
-        if ($voucher['location_id'] !== null && $locationId !== null && $voucher['location_id'] != $locationId) {
-            // Lấy thông tin tên tỉnh/thành phố
-            try {
-                $provinceName = '';
-                $stmt = $pdo->prepare("SELECT province FROM location WHERE id = :id");
-                $stmt->bindParam(':id', $voucher['location_id'], PDO::PARAM_INT);
-                $stmt->execute();
-                $locationInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($locationInfo) {
-                    $provinceName = $locationInfo['province'];
+        // Bây giờ xét với selected_provinces thay vì chỉ location_id
+        if ($voucher['location_id'] !== null && $locationId !== null) {
+            // Nếu locationId là JSON string (selected_provinces), parse nó
+            $selectedProvinceIds = [];
+            if (is_string($locationId) && (substr($locationId, 0, 1) === '[' || substr($locationId, 0, 1) === '{')) {
+                // It's JSON
+                $decoded = json_decode($locationId, true);
+                if (is_array($decoded)) {
+                    $selectedProvinceIds = $decoded;
                 }
-                
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực: ' . $provinceName];
-            } catch (Exception $e) {
-                error_log("Error fetching location info for voucher validation: " . $e->getMessage());
-                return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực cụ thể'];
+            } else {
+                // It's single location ID
+                $selectedProvinceIds = [$locationId];
+            }
+            
+            // Kiểm tra xem voucher location_id có nằm trong danh sách selected_provinces không
+            $isValidLocation = in_array($voucher['location_id'], $selectedProvinceIds);
+            
+            if (!$isValidLocation) {
+                // Lấy thông tin tên tỉnh/thành phố
+                try {
+                    $provinceName = '';
+                    $stmt = $pdo->prepare("SELECT province FROM location WHERE id = :id");
+                    $stmt->bindParam(':id', $voucher['location_id'], PDO::PARAM_INT);
+                    $stmt->execute();
+                    $locationInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($locationInfo) {
+                        $provinceName = $locationInfo['province'];
+                    }
+                    
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực: ' . $provinceName];
+                } catch (Exception $e) {
+                    error_log("Error fetching location info for voucher validation: " . $e->getMessage());
+                    return ['status' => false, 'message' => 'Mã voucher này chỉ áp dụng cho khu vực cụ thể'];
+                }
             }
         }
         

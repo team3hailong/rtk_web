@@ -1,351 +1,227 @@
 // Biến toàn cục để lưu trữ các tham số từ PHP
+let referralLink;
 let availableBalance;
-let minWithdrawalAmount = 100000; // Giá trị mặc định, sẽ được cập nhật từ PHP
+let minWithdrawalAmount = 100000;
 let ajaxUrl;
 
 // Cài đặt các tham số cần thiết
 function initializeReferralSystem(config) {
+    referralLink = config.referralLink;
     availableBalance = config.availableBalance;
     minWithdrawalAmount = config.minWithdrawalAmount || minWithdrawalAmount;
     ajaxUrl = config.processWithdrawalUrl;
-}
 
-// Cải thiện chức năng copy với thông báo tốt hơn
-function copyReferralCode() {
-    var copyText = document.getElementById("referral-code");
-    if (!copyText) return;
-    
-    try {
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // For mobile devices
-        document.execCommand("copy");
-        
-        // Hiển thị toast thay vì confirm
-        showToast("Đã sao chép mã giới thiệu: " + copyText.value);
-    } catch (err) {
-        alert("Không thể sao chép: " + err);
+    if (referralLink) {
+        generateQRCode(referralLink);
     }
 }
 
-function copyReferralLink() {
-    var copyText = document.getElementById("referral-link-input");
-    if (!copyText) return;
-    
-    try {
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // For mobile devices
-        document.execCommand("copy");
-        
-        // Hiển thị toast thay vì confirm
-        showToast("Đã sao chép liên kết giới thiệu!");
-    } catch (err) {
-        alert("Không thể sao chép: " + err);
+// Hàm tạo QR Code
+function generateQRCode(link) {
+    const qrElement = document.getElementById('qrcode');
+    if (!qrElement) return;
+
+    new QRious({
+        element: qrElement,
+        value: link,
+        size: 200,
+        padding: 10,
+        level: 'H'
+    });
+}
+
+// Hàm copy dùng chung
+function copyToClipboard(elementId, typeName) {
+    const copyText = document.getElementById(elementId);
+    if (!copyText || !copyText.value) return;
+
+    // Sử dụng Clipboard API hiện đại
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            showToast(`Đã sao chép ${typeName}!`);
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            fallbackCopy(copyText, typeName); // Fallback nếu có lỗi
+        });
+    } else {
+        fallbackCopy(copyText, typeName); // Fallback cho trình duyệt cũ
     }
 }
 
-// Thêm chức năng toast message cho UX tốt hơn
+// Hàm copy dự phòng cho trình duyệt cũ
+function fallbackCopy(copyText, typeName) {
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+    try {
+        document.execCommand("copy");
+        showToast(`Đã sao chép ${typeName}!`);
+    } catch (err) {
+        alert("Rất tiếc, không thể sao chép tự động.");
+    }
+}
+
+// Hàm hiển thị thông báo toast
 function showToast(message) {
-    // Kiểm tra nếu đã có toast container
-    var toastContainer = document.getElementById('toast-container');
+    let toastContainer = document.getElementById('toast-container');
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.id = 'toast-container';
-        toastContainer.style.position = 'fixed';
-        toastContainer.style.bottom = '20px';
-        toastContainer.style.right = '20px';
-        toastContainer.style.zIndex = '9999';
+        toastContainer.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999;';
         document.body.appendChild(toastContainer);
     }
-    
-    // Tạo toast message
-    var toast = document.createElement('div');
+
+    const toast = document.createElement('div');
     toast.className = 'toast-message';
-    toast.style.backgroundColor = 'rgba(33, 150, 243, 0.9)';
-    toast.style.color = 'white';
-    toast.style.padding = '12px 20px';
-    toast.style.borderRadius = '4px';
-    toast.style.marginTop = '10px';
-    toast.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-    toast.style.minWidth = '250px';
+    toast.style.cssText = 'background-color: rgba(33, 150, 243, 0.9); color: white; padding: 12px 20px; border-radius: 4px; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); min-width: 250px; opacity: 0; transition: opacity 0.3s ease;';
     toast.innerText = message;
-    
+
     toastContainer.appendChild(toast);
-    
-    // Auto remove sau 3 giây
-    setTimeout(function() {
+
+    // Fade in
+    setTimeout(() => { toast.style.opacity = '1'; }, 10);
+
+    // Fade out và xóa
+    setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.5s ease';
-        
-        // Xóa khỏi DOM sau khi hiệu ứng fade out hoàn thành
-        setTimeout(function() {
-            toastContainer.removeChild(toast);
-        }, 500);
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
     }, 3000);
 }
 
-// Script cải tiến để xử lý các tab và hiệu ứng người dùng
-$(document).ready(function() {
-    // Cải tiến tab implementation - đảm bảo hoạt động trong mọi trường hợp
-    $('#referralTabs a').on('click', function (e) {
-        e.preventDefault();
-        
-        // Ẩn tất cả tab panes
-        $('.tab-pane').removeClass('show active');
-        
-        // Loại bỏ active class từ tất cả tabs
-        $('#referralTabs a').removeClass('active');
-        
-        // Thêm active class cho tab hiện tại
-        $(this).addClass('active');
-        
-        // Hiển thị tab pane tương ứng
-        var target = $(this).attr('href');
-        $(target).addClass('show active');
-        
-        // Lưu trạng thái tab vào localStorage
-        localStorage.setItem('activeReferralTab', target);
-    });
+
+// Xử lý logic chính khi DOM đã tải xong
+document.addEventListener('DOMContentLoaded', function() {
     
-    // Khôi phục tab đã chọn từ localStorage
-    var activeTab = localStorage.getItem('activeReferralTab');
-    if (activeTab) {
-        $('#referralTabs a[href="' + activeTab + '"]').click();
+    // Sự kiện tải xuống QR Code
+    const downloadBtn = document.getElementById('download-qr-btn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            const canvas = document.getElementById('qrcode');
+            if (!canvas) return;
+            const link = document.createElement('a');
+            link.download = 'referral-qr-code.png';
+            link.href = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+            link.click();
+        });
+    }
+
+    // Xử lý các tab chính
+    const referralTabs = document.querySelectorAll('#referralTabs .nav-link');
+    const tabPanes = document.querySelectorAll('#referralTabsContent .tab-pane');
+
+    referralTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            referralTabs.forEach(item => item.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+
+            this.classList.add('active');
+            const activePane = document.querySelector(this.getAttribute('href'));
+            if (activePane) {
+                activePane.classList.add('show', 'active');
+            }
+            localStorage.setItem('activeReferralTab', this.getAttribute('href'));
+        });
+    });
+
+    const activeTab = localStorage.getItem('activeReferralTab');
+    if (activeTab && document.querySelector(`a[href="${activeTab}"]`)) {
+        document.querySelector(`a[href="${activeTab}"]`).click();
     }
     
-    // Cải tiến auto-dismiss alerts với hiệu ứng mượt
-    setTimeout(function() {
-        $('.alert:not(#withdrawal-message)').fadeOut('slow');
-    }, 5000);
-    
-    // Form validation & loading - được cải tiến với UX tốt hơn
-    $('#withdrawal-form').submit(function(event) {
-        event.preventDefault();
-        
-        var form = $(this);
-        var withdrawBtn = $('#withdraw-btn');
-        var btnText = $('#withdraw-btn-text');
-        var btnLoading = $('#withdraw-btn-loading');
-        var messageDiv = $('#withdrawal-message');
-        
-        var amount = parseFloat($('#amount').val());
-        var bankName = $('#bank_name').val().trim();
-        var accountNumber = $('#account_number').val().trim();
-        var accountHolder = $('#account_holder').val().trim();
-        var available = parseFloat(availableBalance);
-        var minWithdrawal = minWithdrawalAmount;
+    // Xử lý form rút tiền
+    const withdrawalForm = document.getElementById('withdrawal-form');
+    if (withdrawalForm) {
+        withdrawalForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        // Reset thông báo
-        messageDiv.hide().removeClass('alert-success alert-danger');
+            const withdrawBtn = document.getElementById('withdraw-btn');
+            const btnText = document.getElementById('withdraw-btn-text');
+            const btnLoading = document.getElementById('withdraw-btn-loading');
+            const messageDiv = document.getElementById('withdrawal-message');
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'alert';
 
-        // Kiểm tra form
-        if (!amount || !bankName || !accountNumber || !accountHolder) {
-            messageDiv.text('Vui lòng điền đầy đủ thông tin yêu cầu rút tiền.').addClass('alert-danger').show();
-            return false;
-        }
-        if (isNaN(amount) || amount <= 0) {
-            messageDiv.text('Số tiền không hợp lệ.').addClass('alert-danger').show();
-            return false;
-        }
-        if (amount < minWithdrawal) {
-            messageDiv.text('Số tiền rút tối thiểu là ' + minWithdrawal.toLocaleString('vi-VN') + ' VNĐ.').addClass('alert-danger').show();
-            return false;
-        }
-        if (amount > available) {
-            messageDiv.text('Số dư khả dụng không đủ!').addClass('alert-danger').show();
-            return false;
-        }
+            if (amount < minWithdrawalAmount) {
+                messageDiv.innerText = 'Số tiền rút tối thiểu là ' + minWithdrawalAmount.toLocaleString('vi-VN') + ' VNĐ.';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.style.display = 'block';
+                return;
+            }
+            if (amount > availableBalance) {
+                messageDiv.innerText = 'Số dư khả dụng không đủ!';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.style.display = 'block';
+                return;
+            }
 
-        // Hiển thị trạng thái loading
-        btnText.hide();
-        btnLoading.show();
-        withdrawBtn.prop('disabled', true);
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            withdrawBtn.disabled = true;
 
-        // Gửi yêu cầu AJAX
-        $.ajax({
-            type: 'POST',
-            url: ajaxUrl,
-            data: form.serialize(),
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    messageDiv.text(response.message).removeClass('alert-danger').addClass('alert-success').show();
-                    
-                    // Hiển thị spinner trên toàn trang khi reload
-                    var overlay = $('<div>').css({
-                        'position': 'fixed',
-                        'top': 0,
-                        'left': 0,
-                        'width': '100%',
-                        'height': '100%',
-                        'background-color': 'rgba(255,255,255,0.7)',
-                        'z-index': 9999,
-                        'display': 'flex',
-                        'justify-content': 'center',
-                        'align-items': 'center'
-                    });
-                    
-                    var spinner = $('<div>').html('<i class="fas fa-spinner fa-spin fa-3x" style="color:#2196F3"></i>');
-                    overlay.append(spinner);
-                    $('body').append(overlay);
-                    
-                    // Reload sau 1.5 giây
-                    setTimeout(function(){ location.reload(); }, 1500);
+            fetch(ajaxUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(new FormData(this))
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.innerText = data.message;
+                    messageDiv.classList.add('alert-success');
+                    setTimeout(() => location.reload(), 1500);
                 } else {
-                    messageDiv.text(response.message || 'Đã xảy ra lỗi không xác định.').removeClass('alert-success').addClass('alert-danger').show();
+                    messageDiv.innerText = data.message || 'Đã xảy ra lỗi không xác định.';
+                    messageDiv.classList.add('alert-danger');
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error("AJAX Error: ", textStatus, errorThrown, jqXHR.responseText);
-                messageDiv.text('Lỗi khi gửi yêu cầu. Vui lòng thử lại.').removeClass('alert-success').addClass('alert-danger').show();
-            },
-            complete: function() {
-                btnText.show();
-                btnLoading.hide();
-                withdrawBtn.prop('disabled', false);
-            }        
-        });
-    });
-    
-    // Thêm các tính năng responsive cho bảng
-    function adjustTableResponsive() {
-        if (window.innerWidth < 768) {
-            $('.table-responsive').each(function() {
-                var table = $(this).find('table');
-                if (!table.hasClass('table-mobile-ready')) {
-                    table.addClass('table-mobile-ready');
-                    
-                    // Thêm data-label attribute cho mỗi cell dựa trên header
-                    // Đảm bảo bảng hiển thị tốt trên mobile
-                    table.find('thead th').each(function(index) {
-                        var headerText = $(this).text();
-                        table.find('tbody tr').each(function() {
-                            $(this).find('td:eq(' + index + ')').attr('data-label', headerText);
-                        });
-                    });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.innerText = 'Lỗi khi gửi yêu cầu. Vui lòng thử lại.';
+                messageDiv.classList.add('alert-danger');
+            })
+            .finally(() => {
+                messageDiv.style.display = 'block';
+                btnText.style.display = 'inline-block';
+                btnLoading.style.display = 'none';
+                // Không bật lại nút nếu thành công để tránh double-submit
+                if (!messageDiv.classList.contains('alert-success')) {
+                    withdrawBtn.disabled = false;
                 }
             });
-        }
-    }
-    
-    // Gọi lần đầu và khi thay đổi kích thước màn hình
-    adjustTableResponsive();
-    $(window).on('resize', function() {
-        adjustTableResponsive();
-    });
-    
-    // Focus input khi click vào label để cải thiện UX
-    $('label').on('click', function() {
-        var forAttr = $(this).attr('for');
-        if (forAttr) {
-            $('#' + forAttr).focus();
-        }
-    });
-    
-    // Cải thiện UX cho form khi chuyển tab
-    $('#withdrawal-tab').on('click', function() {
-        setTimeout(function() {
-            $('#amount').focus();
-        }, 300);
-    });
-    
-    // Xử lý tab rankings (tab trong tab)
-    $('#ranking-tabs a').on('click', function (e) {
-        e.preventDefault();
-        
-        // Ẩn tất cả tab panes trong ranking tabs
-        $('#ranking-tabs-content .tab-pane').removeClass('show active');
-        
-        // Loại bỏ active class từ tất cả tabs
-        $('#ranking-tabs a').removeClass('active');
-        
-        // Thêm active class cho tab hiện tại
-        $(this).addClass('active');
-        
-        // Hiển thị tab pane tương ứng
-        let tabId = $(this).attr('href');
-        $(tabId).addClass('show active');
-    });    // Animate the rows in the ranking tables when they appear
-    $('#ranking-tab').on('click', function() {
-        setTimeout(function() {
-            $('.table-ranking tbody tr').each(function(index) {
-                $(this).css({
-                    'opacity': 0,
-                    'transform': 'translateY(20px)'
-                });
-                
-                setTimeout(function(row) {
-                    $(row).css({
-                        'opacity': 1,
-                        'transform': 'translateY(0)',
-                        'transition': 'all 0.3s ease'
-                    });
-                }, index * 100, this);
-            });
-        }, 100);
-    });
-    
-    // Hiệu ứng highlight cho top 3 người dùng
-    $('#ranking-tab').on('click', function() {
-        setTimeout(function() {
-            $('.trophy-1').parent().parent().addClass('top-rank');
-            $('.trophy-2').parent().parent().addClass('top-rank');
-            $('.trophy-3').parent().parent().addClass('top-rank');
-            
-            
-        }, 200);
-    });
-    
-    // Ranking tab functionality
-    $('.rank-tab-btn').on('click', function() {
-        // Remove active class from all buttons
-        $('.rank-tab-btn').removeClass('active');
-        // Add active class to clicked button
-        $(this).addClass('active');
-        
-        // Hide all tab contents
-        $('.rank-tab-content').removeClass('active');
-        
-        // Show the target tab content
-        var targetId = $(this).data('target');
-        $(targetId).addClass('active');
-        
-        // Store the active tab in localStorage
-        localStorage.setItem('activeRankingTab', targetId);
-        
-        // Apply animation to the tables
-        animateRankingRows(targetId);
-    });
-    
-    // Function to animate ranking rows
-    function animateRankingRows(targetId) {
-        $(targetId + ' tbody tr').each(function(index) {
-            $(this).css({
-                'opacity': 0,
-                'transform': 'translateY(10px)'
-            });
-            
-            setTimeout(function(row) {
-                $(row).css({
-                    'opacity': 1,
-                    'transform': 'translateY(0)',
-                    'transition': 'all 0.3s ease'
-                });
-            }, index * 50, this); // Faster animation with shorter delay
         });
-        
-        // Highlight top 3 ranks
-        setTimeout(function() {
-            $(targetId + ' .trophy-1').parent().parent().addClass('top-rank');
-            $(targetId + ' .trophy-2').parent().parent().addClass('top-rank');
-            $(targetId + ' .trophy-3').parent().parent().addClass('top-rank');
-            
-        }, 100);
     }
-    
-    // Initialize by animating the default active tab
-    $('#ranking-tab').on('click', function() {
-        setTimeout(function() {
-            animateRankingRows('#monthly-ranking');
-        }, 100);
+
+    // Xử lý các tab xếp hạng
+    const rankTabBtns = document.querySelectorAll('.rank-tab-btn');
+    const rankTabContents = document.querySelectorAll('.rank-tab-content');
+
+    rankTabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            rankTabBtns.forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+            
+            const targetId = this.dataset.target;
+            rankTabContents.forEach(content => {
+                if ('#' + content.id === targetId) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            localStorage.setItem('activeRankingTab', targetId);
+        });
     });
+
+    const activeRankingTab = localStorage.getItem('activeRankingTab');
+    if (activeRankingTab && document.querySelector(`[data-target="${activeRankingTab}"]`)) {
+        document.querySelector(`[data-target="${activeRankingTab}"]`).click();
+    }
 });

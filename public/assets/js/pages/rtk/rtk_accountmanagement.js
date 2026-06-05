@@ -1,485 +1,590 @@
 /**
- * JavaScript for RTK Account Management Page
+ * Consolidated & Optimized JavaScript for RTK Account Management Page
  */
-
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const modalOverlay = document.getElementById('account-details-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalUsername = document.getElementById('modal-username');
-    const modalPassword = document.getElementById('modal-password');
-    const modalStartTime = document.getElementById('modal-start-time');
-    const modalEndTime = document.getElementById('modal-end-time');
-    const modalMountpointsList = document.getElementById('modal-mountpoints-list');
-    const perPageSelect = document.getElementById('per-page');
-    
-    // Export elements
-    const exportButton = document.getElementById('export-excel');
-    const selectAllButton = document.getElementById('select-all-accounts');
-    const selectedCountElement = document.getElementById('selected-count');
-    const accountCheckboxes = document.querySelectorAll('.account-checkbox');
-    const exportForm = document.getElementById('export-form');
-
-    // Renewal elements
-    const renewalBtn = document.getElementById('renewal-btn');
-    const renewalForm = document.getElementById('renewal-form');
-      // Theo dõi trạng thái lọc và tìm kiếm hiện tại
-    let currentFilter = paginationConfig.currentFilter || 'all';
+    // --- State Variables ---
+    let currentStatusFilter = paginationConfig.currentFilter || 'all';
+    // --- Horizontal Scroll Hint Logic ---
+    (function(){
+        // Helper: show a temporary hint and the scroll handle when horizontal overflow is present
     let currentSearchTerm = '';
     let currentRemainingTimeFilter = 'all';
-    // Xử lý chọn tài khoản và cập nhật trạng thái nút xuất Excel
-    function updateExportButtonState() {
-        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
-        const count = checkedBoxes.length;
-        
-        // Cập nhật số lượng tài khoản đã chọn
-        if (selectedCountElement) {
-            selectedCountElement.textContent = count;
-        }
-        
-        // Bật/tắt nút xuất Excel
-        if (exportButton) {
-            exportButton.disabled = count === 0;
-        }
-    }
 
-    // Function to update renewal button state
-    function updateRenewalButtonState() {
-        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
-        if (renewalBtn) {
-            renewalBtn.disabled = checkedBoxes.length === 0;
-        }
-    }
-      // Thêm sự kiện cho từng checkbox
-    accountCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            // Check if this is a package_id = 7 account and show warning if it's selected
-            if (checkbox.checked && checkbox.dataset.packageId === "7") {
-                alert('Tài khoản này sử dụng gói dùng thử và không thể gia hạn.');
+    // --- DOM Element References ---
+    const perPageSelect = document.getElementById('per-page');
+    const exportButton = document.getElementById('export-excel');
+    const selectAllButton = document.getElementById('select-all-accounts');
+    const renewalBtn = document.getElementById('renewal-btn');
+    const updateSurveyAccountsBtn = document.getElementById('update-survey-accounts');
+    const searchBox = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const resetButton = document.getElementById('reset-button');
+    const remainingTimeFilter = document.getElementById('remaining-time-filter');
+    const filterToggleBtn = document.querySelector('.filter-toggle-btn');
+    const filterGroupContent = document.querySelector('.filter-group-content');
+    const selectedCountElement = document.getElementById('selected-count');
+    const exportForm = document.getElementById('export-form');
+    const renewalForm = document.getElementById('renewal-form');
+    const statusFilterMobile = document.getElementById('status-filter-mobile');
+    
+    // --- Main Filter Logic ---
+    function applyFilters() {
+        const tableBody = document.querySelector('.accounts-table tbody');
+        if (!tableBody) return;
+        
+        const accounts = tableBody.querySelectorAll('tr[data-search-terms]');
+        let visibleCount = 0;
+        const searchTerms = currentSearchTerm.toLowerCase().split(/\s+/).filter(Boolean);
+
+        accounts.forEach(account => {
+            const searchData = account.dataset.searchTerms;
+            const accountStatus = account.dataset.status;
+            const remainingDays = parseInt(account.dataset.remainingDays, 10);
+            
+            // 1. Search Filter
+            const matchesSearch = !searchTerms.length || searchTerms.every(term => searchData.includes(term));
+            
+            // 2. Status Filter
+            const matchesStatus = currentStatusFilter === 'all' || currentStatusFilter === accountStatus;
+            
+            // 3. Remaining Time Filter
+            let matchesRemainingTime = true;
+            if (currentRemainingTimeFilter !== 'all') {
+                switch (currentRemainingTimeFilter) {
+                    case 'less-than-7':   matchesRemainingTime = (remainingDays >= 0 && remainingDays < 7); break;
+                    case '7-to-30':       matchesRemainingTime = (remainingDays >= 7 && remainingDays <= 30); break;
+                    case '30-to-90':      matchesRemainingTime = (remainingDays > 30 && remainingDays <= 90); break;
+                    case 'more-than-90':  matchesRemainingTime = (remainingDays > 90); break;
+                }
             }
             
-            updateExportButtonState();
-            updateRenewalButtonState();
+            const shouldDisplay = matchesSearch && matchesStatus && matchesRemainingTime;
+            account.style.display = shouldDisplay ? '' : 'none';
+            if (shouldDisplay) visibleCount++;
+        });
+
+        handleEmptyState(visibleCount === 0 && accounts.length > 0);
+        updatePaginationInfo(visibleCount);
+        resetSelectionOnFilter();
+    }
+    
+    // --- Event Listeners ---
+    if (filterToggleBtn && filterGroupContent) {
+    // Lắng nghe sự kiện click trên toàn bộ header của bộ lọc
+    filterToggleBtn.parentElement.addEventListener('click', function() {
+        // Kiểm tra trạng thái hiển thị của nội dung bộ lọc
+        const isHidden = filterGroupContent.style.display === 'none';
+        
+        // Thay đổi trạng thái hiển thị
+        filterGroupContent.style.display = isHidden ? 'flex' : 'none';
+        
+        // Thay đổi icon mũi tên
+        const icon = filterToggleBtn.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down', !isHidden);
+            icon.classList.toggle('fa-chevron-up', isHidden);
+        }
+    });
+}
+
+    document.querySelectorAll('.filter-button').forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentStatusFilter = this.dataset.filter;
+            if (statusFilterMobile) {
+                statusFilterMobile.value = currentStatusFilter;
+            }
+            applyFilters();
         });
     });
-    
-    // Xử lý nút chọn tất cả
-    if (selectAllButton) {
-        selectAllButton.addEventListener('click', function() {
-            // Only select checkboxes in visible rows
-            const checkboxes = Array.from(document.querySelectorAll('.account-checkbox')).filter(cb => {
-                const row = cb.closest('tr');
-                return row && row.style.display !== 'none';
-            });
-            const allChecked = checkboxes.length > 0 && checkboxes.every(checkbox => checkbox.checked);
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = !allChecked;
-            });
-            updateExportButtonState();
-            updateRenewalButtonState();
-            // Cập nhật text của nút
-            this.innerHTML = !allChecked ? 
-                '<i class="fas fa-times-square"></i> Bỏ chọn tất cả' : 
-                '<i class="fas fa-check-square"></i> Chọn tất cả';
+
+    if (statusFilterMobile) {
+        statusFilterMobile.addEventListener('change', function() {
+            currentStatusFilter = this.value;
+            const desktopButton = document.querySelector(`.filter-button[data-filter="${this.value}"]`);
+            if (desktopButton) {
+                document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+                desktopButton.classList.add('active');
+            }
+            applyFilters();
         });
     }
+
+    if (remainingTimeFilter) {
+        remainingTimeFilter.addEventListener('change', function() {
+            currentRemainingTimeFilter = this.value;
+            applyFilters();
+        });
+    }
+
+    if (searchButton) searchButton.addEventListener('click', () => {
+        currentSearchTerm = searchBox.value.trim();
+        applyFilters();
+    });
     
-    // Xử lý nút xuất Excel
+    if (searchBox) searchBox.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            currentSearchTerm = searchBox.value.trim();
+            applyFilters();
+        }
+    });
+    
+    if (resetButton) resetButton.addEventListener('click', () => {
+        searchBox.value = '';
+        currentSearchTerm = '';
+        if(remainingTimeFilter) remainingTimeFilter.value = 'all';
+        currentRemainingTimeFilter = 'all';
+        document.querySelector('.filter-button[data-filter="all"]')?.click();
+        applyFilters();
+    });
+
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            const url = new URL(window.location);
+            url.searchParams.set('per_page', this.value);
+            url.searchParams.set('page', '1');
+            window.location.href = url.toString();
+        });
+    }
+
+    // --- Selection & Actions Logic ---
+    function updateActionButtonsState() {
+        const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
+        const count = checkedBoxes.length;
+        if (selectedCountElement) selectedCountElement.textContent = count;
+        if (exportButton) exportButton.disabled = count === 0;
+        if (renewalBtn) renewalBtn.disabled = count === 0;
+    }
+
+    function resetSelectionOnFilter() {
+        document.querySelectorAll('.account-checkbox').forEach(cb => cb.checked = false);
+        if (selectAllButton) selectAllButton.innerHTML = '<i class="fas fa-check-square"></i> Chọn tất cả';
+        updateActionButtonsState();
+    }
+    
+    document.querySelectorAll('.account-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateActionButtonsState);
+    });
+
+    if (selectAllButton) {
+        selectAllButton.addEventListener('click', function() {
+            const visibleCheckboxes = Array.from(document.querySelectorAll('.account-checkbox')).filter(cb => cb.closest('tr').style.display !== 'none');
+            const allChecked = visibleCheckboxes.length > 0 && visibleCheckboxes.every(cb => cb.checked);
+            visibleCheckboxes.forEach(cb => { cb.checked = !allChecked; });
+            this.innerHTML = !allChecked ? '<i class="fas fa-times-square"></i> Bỏ chọn' : '<i class="fas fa-check-square"></i> Chọn tất cả';
+            updateActionButtonsState();
+        });
+    }
+
     if (exportButton) {
-        exportButton.addEventListener('click', function() {
+        exportButton.addEventListener('click', () => {
             if (document.querySelectorAll('.account-checkbox:checked').length > 0) {
-                exportForm.submit();
+                 const selected = Array.from(document.querySelectorAll('.account-checkbox:checked')).map(cb => cb.value);
+                 const hiddenInput = document.createElement('input');
+                 hiddenInput.type = 'hidden';
+                 hiddenInput.name = 'selected_accounts_json';
+                 hiddenInput.value = JSON.stringify(selected);
+                 exportForm.appendChild(hiddenInput);
+                 exportForm.submit();
+                 exportForm.removeChild(hiddenInput);
             }
         });
-    }    // Handle renewal form submission
+    }
+
     if (renewalForm) {
         renewalForm.addEventListener('submit', function(e) {
-            // Clear previous hidden inputs for selected accounts to avoid duplicates
-            const existingInputs = renewalForm.querySelectorAll('input[type="hidden"][name="selected_accounts[]"]');
-            existingInputs.forEach(input => input.remove());
-
+            this.querySelectorAll('input[name="selected_accounts[]"]').forEach(i => i.remove());
             const checkedBoxes = document.querySelectorAll('.account-checkbox:checked');
-            
             if (checkedBoxes.length === 0) {
-                // If no accounts are selected, prevent form submission.
-                // alert('Vui lòng chọn ít nhất một tài khoản để gia hạn.'); // Optional: display a message
-                e.preventDefault(); 
-                return; 
-            }
-            
-            // Check if any selected account has package_id = 7
-            let hasPackage7 = false;
-            checkedBoxes.forEach(cb => {
-                if (cb.dataset.packageId === "7") {
-                    hasPackage7 = true;
-                }
-            });
-            
-            if (hasPackage7) {
-                alert('Một hoặc nhiều tài khoản được chọn không thể gia hạn vì đang sử dụng gói dùng thử.');
                 e.preventDefault();
                 return;
             }
-
-            // Add hidden input for each selected account
             checkedBoxes.forEach(cb => {
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'selected_accounts[]';
                 input.value = cb.value;
-                renewalForm.appendChild(input);
+                this.appendChild(input);
             });
         });
     }
     
-    // Filter buttons functionality
-    const filterButtons = document.querySelectorAll('.filter-button');
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Lấy giá trị filter mới
-            const filterValue = this.dataset.filter;
-            
-            // Cập nhật lớp active cho button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Thiết lập filter hiện tại và áp dụng
-            currentFilter = filterValue;
-            applyFilters();
-            
-            // Nếu người dùng không chỉ muốn lọc tạm thời, có thể chuyển hướng URL
-            if (button.hasAttribute('data-permanent')) {
-                // Chuyển hướng đến URL với filter mới
-                window.location.href = buildPaginationUrl({
-                    filter: filterValue,
-                    page: 1 // Luôn reset về trang đầu tiên khi filter thay đổi
-                });
-            }
-        });
-    });
-
-    // Xử lý thay đổi số mục trên mỗi trang
-    if (perPageSelect) {
-        perPageSelect.addEventListener('change', function() {
-            // Lấy số mục trên mỗi trang từ giá trị đã chọn
-            const perPage = this.value;
-            
-            // Chuyển hướng đến URL với per_page mới
-            window.location.href = buildPaginationUrl({
-                perPage: perPage,
-                page: 1 // Luôn reset về trang đầu tiên khi số lượng mục thay đổi
-            });
-        });
-    }
-
-    // Xây dựng URL phân trang với các tham số được cung cấp
-    function buildPaginationUrl(params = {}) {
-        // Lấy các tham số hiện tại từ URL
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Lấy tham số hiện tại
-        let page = params.page || urlParams.get('page') || paginationConfig.currentPage;
-        let perPage = params.perPage || urlParams.get('per_page') || paginationConfig.perPage;
-        let filter = params.filter || urlParams.get('filter') || paginationConfig.currentFilter;
-        
-        // Loại bỏ giá trị mặc định nếu không cần thiết
-        if (filter === 'all') filter = null;
-        
-        // Tạo đối tượng URL params mới
-        const newParams = new URLSearchParams();
-        
-        // Thêm các tham số vào URL
-        if (page && page !== '1') newParams.append('page', page);
-        if (perPage && perPage !== '10') newParams.append('per_page', perPage);
-        if (filter) newParams.append('filter', filter);
-        
-        // Trả về URL với các tham số mới
-        const queryString = newParams.toString();
-        return queryString ? `?${queryString}` : window.location.pathname;
-    }    // Search functionality
-    const searchBox = document.querySelector('.search-box');
-    const searchButton = document.getElementById('search-button');
-    const resetButton = document.getElementById('reset-button');
-    
-    // Search button click handler
-    if (searchButton) {
-        searchButton.addEventListener('click', function() {
-            if (searchBox) {
-                currentSearchTerm = searchBox.value.toLowerCase().trim();
-                applyFilters();
-            }
-        });
-    }
-    
-    // Reset button click handler
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            if (searchBox) {
-                searchBox.value = '';
-                currentSearchTerm = '';
-            }
-            
-            if (remainingTimeFilter) {
-                remainingTimeFilter.value = 'all';
-                currentRemainingTimeFilter = 'all';
-            }
-            
-            // Reset status buttons if not server-side filters
-            const filterButtons = document.querySelectorAll('.filter-button');
-            filterButtons.forEach(button => {
-                if (button.dataset.filter === 'all') {
-                    button.classList.add('active');
-                } else {
-                    button.classList.remove('active');
-                }
-            });
-            currentFilter = 'all';
-            
-            // Apply the filters after reset
-            applyFilters();
-        });
-    }
-    
-    // Also keep input event for real-time filtering if preferred
-    if (searchBox) {
-        searchBox.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                currentSearchTerm = this.value.toLowerCase().trim();
-                applyFilters();
-                e.preventDefault();
-            }
-        });
-    }
-
-    // Remaining time filter functionality
-    const remainingTimeFilter = document.getElementById('remaining-time-filter');
-    if (remainingTimeFilter) {
-        remainingTimeFilter.addEventListener('change', function() {
-            // Lấy giá trị filter thời hạn còn lại
-            currentRemainingTimeFilter = this.value;
-            
-            // Áp dụng lọc và tìm kiếm
-            applyFilters();
-        });
-    }// Tập hợp tất cả các bộ lọc và áp dụng vào danh sách tài khoản
-    function applyFilters() {
-        const accounts = document.querySelectorAll('.accounts-table tbody tr:not(.empty-state-row)');
-        let visibleCount = 0;
-        // Split search terms for multi-keyword search
-        const searchTerms = currentSearchTerm.split(/\s+/).filter(Boolean);
-        accounts.forEach(account => {
-            if (!account.dataset.searchTerms) return; // Bỏ qua hàng không phải dữ liệu
-            // Multi-keyword, case-insensitive search
-            const searchData = account.dataset.searchTerms.toLowerCase();
-            const matchesSearch = !searchTerms.length || searchTerms.every(term => searchData.includes(term));
-            
-            // Kiểm tra điều kiện lọc theo trạng thái
-            let matchesFilter = true;
-            if (currentFilter !== 'all') {
-                const accountStatus = account.dataset.status;
-                // Đảm bảo filter status khớp với data-status và hiển thị đúng trạng thái
-                matchesFilter = (currentFilter === accountStatus);
-            }
-            
-            // Kiểm tra điều kiện lọc theo thời hạn còn lại
-            let matchesRemainingTime = true;
-            if (currentRemainingTimeFilter !== 'all') {
-                const remainingDays = parseInt(account.dataset.remainingDays, 10);
-                
-                switch(currentRemainingTimeFilter) {
-                    case 'less-than-7':
-                        matchesRemainingTime = (remainingDays >= 0 && remainingDays < 7);
-                        break;
-                    case '7-to-30':
-                        matchesRemainingTime = (remainingDays >= 7 && remainingDays <= 30);
-                        break;
-                    case '30-to-90':
-                        matchesRemainingTime = (remainingDays > 30 && remainingDays <= 90);
-                        break;
-                    case 'more-than-90':
-                        matchesRemainingTime = (remainingDays > 90);
-                        break;
-                }
-            }
-            
-            // Hiển thị/ẩn dựa trên kết quả lọc
-            const shouldDisplay = matchesSearch && matchesFilter && matchesRemainingTime;
-            account.style.display = shouldDisplay ? '' : 'none';
-            if (shouldDisplay) visibleCount++;
-        });
-        // Hiển thị thông báo "Không có dữ liệu" nếu không có tài khoản nào phù hợp
-        handleEmptyState(visibleCount === 0);
-        // Cập nhật thông tin phân trang
-        updatePaginationInfo(visibleCount);
-        // Cập nhật nút chọn tất cả
-        if (selectAllButton) {
-            selectAllButton.innerHTML = '<i class="fas fa-check-square"></i> Chọn tất cả';
-        }
-    }
-    
-    // Xử lý trạng thái khi không có dữ liệu
+    // --- UI Helper Functions ---
     function handleEmptyState(isEmpty) {
-        // Kiểm tra xem đã có dòng thông báo chưa
-        let emptyRow = document.querySelector('.accounts-table tbody tr.empty-state-row');
-        
+        let emptyRow = document.querySelector('.accounts-table tbody .empty-state-row');
         if (isEmpty) {
             if (!emptyRow) {
-                const tableBody = document.querySelector('.accounts-table tbody');
                 emptyRow = document.createElement('tr');
-                emptyRow.classList.add('empty-state-row');
-                
-                const emptyCell = document.createElement('td');
-                emptyCell.setAttribute('colspan', '8');
-                emptyCell.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <p>Không tìm thấy tài khoản nào phù hợp</p>
-                    </div>
-                `;
-                
-                emptyRow.appendChild(emptyCell);
-                tableBody.appendChild(emptyRow);
+                emptyRow.className = 'empty-state-row';
+                emptyRow.innerHTML = `<td colspan="8"><div class="empty-state"><i class="fas fa-search"></i><p>Không tìm thấy tài khoản phù hợp</p></div></td>`;
+                document.querySelector('.accounts-table tbody').appendChild(emptyRow);
             }
             emptyRow.style.display = '';
         } else if (emptyRow) {
             emptyRow.style.display = 'none';
         }
     }
-    
-    // Cập nhật thông tin phân trang dựa trên số lượng hàng hiện đang hiển thị
+
     function updatePaginationInfo(visibleCount) {
         const paginationInfo = document.querySelector('.pagination-info');
         if (!paginationInfo) return;
-        
-        paginationInfo.textContent = `Hiển thị ${visibleCount} trên tổng số ${paginationConfig.totalRecords} tài khoản`;
+        const isFiltering = currentSearchTerm || currentRemainingTimeFilter !== 'all' || currentStatusFilter !== paginationConfig.currentFilter;
+        if (isFiltering) {
+             paginationInfo.textContent = `Tìm thấy ${visibleCount} tài khoản`;
+        } else {
+             const startRecord = (paginationConfig.currentPage - 1) * paginationConfig.perPage + 1;
+             const endRecord = Math.min(startRecord + paginationConfig.perPage - 1, paginationConfig.totalRecords);
+             paginationInfo.textContent = `Hiển thị ${startRecord} đến ${endRecord} trong tổng số ${paginationConfig.totalRecords} tài khoản`;
+        }
     }
 
-    
+    // --- Modal Management ---
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if(modal) modal.classList.add('active');
+    }
 
-    // Close Modal
-    window.closeModal = function() {
-        if (modalOverlay) {
-            modalOverlay.classList.remove('active');
+    window.closeModal = function(modalId) {
+        const modal = document.getElementById(modalId);
+        if(modal) modal.classList.remove('active');
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeModal(this.id);
+        });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            document.querySelectorAll('.modal-overlay.active').forEach(modal => closeModal(modal.id));
         }
-    };
-
-    // Show Account Details Modal
+    });
+    
+    // --- Specific Modal Logic ---
     window.showAccountDetails = function(account) {
-        if (!modalOverlay || !account) return;
+        document.getElementById('modal-username').textContent = account.username;
+        document.getElementById('modal-password').textContent = account.password;
+        document.getElementById('modal-start-time').textContent = account.start_time;
+        document.getElementById('modal-end-time').textContent = account.end_time;
         
-        modalTitle.textContent = `Chi Tiết Tài Khoản`;
-        modalUsername.textContent = account.username;
-        modalPassword.textContent = account.password;
-        modalStartTime.textContent = account.start_time;
-        modalEndTime.textContent = account.end_time;
-        
-        // Populate mountpoints as a table
-        modalMountpointsList.innerHTML = '';
+        const mountpointsList = document.getElementById('modal-mountpoints-list');
+        mountpointsList.innerHTML = '';
         if (account.mountpoints && account.mountpoints.length > 0) {
             account.mountpoints.forEach(mp => {
-                const row = document.createElement('tr');
-                
-                // Đổi thứ tự thành "IP, Port, Trạm" thay vì "Trạm, IP, Port"
-                const ipCell = document.createElement('td');
-                ipCell.textContent = mp.ip || 'N/A';
-                
-                const portCell = document.createElement('td');
-                portCell.textContent = mp.port || 'N/A';
-                
-                const mpCell = document.createElement('td');
-                mpCell.textContent = mp.mountpoint || 'N/A';
-                
-                // Thêm các ô vào hàng theo thứ tự mới
-                row.appendChild(ipCell);
-                row.appendChild(portCell);
-                row.appendChild(mpCell);
-                
-                modalMountpointsList.appendChild(row);
+                mountpointsList.innerHTML += `<tr><td>${mp.ip || 'N/A'}</td><td>${mp.port || 'N/A'}</td><td>${mp.mountpoint || 'N/A'}</td></tr>`;
             });
             document.getElementById('mountpoints-section').style.display = 'block';
         } else {
-            const row = document.createElement('tr');
-            const cell = document.createElement('td');
-            cell.setAttribute('colspan', '3');
-            cell.textContent = 'Không có dữ liệu trạm';
-            cell.style.textAlign = 'center';
-            row.appendChild(cell);
-            modalMountpointsList.appendChild(row);
+            mountpointsList.innerHTML = `<tr><td colspan="3" style="text-align: center;">Không có dữ liệu trạm</td></tr>`;
         }
-        
-        // Show the modal
-        modalOverlay.classList.add('active');
+        openModal('account-details-modal');
     };
     
-    // Xử lý nút copy trong modal chi tiết
-    const copyButtons = document.querySelectorAll('.copy-btn');
-    copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Lấy target để copy
-            const targetId = this.getAttribute('data-copy-target');
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                // Tạo một textarea element để copy text
-                const textarea = document.createElement('textarea');
-                textarea.value = targetElement.textContent;
-                document.body.appendChild(textarea);
-                textarea.select();
+    window.showChangePasswordModal = function(account) {
+        document.getElementById('cp-username').value = account.username;
+        document.getElementById('cp-current-password').value = account.password;
+        document.getElementById('cp-new-password').value = '';
+        document.getElementById('cp-confirm-password').value = '';
+        document.getElementById('cp-account-id').value = account.id;
+        openModal('change-password-modal');
+    };
+
+    if (updateSurveyAccountsBtn) {
+        updateSurveyAccountsBtn.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('#update-accounts-tbody input');
+            inputs.forEach(input => input.value = '');
+            openModal('update-survey-account-modal');
+        });
+    }
+
+    // --- API & Form Handling ---
+    document.getElementById('add-account-row')?.addEventListener('click', () => {
+        const tbody = document.getElementById('update-accounts-tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `<td><input type="text" class="form-input username-input" placeholder="Tên đăng nhập"></td><td><input type="text" class="form-input password-input" placeholder="Mật khẩu"></td>`;
+        tbody.appendChild(newRow);
+    });
+
+    document.getElementById('confirm-update-accounts')?.addEventListener('click', function() {
+        const accounts = [];
+        document.querySelectorAll('#update-accounts-tbody tr').forEach(row => {
+            const username = row.querySelector('.username-input').value.trim();
+            const password = row.querySelector('.password-input').value.trim();
+            if (username && password) accounts.push({ username, password });
+        });
+        if (accounts.length === 0) {
+            alert('Vui lòng nhập ít nhất một tài khoản.');
+            return;
+        }
+        
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+
+        fetch(`${baseUrl}/public/handlers/rtk_account_handlers.php`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ action: 'validate_accounts', accounts: accounts })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Show detailed message
+                let message = data.message || '';
                 
-                try {
-                    // Sao chép vào clipboard
-                    document.execCommand('copy');
-                    
-                    // Thay đổi icon và thêm class để chỉ ra đã copy thành công
-                    const icon = this.querySelector('i');
-                    if (icon) {
-                        const originalClass = icon.className;
-                        icon.className = 'fas fa-check';
-                        this.classList.add('copied');
-                        
-                        // Sau 2 giây, đổi lại icon và class ban đầu
-                        setTimeout(() => {
-                            icon.className = originalClass;
-                            this.classList.remove('copied');
-                        }, 2000);
-                    }
-                } catch (err) {
-                    console.error('Không thể sao chép: ', err);
+                // Add details for invalid accounts
+                if (data.invalid_count > 0) {
+                    const invalidAccounts = data.results.filter(r => !r.valid).map(r => r.username);
+                    message += '\n\nTài khoản không hợp lệ:\n- ' + invalidAccounts.join('\n- ');
                 }
                 
-                // Dọn dẹp
-                document.body.removeChild(textarea);
+                // Check if there are accounts requiring confirmation
+                const toConfirm = data.results.find(r => r.requires_confirmation);
+                
+                if (toConfirm) {
+                    closeModal('update-survey-account-modal');
+                    document.getElementById('otp-registration-id').value = toConfirm.registration_id;
+                    openModal('otp-confirm-modal');
+                } else {
+                    alert(message);
+                    // Reload if any accounts were updated
+                    if (data.updated_count > 0) {
+                        window.location.reload();
+                    } else {
+                        closeModal('update-survey-account-modal');
+                    }
+                }
+            } else {
+                alert(data.message || 'Có lỗi xảy ra.');
             }
+        }).catch(() => alert('Lỗi kết nối.'))
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = 'Xác nhận';
         });
     });
-    
-    // Close modal when clicking outside content
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', function(event) {
-            if (event.target === modalOverlay) {
-                closeModal();
-            }
-        });
-    }
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
-            closeModal();
-        }
-    });
-    
-    // Nếu đã chọn filter, tự động kích hoạt nút filter tương ứng
-    if (currentFilter && currentFilter !== 'all') {
-        const activeFilterButton = document.querySelector(`.filter-button[data-filter="${currentFilter}"]`);
-        if (activeFilterButton) {
-            activeFilterButton.classList.add('active');
-        }
-    }
-    
-    // Khởi tạo trạng thái nút xuất khi tải trang
-    updateExportButtonState();
-    // Initialize renewal button state on page load
-    updateRenewalButtonState();
-});
 
+    document.getElementById('confirm-change-password')?.addEventListener('click', function() {
+        const accountId = document.getElementById('cp-account-id').value;
+        const newPassword = document.getElementById('cp-new-password').value;
+        if (newPassword !== document.getElementById('cp-confirm-password').value) {
+            alert('Mật khẩu xác nhận không khớp.');
+            return;
+        }
+        if (!newPassword) {
+            alert('Vui lòng nhập mật khẩu mới.');
+            return;
+        }
+
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+        
+        const formData = new FormData();
+        formData.append('action', 'change_password');
+        formData.append('account_id', accountId);
+        formData.append('new_password', newPassword);
+
+        fetch(`${baseUrl}/public/handlers/rtk_account_handlers.php`, { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                closeModal('change-password-modal');
+                window.location.reload();
+            }
+        }).catch(() => alert('Lỗi kết nối.'))
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = 'Xác nhận';
+        });
+    });
+
+    document.getElementById('confirm-otp-btn')?.addEventListener('click', function() {
+        const regId = document.getElementById('otp-registration-id').value;
+        const otp = document.getElementById('otp-input').value.trim();
+        if (!otp) {
+            alert('Vui lòng nhập OTP.');
+            return;
+        }
+        
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+        
+        fetch(`${baseUrl}/public/handlers/confirm_transfer.php`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `registration_id=${regId}&otp=${encodeURIComponent(otp)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            if (data.success) {
+                closeModal('otp-confirm-modal');
+                window.location.reload();
+            }
+        }).catch(() => alert('Lỗi kết nối.'))
+        .finally(() => {
+            this.disabled = false;
+            this.innerHTML = 'Xác nhận';
+        });
+    });
+    
+    document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.dataset.copyTarget;
+            const textToCopy = document.getElementById(targetId)?.textContent;
+            if (textToCopy) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const icon = this.querySelector('i');
+                    const originalIcon = icon.className;
+                    icon.className = 'fas fa-check';
+                    this.classList.add('copied');
+                    setTimeout(() => {
+                        icon.className = originalIcon;
+                        this.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => console.error('Failed to copy: ', err));
+            }
+        });
+    });
+
+    // --- Lock/Unlock Account Handler ---
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-lock')) {
+            const button = e.target.closest('.btn-lock');
+            const accountId = button.dataset.accountId;
+            const currentEnabled = button.dataset.enabled === '1';
+            const action = currentEnabled ? 'lock' : 'unlock';
+            const actionText = currentEnabled ? 'khóa' : 'mở khóa';
+            
+            if (!confirm(`Bạn có chắc chắn muốn ${actionText} tài khoản này?`)) {
+                return;
+            }
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+            
+            fetch(`${baseUrl}/public/handlers/toggle_account_lock.php`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: `account_id=${accountId}&action=${action}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || `Đã ${actionText} tài khoản thành công!`);
+                    window.location.reload();
+                } else {
+                    alert(data.error || `Không thể ${actionText} tài khoản.`);
+                    button.disabled = false;
+                    const newEnabled = !currentEnabled;
+                    button.innerHTML = `<i class="fas fa-${newEnabled ? 'lock' : 'unlock'}"></i> ${newEnabled ? 'Khóa' : 'Mở khóa'}`;
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert(`Lỗi kết nối khi ${actionText} tài khoản.`);
+                button.disabled = false;
+                const newEnabled = !currentEnabled;
+                button.innerHTML = `<i class="fas fa-${newEnabled ? 'lock' : 'unlock'}"></i> ${newEnabled ? 'Khóa' : 'Mở khóa'}`;
+            });
+        }
+    });
+
+    // --- Initialization ---
+    })();
+
+    // --- Custom persistent scrollbar sync & drag support ---
+    (function(){
+        function initCustomScrollbar(){
+            var wrapper = document.querySelector('.accounts-table-wrapper');
+            if(!wrapper) return;
+            var table = wrapper.querySelector('.accounts-table');
+            var track = wrapper.querySelector('.accounts-table-scrollbar-track');
+            var thumb = wrapper.querySelector('.accounts-table-scrollbar-thumb');
+            if(!track || !thumb || !table) return;
+
+            function updateThumb(){
+                var visible = wrapper.clientWidth;
+                var total = wrapper.scrollWidth;
+                if(total <= visible){
+                    thumb.style.display = 'none';
+                    track.style.opacity = '0.4';
+                    return;
+                }
+                thumb.style.display = '';
+                var ratio = visible / total;
+                var thumbWidth = Math.max(32, Math.floor(track.clientWidth * ratio));
+                thumb.style.width = thumbWidth + 'px';
+                var maxOffset = track.clientWidth - thumbWidth;
+                var left = Math.round((wrapper.scrollLeft / (total - visible)) * maxOffset) || 0;
+                thumb.style.left = left + 'px';
+                var percent = Math.round((wrapper.scrollLeft / (total - visible)) * 100) || 0;
+                thumb.setAttribute('aria-valuenow', percent);
+            }
+
+            var dragging = false;
+            var dragStartX = 0;
+            var startLeft = 0;
+
+            thumb.addEventListener('pointerdown', function(e){
+                e.preventDefault();
+                thumb.setPointerCapture && thumb.setPointerCapture(e.pointerId);
+                dragging = true;
+                dragStartX = e.clientX;
+                startLeft = parseInt(thumb.style.left || 0, 10) || 0;
+                thumb.classList.add('dragging');
+            });
+
+            document.addEventListener('pointermove', function(e){
+                if(!dragging) return;
+                var dx = e.clientX - dragStartX;
+                var maxOffset = track.clientWidth - thumb.clientWidth;
+                var newLeft = Math.max(0, Math.min(maxOffset, startLeft + dx));
+                thumb.style.left = newLeft + 'px';
+                var scrollRatio = maxOffset > 0 ? newLeft / maxOffset : 0;
+                wrapper.scrollLeft = Math.round(scrollRatio * (wrapper.scrollWidth - wrapper.clientWidth));
+                var percent = Math.round(scrollRatio * 100);
+                thumb.setAttribute('aria-valuenow', percent);
+            });
+
+            document.addEventListener('pointerup', function(e){
+                if(!dragging) return;
+                dragging = false;
+                try{ thumb.releasePointerCapture && thumb.releasePointerCapture(e.pointerId); }catch(e){}
+                thumb.classList.remove('dragging');
+            });
+
+            track.addEventListener('click', function(e){
+                if(e.target === thumb) return;
+                var rect = track.getBoundingClientRect();
+                var clickX = e.clientX - rect.left;
+                var thumbHalf = thumb.clientWidth / 2;
+                var newLeft = Math.max(0, Math.min(track.clientWidth - thumb.clientWidth, clickX - thumbHalf));
+                var scrollRatio = (track.clientWidth - thumb.clientWidth) > 0 ? newLeft / (track.clientWidth - thumb.clientWidth) : 0;
+                wrapper.scrollLeft = Math.round(scrollRatio * (wrapper.scrollWidth - wrapper.clientWidth));
+                updateThumb();
+            });
+
+            // Sync on scroll, wheel, touchmove and resize (cover different input types)
+            wrapper.addEventListener('scroll', function(){ updateThumb(); });
+            wrapper.addEventListener('wheel', function(){ setTimeout(updateThumb, 10); });
+            wrapper.addEventListener('touchmove', function(){ setTimeout(updateThumb, 10); }, {passive: true});
+            // Also listen to scroll events on the table (some browsers may dispatch differently)
+            table.addEventListener('scroll', function(){ updateThumb(); });
+            window.addEventListener('resize', function(){ updateThumb(); });
+
+            // initial
+            setTimeout(updateThumb, 60);
+        }
+
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCustomScrollbar);
+        else initCustomScrollbar();
+    })();
+
+    // --- Initialization ---
+    updateActionButtonsState();
+    updatePaginationInfo(document.querySelectorAll('.accounts-table tbody tr[data-search-terms]').length);
+});

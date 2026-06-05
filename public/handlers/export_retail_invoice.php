@@ -1,7 +1,9 @@
 <?php
 // Handler for exporting retail invoices (Hóa đơn bán lẻ) instantly
-session_start();
 require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
+
 require_once PROJECT_ROOT_PATH . '/private/classes/Database.php';
 require_once PROJECT_ROOT_PATH . '/private/classes/invoice/RetailInvoiceService.php';
 
@@ -17,6 +19,12 @@ header('Content-Type: application/json');
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
     echo json_encode(['error' => 'Chưa đăng nhập']);
+    exit;
+}
+
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Tính năng này hiện không khả dụng.']);
     exit;
 }
 
@@ -43,6 +51,31 @@ $retail_invoices = $retailInvoiceService->getRetailInvoicesData($tx_ids, $user_i
 if (empty($retail_invoices)) {
     http_response_code(404);
     echo json_encode(['error' => 'Không tìm thấy giao dịch hợp lệ']);
+    exit;
+}
+
+// Lọc bỏ các giao dịch có VAT hoặc được mua cho công ty - không cho xuất hóa đơn bán lẻ
+$filtered_invoices = [];
+$vat_tx_ids = []; // Danh sách các ID giao dịch có VAT
+foreach ($retail_invoices as $invoice) {
+    if (isset($invoice['has_vat']) && $invoice['has_vat'] === true) {
+        $vat_tx_ids[] = $invoice['id']; // Lưu ID giao dịch có VAT để thông báo
+    } else {
+        $filtered_invoices[] = $invoice; // Chỉ giữ lại các giao dịch không có VAT
+    }
+}
+$retail_invoices = $filtered_invoices;
+
+// Kiểm tra lại sau khi lọc VAT
+if (empty($retail_invoices)) {
+    $error_message = 'Giao dịch có thuế VAT không thể xuất hóa đơn bán lẻ.';
+    
+    if (!empty($vat_tx_ids)) {
+        $error_message .= ' Các giao dịch không hợp lệ: ' . implode(', ', $vat_tx_ids);
+    }
+    
+    http_response_code(400);
+    echo json_encode(['error' => $error_message]);
     exit;
 }
 
@@ -251,8 +284,7 @@ foreach ($retail_invoices as $invoice) {
         </div>
         
         <div class="transaction-details info-section">
-            <h3>CHI TIẾT GIAO DỊCH</h3>
-            <table class="transaction-table">
+            <h3>CHI TIẾT GIAO DỊCH</h3>            <table class="transaction-table">
                 <thead>
                     <tr>
                         <th width="10%">STT</th>
@@ -266,13 +298,12 @@ foreach ($retail_invoices as $invoice) {
                     <tr>
                         <td>1</td>
                         <td>' . $product_name . '</td>
-                        <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
+                        <td>' . number_format((float)(($invoice['package_price'] ?? $invoice['amount']) / ($invoice['registration_details']['num_account'] ?? 1)), 0, ',', '.') . ' đ</td>
                         <td> '. htmlspecialchars((string)$invoice['registration_details']['num_account']) .'</td>
                         <td>' . number_format((float)($invoice['amount'] ?? 0), 0, ',', '.') . ' đ</td>
                     </tr>';
       // Thêm thông tin chi tiết về gói dịch vụ nếu có
-    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {
-        if (!empty($invoice['registration_details']['province'])) {
+    if (isset($invoice['registration_details']) && is_array($invoice['registration_details'])) {        if (!empty($invoice['registration_details']['province'])) {
             $html .= '
                     <tr>
                         <td></td>
@@ -281,9 +312,7 @@ foreach ($retail_invoices as $invoice) {
         }
         
         
-    }
-    
-    // Tổng thanh toán
+    }    // Tổng thanh toán
     $html .= '
                 </tbody>
                 <tfoot>

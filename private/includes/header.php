@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Your CSS files -->
+    <!-- CSS Variables - Must be loaded first -->
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/css/variables.css">
     <!-- Base styles, variables etc. should be loaded here -->
-    <link rel="stylesheet" href="/assets/css/layouts/main-content.css"> <!-- Styles for content area -->
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/css/layouts/main-content.css"> <!-- Styles for content area -->
     <!-- Include other necessary CSS like components (buttons, cards, etc.) -->
     <!-- Dashboard specific styles (extracted from inline styles) -->
-    <link rel="stylesheet" href="/assets/css/pages/dashboard.css">
+    <link rel="stylesheet" href="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/css/pages/dashboard.css">
 </head>
 <body>
 <!-- Body content starts here -->

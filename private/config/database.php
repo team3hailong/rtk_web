@@ -6,7 +6,7 @@ require_once __DIR__ . '/env_loader.php';
 define('DB_SERVER', env('DB_SERVER', 'localhost'));
 define('DB_USERNAME', env('DB_USERNAME', 'root')); 
 define('DB_PASSWORD', env('DB_PASSWORD', '')); 
-define('DB_NAME', env('DB_NAME', 'sa2'));
+define('DB_NAME', env('DB_NAME', 'sa3'));
 
 // Tạo kết nối
 $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);

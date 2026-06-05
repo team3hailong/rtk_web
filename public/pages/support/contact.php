@@ -1,8 +1,8 @@
 <?php
-session_start();
-
 // --- Require file config - includes path helpers ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+init_session();
 
 // --- Use path constants defined by path_helpers ---
 $base_url = BASE_URL;
@@ -21,20 +21,30 @@ require_once $project_root_path . '/private/utils/csrf_helper.php';
 
 // --- Get User Data and Support Requests ---
 $db = new Database();
-$conn = $db->getConnection();
 $supportRequest = new SupportRequest($db);
 $user_id = $_SESSION['user_id'];
-
-// Fetch company information
-$companyInfo = $supportRequest->getCompanyInfo();
-
-// Fetch user's previous support requests
 $supportRequests = $supportRequest->getRequestsByUser($user_id);
 
-// Get messages from session (if any)
+// Get messages
 $message = $_SESSION['support_message'] ?? '';
 $error = $_SESSION['support_error'] ?? '';
 unset($_SESSION['support_message'], $_SESSION['support_error']);
+
+// ==========================================
+// CẤU HÌNH ZALO (ĐƠN GIẢN HÓA)
+// ==========================================
+
+// 1. Link Zalo Group (Link gốc)
+$zalo_link = "https://zalo.me/g/xwfsuz556";
+
+// 2. Link dùng để Share và Copy (Chính là link gốc)
+$share_link_val = $zalo_link;
+
+// 3. Link ảnh QR Code (Tạo từ link gốc)
+// Sử dụng API qrserver
+$qr_api_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data=" . urlencode($zalo_link);
+// Link backup nếu cái trên lỗi
+$qr_backup_url = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" . urlencode($zalo_link);
 
 // --- Include Header ---
 $_SESSION['base_url'] = $base_url;
@@ -47,6 +57,7 @@ include $project_root_path . '/private/includes/header.php';
     <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
 
     <!-- Main Content -->
+<!-- ... (Phần Dashboard Wrapper giữ nguyên) ... -->
     <main class="content-wrapper">
         <div class="container">
             <h2 class="page-title">Hỗ trợ & Liên hệ</h2>
@@ -58,15 +69,29 @@ include $project_root_path . '/private/includes/header.php';
                 <div class="message error-message"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
+            <!-- NEW: THANH TAB CHUYỂN ĐỔI (Chỉ hiện trên Mobile do CSS quy định) -->
+            <div class="mobile-tabs-nav">
+                <button type="button" class="tab-btn active" onclick="switchTab('form')">
+                    <i class="fas fa-paper-plane"></i> Gửi yêu cầu
+                </button>
+                <button type="button" class="tab-btn" onclick="switchTab('qr')">
+                    <i class="fab fa-whatsapp"></i> Chat Zalo
+                </button>
+                <button type="button" class="tab-btn" onclick="switchTab('history')">
+                    <i class="fas fa-history"></i> Lịch sử
+                </button>
+            </div>
+
             <div class="support-grid">
-                <!-- Support Request Form -->
-                <div class="form-section">
+                <!-- KHỐI 1: FORM -->
+                <!-- Thêm class "tab-content active" và id="tab-form" -->
+                <div class="form-section tab-content active" id="tab-form">
                     <h3>Gửi yêu cầu hỗ trợ</h3>
                     <form id="support-form" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=support&action=process_support_request" method="POST">
-                        <?php 
-                        // Add CSRF token to form
-                        echo generate_csrf_input();
-                        ?>
+                        <?php echo generate_csrf_input(); ?>
+                        
+                        <!-- ... (Nội dung Form giữ nguyên) ... -->
+                        
                         <div class="form-group">
                             <label for="subject">Tiêu đề:</label>
                             <input type="text" id="subject" name="subject" required class="form-control" maxlength="100">
@@ -95,154 +120,76 @@ include $project_root_path . '/private/includes/header.php';
                     </form>
                 </div>
                 
-                <!-- Company Information -->
-                <!--
-                <div class="company-info-section">
-                    <h3>Thông tin công ty</h3>
-                    <?php if ($companyInfo): ?>
-                        <div class="company-profile">
-                            <div class="company-header">
-                                <h4><?php echo htmlspecialchars($companyInfo['name']); ?></h4>
-                                <?php if (!empty($companyInfo['description'])): ?>
-                                    <p class="company-description"><?php echo nl2br(htmlspecialchars($companyInfo['description'])); ?></p>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <div class="contact-details">
-                                <?php
-                                $addressesJson = $companyInfo['address'] ?? null;
-                                if ($addressesJson) {
-                                    $addresses = json_decode($addressesJson, true);
-                                    if (is_array($addresses) && !empty($addresses)) {
-                                        foreach ($addresses as $addressEntry) {
-                                            $typeText = '';
-                                            if (isset($addressEntry['type'])) {
-                                                if ($addressEntry['type'] === 'trụ sở') {
-                                                    $typeText = 'Trụ sở: ';
-                                                } elseif ($addressEntry['type'] === 'chi nhánh') {
-                                                    $typeText = 'Chi nhánh: ';
-                                                }
-                                            }
-                                            $locationText = isset($addressEntry['location']) ? htmlspecialchars($addressEntry['location']) : 'N/A';
-                                ?>
-                                <div class="contact-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong><?php echo $typeText; ?></strong><?php echo $locationText; ?></span>
-                                </div>
-                                <?php
-                                        }
-                                    } elseif (!is_array($addresses) && !empty($companyInfo['address'])) {
-                                        // Fallback for plain text address if not JSON or empty JSON
-                                ?>
-                                <div class="contact-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><?php echo htmlspecialchars($companyInfo['address']); ?></span>
-                                </div>
-                                <?php
-                                    }
-                                }
-                                ?>
-                                
-                                <div class="contact-item">
-                                    <i class="fas fa-phone"></i>
-                                    <span><?php echo htmlspecialchars($companyInfo['phone']); ?></span>
-                                </div>
-                                
-                                <div class="contact-item">
-                                    <i class="fas fa-envelope"></i>
-                                    <span><?php echo htmlspecialchars($companyInfo['email']); ?></span>
-                                </div>
-                                
-                                <?php if (!empty($companyInfo['website'])): ?>
-                                    <div class="contact-item">
-                                        <i class="fas fa-globe"></i>
-                                        <span><a href="<?php echo htmlspecialchars($companyInfo['website']); ?>" target="_blank"><?php echo htmlspecialchars($companyInfo['website']); ?></a></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if (!empty($companyInfo['tax_code'])): ?>
-                                    <div class="contact-item">
-                                        <i class="fas fa-file-invoice"></i>
-                                        <span>Mã số thuế: <?php echo htmlspecialchars($companyInfo['tax_code']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if (!empty($companyInfo['working_hours'])): ?>
-                                    <div class="contact-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span><?php echo htmlspecialchars($companyInfo['working_hours']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <p>Không có thông tin công ty.</p>
-                    <?php endif; ?>
+                <!-- KHỐI 2: ZALO QR -->
+                <!-- Thêm class "tab-content" (không có active) và id="tab-qr" -->
+                <div class="qr-section tab-content" id="tab-qr">
+                    <h3>Nhận hỗ trợ trực tiếp qua Zalo</h3>
+                    
+                    <div class="qr-wrapper">
+                        <!-- Lưu ý: Nhớ dùng link ảnh nội bộ nếu bạn đã tải ảnh về như hướng dẫn trước -->
+                        <img src="<?php echo $qr_api_url; ?>" 
+                             alt="Zalo QR Code" 
+                             class="qr-image" 
+                             id="zalo-qr-img"
+                             crossOrigin="anonymous"
+                             onerror="this.onerror=null; this.src='https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=<?php echo urlencode($zalo_link); ?>'">
+                    </div>
+                    
+                    <p class="qr-desc">
+                        Quét mã QR để vào nhóm Zalo hỗ trợ .
+                    </p>
+                    
+                    <input type="hidden" id="share-link-val" value="<?php echo htmlspecialchars($share_link_val); ?>">
+                    
+                    <div class="qr-actions">
+                        <button type="button" class="btn-qr-action btn-share" id="btn-share-zalo">
+                            <i class="fas fa-share-alt"></i> <span>Share</span>
+                        </button>
+                        <button type="button" class="btn-qr-action btn-copy" id="btn-copy-link">
+                            <i class="fas fa-link"></i> <span>Copy</span>
+                        </button>
+                        <button type="button" class="btn-qr-action btn-download" id="btn-download-qr">
+                            <i class="fas fa-download"></i> <span>Tải QR</span>
+                        </button>
+                    </div>
                 </div>
-                -->
-            </div>
 
-            <!-- Previous Support Requests -->
-            <div class="previous-requests-section">
+                <!-- KHỐI 3: LỊCH SỬ (Previous Requests) -->
+            <!-- Thêm class "tab-content" và id="tab-history" -->
+                <div class="previous-requests-section tab-content" id="tab-history">
                 <h3>Yêu cầu hỗ trợ của bạn</h3>
                 <?php if (!empty($supportRequests)): ?>
                     <div class="requests-table-container">
+                        <!-- ... (Giữ nguyên Table code) ... -->
                         <table class="requests-table">
                             <thead>
                                 <tr>
                                     <th>Tiêu đề</th>
-                                    <th>Loại yêu cầu</th>
-                                    <th>Ngày gửi</th>
+                                    <th>Loại</th> <!-- Rút gọn chữ cho mobile đỡ vỡ -->
+                                    <th>Ngày</th>
                                     <th>Trạng thái</th>
                                     <th>Chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($supportRequests as $request): ?>
-                                    <?php 
-                                        // Define status classes and translations
-                                        $status_class = '';
-                                        $status_text = '';
-                                        
+                                    <!-- ... (Giữ nguyên nội dung vòng lặp) ... -->
+                                     <?php 
+                                        $status_class = ''; $status_text = '';
                                         switch ($request['status']) {
-                                            case 'pending':
-                                                $status_class = 'status-pending';
-                                                $status_text = 'Chờ xử lý';
-                                                break;
-                                            case 'in_progress':
-                                                $status_class = 'status-progress';
-                                                $status_text = 'Đang xử lý';
-                                                break;
-                                            case 'resolved':
-                                                $status_class = 'status-resolved';
-                                                $status_text = 'Đã giải quyết';
-                                                break;
-                                            case 'closed':
-                                                $status_class = 'status-closed';
-                                                $status_text = 'Đã đóng';
-                                                break;
-                                            default:
-                                                $status_class = 'status-pending';
-                                                $status_text = 'Chờ xử lý';
+                                            case 'pending': $status_class = 'status-pending'; $status_text = 'Chờ xử lý'; break;
+                                            case 'in_progress': $status_class = 'status-progress'; $status_text = 'Đang xử lý'; break;
+                                            case 'resolved': $status_class = 'status-resolved'; $status_text = 'Đã giải quyết'; break;
+                                            case 'closed': $status_class = 'status-closed'; $status_text = 'Đã đóng'; break;
+                                            default: $status_class = 'status-pending'; $status_text = 'Chờ xử lý';
                                         }
-                                        
-                                        // Translate category
                                         $category_text = '';
                                         switch ($request['category']) {
-                                            case 'technical':
-                                                $category_text = 'Kỹ thuật';
-                                                break;
-                                            case 'billing':
-                                                $category_text = 'Thanh toán';
-                                                break;
-                                            case 'account':
-                                                $category_text = 'Tài khoản';
-                                                break;
-                                            default:
-                                                $category_text = 'Khác';
+                                            case 'technical': $category_text = 'Kỹ thuật'; break;
+                                            case 'billing': $category_text = 'Thanh toán'; break;
+                                            case 'account': $category_text = 'Tài khoản'; break;
+                                            default: $category_text = 'Khác';
                                         }
-                                        
-                                        // Format date
                                         $created_date = new DateTime($request['created_at']);
                                         $formatted_date = $created_date->format('d/m/Y H:i');
                                     ?>
@@ -250,11 +197,7 @@ include $project_root_path . '/private/includes/header.php';
                                         <td><?php echo htmlspecialchars($request['subject']); ?></td>
                                         <td><?php echo htmlspecialchars($category_text); ?></td>
                                         <td><?php echo $formatted_date; ?></td>
-                                        <td>
-                                            <span class="status-badge <?php echo $status_class; ?>">
-                                                <?php echo htmlspecialchars($status_text); ?>
-                                            </span>
-                                        </td>
+                                        <td><span class="status-badge <?php echo $status_class; ?>"><?php echo htmlspecialchars($status_text); ?></span></td>
                                         <td>
                                             <button type="button" class="btn-view-details" 
                                                     data-request='<?php echo htmlspecialchars(json_encode($request), ENT_QUOTES, 'UTF-8'); ?>'
@@ -272,11 +215,13 @@ include $project_root_path . '/private/includes/header.php';
                     <p class="no-requests">Bạn chưa có yêu cầu hỗ trợ nào.</p>
                 <?php endif; ?>
             </div>
+
+            </div>
         </div>
     </main>
 </div>
 
-<!-- Modal for Request Details -->
+<!-- Modal (Giữ nguyên) -->
 <div id="request-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -289,27 +234,22 @@ include $project_root_path . '/private/includes/header.php';
                     <div class="detail-label">Tiêu đề:</div>
                     <div class="detail-value" id="modal-subject"></div>
                 </div>
-                
                 <div class="detail-item">
                     <div class="detail-label">Loại yêu cầu:</div>
                     <div class="detail-value" id="modal-category"></div>
                 </div>
-                
                 <div class="detail-item">
                     <div class="detail-label">Ngày gửi:</div>
                     <div class="detail-value" id="modal-created"></div>
                 </div>
-                
                 <div class="detail-item">
                     <div class="detail-label">Trạng thái:</div>
                     <div class="detail-value" id="modal-status"></div>
                 </div>
-                
                 <div class="detail-item">
                     <div class="detail-label">Nội dung:</div>
                     <div class="detail-value message-content" id="modal-message"></div>
                 </div>
-                
                 <div class="detail-item" id="response-container">
                     <div class="detail-label">Phản hồi:</div>
                     <div class="detail-value message-content" id="modal-response"></div>
@@ -319,109 +259,9 @@ include $project_root_path . '/private/includes/header.php';
     </div>
 </div>
 
-<!-- Add JavaScript for Modal Functionality -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Character counter functionality
-    const subjectInput = document.getElementById('subject');
-    const messageTextarea = document.getElementById('message');
-    const subjectCounter = document.getElementById('subject-counter');
-    const messageCounter = document.getElementById('message-counter');
-    
-    // Update character counter for subject
-    subjectInput.addEventListener('input', function() {
-        const currentLength = this.value.length;
-        const maxLength = this.getAttribute('maxlength');
-        subjectCounter.textContent = currentLength + '/' + maxLength + ' ký tự';
-        
-        // Add visual feedback when approaching character limit
-        if (currentLength >= maxLength * 0.9) {
-            subjectCounter.classList.add('char-limit-warning');
-        } else {
-            subjectCounter.classList.remove('char-limit-warning');
-        }
-    });
-    
-    // Update character counter for message
-    messageTextarea.addEventListener('input', function() {
-        const currentLength = this.value.length;
-        const maxLength = this.getAttribute('maxlength');
-        messageCounter.textContent = currentLength + '/' + maxLength + ' ký tự';
-        
-        // Add visual feedback when approaching character limit
-        if (currentLength >= maxLength * 0.9) {
-            messageCounter.classList.add('char-limit-warning');
-        } else {
-            messageCounter.classList.remove('char-limit-warning');
-        }
-    });
-    
-    // Modal functionality
-    const modal = document.getElementById('request-modal');
-    const closeBtn = modal.querySelector('.modal-close-btn');
-    const viewButtons = document.querySelectorAll('.btn-view-details');
-    
-    // Open modal with request details
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const requestData = JSON.parse(this.getAttribute('data-request'));
-            const statusText = this.getAttribute('data-status-text');
-            const categoryText = this.getAttribute('data-category-text');
-            
-            document.getElementById('modal-subject').textContent = requestData.subject;
-            document.getElementById('modal-category').textContent = categoryText;
-            document.getElementById('modal-status').textContent = statusText;
-            document.getElementById('modal-message').textContent = requestData.message;
-            
-            // Format date
-            const createdDate = new Date(requestData.created_at);
-            const formattedDate = createdDate.toLocaleDateString('vi-VN') + ' ' + 
-                                 createdDate.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
-            document.getElementById('modal-created').textContent = formattedDate;
-            
-            // Show/hide admin response
-            const responseContainer = document.getElementById('response-container');
-            if (requestData.admin_response) {
-                document.getElementById('modal-response').textContent = requestData.admin_response;
-                responseContainer.style.display = 'flex';
-            } else {
-                responseContainer.style.display = 'none';
-            }
-            
-            modal.style.display = 'block';
-        });
-    });
-    
-    // Close modal
-    closeBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Auto-hide flash messages
-    const messages = document.querySelectorAll('.message');
-    messages.forEach(message => {
-        setTimeout(() => {
-            message.style.transition = 'opacity 0.5s ease';
-            message.style.opacity = '0';
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 500);
-        }, 5000);
-    });
-});
-</script>
+<script src="<?php echo $base_url; ?>/public/assets/js/pages/support/contact.js"></script>
 
 <?php
-// --- Include Footer ---
 include $project_root_path . '/private/includes/footer.php';
-
-// Close database connection at the end of the file
 $db->close();
 ?>

@@ -13,30 +13,33 @@ $data = handle_forgot_password_request();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quên Mật Khẩu</title>
-    <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/base.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/auth/forgot-password.css">
 </head>
 <body>
-    <div class="forgot-password-container">
-        <h2>Quên Mật Khẩu</h2>
-        
-        <?php if ($data['message']): ?>
-            <div class="message <?php echo $data['message_type']; ?>">
-                <?php echo htmlspecialchars($data['message']); ?>
+    <div class="container">
+        <div class="forgot-password-container">
+            <h2>QUÊN MẬT KHẨU</h2>
+            
+            <?php if ($data['message']): ?>
+                <div class="message <?php echo $data['message_type']; ?>">
+                    <?php echo htmlspecialchars($data['message']); ?>
+                </div>
+            <?php endif; ?>
+            
+            <p>Nhập địa chỉ email của bạn, chúng tôi sẽ gửi cho bạn OTP 6 số để đặt lại mật khẩu</p>
+            
+            <form action="/public/handlers/action_handler.php?module=auth&action=process_forgot_password" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <button type="submit" class="btn-submit">GỬI MÃ OTP</button>
+            </form>
+            <div class="login-link">
+                <a href="login.php">Quay lại đăng nhập</a>
             </div>
-        <?php endif; ?>
-        
-        <p>Nhập địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn mã OTP 6 chữ số để đặt lại mật khẩu.</p>
-        
-        <form action="/public/handlers/action_handler.php?module=auth&action=process_forgot_password" method="POST">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <button type="submit" class="btn-submit">Gửi Mã OTP</button>
-        </form>
-        <div class="login-link">
-            <a href="login.php">Quay lại đăng nhập</a>
         </div>
     </div>
 </body>

@@ -1,103 +1,415 @@
+/* Payment Wizard Container */
+.payment-wizard {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
 
-    .payment-summary, .payment-qr-section {
-        background-color: white;
-        padding: 2rem;
-        border-radius: var(--rounded-lg);
-        border: 1px solid var(--gray-200);
-        margin-bottom: 2rem;
-    }
+.payment-wizard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-    .payment-summary h3, .payment-qr-section h3 {
-        font-size: var(--font-size-lg);
-        font-weight: var(--font-semibold);
-        color: var(--gray-800);
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid var(--gray-200);
-        padding-bottom: 0.75rem;
-    }
+.payment-wizard-header h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 2rem;
+}
 
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center; /* Căn giữa nếu text dài */
-        margin-bottom: 0.75rem;
-        font-size: var(--font-size-base);
-        color: var(--gray-700);
-        gap: 1rem; /* Khoảng cách giữa label và value */
-        flex-wrap: wrap; /* Cho phép xuống dòng nếu không đủ chỗ */
+/* Wizard Steps */
+.wizard-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+.wizard-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    position: relative;
+}
+
+.wizard-step::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 60%;
+    width: 100%;
+    height: 2px;
+    background-color: var(--gray-300);
+    z-index: -1;
+}
+
+.wizard-step:last-child::after {
+    display: none;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--gray-200);
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.wizard-step.active .step-number {
+    background-color: var(--primary-600);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.wizard-step.completed .step-number {
+    position: relative;
+    font-size: 0;
+}
+
+.wizard-step.completed .step-number::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free', 'FontAwesome';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    transition: color 0.3s ease;
+}
+
+.wizard-step.active .step-label {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
+/* Wizard Content */
+.payment-wizard-content {
+    position: relative;
+    min-height: 500px;
+}
+
+.wizard-section {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.wizard-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-    .summary-item span:first-child { flex-shrink: 0;} /* Không co label */    .summary-item strong {
-        font-weight: var(--font-semibold); /* Đậm hơn medium */
-        color: var(--gray-900);
-        text-align: right; /* Căn phải giá trị */
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    .summary-total {
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--gray-300);
-        font-size: 1.25rem; /* --font-size-xl */
-        font-weight: var(--font-bold);
-        color: var(--primary-600);
-    }
+}
+
+/* Section Card */
+.section-card {
+    background-color: white;
+    border-radius: var(--rounded-lg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    border: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.section-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-title i {
+    color: var(--primary-600);
+    font-size: 1.75rem;
+}
+
+.section-description {
+    color: var(--gray-600);
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.section-content {
+    margin-bottom: 2rem;
+}
+
+/* Info Rows */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 0.9375rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row span {
+    color: var(--gray-600);
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.info-row strong {
+    color: var(--gray-900);
+    font-weight: 600;
+    text-align: right;
+    word-break: break-word;
+}
+
+/* Price Summary */
+.price-summary {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--gray-50);
+    border-radius: var(--rounded-md);
+    border: 1px solid var(--gray-200);
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0;
+    font-size: 0.9375rem;
+}
+
+.price-row span {
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.price-row strong {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.price-row.discount {
+    color: var(--danger-600);
+}
+
+.price-row.discount span,
+.price-row.discount strong {
+    color: var(--danger-600);
+}
+
+.price-row.total {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--gray-300);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.price-row.total span,
+.price-row.total strong {
+    color: var(--primary-600);
+}
     
-    /* Voucher styles */
-    .voucher-section {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background-color: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: var(--rounded-md);
-    }
-    .voucher-form {
-        display: flex;
-        gap: 0.5rem;
-    }
-    .voucher-input {
-        flex: 1;
-        padding: 0.5rem;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--rounded-md);
-        font-size: var(--font-size-sm);
-    }
-    .voucher-btn {
-        padding: 0.5rem 1rem;
-        background-color: var(--primary-600);
-        color: white;
-        border: none;
-        border-radius: var(--rounded-md);
-        font-weight: var(--font-medium);
-        cursor: pointer;
-    }
-    .voucher-btn:hover {
-        background-color: var(--primary-700);
-    }
-    .voucher-status {
-        margin-top: 0.5rem;
-        font-size: var(--font-size-sm);
-    }
-    .voucher-status.success {
-        color: var(--success-600);
-    }
-    .voucher-status.error {
-        color: var(--danger-600);
-    }
-    .voucher-info {
-        margin-top: 1rem;
-        padding: 0.75rem;
-        background-color: var(--success-50);
-        border: 1px solid var(--success-200);
-        border-radius: var(--rounded-md);
-        display: none;
-    }
-    .voucher-remove {
-        color: var(--danger-600);
-        background: none;
-        border: none;
-        font-size: var(--font-size-sm);
-        cursor: pointer;
-        padding: 0;
-        margin-left: 1rem;
-    }
+/* Voucher Section */
+.voucher-section {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    border-radius: var(--rounded-md);
+}
+
+/* Notice shown on payment page when GLOBAL_DISCOUNT is enabled */
+.global-discount-payment-note {
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: linear-gradient(90deg, #fff9db 0%, #fff4c2 100%);
+    border: 1px solid rgba(250, 204, 21, 0.18);
+    color: #7c4a00;
+    border-radius: var(--rounded-sm);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.global-discount-payment-note strong { font-weight: 700; margin-right: 6px; }
+
+.voucher-section h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.voucher-section h4 i {
+    color: var(--primary-600);
+}
+
+.voucher-form {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.voucher-input {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-md);
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.voucher-input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.voucher-btn {
+    padding: 0.625rem 1.25rem;
+    background-color: var(--primary-600);
+    color: white;
+    border: none;
+    border-radius: var(--rounded-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.voucher-btn:hover {
+    background-color: var(--primary-700);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.voucher-status {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    border-radius: var(--rounded-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.voucher-status.success {
+    color: var(--success-700);
+    background-color: var(--success-50);
+}
+
+.voucher-status.error {
+    color: var(--danger-700);
+    background-color: var(--danger-50);
+}
+
+.voucher-info {
+    margin-top: 0.75rem;
+    padding: 1rem;
+    background-color: var(--success-50);
+    border: 1px solid var(--success-200);
+    border-radius: var(--rounded-md);
+    display: none;
+}
+
+.voucher-applied {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.voucher-applied i {
+    color: var(--success-600);
+}
+
+.voucher-applied span {
+    flex: 1;
+    color: var(--gray-800);
+    font-size: 0.875rem;
+}
+
+.voucher-remove {
+    color: var(--danger-600);
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--rounded-sm);
+    transition: all 0.2s ease;
+}
+
+.voucher-remove:hover {
+    background-color: var(--danger-50);
+    color: var(--danger-700);
+}
+
+.discount-info {
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+}
+
+.discount-info i {
+    color: var(--success-600);
+    margin-right: 0.25rem;
+}
     
     /* Confirmation Dialog Styles */
     .confirmation-dialog {
@@ -134,154 +446,539 @@
         border-radius: var(--rounded-md, 0.375rem);
     }
 
-    .payment-qr-section {
+/* QR Code Section */
+.qr-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+#qrcode {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: var(--rounded-lg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#qrcode img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+}
+
+/* Bank Details */
+.bank-details {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--gray-50);
+    border-radius: var(--rounded-md);
+    border: 1px solid var(--gray-200);
+}
+
+.bank-details h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.bank-details h4 i {
+    color: var(--primary-600);
+}
+
+.bank-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.bank-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.bank-info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.bank-info-item .label {
+    font-size: 0.8125rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.bank-info-item strong {
+    font-size: 0.9375rem;
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.copyable-field {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--rounded-sm);
+}
+
+.copyable-field strong {
+    flex: 1;
+}
+
+.highlight-amount {
+    color: var(--primary-600) !important;
+    font-weight: 700 !important;
+}
+
+.copy-btn {
+    padding: 0.375rem 0.625rem;
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-sm);
+    color: var(--gray-600);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background-color: var(--primary-600);
+    border-color: var(--primary-600);
+    color: white;
+}
+
+.payment-note {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #fef3c7;
+    border-left: 3px solid #f59e0b;
+    border-radius: var(--rounded-sm);
+    font-size: 0.875rem;
+    color: #92400e;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.payment-note i {
+    color: #f59e0b;
+    margin-top: 0.125rem;
+}
+
+.auto-approve-notice {
+    margin-bottom: 1rem;
+    padding: 0.875rem 1rem;
+    background-color: #d1fae5;
+    border: 1px solid #86efac;
+    border-radius: var(--rounded-md);
+    color: #065f46;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.auto-approve-notice i {
+    color: var(--success-600);
+}
+
+
+/* Upload Instruction */
+.upload-instruction {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border: 1px solid #93c5fd;
+    border-radius: var(--rounded-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9375rem;
+}
+
+.upload-instruction i {
+    color: var(--primary-600);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.upload-instruction span {
+    color: var(--gray-800);
+    line-height: 1.5;
+}
+
+.upload-instruction strong {
+    color: var(--primary-700);
+    font-weight: 600;
+}
+
+/* Upload Area */
+.upload-area {
+    padding: 3rem 2rem;
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--rounded-lg);
+    text-align: center;
+    background-color: var(--gray-50);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: var(--primary-500);
+    background-color: #f0f9ff;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: var(--primary-500);
+    margin-bottom: 1rem;
+}
+
+.upload-text {
+    margin-bottom: 1.5rem;
+}
+
+.upload-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+}
+
+.upload-subtitle {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.file-preview {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--rounded-md);
+    background-color: white;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.preview-header span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-900);
+}
+
+.btn-remove-file {
+    padding: 0.25rem 0.5rem;
+    background-color: var(--danger-50);
+    border: 1px solid var(--danger-200);
+    border-radius: var(--rounded-sm);
+    color: var(--danger-600);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-file:hover {
+    background-color: var(--danger-600);
+    color: white;
+}
+
+.preview-image {
+    text-align: center;
+}
+
+.preview-image img {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: var(--rounded-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-status {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: var(--rounded-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.upload-status.success {
+    background-color: var(--success-50);
+    color: var(--success-700);
+}
+
+.upload-status.error {
+    background-color: var(--danger-50);
+    color: var(--danger-700);
+}
+
+.upload-progress-container {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--gray-50);
+    border-radius: var(--rounded-md);
+    border: 1px solid var(--gray-200);
+}
+
+.progress-bar-wrapper {
+    width: 100%;
+    height: 20px;
+    background-color: var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-text {
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    text-align: center;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Section Actions (Buttons) */
+.section-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.btn-wizard {
+    padding: 0.875rem 2rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: var(--rounded-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-wizard:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary.btn-wizard {
+    background-color: var(--primary-600);
+    color: white;
+}
+
+.btn-primary.btn-wizard:hover:not(:disabled) {
+    background-color: var(--primary-700);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary.btn-wizard {
+    background-color: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.btn-secondary.btn-wizard:hover:not(:disabled) {
+    background-color: var(--gray-300);
+}
+
+.btn-success.btn-wizard {
+    background-color: var(--success-600);
+    color: white;
+}
+
+.btn-success.btn-wizard:hover:not(:disabled) {
+    background-color: var(--success-700);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-outline {
+    background-color: white;
+    border: 2px solid var(--gray-300);
+    color: var(--gray-700);
+}
+
+.btn-outline:hover {
+    border-color: var(--primary-600);
+    color: var(--primary-600);
+    background-color: #f0f9ff;
+}
+
+/* Free Order Notice */
+.free-order-notice {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-left: 4px solid var(--success-600);
+    padding: 1.5rem;
+    border-radius: var(--rounded-md);
+    margin-bottom: 1.5rem;
+}
+
+.free-order-notice p {
+    color: var(--gray-900);
+    line-height: 1.6;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9375rem;
+}
+
+.free-order-notice p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .payment-wizard {
+        padding: 1rem 0.5rem;
+    }
+
+    .payment-wizard-header h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .wizard-steps {
+        gap: 0.5rem;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .step-number {
+        width: 36px;
+        height: 36px;
+        font-size: 0.875rem;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .section-card {
+        padding: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        flex-direction: column;
         text-align: center;
+        gap: 0.5rem;
+    }
+
+    .bank-info-grid {
+        grid-template-columns: 1fr;
     }
 
     #qrcode {
-        width: 250px; /* Kích thước QR */
-        height: 250px;
-        margin: 1rem auto 1.5rem auto; /* Căn giữa QR */
-        border: 5px solid white; /* Khung trắng quanh QR */
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        display: flex; /* Để căn giữa placeholder nếu JS chưa chạy */
-        align-items: center;
+        width: 220px;
+        height: 220px;
+    }
+
+    .section-actions {
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+    }
+
+    .btn-wizard {
+        width: 100%;
         justify-content: center;
-        background-color: var(--gray-100); /* Nền chờ */
-    }
-    #qrcode img { /* Style cho thẻ img do thư viện JS tạo ra */
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain; /* Đảm bảo QR không bị méo */
     }
 
-    .bank-details p {
-        margin-bottom: 0.5rem;
-        color: var(--gray-600);
-        font-size: var(--font-size-sm); /* Chữ nhỏ hơn chút */
-    }
-     .bank-details strong {
-         color: var(--gray-800);
-         font-weight: var(--font-semibold);
-     }
-     .bank-details code {
-        background-color: var(--gray-100);
-        padding: 0.2em 0.5em;
-        border-radius: var(--rounded-sm);
-        font-family: monospace;
-        color: var(--gray-700);
-        cursor: pointer;
-        border: 1px solid var(--gray-200);
-        display: inline-block; /* Để có padding */
-        margin-left: 5px;
-        position: relative; /* Cho tooltip nếu muốn */
-     }
-    .bank-details code:hover::after {
-        content: 'Sao chép';
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--gray-800);
-        color: white;
-        padding: 2px 6px;
-        border-radius: var(--rounded-sm);
-        font-size: 0.7rem;
-        white-space: nowrap;
-        margin-bottom: 4px;
+    .upload-area {
+        padding: 2rem 1rem;
     }
 
+    .upload-icon {
+        font-size: 3rem;
+    }
+    
+    .voucher-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .voucher-input {
+        width: 100%;
+    }
+    
+    .voucher-btn {
+        width: 100%;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .info-row strong {
+        text-align: left;
+        width: 100%;
+    }
+}
 
-    .payment-instructions {
-        margin-top: 1.5rem;
-        font-size: var(--font-size-sm);
-        color: var(--gray-500);
-        line-height: 1.6;
+@media (max-width: 480px) {
+    .payment-wizard {
+        padding: 1rem 0.5rem;
     }
-
-
-     @media (max-width: 768px) {
-        .content-wrapper {
-            padding: 1rem !important;
-        }
-        .payment-summary, .payment-qr-section {
-            padding: 1.5rem;
-        }
-         #qrcode {
-            width: 200px;
-            height: 200px;
-        }
-        .payment-container {
-             grid-template-columns: 1fr; /* Stack 2 cột trên mobile */
-        }
-    }
-
-    .upload-section {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background-color: var(--gray-50);
-        border: 1px dashed var(--gray-300);
-        border-radius: var(--rounded-md);
-        text-align: center;
-    }
-    .upload-section h4 {
-        font-size: var(--font-size-base);
-        font-weight: var(--font-semibold);
-        color: var(--gray-700);
-        margin-bottom: 1rem;
-    }
-    .upload-section p {
-        font-size: var(--font-size-sm);
-        color: var(--gray-500);
-        margin-bottom: 1rem;
-    }
-    .upload-section input[type="file"] {
-        display: block;
-        margin: 1rem auto;
-        padding: 0.5rem;
-        border: 1px solid var(--gray-300);
-        border-radius: var(--rounded-md);
-        max-width: 300px; /* Giới hạn chiều rộng */
-        cursor: pointer;
-    }
-     .upload-section .btn-upload {
-        /* Style giống btn-primary hoặc btn-secondary */
-        padding: 0.6rem 1.2rem;
-        background-color: var(--primary-600);
-        color: white;
-        border: none;
-        border-radius: var(--rounded-md);
-        font-weight: var(--font-medium);
-        cursor: pointer;
-        transition: background-color 0.2s;
-     }
-     .upload-section .btn-upload:hover {
-         background-color: var(--primary-700);
-     }
-     .upload-section .btn-upload:disabled {
-         background-color: var(--gray-400);
-         cursor: not-allowed;
-     }
-     #upload-status {
-         margin-top: 1rem;
-         font-size: var(--font-size-sm);
-         font-weight: var(--font-medium);
-     }
-     .status-success { color: var(--success-600); }
-     .status-error { color: var(--danger-600); }
-     
-    /* Responsive styles for mobile */
-    @media (max-width: 480px) {
-        .payment-summary, .payment-qr-section {
-            padding: 1rem;
-        }
-        .summary-total {
-            font-size: 1rem;
-        }
-        #qrcode {
-            width: 150px;
-            height: 150px;
-        }
+    
+    .payment-wizard-header h2 {
+        font-size: 1.25rem;
     }
 
+    .wizard-step::after {
+        display: none;
+    }
+
+    .section-card {
+        padding: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 1.125rem;
+    }
+
+    #qrcode {
+        width: 180px;
+        height: 180px;
+    }
+
+    .price-row.total {
+        font-size: 1.125rem;
+    }
+    
+    .step-label {
+        font-size: 0.625rem;
+    }
+}

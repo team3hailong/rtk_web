@@ -1,15 +1,14 @@
 <?php
-session_start();
 require_once __DIR__ . '/../../../private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session();
 
 // Check if user has valid password reset session
-if (!isset($_SESSION['password_reset_token']) || 
-    !isset($_SESSION['password_reset_user_id']) || 
-    !isset($_SESSION['password_reset_email']) || 
+if (!isset($_SESSION['password_reset_token']) ||
+    !isset($_SESSION['password_reset_user_id']) ||
+    !isset($_SESSION['password_reset_email']) ||
     !isset($_SESSION['password_reset_expiry']) ||
-    time() > $_SESSION['password_reset_expiry']) {
-    
-    // Invalid or expired session, redirect to forgot password page
+    time() > $_SESSION['password_reset_expiry']) {    // Invalid or expired session, redirect to forgot password page
     $_SESSION['reset_message'] = 'Phiên đặt lại mật khẩu đã hết hạn hoặc không hợp lệ. Vui lòng thực hiện lại quy trình đặt lại mật khẩu.';
     $_SESSION['reset_message_type'] = 'error';
     header('Location: /public/pages/auth/forgot_password.php');

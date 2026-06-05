@@ -404,6 +404,52 @@ html{
 }
 
 /* ============================================= */
+/* == Featured Navigation Item Styles         == */
+/* ============================================= */
+.nav-item.featured {
+    position: relative;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+}
+
+.nav-item.featured:hover {
+    background: linear-gradient(135deg, var(--primary-100) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.nav-item.featured.active {
+    background: linear-gradient(135deg, var(--primary-100) 0%, rgba(16, 185, 129, 0.15) 100%);
+    border-color: var(--primary-500);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.featured-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.nav-item.featured .icon {
+    color: var(--primary-600);
+}
+
+.nav-item.featured span {
+    font-weight: var(--font-semibold);
+}
+
+/* ============================================= */
 /* == Content Wrapper                         == */
 /* ============================================= */
 .content-wrapper {
@@ -505,7 +551,7 @@ html{
 
     /* --- Content Wrapper: Adjust Padding --- */
     .content-wrapper {
-        padding-top: 5.5rem; /* Increased top padding slightly */
+        padding-top: 3rem; /* Increased top padding slightly */
         padding-left: 1rem; /* Adjust mobile padding */
         padding-right: 1rem;
         /* Margin-left is not needed as sidebar is fixed */

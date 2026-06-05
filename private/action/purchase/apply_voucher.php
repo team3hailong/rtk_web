@@ -103,12 +103,13 @@ try {
         $registration_id = $_SESSION['pending_registration_id'];
         try {
             $conn = $db->getConnection();
-            $stmt = $conn->prepare("SELECT package_id, location_id, num_account FROM registration WHERE id = ?");
+            $stmt = $conn->prepare("SELECT package_id, location_id, selected_provinces, num_account FROM registration WHERE id = ?");
             $stmt->execute([$registration_id]);
             $regInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($regInfo) {
                 $packageId = $regInfo['package_id'];
-                $locationId = $regInfo['location_id'];
+                // Sử dụng selected_provinces thay vì location_id
+                $locationId = !empty($regInfo['selected_provinces']) ? $regInfo['selected_provinces'] : $regInfo['location_id'];
                 $numSurveyAccounts = $regInfo['num_account'];
             }
         } catch (Exception $e) {
@@ -150,12 +151,52 @@ $_SESSION[$sessionKey]['voucher_id'] = $voucher['id'];
 $_SESSION[$sessionKey]['voucher_code'] = $voucher['code'];
 $_SESSION[$sessionKey]['original_amount'] = $orderAmount;
 $_SESSION[$sessionKey]['voucher_discount'] = $applicationResult['discount_value'];
+$_SESSION[$sessionKey]['voucher_type'] = $voucher['voucher_type'];
 
-// Update total price
-if ($sessionKey === 'order') {
-    $_SESSION[$sessionKey]['total_price'] = $applicationResult['new_amount'];
-} elseif ($sessionKey === 'renewal') {
-    $_SESSION[$sessionKey]['amount'] = $applicationResult['new_amount'];
+// Lưu lại thông tin giá đã giảm để hiển thị trên trang thanh toán
+if (isset($_SESSION['pending_registration_id'])) {
+    $_SESSION['discounted_price_before_vat'] = true; // Đánh dấu cần tính VAT trên giá đã giảm
+    
+    // Lấy thông tin VAT từ registration
+    try {
+        $conn = $db->getConnection();
+        $stmt = $conn->prepare("SELECT base_price, num_account, vat_percent FROM registration WHERE id = ?");
+        $stmt->execute([$_SESSION['pending_registration_id']]);
+        $regInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($regInfo) {
+            $base_subtotal = $regInfo['base_price'] * $regInfo['num_account'];
+            $discounted_subtotal = $base_subtotal - $applicationResult['discount_value'];
+            if ($discounted_subtotal < 0) $discounted_subtotal = 0;
+            
+            // Lưu giá trị đã giảm giá trước VAT
+            $_SESSION[$sessionKey]['discounted_subtotal'] = $discounted_subtotal;
+            
+            // Tính lại VAT và tổng giá dựa trên giá đã giảm giá
+            if ($regInfo['vat_percent'] > 0) {
+                $new_vat = round($discounted_subtotal * ($regInfo['vat_percent'] / 100));
+                $final_price = $discounted_subtotal + $new_vat;
+                
+                // Cập nhật tổng giá đã bao gồm VAT
+                if ($sessionKey === 'order') {
+                    $_SESSION[$sessionKey]['total_price'] = $final_price;
+                } elseif ($sessionKey === 'renewal') {
+                    $_SESSION[$sessionKey]['amount'] = $final_price;
+                }
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error updating VAT calculation after voucher: " . $e->getMessage());
+    }
+}
+
+// Update total price only if we haven't already calculated with VAT
+if (!isset($_SESSION['discounted_price_before_vat'])) {
+    if ($sessionKey === 'order') {
+        $_SESSION[$sessionKey]['total_price'] = $applicationResult['new_amount'];
+    } elseif ($sessionKey === 'renewal') {
+        $_SESSION[$sessionKey]['amount'] = $applicationResult['new_amount'];
+    }
 }
 
 // If this is an extend_duration voucher, update end time for renewal

@@ -1,0 +1,26 @@
+[2025-11-06 23:22:11] ========================================
+[2025-11-06 23:22:11] Cron Job Started - Action: START
+[2025-11-06 23:22:11] Found 1 stations configured for auto start
+[2025-11-06 23:22:11] Calling API endpoint: /stream/stations/batch-start
+[2025-11-06 23:22:11] Request URL: http://rtk.taikhoandodac.vn:8090/openapi/stream/stations/batch-start
+[2025-11-06 23:22:11] Request Payload: {"ids":["57"]}
+[2025-11-06 23:22:11] Response HTTP Code: 200
+[2025-11-06 23:22:11] Response Body: {"code":"SUCCESS","traceId":null,"msg":null,"data":false}
+[2025-11-06 23:22:11] SUCCESS: Operation completed successfully
+[2025-11-06 23:22:11] Stations affected: 1
+[2025-11-06 23:22:11] Cron Job Completed
+[2025-11-06 23:22:11] ========================================
+
+[2025-11-06 23:22:25] ========================================
+[2025-11-06 23:22:25] Cron Job Started - Action: START
+[2025-11-06 23:22:25] Found 1 stations configured for auto start
+[2025-11-06 23:22:25] Calling API endpoint: /stream/stations/batch-start
+[2025-11-06 23:22:25] Request URL: http://rtk.taikhoandodac.vn:8090/openapi/stream/stations/batch-start
+[2025-11-06 23:22:25] Request Payload: {"ids":["57"]}
+[2025-11-06 23:22:25] Response HTTP Code: 200
+[2025-11-06 23:22:25] Response Body: {"code":"SUCCESS","traceId":null,"msg":null,"data":false}
+[2025-11-06 23:22:25] SUCCESS: Operation completed successfully
+[2025-11-06 23:22:25] Stations affected: 1
+[2025-11-06 23:22:25] Cron Job Completed
+[2025-11-06 23:22:25] ========================================
+

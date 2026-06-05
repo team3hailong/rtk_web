@@ -70,7 +70,7 @@ if (empty($packages)) {
     <!-- Main Content -->
     <main class="content-wrapper">
         <div class="container">
-            <h2>Gia hạn tài khoản RTK</h2>
+            <h2><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Gia hạn tài khoản' : 'Gia hạn tài khoản RTK'; ?></h2>
     
     <form method="post" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_renewal" id="renewal-form">
         <!-- inject CSRF token -->
@@ -84,7 +84,9 @@ if (empty($packages)) {
                 <?php foreach ($packages as $pkg): ?>
                 <div class="package-card" data-package-id="<?php echo $pkg['id']; ?>" data-package-price="<?php echo $pkg['price']; ?>">
                     <div class="package-name"><?php echo htmlspecialchars($pkg['name']); ?></div>
+                    <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
                     <div class="package-price"><?php echo number_format($pkg['price']); ?> đ</div>
+                    <?php endif; ?>
                     <div class="package-duration"><?php echo htmlspecialchars($pkg['duration_text']); ?></div>
                 </div>
                 <?php endforeach; ?>
@@ -92,6 +94,7 @@ if (empty($packages)) {
         </div>
         
         <!-- Purchase Type Selection -->
+        <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
         <div class="purchase-type-selection section-spacing">
             <h4>Chọn loại hình thanh toán</h4>
             <div class="radio-group">
@@ -105,6 +108,9 @@ if (empty($packages)) {
                 </label>
             </div>
         </div>
+        <?php else: ?>
+        <input type="hidden" name="purchase_type" value="individual">
+        <?php endif; ?>
 
         <!-- Bảng tài khoản -->
         <h3>Danh sách tài khoản được chọn</h3>
@@ -125,6 +131,7 @@ if (empty($packages)) {
             </tbody>
         </table>
 
+        <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
         <!-- Hiển thị tính toán tổng tiền -->
         <div class="total-section">
             <div class="total-row">
@@ -140,8 +147,9 @@ if (empty($packages)) {
                 <div id="package-price">0 đ</div>
             </div>
             <div class="grand-total">
-                Tổng tiền: <span id="total-price">0 đ</span>
-            </div>
+                Tổng tiền: <span id="total-price">0 đ</span>            </div>
+        </div>
+        <?php endif; ?>
         </div>
         
         <!-- Ẩn input để lưu trữ ID gói đã chọn -->

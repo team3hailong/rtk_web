@@ -48,11 +48,13 @@ $user_display_name = $_SESSION['username'] ?? 'Người dùng';
                 <h3>Số lượng tài khoản</h3>
                 <p class="value" id="survey-account-count"><?php echo htmlspecialchars($survey_account_count); ?></p>
             </div>
+            <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
             <div class="stat-card">
                 <i class="icon fas fa-sync warning"></i>
                 <h3>Giao dịch đang xử lý</h3>
                 <p class="value" id="pending-transactions"><?php echo htmlspecialchars($pending_transactions); ?></p>
-            </div>            <div class="stat-card">
+            </div>
+            <?php endif; ?>            <div class="stat-card">
                 <i class="icon fas fa-users-cog info"></i>
                 <h3>Số người đã giới thiệu</h3>
                 <p class="value" id="referral-count"><?php echo htmlspecialchars($referred_user_count); ?></p>
@@ -95,6 +97,7 @@ $user_display_name = $_SESSION['username'] ?? 'Người dùng';
                 </div>
             </div>
             
+            <?php if (!(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): ?>
             <!-- Recent Transactions -->
             <div class="dashboard-box transactions-box">
                 <h3 class="box-title">Giao dịch gần đây</h3>
@@ -165,6 +168,7 @@ $user_display_name = $_SESSION['username'] ?? 'Người dùng';
                     <?php endif; ?>
                 </div>
             </div>
+            <?php endif; // HIDE_PAYMENT_UI - end transactions-box ?>
         </div>
     </main>
 </div>

@@ -1,8 +1,8 @@
 <?php
-session_start();
-
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
+
+init_session();
 
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
 $base_url = BASE_URL;
@@ -21,7 +21,6 @@ if ($slug) {
 }
 include $project_root_path . '/private/includes/header.php';
 ?>
-<link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/map.css" />
 <link rel="stylesheet" href="<?php echo $base_url; ?>/public/assets/css/pages/support/guide_detail.css" />
 
 <div class="dashboard-wrapper">
@@ -41,11 +40,7 @@ include $project_root_path . '/private/includes/header.php';
                     <?php endif; ?>
                     <span>Ngày đăng: <?php echo date('d/m/Y', strtotime($article['created_at'])); ?></span>
                 </div>
-                <?php if (!empty($article['thumbnail'])): ?>
-                    <img class="guide-thumbnail"
-                         src="<?php echo $admin_site . '/public/uploads/guide/' . basename($article['thumbnail']); ?>"
-                         alt="Thumbnail">
-                <?php endif; ?>
+                
                 <div class="guide-content"><?php echo $article['content']; ?></div>
                 <div class="guide-back-container"><a href="guide.php" class="guide-back-link">&larr; Quay lại danh sách bài viết</a></div>
             </div>

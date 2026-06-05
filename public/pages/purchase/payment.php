@@ -1,6 +1,4 @@
 <?php
-
-
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
 
@@ -12,32 +10,86 @@ $base_path = PUBLIC_URL;
 $project_root_path = PROJECT_ROOT_PATH;
 
 // --- Include Required Files ---
-require_once $project_root_path . '/private/utils/functions.php'; // For CRC function if moved there
-require_once $project_root_path . '/private/utils/csrf_helper.php'; // Include CSRF Helper
-require_once $project_root_path . '/private/utils/device_voucher_helper.php'; // Include Device Voucher Helper
+require_once $project_root_path . '/private/utils/functions.php';
+require_once $project_root_path . '/private/utils/csrf_helper.php';
+require_once $project_root_path . '/private/utils/device_voucher_helper.php';
 require_once $project_root_path . '/private/classes/purchase/PaymentService.php';
 
 // --- VAT Rate ---
-$vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10; // Lấy từ .env hoặc mặc định 10%
+$vat_value = getenv('VAT_VALUE') !== false ? (float)getenv('VAT_VALUE') : 10;
 
 // --- Authentication & Pending Order Check ---
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . $base_url . '/public/pages/auth/login.php?error=not_logged_in'); // Adjusted path
+    header('Location: ' . $base_url . '/public/pages/auth/login.php?error=not_logged_in');
     exit;
 }
 if (!isset($_SESSION['pending_registration_id']) || !isset($_SESSION['pending_total_price'])) {
-    // If no pending registration found in session, redirect to packages
-    header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=no_pending_order'); // Adjusted path
+    header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=no_pending_order');
     exit;
 }
 
 $user_id = $_SESSION['user_id'];
 $registration_id = $_SESSION['pending_registration_id'];
-$session_total_price = $_SESSION['pending_total_price']; // Get total price from session
-$is_trial = $_SESSION['pending_is_trial'] ?? false; // Check if it's a trial from session
-$is_renewal = $_SESSION['is_renewal'] ?? false; // Check if it's a renewal process
+$session_total_price = $_SESSION['pending_total_price'];
+$is_trial = $_SESSION['pending_is_trial'] ?? false;
+$is_renewal = $_SESSION['is_renewal'] ?? false;
+
+// Khi o che do cong khai mien phi: tao transaction pending, admin duyet thu cong
+if (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) {
+    // Luon reset session truoc, tranh bi anh huong boi session cu
+    if (!isset($_SESSION['purchase_details'])) {
+        $_SESSION['purchase_details'] = [];
+    }
+    $_SESSION['purchase_success'] = true;
+    $_SESSION['purchase_details']['registration_id'] = $registration_id;
+    $_SESSION['purchase_details']['auto_approved']   = false;
+    $_SESSION['purchase_details']['payment_status']  = 'Chờ xác nhận';
+
+    // Tao transaction pending trong DB
+    require_once $project_root_path . '/private/classes/Database.php';
+    try {
+        $db_hide = new Database();
+        $conn_hide = $db_hide->getConnection();
+        $sessionKey_hide = $is_renewal ? 'renewal' : 'order';
+        $voucher_id_hide = $_SESSION[$sessionKey_hide]['voucher_id'] ?? null;
+
+        $stmt_chk = $conn_hide->prepare(
+            'SELECT id FROM transaction_history WHERE registration_id = :rid AND user_id = :uid'
+        );
+        $stmt_chk->bindValue(':rid', $registration_id, PDO::PARAM_INT);
+        $stmt_chk->bindValue(':uid', $user_id, PDO::PARAM_INT);
+        $stmt_chk->execute();
+
+        if (!$stmt_chk->fetch()) {
+            $tx_type  = $is_renewal ? 'renewal' : 'purchase';
+            $stmt_ins = $conn_hide->prepare(
+                'INSERT INTO transaction_history
+                 (user_id, registration_id, voucher_id, transaction_type, amount, status,
+                  payment_method, payment_confirmed, created_at, updated_at)
+                 VALUES (:uid, :rid, :vid, :type, :amount, \'pending\', \'Chuyển khoản ngân hàng\', 0, NOW(), NOW())'
+            );
+            $stmt_ins->bindValue(':uid',    $user_id,             PDO::PARAM_INT);
+            $stmt_ins->bindValue(':rid',    $registration_id,     PDO::PARAM_INT);
+            $stmt_ins->bindValue(':vid',    $voucher_id_hide,     $voucher_id_hide === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+            $stmt_ins->bindValue(':type',   $tx_type,             PDO::PARAM_STR);
+            $stmt_ins->bindValue(':amount', (float)$session_total_price, PDO::PARAM_STR);
+            $stmt_ins->execute();
+            error_log('[HIDE_PAYMENT_UI] Transaction created: reg=' . $registration_id . ' type=' . $tx_type . ' amount=' . $session_total_price);
+        }
+    } catch (Exception $e) {
+        error_log('[HIDE_PAYMENT_UI] Transaction creation failed: ' . $e->getMessage());
+    }
+
+    $redirect_url = $base_url . '/public/pages/purchase/success.php';
+    if ($is_trial) {
+        $redirect_url .= '?is_trial=1';
+    }
+    header('Location: ' . $redirect_url);
+    exit;
+}
 
 // Create order/renewal session object required by voucher system
+$sessionKey = $is_renewal ? 'renewal' : 'order';
 if ($is_renewal) {
     if (!isset($_SESSION['renewal'])) {
         $_SESSION['renewal'] = [
@@ -54,143 +106,107 @@ if ($is_renewal) {
     }
 }
 
-// Reset biến renewal nếu đây là giao dịch mua mới
 if (!isset($_SESSION['is_renewal'])) {
     $is_renewal = false;
-    // Đảm bảo các biến liên quan đến renewal cũng được reset
     unset($_SESSION['renewal_account_ids']);
     unset($_SESSION['pending_renewal_details']);
 }
 
-// Check for device vouchers if no voucher has been applied already
-$sessionKey = $is_renewal ? 'renewal' : 'order';
-if (isset($_SESSION['device_fingerprint']) && 
-    (!isset($_SESSION[$sessionKey]['voucher_code']) || empty($_SESSION[$sessionKey]['voucher_code']))) {
-    
-    // Store the base price information for proper voucher calculation
+// Check for device vouchers
+if (isset($_SESSION['device_fingerprint']) && (!isset($_SESSION[$sessionKey]['voucher_code']) || empty($_SESSION[$sessionKey]['voucher_code']))) {
     if (!isset($_SESSION['payment_data'])) {
-        $_SESSION['payment_data'] = [
-            'base_price_from_registration' => $session_total_price,
-            'quantity' => 1
-        ];
+        $_SESSION['payment_data'] = ['base_price_from_registration' => $session_total_price, 'quantity' => 1];
     }
-    
     $deviceVoucherResult = checkAndApplyDeviceVoucher($_SESSION['device_fingerprint'], $sessionKey);
-    // If a voucher was auto-applied, we'll use this for display later
     $autoAppliedVoucher = $deviceVoucherResult ? true : false;
-    
-    // Update verified total price if a voucher was applied
     if ($deviceVoucherResult) {
-        // Use base price as the original price for clean calculation
-        $original_price = isset($_SESSION['payment_data']['base_price_from_registration']) 
-            ? ($_SESSION['payment_data']['base_price_from_registration'] * ($_SESSION['payment_data']['quantity'] ?? 1)) 
-            : $session_total_price;
-            
+        $original_price = ($_SESSION['payment_data']['base_price_from_registration'] * ($_SESSION['payment_data']['quantity'] ?? 1));
         $discount_amount = $deviceVoucherResult['discount_value'];
-        
-        // Calculate the new price exactly once
-        $session_total_price = $original_price - $discount_amount;
-        if ($session_total_price < 0) $session_total_price = 0;
-        
-        // Update session values
+        $session_total_price = max(0, $original_price - $discount_amount);
         $_SESSION['pending_total_price'] = $session_total_price;
-        $verified_total_price = $session_total_price;
-        
-        error_log("Auto-applied voucher: Original: {$original_price}, Discount: {$discount_amount}, New: {$session_total_price}");
     }
 }
-
-// Lấy mảng các registration IDs cho trường hợp gia hạn nhiều tài khoản
-$registration_ids = $is_renewal ? ($_SESSION['renewal_account_ids'] ?? [$registration_id]) : [$registration_id];
-$renewal_details = $is_renewal ? ($_SESSION['pending_renewal_details'] ?? null) : null;
 
 // --- Fetch Payment Details using PaymentService ---
 $paymentService = new PaymentService();
 $payment_details_result = $paymentService->getPaymentPageDetails($registration_id, $user_id, $session_total_price);
 
 if (!$payment_details_result['success']) {
-    // Handle errors reported by the helper function
     $error_code = $payment_details_result['error'];
     if ($error_code === 'invalid_order_state') {
         unset($_SESSION['pending_registration_id'], $_SESSION['pending_total_price']);
     }
-    // Redirect back to packages page with the specific error
     header('Location: ' . $base_url . '/public/pages/purchase/packages.php?error=' . $error_code);
     exit;
 }
 
-// Extract data on success
 $payment_data = $payment_details_result['data'];
-$package_name = $payment_data['package_name'];
-$quantity = $payment_data['quantity'];
-$province = $payment_data['province'];
 $verified_total_price = $payment_data['verified_total_price'];
 
-// Lưu thông tin giá gốc vào session để tránh dùng giá đã giảm
+// Store base price data in session
 $_SESSION['payment_data'] = $payment_data;
 
-// Override verified_total_price with session price if voucher is applied
-if (isset($_SESSION[$sessionKey]['voucher_code'])) {
-    $originalPrice = $payment_data['base_price_from_registration'] * $quantity + $payment_data['vat_amount_from_registration'];
-    $discountAmount = $_SESSION[$sessionKey]['voucher_discount'] ?? 0;
-    
-    // Tính lại giá đúng, đảm bảo chỉ trừ một lần
-    $discountedPrice = $originalPrice - $discountAmount;
-    if ($discountedPrice < 0) $discountedPrice = 0;
-    
-    // Log để debug
-    error_log("PAYMENT PAGE - Original: {$originalPrice}, Discount: {$discountAmount}, New: {$discountedPrice}");
-    
-    // Update session với giá đã tính lại
-    if ($sessionKey === 'order') {
-        $_SESSION[$sessionKey]['total_price'] = $discountedPrice;
-    } elseif ($sessionKey === 'renewal') {
-        $_SESSION[$sessionKey]['amount'] = $discountedPrice;
+// Check if current voucher has auto_approve enabled and need_upload_proof
+$has_auto_approve_voucher = false;
+$need_upload_proof = true; // Default: cần upload proof
+if (isset($_SESSION[$sessionKey]['voucher_id'])) {
+    try {
+        require_once $project_root_path . '/private/classes/Database.php';
+        $db = new Database();
+        $conn = $db->getConnection();
+        
+        $sql = "SELECT auto_approve, need_upload_proof FROM voucher WHERE id = :voucher_id AND is_active = 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':voucher_id', $_SESSION[$sessionKey]['voucher_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $voucher_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($voucher_data) {
+            // YÊU CẦU MỚI: Chỉ cho phép auto-approve khi auto_approve = 1 VÀ verified_total_price = 0
+            if ($voucher_data['auto_approve'] == 1 && $verified_total_price == 0) {
+                $has_auto_approve_voucher = true;
+            }
+            // Lấy thông tin need_upload_proof từ voucher
+            $need_upload_proof = isset($voucher_data['need_upload_proof']) ? (bool)$voucher_data['need_upload_proof'] : true;
+        }
+    } catch (Exception $e) {
+        error_log("Error checking voucher properties: " . $e->getMessage());
     }
-    
-    // Cập nhật giá hiển thị
-    $verified_total_price = $discountedPrice;
 }
 
-// --- Tạo nội dung chuyển khoản (chỉ cần nếu không phải trial) ---
-$order_description = "REG{$registration_id} MUA GOI"; // Keep it short
+// Recalculate final price if a voucher is applied
+if (isset($_SESSION[$sessionKey]['voucher_code'])) {
+    $base_subtotal = $payment_data['base_price_from_registration'] * $payment_data['quantity'];
+    $discountAmount = $_SESSION[$sessionKey]['voucher_discount'] ?? 0;
+    $discounted_subtotal = max(0, $base_subtotal - $discountAmount);
+    $vat_percent = $payment_data['vat_percent_from_registration'];
+    $vat_on_discounted = round($discounted_subtotal * ($vat_percent / 100));
+    $final_price = $discounted_subtotal + $vat_on_discounted;
 
-// --- Generate VietQR Payload (chỉ cần nếu không phải trial) ---
-$final_qr_payload = null;
-$vietqr_image_url = null;
-if (!$is_trial) {
-    $base_price_for_qr_and_display = $verified_total_price; // Giá này đã bao gồm VAT nếu có từ process_order.php
-    $session_key = $is_renewal ? 'renewal' : 'order';
-
-    // Sử dụng giá đã được giảm nếu có voucher
-    $final_price_for_qr = $verified_total_price; // Sử dụng trực tiếp giá đã xác minh và đã tính voucher ở trên
-
-    // Logic cập nhật transaction_history amount nên sử dụng $final_price_for_qr
-    // vì đây là số tiền người dùng thực sự cần thanh toán.
-    $qr = $paymentService->generateVietQR($final_price_for_qr, $order_description);
-    $final_qr_payload = $qr['payload'];
-    $vietqr_image_url = $qr['image_url'];
-
-    // Cập nhật giá trị tổng thanh toán vào transaction_history
-    // $final_price_for_qr đã là giá cuối cùng (đã có VAT nếu purchase_type là company)
-    if ($is_renewal) {
-        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price_for_qr);
-        if ($update_result) {
-            error_log("Payment Page: Updated renewal transaction_history amount to {$final_price_for_qr} for registration ID {$registration_id}");
-        }
-    } else {
-        $update_result = $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $final_price_for_qr);
-        if ($update_result) {
-            error_log("Payment Page: Updated purchase transaction_history amount to {$final_price_for_qr} for registration ID {$registration_id}");
-        }
+    $sessionDataKey = $is_renewal ? 'amount' : 'total_price';
+    $_SESSION[$sessionKey][$sessionDataKey] = $final_price;
+    $_SESSION[$sessionKey]['discounted_subtotal'] = $discounted_subtotal;
+    // Ensure auto-approve flow & other actions see the discounted total instead of the original price
+    if (isset($_SESSION['payment_data'])) {
+        $_SESSION['payment_data']['verified_total_price'] = $final_price;
     }
+    
+    $verified_total_price = $final_price;
+}
+
+// --- Create transfer content and QR code if needed ---
+$order_description = "REG{$registration_id} MUA GOI";
+$vietqr_image_url = null;
+if (!$is_trial && $verified_total_price > 0) {
+    $qr = $paymentService->generateVietQR($verified_total_price, $order_description);
+    $vietqr_image_url = $qr['image_url'];
+    $paymentService->updateTransactionHistoryAmount($registration_id, $user_id, $verified_total_price);
 }
 
 // --- User Info ---
 $user_username = $_SESSION['username'] ?? 'Người dùng';
 
 // --- Include Header ---
-// Use correct path relative to project root
 include $project_root_path . '/private/includes/header.php';
 ?>
 
@@ -199,234 +215,317 @@ include $project_root_path . '/private/includes/header.php';
 
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
-    <?php include $project_root_path . '/private/includes/sidebar.php'; // Adjusted path ?>
+    <?php include $project_root_path . '/private/includes/sidebar.php'; ?>
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-6">
-            <?php echo $is_trial ? 'Xác nhận kích hoạt dùng thử' : 'Thanh toán đơn hàng'; ?>
-        </h2>
-
-        <div class="payment-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-
-            <!-- Cột Tóm tắt đơn hàng (Luôn hiển thị) -->
-            <section class="payment-summary">
-                <h3>Thông tin đăng ký</h3>
-                <?php if ($is_renewal): ?>
-                <!-- Hiển thị thông tin gia hạn nhiều tài khoản -->
-                <div class="summary-item" style="font-size: var(--font-size-sm);">
-                    <span>Loại giao dịch:</span>
-                    <strong>Gia hạn tài khoản</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Số lượng tài khoản:</span>
-                    <strong><?php echo $renewal_details ? $renewal_details['total_accounts'] : count($registration_ids); ?> tài khoản</strong>
-                </div>
-                  <?php if (count($registration_ids) > 0 && !$is_trial): ?>
-                <!-- Phần áp dụng voucher cho gia hạn -->
-                <div class="voucher-section">
-                    <h4>Mã giảm giá</h4>
-                    <div class="voucher-form">
-                        <input type="text" id="voucher-code" class="voucher-input" placeholder="Nhập mã giảm giá">
-                        <button type="button" id="apply-voucher" class="voucher-btn">Áp dụng</button>
-                    </div>
-                    <div id="voucher-status" class="voucher-status"></div>
-                    <div id="voucher-info" class="voucher-info" style="display: <?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_id']) ? 'block' : 'none'; ?>">
-                        <div>Mã giảm giá: <strong id="applied-voucher-code"><?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) ? htmlspecialchars($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) : ''; ?></strong> 
-                            <button type="button" id="remove-voucher" class="voucher-remove">Xóa</button>
-                        </div>
-                        <div id="discount-info">
-                            <?php 
-                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'])) {
-                                echo 'Giảm giá: ' . number_format($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'], 0, ',', '.') . ' đ';
-                            }
-                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months']) && $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] > 0) {
-                                echo 'Tăng thêm ' . $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] . ' tháng sử dụng';
-                            }
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
-                  <div class="summary-item">
-                    <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
-                    <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
-                </div>
-                <div class="summary-item summary-total" style="margin-top: 1.5rem;">
-                    <span>Tổng thanh toán:</span>
-                    <strong><?php echo number_format(($payment_data['base_price_from_registration'] * $quantity) + $payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
-                </div>
-                
-                <?php else: ?>
-                <!-- Hiển thị thông tin đơn đăng ký thường -->
-                <div class="summary-item" style="font-size: var(--font-size-sm);">
-                    <span>Mã đăng ký:</span>
-                    <strong><?php echo htmlspecialchars($registration_id); ?></strong>
-                 </div>
-                <div class="summary-item">
-                    <span>Gói dịch vụ:</span>
-                    <strong><?php echo htmlspecialchars($package_name); ?> <?php echo $is_trial ? '(Dùng thử)' : ''; ?></strong>
-                </div>
-                <div class="summary-item">
-                    <span>Số lượng:</span>
-                    <strong><?php echo htmlspecialchars($quantity); ?> tài khoản</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Tỉnh/Thành phố:</span>
-                    <strong><?php echo htmlspecialchars($province); ?></strong>
-                </div>                <!-- Phần áp dụng voucher -->
+        <div class="payment-wizard">
+            <div class="payment-wizard-header">
+                <h2><?php echo $is_trial ? 'Xác nhận kích hoạt dùng thử' : 'Thanh toán đơn hàng'; ?></h2>
                 <?php if (!$is_trial): ?>
-                <div class="voucher-section">
-                    <h4>Mã giảm giá</h4>
-                    <div class="voucher-form">
-                        <input type="text" id="voucher-code" class="voucher-input" placeholder="Nhập mã giảm giá">
-                        <button type="button" id="apply-voucher" class="voucher-btn">Áp dụng</button>
+                <div class="wizard-steps">
+                    <div class="wizard-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Thông tin</div>
                     </div>
-                    <div id="voucher-status" class="voucher-status"></div>
-                    <div id="voucher-info" class="voucher-info" style="display: <?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_id']) ? 'block' : 'none'; ?>">
-                        <div>Mã giảm giá: <strong id="applied-voucher-code"><?php echo isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) ? htmlspecialchars($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_code']) : ''; ?></strong> 
-                            <button type="button" id="remove-voucher" class="voucher-remove">Xóa</button>
-                        </div>
-                        <div id="discount-info">
-                            <?php 
-                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'])) {
-                                echo 'Giảm giá: ' . number_format($_SESSION[$is_renewal ? 'renewal' : 'order']['voucher_discount'], 0, ',', '.') . ' đ';
-                            }
-                            if (isset($_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months']) && $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] > 0) {
-                                echo 'Tăng thêm ' . $_SESSION[$is_renewal ? 'renewal' : 'order']['additional_months'] . ' tháng sử dụng';
-                            }
-                            ?>
-                        </div>
+                    <div class="wizard-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Thanh toán</div>
+                    </div>
+                    <div class="wizard-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Xác nhận</div>
                     </div>
                 </div>
-                <?php endif; ?>                <div class="summary-item">
-                    <span>Giá trị đơn hàng:</span>
-                    <strong><?php echo number_format($payment_data['base_price_from_registration'] * $quantity, 0, ',', '.'); ?> đ</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Thuế VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
-                    <strong><?php echo number_format($payment_data['vat_amount_from_registration'], 0, ',', '.'); ?> đ</strong>
-                </div>
-                
-                <?php if (isset($_SESSION[$sessionKey]['voucher_code']) && isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0): ?>
-                <div class="summary-item" style="color: #e53e3e; font-weight: bold;">
-                    <span>Giảm giá (<?php echo htmlspecialchars($_SESSION[$sessionKey]['voucher_code']); ?>):</span>
-                    <strong>-<?php echo number_format($_SESSION[$sessionKey]['voucher_discount'], 0, ',', '.'); ?> đ</strong>
-                </div>
                 <?php endif; ?>
-                
-                <div class="summary-item summary-total">
-                    <span>Tổng thanh toán:</span>
-                    <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
-                </div>
-                <?php endif; ?>
-            </section>
+            </div>
 
-            <?php if ($is_trial): ?>
-            <!-- Cột Xác nhận Dùng thử -->
-            <section class="payment-qr-section" style="text-align: center;">
-                <h3>Kích hoạt gói dùng thử</h3>
-                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>                <form id="trialActivationForm" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
-                    <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
-                    <!-- CSRF Protection Token -->
-                    <?php echo generate_csrf_input(); ?>
-                    <button type="submit" class="btn btn-success" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base); background-color: var(--success-500); border-color: var(--success-500);">
-                        Xác nhận kích hoạt
-                    </button>
-                </form>
-                 <p class="payment-instructions" style="margin-top: 1rem;">
-                     Sau khi xác nhận, bạn có thể bắt đầu sử dụng dịch vụ.
-                 </p>
-            </section>
+            <div class="payment-wizard-content">
+                <?php if ($is_trial): ?>
+                    <!-- Trial Activation -->
+                    <section class="wizard-section active" data-section="trial">
+                        <div class="section-card">
+                            <div class="section-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <h3>Kích hoạt gói dùng thử</h3>
+                            <p class="section-description">Gói dùng thử của bạn sẽ được kích hoạt ngay lập tức.</p>
+                            <form id="trialActivationForm" action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=process_trial_activation" method="POST">
+                                <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
+                                <?php echo generate_csrf_input(); ?>
+                                <button type="submit" class="btn btn-primary btn-wizard">Xác nhận kích hoạt</button>
+                            </form>
+                        </div>
+                    </section>
+                <?php else: ?>
+                    <!-- Step 1: Thông tin đăng ký -->
+                    <section class="wizard-section active" data-section="1">
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i>
+                                Thông tin đăng ký
+                            </h3>
+                            <div class="section-content">
+                                <?php if ($is_renewal): ?>
+                                    <!-- Renewal info display -->
+                                    <div class="info-row"><span>Loại:</span><strong>Gia hạn dịch vụ</strong></div>
+                                    <div class="info-row"><span>Số tài khoản:</span><strong><?php echo count($_SESSION['renewal_account_ids'] ?? []); ?> tài khoản</strong></div>
+                                <?php else: ?>
+                                    <div class="info-row"><span>Mã đăng ký:</span><strong><?php echo htmlspecialchars($registration_id); ?></strong></div>
+                                    <div class="info-row"><span>Gói dịch vụ:</span><strong><?php echo htmlspecialchars($payment_data['package_name']); ?></strong></div>
+                                    <div class="info-row"><span>Số lượng:</span><strong><?php echo htmlspecialchars($payment_data['quantity']); ?> tài khoản</strong></div>
+                                    <div class="info-row"><span>Tỉnh/Thành phố:</span><strong><?php echo htmlspecialchars($payment_data['province']); ?></strong></div>
+                                <?php endif; ?>
+                                
+                                <?php if (defined('SHOW_GLOBAL_DISCOUNT') && SHOW_GLOBAL_DISCOUNT === 'yes'): ?>
+                                    <div class="global-discount-payment-note" role="note" aria-live="polite">
+                                        <strong>Ưu đãi:</strong>
+                                        Mỗi người sử dụng Voucher <strong><?php echo htmlspecialchars(GLOBAL_DISCOUNT_CODE); ?></strong>tối đa 1 lần, áp dụng giảm 100% cho gói 3 tháng. Hãy chia sẻ cho bạn bè, người thân để cùng nhận ưu đãi này
+                                    </div>
+                                <?php endif; ?>
 
-            <?php else: ?>
-            <!-- Cột Mã QR và Hướng dẫn (Chỉ hiển thị nếu không phải trial) -->
-            <section class="payment-qr-section">
-                <h3>Quét mã để thanh toán</h3>
-                <p style="font-size: var(--font-size-sm); color: var(--gray-600); margin-bottom: 1rem;">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR.</p>
-                <!-- Div để hiển thị QR Code -->
-                <div id="qrcode">
-                     <img src="<?php echo htmlspecialchars($vietqr_image_url); ?>" alt="VietQR Code" style="display: block; width: 100%; height: auto; object-fit: contain;">
-                </div>
+                                <div class="voucher-section">
+                                    <h4><i class="fas fa-ticket-alt"></i> Mã giảm giá</h4>
+                                    <div class="voucher-form">
+                                        <input type="text" id="voucher-code" class="voucher-input" placeholder="Nhập mã giảm giá (nếu có)">
+                                        <button type="button" id="apply-voucher" class="voucher-btn">Áp dụng</button>
+                                    </div>
+                                    <div id="voucher-status" class="voucher-status"></div>
+                                    <div id="voucher-info" class="voucher-info" style="display: <?php echo isset($_SESSION[$sessionKey]['voucher_id']) ? 'block' : 'none'; ?>">
+                                        <div class="voucher-applied">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Mã: <strong id="applied-voucher-code"><?php echo htmlspecialchars($_SESSION[$sessionKey]['voucher_code'] ?? ''); ?></strong></span>
+                                            <button type="button" id="remove-voucher" class="voucher-remove"><i class="fas fa-times"></i></button>
+                                        </div>
+                                        <div id="discount-info" class="discount-info">
+                                            <?php
+                                            if (isset($_SESSION[$sessionKey]['voucher_discount'])) {
+                                                echo '<i class="fas fa-tag"></i> Giảm giá: ' . number_format($_SESSION[$sessionKey]['voucher_discount'], 0, ',', '.') . ' đ';
+                                            }
+                                            if (isset($_SESSION[$sessionKey]['additional_months']) && $_SESSION[$sessionKey]['additional_months'] > 0) {
+                                                echo '<br><i class="fas fa-calendar-plus"></i> Tăng thêm ' . $_SESSION[$sessionKey]['additional_months'] . ' tháng sử dụng';
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div class="bank-details">
-                    <p><strong>Thông tin chuyển khoản thủ công:</strong></p>
-                    <p>Ngân hàng: <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : (defined('VIETQR_BANK_ID') ? VIETQR_BANK_ID : 'N/A'); ?></strong></p>                    <p>Số tài khoản: <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong> <code title="Sao chép số tài khoản" data-copy-target="#account-number">Copy</code></p>
-                    <p>Chủ tài khoản: <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong></p>
-                    <p>Số tiền: <strong id="payment-amount">
-                        <?php 
-                        // Hiển thị tổng thanh toán (đã bao gồm VAT từ $verified_total_price)
-                        echo number_format($verified_total_price, 0, ',', '.'); 
-                        ?> đ</strong> <code title="Sao chép số tiền" data-copy-target="#payment-amount">Copy</code></p>
-                    <p>Nội dung: <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong> <code title="Sao chép nội dung" data-copy-target="#payment-description">Copy</code></p>
-                </div>
+                                <div class="price-summary">
+                                    <div class="price-row"><span>Giá gốc:</span><strong><?php echo number_format($payment_data['base_price_from_registration'] * $payment_data['quantity'], 0, ',', '.'); ?> đ</strong></div>
+                                    
+                                    <?php if (isset($_SESSION[$sessionKey]['voucher_discount']) && $_SESSION[$sessionKey]['voucher_discount'] > 0): ?>
+                                        <div class="price-row discount">
+                                            <span><i class="fas fa-tag"></i> Giảm giá:</span>
+                                            <strong>-<?php echo number_format($_SESSION[$sessionKey]['voucher_discount'], 0, ',', '.'); ?> đ</strong>
+                                        </div>
+                                        <div class="price-row"><span>Giá sau giảm:</span><strong><?php echo number_format($_SESSION[$sessionKey]['discounted_subtotal'] ?? 0, 0, ',', '.'); ?> đ</strong></div>
+                                    <?php endif; ?>
+                                    
+                                    <div class="price-row">
+                                        <span>VAT (<?php echo $payment_data['vat_percent_from_registration']; ?>%):</span>
+                                        <strong><?php
+                                        $vat_to_display = isset($_SESSION[$sessionKey]['voucher_code'])
+                                            ? round(($_SESSION[$sessionKey]['discounted_subtotal'] ?? 0) * ($payment_data['vat_percent_from_registration'] / 100))
+                                            : $payment_data['vat_amount_from_registration'];
+                                        echo number_format($vat_to_display, 0, ',', '.');
+                                        ?> đ</strong>
+                                    </div>
+                                    <div class="price-row total">
+                                        <span>Tổng thanh toán:</span>
+                                        <strong id="total-price-display"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-actions">
+                                <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(2)">
+                                    Tiếp tục <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
 
-                <p class="payment-instructions">
-                    <strong>Lưu ý:</strong> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản <code><?php echo htmlspecialchars($order_description); ?></code>.
-                    Lưu lại ảnh minh chứng chuyển khoản thành công để đội ngũ chúng tôi nhận thông tin và duyệt tạo tài khoản đo đạc cho bạn. 
-                </p>
-                 <p class="payment-instructions" style="margin-top: 0.5rem;">
-                     Nếu gặp sự cố, vui lòng liên hệ bộ phận hỗ trợ.
-                 </p>                <!-- === Nút xác nhận và chuyển hướng === -->
-                <div style="text-align: center; margin-top: 2rem;">
-                    <button data-href="<?php echo $base_url; ?>/public/pages/purchase/upload_proof.php?reg_id=<?php echo htmlspecialchars($registration_id); ?>" class="btn btn-primary btn-payment-confirm" style="padding: 0.8rem 1.5rem; font-size: var(--font-size-base);">
-                        Tôi đã thanh toán - Tải lên minh chứng
-                    </button>
-                    <p style="font-size: var(--font-size-sm); color: var(--gray-500); margin-top: 0.8rem;">
-                        (Bạn hãy tải lên minh chứng sau khi chuyển khoản thành công)
-                    </p>
-                </div>
-                 <!-- === Kết thúc Nút xác nhận === -->
+                    <!-- Step 2: Quét mã thanh toán -->
+                    <section class="wizard-section" data-section="2">
+                        <div class="section-card">
+                            <!-- Payment instructions (for all cases) -->
+                            <div id="payment-qr-code-section">
+                                <?php if ($verified_total_price <= 0): ?>
+                                    <!-- Free order - skip payment -->
+                                    <h3 class="section-title">
+                                        <i class="fas fa-check-circle" style="color: var(--success-600);"></i>
+                                        Xác nhận đơn hàng
+                                    </h3>
+                                    <div class="section-content">
+                                        <div class="free-order-notice">
+                                            <p>Do áp dụng mã giảm giá, tổng thanh toán của bạn là <strong style="color: var(--success-600);"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>.</p>
+                                            <?php if ($has_auto_approve_voucher): ?>
+                                                <p>Voucher của bạn hỗ trợ <strong style="color: var(--success-600);">duyệt tự động</strong>. Vui lòng tiếp tục để hoàn tất đăng ký.</p>
+                                            <?php else: ?>
+                                                <p>Vui lòng tiếp tục để hoàn tất đăng ký.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <!-- Paid order - show QR code -->
+                                    <h3 class="section-title">
+                                        <i class="fas fa-qrcode"></i>
+                                        Quét mã để thanh toán
+                                    </h3>
+                                    <div class="section-content">
+                                        <?php if ($has_auto_approve_voucher): ?>
+                                            <div class="auto-approve-notice">
+                                                <i class="fas fa-check-circle"></i>
+                                                <span>Voucher của bạn hỗ trợ <strong>duyệt tự động</strong>. Đơn hàng sẽ được duyệt tự động sau khi thanh toán.</span>
+                                            </div>
+                                        <?php endif; ?>
+                                        <p class="section-description">Sử dụng ứng dụng ngân hàng hoặc ví điện tử hỗ trợ VietQR để quét mã thanh toán.</p>
+                                        <div class="qr-container">
+                                            <div id="qrcode">
+                                                <img src="<?php echo htmlspecialchars($vietqr_image_url ?? ''); ?>" alt="VietQR Code">
+                                            </div>
+                                        </div>
+                                        <div class="bank-details">
+                                            <h4><i class="fas fa-university"></i> Thông tin chuyển khoản</h4>
+                                            <div class="bank-info-grid">
+                                                <div class="bank-info-item">
+                                                    <span class="label">Ngân hàng:</span>
+                                                    <strong><?php echo defined('VIETQR_BANK_NAME') ? VIETQR_BANK_NAME : 'N/A'; ?></strong>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Số tài khoản:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="account-number"><?php echo defined('VIETQR_ACCOUNT_NO') ? VIETQR_ACCOUNT_NO : 'N/A'; ?></strong>
+                                                        <button class="copy-btn" data-copy-target="#account-number"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Chủ tài khoản:</span>
+                                                    <strong><?php echo defined('VIETQR_ACCOUNT_NAME') ? VIETQR_ACCOUNT_NAME : 'N/A'; ?></strong>
+                                                </div>
+                                                <div class="bank-info-item">
+                                                    <span class="label">Số tiền:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="payment-amount" class="highlight-amount"><?php echo number_format($verified_total_price, 0, ',', '.'); ?> đ</strong>
+                                                        <button class="copy-btn" data-copy-target="#payment-amount"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="bank-info-item full-width">
+                                                    <span class="label">Nội dung CK:</span>
+                                                    <div class="copyable-field">
+                                                        <strong id="payment-description"><?php echo htmlspecialchars($order_description); ?></strong>
+                                                        <button class="copy-btn" data-copy-target="#payment-description"><i class="fas fa-copy"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="payment-note"><i class="fas fa-exclamation-circle"></i> Vui lòng nhập <strong>chính xác</strong> nội dung chuyển khoản để được xử lý tự động.</p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="section-actions">
+                                    <button type="button" class="btn btn-secondary btn-wizard btn-prev" onclick="goToStep(1)">
+                                        <i class="fas fa-arrow-left"></i> Quay lại
+                                    </button>
+                                    
+                                    <?php if ($verified_total_price <= 0 && !$need_upload_proof): ?>
+                                        <!-- Giao dịch = 0 đồng VÀ voucher không cần upload proof → Submit trực tiếp -->
+                                        <form action="<?php echo $base_url; ?>/public/handlers/action_handler.php?module=purchase&action=complete_order_without_proof" method="POST" style="display: inline;">
+                                            <input type="hidden" name="registration_id" value="<?php echo htmlspecialchars($registration_id); ?>">
+                                            <?php echo generate_csrf_input(); ?>
+                                            <button type="submit" class="btn btn-success btn-wizard">
+                                                <i class="fas fa-check"></i> Hoàn tất đăng ký
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <!-- Tất cả trường hợp khác: giao dịch > 0 HOẶC cần upload proof → Chuyển sang step 3 -->
+                                        <button type="button" class="btn btn-primary btn-wizard btn-next" onclick="goToStep(3)">
+                                            <?php if ($verified_total_price <= 0): ?>
+                                                Tiếp tục <i class="fas fa-arrow-right"></i>
+                                            <?php else: ?>
+                                                Đã thanh toán <i class="fas fa-arrow-right"></i>
+                                            <?php endif; ?>
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-            </section>
-            <?php endif; ?>
-
+                    <!-- Step 3: Upload ảnh minh chứng -->
+                    <!-- Hiển thị cho TẤT CẢ trường hợp: giao dịch > 0 hoặc cần upload proof -->
+                    <section class="wizard-section" data-section="3">
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <i class="fas fa-upload"></i>
+                                Upload ảnh minh chứng
+                            </h3>
+                            <div class="section-content">
+                                <p class="section-description">Vui lòng tải lên ảnh chụp màn hình hoặc ảnh xác nhận giao dịch chuyển khoản thành công.</p>
+                                
+                                <div class="upload-instruction">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span><strong>Bước 1:</strong> Chọn ảnh minh chứng → <strong>Bước 2:</strong> Click nút "Tải lên minh chứng" bên dưới</span>
+                                </div>
+                                
+                                <div class="upload-area">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <p class="upload-title">Chọn hoặc kéo thả ảnh vào đây</p>
+                                        <p class="upload-subtitle">Hỗ trợ: JPG, PNG, PDF (Tối đa 5MB)</p>
+                                    </div>
+                                    <input type="file" id="proof-file-input" accept="image/*,.pdf" style="display: none;">
+                                    <button type="button" class="btn btn-outline btn-select-file" onclick="document.getElementById('proof-file-input').click()">
+                                        <i class="fas fa-folder-open"></i> Chọn file
+                                    </button>
+                                </div>
+                                <div id="file-preview" class="file-preview" style="display: none;">
+                                    <div class="preview-header">
+                                        <span id="file-name"></span>
+                                        <button type="button" class="btn-remove-file" onclick="removeFile()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div id="preview-image" class="preview-image"></div>
+                                </div>
+                                <div id="upload-progress-container" class="upload-progress-container" style="display: none;">
+                                    <div class="progress-bar-wrapper">
+                                        <div id="upload-progress-bar" class="progress-bar-fill"></div>
+                                    </div>
+                                    <p id="upload-progress-text" class="progress-text">Đang tải lên: 0%</p>
+                                </div>
+                                <div id="upload-status" class="upload-status"></div>
+                            </div>
+                            <div class="section-actions">
+                                <button type="button" class="btn btn-secondary btn-wizard btn-prev" onclick="goToStep(2)">
+                                    <i class="fas fa-arrow-left"></i> Quay lại
+                                </button>
+                                <button type="button" id="upload-submit-btn" class="btn btn-success btn-wizard" onclick="submitProof()" disabled>
+                                    <i class="fas fa-upload"></i> Tải lên minh chứng
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                <?php endif; // end if (!$is_trial) ?>
+            </div>
         </div>
-
     </main>
 </div>
 
-<!-- JavaScript variables needed for payment scripts -->
+<!-- JavaScript variables -->
 <script>
-    // Define variables needed by payment_data.js and payment_voucher.js
     const JS_IS_TRIAL = <?php echo $is_trial ? 'true' : 'false'; ?>;
     const JS_IS_RENEWAL = <?php echo $is_renewal ? 'true' : 'false'; ?>;
-    const JS_BASE_PRICE = <?php echo $payment_data['base_price_from_registration']; ?>; // Sử dụng base_price từ registration
-    const JS_VAT_VALUE = <?php echo $payment_data['vat_percent_from_registration']; ?>; // Sử dụng vat_percent từ registration
-    const JS_CURRENT_PRICE = <?php echo $verified_total_price; ?>; // Đây là tổng cuối cùng đã có VAT nếu áp dụng
-    const JS_ORDER_DESCRIPTION = "<?php echo htmlspecialchars($order_description, ENT_QUOTES, 'UTF-8'); ?>";
     const JS_BASE_URL = "<?php echo htmlspecialchars($base_url, ENT_QUOTES, 'UTF-8'); ?>";
     const JS_CSRF_TOKEN = "<?php echo htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>";
-    const JS_VIETQR_BANK_ID = "<?php echo defined('VIETQR_BANK_ID') ? htmlspecialchars(VIETQR_BANK_ID, ENT_QUOTES, 'UTF-8') : ''; ?>";
-    const JS_VIETQR_ACCOUNT_NO = "<?php echo defined('VIETQR_ACCOUNT_NO') ? htmlspecialchars(VIETQR_ACCOUNT_NO, ENT_QUOTES, 'UTF-8') : ''; ?>";    const JS_VIETQR_IMAGE_TEMPLATE = "<?php echo defined('VIETQR_IMAGE_TEMPLATE') ? htmlspecialchars(VIETQR_IMAGE_TEMPLATE, ENT_QUOTES, 'UTF-8') : 'compact'; ?>";
-    const JS_VIETQR_ACCOUNT_NAME = "<?php echo defined('VIETQR_ACCOUNT_NAME') ? htmlspecialchars(VIETQR_ACCOUNT_NAME, ENT_QUOTES, 'UTF-8') : ''; ?>";
-      <?php if (isset($autoAppliedVoucher) && $autoAppliedVoucher): ?>
-    // Flag for auto-applied voucher notification
-    const autoAppliedVoucher = <?php echo $autoAppliedVoucher ? 'true' : 'false'; ?>;
-    <?php if (isset($_SESSION[$sessionKey]['voucher_discount'])): ?>
-    const autoAppliedVoucherDiscount = <?php echo $_SESSION[$sessionKey]['voucher_discount']; ?>;
-    <?php endif; ?>
-    <?php endif; ?>
+    const JS_REGISTRATION_ID = "<?php echo htmlspecialchars($registration_id, ENT_QUOTES, 'UTF-8'); ?>";
 </script>
 
-<!-- Script cho quá trình kích hoạt gói dùng thử -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Không cần xử lý modal kích hoạt trial nữa
-    });
-</script>
-
-
-<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_data.js"></script>
+<!-- Scripts -->
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_voucher.js"></script>
 <script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/auto_voucher_notification.js"></script>
-
+<script src="<?php echo defined('PUBLIC_URL') ? PUBLIC_URL : '/public'; ?>/assets/js/pages/purchase/payment_wizard.js"></script>
 <?php
 // --- Include Footer ---
-// Use correct path relative to project root
 include $project_root_path . '/private/includes/footer.php';
 ?>

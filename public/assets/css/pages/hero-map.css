@@ -1,7 +1,7 @@
 /* Map styles for the homepage hero section */
 #hero-map {
-    height: 100%;
-    min-height: 350px;
+    height: 450px;
+    max-height: 500px;
     width: 100%;
     z-index: 1;
 }
@@ -9,13 +9,15 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #hero-map {
-        min-height: 300px;
+        height: 400px;
+        max-height: 450px;
     }
 }
 
 @media (max-width: 480px) {
     #hero-map {
-        min-height: 250px;
+        height: 350px;
+        max-height: 400px;
     }
 }
 

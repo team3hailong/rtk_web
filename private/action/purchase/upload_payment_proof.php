@@ -122,8 +122,8 @@ try {
     // Check if registration belongs to the user
     if (!$paymentProofService->registrationBelongsToUser($registration_id, $user_id)) {
         throw new Exception('Access denied. You do not own this registration.');
-    }// Find and update the transaction history record instead of the payment table
-    $sql_find_transaction = "SELECT id, voucher_id FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id AND status = 'pending'";
+    }// Find transaction history record or create if not exists
+    $sql_find_transaction = "SELECT id, voucher_id, status FROM transaction_history WHERE registration_id = :registration_id AND user_id = :user_id";
     $stmt_find = $conn->prepare($sql_find_transaction);
     $stmt_find->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
     $stmt_find->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -131,18 +131,114 @@ try {
     $transaction = $stmt_find->fetch(PDO::FETCH_ASSOC);
 
     if (!$transaction) {
-        throw new Exception('No pending transaction found for this registration.');
+        // Tạo transaction record mới khi upload proof (cho trường hợp cần upload proof)
+        $sessionKey = (isset($_SESSION['is_renewal']) && $_SESSION['is_renewal']) ? 'renewal' : 'order';
+        
+        // Get registration details
+        $sql_reg = "SELECT package_id, location_id, num_account, total_price FROM registration WHERE id = :registration_id AND user_id = :user_id";
+        $stmt_reg = $conn->prepare($sql_reg);
+        $stmt_reg->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+        $stmt_reg->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_reg->execute();
+        $registration = $stmt_reg->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$registration) {
+            throw new Exception('Registration not found.');
+        }
+        
+        // Calculate final amount (lấy từ session hoặc registration total_price)
+        $total_price = (float)$registration['total_price'];
+        
+        // Lấy voucher info từ session (có thể null nếu không áp dụng voucher)
+        $voucher_id = isset($_SESSION[$sessionKey]) && isset($_SESSION[$sessionKey]['voucher_id']) 
+                      ? $_SESSION[$sessionKey]['voucher_id'] 
+                      : null;
+        
+        $discount_amount = isset($_SESSION[$sessionKey]) && isset($_SESSION[$sessionKey]['voucher_discount']) 
+                           ? $_SESSION[$sessionKey]['voucher_discount'] 
+                           : 0;
+        
+        $final_amount = max(0, $total_price - $discount_amount);
+        
+        // Xác định transaction_type
+        $transaction_type = $sessionKey === 'renewal' ? 'renewal' : 'purchase';
+        $payment_method = 'Chuyển khoản ngân hàng';
+        
+        // Insert new transaction (chỉ các cột có trong bảng transaction_history)
+        $sql_insert = "INSERT INTO transaction_history 
+                       (user_id, registration_id, voucher_id, transaction_type, 
+                        amount, status, payment_method, payment_confirmed, 
+                        created_at, updated_at) 
+                       VALUES 
+                       (:user_id, :registration_id, :voucher_id, :transaction_type, 
+                        :amount, 'pending', :payment_method, 0, 
+                        NOW(), NOW())";
+        
+        $stmt_insert = $conn->prepare($sql_insert);
+        $stmt_insert->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':transaction_type', $transaction_type, PDO::PARAM_STR);
+        $stmt_insert->bindParam(':amount', $final_amount, PDO::PARAM_STR);
+        $stmt_insert->bindParam(':payment_method', $payment_method, PDO::PARAM_STR);
+        $stmt_insert->execute();
+        
+        $transaction_id = $conn->lastInsertId();
+    } else {
+        $transaction_id = $transaction['id'];
+        $voucher_id = $transaction['voucher_id'];
     }
-      $transaction_id = $transaction['id'];
-    $voucher_id = $transaction['voucher_id'];
+
+    // Lấy final_amount từ transaction để kiểm tra điều kiện auto-approve
+    $sql_get_amount = "SELECT amount FROM transaction_history WHERE id = :transaction_id";
+    $stmt_get_amount = $conn->prepare($sql_get_amount);
+    $stmt_get_amount->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+    $stmt_get_amount->execute();
+    $transaction_amount_row = $stmt_get_amount->fetch(PDO::FETCH_ASSOC);
+    $final_amount = $transaction_amount_row ? (float)$transaction_amount_row['amount'] : 0;
+
+    error_log("[UPLOAD_PROOF] Transaction amount: $final_amount");
+
+    // Check if voucher has auto_approve enabled
+    $auto_approve = false;
+    if ($voucher_id) {
+        $sql_voucher = "SELECT auto_approve FROM voucher WHERE id = :voucher_id";
+        $stmt_voucher = $conn->prepare($sql_voucher);
+        $stmt_voucher->bindParam(':voucher_id', $voucher_id, PDO::PARAM_INT);
+        $stmt_voucher->execute();
+        $voucher = $stmt_voucher->fetch(PDO::FETCH_ASSOC);
+        $auto_approve = $voucher && $voucher['auto_approve'] == 1;
+    }
+
+    // YÊU CẦU MỚI: Auto-approve chỉ khi auto_approve = 1 VÀ final_amount = 0
+    $should_auto_approve = ($auto_approve && $final_amount == 0);
 
     // Update transaction record with payment image
-    $sql_update = "UPDATE transaction_history 
-                   SET payment_image = :payment_image, 
-                       payment_confirmed = 0, 
-                       payment_confirmed_at = NULL, 
-                       updated_at = NOW() 
-                   WHERE id = :transaction_id";
+    // If should_auto_approve, set status='completed' and payment_confirmed=1
+    if ($should_auto_approve) {
+        $sql_update = "UPDATE transaction_history 
+                       SET payment_image = :payment_image, 
+                           status = 'completed',
+                           payment_confirmed = 1, 
+                           payment_confirmed_at = NOW(), 
+                           updated_at = NOW() 
+                       WHERE id = :transaction_id";
+        error_log("[UPLOAD_PROOF] Auto-approve enabled AND final_amount=0, setting status=completed");
+    } else {
+        $sql_update = "UPDATE transaction_history 
+                       SET payment_image = :payment_image, 
+                           payment_confirmed = 0, 
+                           payment_confirmed_at = NULL, 
+                           updated_at = NOW() 
+                       WHERE id = :transaction_id";
+        
+        if ($auto_approve && $final_amount > 0) {
+            error_log("[UPLOAD_PROOF] Auto-approve enabled but final_amount=$final_amount > 0, status=pending");
+        } else {
+            error_log("[UPLOAD_PROOF] Auto-approve disabled or conditions not met, status=pending");
+        }
+    }
+    
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->bindParam(':payment_image', $unique_filename, PDO::PARAM_STR);
     $stmt_update->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
@@ -165,10 +261,111 @@ try {
 
     $conn->commit(); // Commit transaction
 
+    // If should_auto_approve, create accounts automatically
+    if ($should_auto_approve) {
+        error_log("[UPLOAD_PROOF] Starting auto account creation for registration $registration_id");
+        
+        require_once $project_root_path . '/private/classes/purchase/AutoAccountCreator.php';
+        $accountCreator = new AutoAccountCreator();
+        
+        $result = $accountCreator->createAccountsForRegistration($registration_id);
+        error_log("[UPLOAD_PROOF] createAccountsForRegistration result: " . json_encode($result));
+        
+        if (!$result['success']) {
+            error_log("[AUTO_ACCOUNT] Failed to create accounts for registration $registration_id: " . $result['error']);
+            // Không throw exception, vẫn cho hoàn tất upload
+        } else {
+            error_log("[AUTO_ACCOUNT] Successfully created " . count($result['accounts']) . " accounts for registration $registration_id");
+        }
+
+        // Ghi log vào activity_logs khi giao dịch hoàn thành
+        try {
+            $sessionKey = (isset($_SESSION['is_renewal']) && $_SESSION['is_renewal']) ? 'renewal' : 'order';
+            $is_renewal = ($sessionKey === 'renewal');
+            
+            // Lấy thông tin registration
+            $sql_reg_info = "SELECT r.package_id, r.num_account, r.total_price, p.name as package_name, l.province 
+                             FROM registration r 
+                             LEFT JOIN package p ON r.package_id = p.id 
+                             LEFT JOIN location l ON r.location_id = l.id 
+                             WHERE r.id = :registration_id";
+            $stmt_reg_info = $conn->prepare($sql_reg_info);
+            $stmt_reg_info->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+            $stmt_reg_info->execute();
+            $reg_info = $stmt_reg_info->fetch(PDO::FETCH_ASSOC);
+            
+            if ($is_renewal) {
+                // Lấy thông tin tài khoản được gia hạn
+                $sql_accounts = "SELECT ra.username, ra.id 
+                                FROM account_groups ag 
+                                JOIN rtk_account ra ON ag.account_id = ra.id 
+                                WHERE ag.registration_id = :registration_id";
+                $stmt_accounts = $conn->prepare($sql_accounts);
+                $stmt_accounts->bindParam(':registration_id', $registration_id, PDO::PARAM_INT);
+                $stmt_accounts->execute();
+                $accounts = $stmt_accounts->fetchAll(PDO::FETCH_ASSOC);
+                
+                $account_usernames = array_column($accounts, 'username');
+                $notify_content = 'Giao dịch gia hạn hoàn thành cho ' . count($accounts) . ' tài khoản: ' . implode(', ', $account_usernames);
+                
+                $log_data = [
+                    'transaction_id' => $transaction_id,
+                    'registration_id' => $registration_id,
+                    'transaction_type' => 'renewal',
+                    'package' => $reg_info['package_name'] ?? '',
+                    'province' => $reg_info['province'] ?? '',
+                    'amount' => $final_amount,
+                    'renewed_accounts' => $account_usernames,
+                    'total_accounts' => count($accounts),
+                    'auto_approved' => true
+                ];
+                $action = 'transaction_renewal_completed';
+            } else {
+                // Lấy thông tin tài khoản được tạo
+                $created_accounts = $result['success'] ? $result['accounts'] : [];
+                $account_usernames = array_column($created_accounts, 'username');
+                
+                $notify_content = 'Giao dịch mua mới hoàn thành, tạo ' . count($created_accounts) . ' tài khoản: ' . implode(', ', $account_usernames);
+                
+                $log_data = [
+                    'transaction_id' => $transaction_id,
+                    'registration_id' => $registration_id,
+                    'transaction_type' => 'purchase',
+                    'package' => $reg_info['package_name'] ?? '',
+                    'province' => $reg_info['province'] ?? '',
+                    'amount' => $final_amount,
+                    'created_accounts' => $account_usernames,
+                    'total_accounts' => count($created_accounts),
+                    'auto_approved' => true
+                ];
+                $action = 'transaction_purchase_completed';
+            }
+            
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+            $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+            $new_values = json_encode($log_data, JSON_UNESCAPED_UNICODE);
+            
+            $sql_log = "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, ip_address, user_agent, new_values, notify_content, created_at) 
+                        VALUES (:user_id, :action, 'transaction', :entity_id, :ip_address, :user_agent, :new_values, :notify_content, NOW())";
+            $stmt_log = $conn->prepare($sql_log);
+            $stmt_log->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':action', $action, PDO::PARAM_STR);
+            $stmt_log->bindParam(':entity_id', $transaction_id, PDO::PARAM_INT);
+            $stmt_log->bindParam(':ip_address', $ip_address);
+            $stmt_log->bindParam(':user_agent', $user_agent);
+            $stmt_log->bindParam(':new_values', $new_values);
+            $stmt_log->bindParam(':notify_content', $notify_content);
+            $stmt_log->execute();
+        } catch (Exception $e) {
+            error_log("Error logging transaction completion: " . $e->getMessage());
+        }
+    }
+
     // Success Response
     $response['success'] = true;
     unset($response['error']);
     $response['message'] = 'Proof uploaded successfully.';
+    $response['auto_approved'] = $should_auto_approve; // Thêm thông tin should_auto_approve
 
 } catch (PDOException $e) {
     if ($conn && $conn->inTransaction()) {

@@ -1,9 +1,6 @@
 <?php
-session_start();
-
 // --- Require file cấu hình - đã bao gồm các tiện ích đường dẫn ---
 require_once dirname(dirname(dirname(__DIR__))) . '/private/config/config.php';
-
 
 init_session();
 // --- Sử dụng các hằng số được định nghĩa từ path_helpers ---
@@ -77,7 +74,7 @@ include $project_root_path . '/private/includes/header.php';
 
     <!-- Main Content -->
     <main class="content-wrapper">
-        <h2 class="text-2xl font-semibold mb-4">Chi tiết mua hàng</h2>
+        <h2 class="text-2xl font-semibold mb-4"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Thông tin đăng ký' : 'Chi tiết mua hàng'; ?></h2>
 
         <!-- Thay đổi action để trỏ đến action_handler.php thay vì trực tiếp vào process_order.php -->
         <form action="/public/handlers/action_handler.php?module=purchase&action=process_order" method="POST" class="purchase-details-form" id="details-form">
@@ -114,18 +111,57 @@ include $project_root_path . '/private/includes/header.php';
 
             <!-- Chọn Tỉnh/Thành phố -->
             <div class="form-group">
-                <label for="location_id">Tỉnh/Thành phố sử dụng:</label>
-                <select id="location_id" name="location_id" class="form-control" required>
-                    <option value="" disabled selected>-- Chọn Tỉnh/Thành phố --</option>
-                    <?php foreach ($provinces as $province): ?>
-                        <option value="<?php echo htmlspecialchars($province['id']); ?>">
-                            <?php echo htmlspecialchars($province['province']); ?>
-                        </option>
+                <label>Tỉnh/Thành phố sử dụng: <small style="color: #666;">(Có thể chọn nhiều tỉnh)</small></label>
+                <div style="display:flex; gap:8px; align-items:center; margin:6px 0 10px 0;">
+                    <button type="button" id="btn-select-all-provinces" class="btn-small">Chọn tất cả</button>
+                    <button type="button" id="btn-deselect-all-provinces" class="btn-small">Bỏ chọn tất cả</button>
+                </div>
+                <div class="provinces-checkbox-container" id="provinces-container">
+                    <?php
+                    // Priority provinces to show first (central municipalities)
+                    $priority = ['Hà Nội', 'Hải Phòng', 'Đà Nẵng', 'TP Hồ Chí Minh', 'Cần Thơ'];
+                    $priority_list = [];
+                    $others = [];
+                    foreach ($provinces as $p) {
+                        if (in_array($p['province'], $priority, true)) {
+                            $priority_list[] = $p;
+                        } else {
+                            $others[] = $p;
+                        }
+                    }
+                    // Sort priority_list by the manual order of $priority
+                    usort($priority_list, function($a, $b) use ($priority) {
+                        return array_search($a['province'], $priority) - array_search($b['province'], $priority);
+                    });
+                    // Sort others alphabetically using locale-aware collation (Vietnamese) when available
+                    if (class_exists('Collator')) {
+                        $coll = collator_create('vi_VN') ?: collator_create('root');
+                        usort($others, function($a, $b) use ($coll) {
+                            return collator_compare($coll, $a['province'], $b['province']);
+                        });
+                    } else {
+                        usort($others, function($a, $b) {
+                            return strcmp(mb_strtolower($a['province']), mb_strtolower($b['province']));
+                        });
+                    }
+                    $ordered = array_merge($priority_list, $others);
+
+                    foreach ($ordered as $province): ?>
+                        <label class="province-checkbox-label">
+                            <input type="checkbox" 
+                                   name="location_id[]" 
+                                   value="<?php echo htmlspecialchars($province['id']); ?>"
+                                   class="province-checkbox">
+                            <span class="province-name"><?php echo htmlspecialchars($province['province']); ?></span>
+                        </label>
                     <?php endforeach; ?>
-                </select>
+                </div>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    ✓ Click để chọn/bỏ chọn tỉnh. Tỉnh đầu tiên bạn chọn sẽ là tỉnh chính. Chọn "Tất cả" sẽ chọn mọi tỉnh hiện có (gửi đầy đủ ID khi submit).
+                </small>
             </div>
 
-            <?php if (!$is_trial_7d_package): // Only show total price display if NOT the trial_7d package ?>
+            <?php if (!$is_trial_7d_package && !(defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI)): // Only show total price display if NOT the trial_7d package and not in free mode ?>
              <!-- Hiển thị tổng tiền (cập nhật bằng JS) -->
             <div class="total-price-display">
                 Tổng cộng: <span id="total-price-view"><?php echo number_format($display_price, 0, ',', '.'); ?>đ</span><span id="vat-text"><?php echo $vat_text; ?></span>
@@ -134,7 +170,7 @@ include $project_root_path . '/private/includes/header.php';
 
             <!-- Nút chuyển đến thanh toán -->
             <div class="form-group" style="margin-top: 2rem; margin-bottom: 0;">
-                <button type="submit" class="btn-submit">Tiếp tục đến Thanh toán</button>
+                <button type="submit" class="btn-submit"><?php echo (defined('HIDE_PAYMENT_UI') && HIDE_PAYMENT_UI) ? 'Xác nhận đăng ký' : 'Tiếp tục đến Thanh toán'; ?></button>
             </div>
         </form>
 
@@ -173,6 +209,52 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // --- Provinces select-all logic ---
+    (function(){
+        const btnSelectAll = document.getElementById('btn-select-all-provinces');
+        const btnDeselectAll = document.getElementById('btn-deselect-all-provinces');
+        const displayAllCheckbox = document.getElementById('province-select-all-display');
+        const provinceCheckboxes = Array.from(document.querySelectorAll('.province-checkbox'));
+        const form = document.getElementById('details-form');
+
+        function setAll(checked){
+            provinceCheckboxes.forEach(cb => cb.checked = checked);
+            if(displayAllCheckbox) displayAllCheckbox.checked = checked;
+        }
+
+        btnSelectAll && btnSelectAll.addEventListener('click', function(){ setAll(true); });
+        btnDeselectAll && btnDeselectAll.addEventListener('click', function(){ setAll(false); });
+
+        if(displayAllCheckbox){
+            displayAllCheckbox.addEventListener('change', function(){ setAll(this.checked); });
+        }
+
+        // If user manually unchecks any -> uncheck displayAllCheckbox
+        provinceCheckboxes.forEach(cb => cb.addEventListener('change', function(){
+            if(!this.checked && displayAllCheckbox && displayAllCheckbox.checked){
+                displayAllCheckbox.checked = false;
+            }
+        }));
+
+        // On submit: if displayAllCheckbox is checked, ensure all province ids sent (they already will be because we set all checked).
+        // But to be safe (in case some checkboxes disabled), add hidden inputs for any missing ids.
+        form && form.addEventListener('submit', function(e){
+            if(displayAllCheckbox && displayAllCheckbox.checked){
+                // ensure all province ids present as inputs
+                const existing = Array.from(document.querySelectorAll('input[name="location_id[]"]')).map(i => i.value);
+                provinceCheckboxes.forEach(cb => {
+                    if(!existing.includes(cb.value)){
+                        const hidden = document.createElement('input');
+                        hidden.type = 'hidden';
+                        hidden.name = 'location_id[]';
+                        hidden.value = cb.value;
+                        form.appendChild(hidden);
+                    }
+                });
+            }
+        });
+    })();
 });
 </script>
 

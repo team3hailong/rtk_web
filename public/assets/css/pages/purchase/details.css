@@ -97,6 +97,84 @@ total-price-display span {
     background-color: #059669; /* Darker green on hover */
 }
 
+/* CSS cho checkbox list tỉnh/thành phố */
+.provinces-checkbox-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--rounded-md);
+    padding: 0.5rem;
+    background: white;
+}
+
+.province-checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+
+.province-checkbox-label:hover {
+    background-color: #f0f4ff;
+}
+
+.province-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+    accent-color: #10B981;
+    flex-shrink: 0;
+}
+
+.province-name {
+    font-size: 15px;
+    color: var(--gray-700);
+    flex-grow: 1;
+}
+
+.province-checkbox:checked + .province-name {
+    font-weight: 600;
+    color: #10B981;
+}
+
+/* Small utility button used on details page */
+.btn-small {
+    background: #f1f5f9;
+    border: 1px solid var(--gray-300);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+.btn-small:hover { background: #eef2ff; }
+
+.provinces-checkbox-container .province-checkbox-label { gap: 8px; }
+
+/* Scrollbar styling */
+.provinces-checkbox-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-thumb {
+    background: #10B981;
+    border-radius: 4px;
+}
+
+.provinces-checkbox-container::-webkit-scrollbar-thumb:hover {
+    background: #059669;
+}
+
 @media (max-width: 768px) {
     .content-wrapper {
         padding: 1rem !important;

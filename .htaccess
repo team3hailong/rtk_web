@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Nếu người dùng gõ domain.com/share/cai-gi-do
+    # Server sẽ ngầm hiểu là gọi vào public/share.php?slug=cai-gi-do
+    RewriteRule ^share/([a-zA-Z0-9-]+)/?$ public/share.php?slug=$1 [L,QSA]
+    
+    # (Tuỳ chọn) Các rule khác của dự án nếu có...
+</IfModule>

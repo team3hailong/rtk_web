@@ -1,5 +1,7 @@
 <?php
-session_start(); // Bắt đầu session nếu chưa có
+require_once dirname(dirname(__DIR__)) . '/private/config/config.php';
+require_once PROJECT_ROOT_PATH . '/private/utils/session_middleware.php';
+init_session(); // Bắt đầu session nếu chưa có
 
 // Lấy thông báo lỗi từ session hoặc tham số GET (ưu tiên session)
 $error_message = $_SESSION['error_message'] ?? $_GET['message'] ?? 'Đã xảy ra lỗi không xác định.';

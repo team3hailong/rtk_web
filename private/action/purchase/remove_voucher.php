@@ -121,6 +121,20 @@ try {
 unset($_SESSION[$sessionKey]['voucher_id']);
 unset($_SESSION[$sessionKey]['voucher_code']);
 unset($_SESSION[$sessionKey]['voucher_discount']);
+unset($_SESSION[$sessionKey]['voucher_type']);
+
+// Đánh dấu là không còn cần tính VAT trên giá đã giảm
+if (isset($_SESSION['discounted_price_before_vat'])) {
+    unset($_SESSION['discounted_price_before_vat']);
+}
+
+// Xóa thông tin giá gốc và giá đã giảm
+if (isset($_SESSION[$sessionKey]['original_subtotal'])) {
+    unset($_SESSION[$sessionKey]['original_subtotal']);
+}
+if (isset($_SESSION[$sessionKey]['discounted_subtotal'])) {
+    unset($_SESSION[$sessionKey]['discounted_subtotal']);
+}
 
 // Restore original amount
 if (isset($_SESSION[$sessionKey]['original_amount'])) {

@@ -1,0 +1,611 @@
+# Instincts generated from https://github.com/halobiron/rtk_web
+# Generated: 2026-06-05T03:39:11.252Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: rtk_web-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Commit Length
+
+## Action
+
+Keep commit messages concise (~27 characters)
+
+## Evidence
+
+- Average commit message length: 27 chars
+- Based on 89 commits
+
+---
+id: rtk_web-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: rtk_web-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: rtk_web-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: rtk_web-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: rtk_web-workflow-database-migration
+trigger: "when modifying the database schema or adding tables"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Database Migration
+
+## Action
+
+Follow the database-migration workflow:
+1. Create migration file
+2. Update schema definitions
+3. Generate/update types
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~7x per month
+- Files: migrations/*
+
+---
+id: rtk_web-workflow-feature-development-landing-page
+trigger: "when doing feature development landing page"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Feature Development Landing Page
+
+## Action
+
+Follow the feature-development-landing-page workflow:
+1. Edit or add images in public/assets/img/landingpage/
+2. Update CSS in public/assets/css/landing.css
+3. Update or add JS in public/assets/js/landing.js
+4. Modify PHP logic or markup in public/landing.php
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: public/assets/css/landing.css, public/assets/js/landing.js, public/assets/img/landingpage/
+
+---
+id: rtk_web-workflow-auth-otp-feature-workflow
+trigger: "when doing auth otp feature workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Auth Otp Feature Workflow
+
+## Action
+
+Follow the auth-otp-feature-workflow workflow:
+1. Create or update migration in db/migrations/ (e.g., *_add_otp_verification.sql)
+2. Update or add PHP logic in private/action/auth/ (process_*, resend-*, verify-*)
+3. Update helper utilities in private/utils/ (email_helper.php, otp_helper.php, sms_helper.php)
+4. Update or add documentation in docs/doc_for_user/otp_authentication.md
+5. Update frontend pages in public/pages/auth/ (forgot_password.php, new_password.php, reset-password-otp.php, verify-email-otp.php)
+6. Update CSS in public/assets/css/home.css
+7. Update handler logic in public/handlers/action_handler.php
+8. Update homepage if needed
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: db/migrations/*otp*.sql, private/action/auth/*otp*.php, private/utils/email_helper.php
+
+---
+id: rtk_web-workflow-voucher-feature-workflow
+trigger: "when doing voucher feature workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Voucher Feature Workflow
+
+## Action
+
+Follow the voucher-feature-workflow workflow:
+1. Create or update voucher-related documentation in docs/ (voucher_system.md, CAP_NHAT_PAYMENT_SELECTED_PROVINCES.md, etc.)
+2. Create or update migration in db/migrations/ (e.g., *_add_temp_phone_to_survey_account.sql, migration_add_selected_provinces.sql)
+3. Update or add PHP logic in private/action/purchase/ (apply_voucher.php, process_order.php, remove_voucher.php, etc.)
+4. Update or add helper utilities in private/utils/ (device_voucher_helper.php, selected_provinces_helper.php)
+5. Update or add PHP classes in private/classes/ (Voucher.php, purchase/PaymentService.php)
+6. Update error logging in private/logs/error.log
+7. Update frontend JS and CSS in public/assets/js/pages/purchase/ and public/assets/css/pages/purchase/
+8. Update frontend pages in public/pages/purchase/
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: docs/*voucher*.md, db/migrations/*voucher*.sql, private/action/purchase/apply_voucher.php
+
+---
+id: rtk_web-workflow-map-feature-development
+trigger: "when doing map feature development"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Map Feature Development
+
+## Action
+
+Follow the map-feature-development workflow:
+1. Update or add CSS in public/assets/css/pages/map.css (sometimes also hero-map.css or layouts/sidebar.css)
+2. Update or add JS in public/assets/js/pages/map.js
+3. Update or add PHP in public/pages/map_display.php
+4. Update error logging in private/logs/error.log
+5. Optionally, update or add related documentation or data files
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: public/assets/css/pages/map.css, public/assets/js/pages/map.js, public/pages/map_display.php
+
+---
+id: rtk_web-workflow-account-management-feature-workflow
+trigger: "when doing account management feature workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Account Management Feature Workflow
+
+## Action
+
+Follow the account-management-feature-workflow workflow:
+1. Update or add PHP classes in private/classes/ (RtkAccount.php, DeviceTracker.php, etc.)
+2. Update or add handler logic in public/handlers/rtk_account_handlers.php
+3. Update or add JS in public/assets/js/pages/rtk/rtk_accountmanagement.js
+4. Update or add CSS in public/assets/css/pages/rtk/rtk_account_update.css and rtk_accountmanagement.css
+5. Update or add frontend pages in public/pages/rtk_accountmanagement.php
+6. Update error logging in private/logs/error.log
+7. Optionally, update documentation in docs/
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: private/classes/RtkAccount.php, private/classes/DeviceTracker.php, public/handlers/rtk_account_handlers.php
+
+---
+id: rtk_web-workflow-documentation-update-workflow
+trigger: "when doing documentation update workflow"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/halobiron/rtk_web
+---
+
+# Rtk_web Workflow Documentation Update Workflow
+
+## Action
+
+Follow the documentation-update-workflow workflow:
+1. Edit or add files in docs/doc_for_user/
+2. Edit or add files in docs/doc_manage_code/
+3. Edit or add files in docs/newdoc_manage/
+4. Edit or add files in docs/newdoc_user/
+5. Optionally, update related frontend files for consistency
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: docs/doc_for_user/*.md, docs/doc_manage_code/*.md, docs/newdoc_manage/**/*.md
+
+---
+id: rtk_web-instinct-naming-files
+trigger: "When creating or renaming files"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Naming Files
+
+## Action
+
+Use snake_case for file names
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.files
+- Consistent snake_case in src and public files
+
+---
+id: rtk_web-instinct-naming-functions
+trigger: "When defining functions"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Naming Functions
+
+## Action
+
+Use camelCase for function names
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.functions
+- Examples in JS files
+
+---
+id: rtk_web-instinct-naming-classes
+trigger: "When defining classes"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Naming Classes
+
+## Action
+
+Use PascalCase for class names
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.classes
+- private/classes/Voucher.php
+
+---
+id: rtk_web-instinct-naming-constants
+trigger: "When defining constants"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Naming Constants
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for constants
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.constants
+
+---
+id: rtk_web-instinct-import-style
+trigger: "When importing modules in JS"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Pattern in codeStyle.importStyle
+- Examples in public/assets/js/landing.js
+
+---
+id: rtk_web-instinct-export-style
+trigger: "When exporting modules in JS"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in codeStyle.exportStyle
+- Examples in JS files
+
+---
+id: rtk_web-instinct-error-handling
+trigger: "When handling errors in code"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Error Handling
+
+## Action
+
+Use try-catch blocks and a global error handler
+
+## Evidence
+
+- Pattern in errorHandling.style
+- Presence of globalHandler: true
+
+---
+id: rtk_web-instinct-testing-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Testing Location
+
+## Action
+
+Place tests in a separate directory from source code
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation
+- No tests in srcLayout
+
+---
+id: rtk_web-instinct-git-commit-format
+trigger: "When writing commit messages"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Git Commit Format
+
+## Action
+
+Use short, freeform messages, often in Vietnamese or English, without a strict prefix
+
+## Evidence
+
+- Pattern in commits.examples
+- No prefix detected, average length 27
+
+---
+id: rtk_web-instinct-git-merge-branches
+trigger: "When merging branches"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Git Merge Branches
+
+## Action
+
+Use 'Merge branch <source> into <target>' as the commit message
+
+## Evidence
+
+- Seen in commit 'Merge branch 'Nguyen' into Long4'
+
+---
+id: rtk_web-instinct-feature-landing
+trigger: "When someone wants to add or update UI features on the landing page"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Landing
+
+## Action
+
+Edit images (public/assets/img/landingpage/), update CSS (landing.css), update JS (landing.js), and modify PHP (landing.php)
+
+## Evidence
+
+- Workflow: feature-development-landing-page
+- Example commits and files
+
+---
+id: rtk_web-instinct-feature-auth-otp
+trigger: "When someone wants to add or improve OTP-based authentication or password reset"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Auth Otp
+
+## Action
+
+Update migration, PHP logic (auth), helpers, documentation, frontend pages, CSS, and handler logic
+
+## Evidence
+
+- Workflow: auth-otp-feature-workflow
+- Example commits and files
+
+---
+id: rtk_web-instinct-feature-voucher
+trigger: "When someone wants to add or improve voucher features in the purchase flow"
+confidence: 0.92
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Voucher
+
+## Action
+
+Update documentation, migration, PHP logic (purchase), helpers, classes, error logging, frontend JS/CSS, and frontend pages
+
+## Evidence
+
+- Workflow: voucher-feature-workflow
+- Example commits and files
+
+---
+id: rtk_web-instinct-feature-map
+trigger: "When someone wants to add, update, or fix map-related features"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Map
+
+## Action
+
+Update CSS (map.css), JS (map.js), PHP (map_display.php), error logging, and optionally documentation/data
+
+## Evidence
+
+- Workflow: map-feature-development
+- Example commits and files
+
+---
+id: rtk_web-instinct-feature-account-management
+trigger: "When someone wants to add or update features for RTK account management"
+confidence: 0.88
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Account Management
+
+## Action
+
+Update PHP classes, handler logic, JS, CSS, frontend pages, error logging, and optionally documentation
+
+## Evidence
+
+- Workflow: account-management-feature-workflow
+- Example commits and files
+
+---
+id: rtk_web-instinct-feature-documentation-update
+trigger: "When someone wants to update or add documentation for features, modules, or guides"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: halobiron/rtk_web
+---
+
+# Rtk_web Instinct Feature Documentation Update
+
+## Action
+
+Edit or add files in docs/doc_for_user/, docs/doc_manage_code/, docs/newdoc_manage/, docs/newdoc_user/, and optionally update related frontend files
+
+## Evidence
+
+- Workflow: documentation-update-workflow
+- Example commits and files
+

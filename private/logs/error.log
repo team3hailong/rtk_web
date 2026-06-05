@@ -2898,3 +2898,10 @@
 [06-Mar-2026 22:31:38 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
 [06-Mar-2026 22:31:40 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 100000
 [06-Mar-2026 22:31:40 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 7 records
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Getting online users with AUTH - Page: 1, Size: 10
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Success: Got 10 records
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Getting storage tasks with AUTH - Page: 1, Size: 5
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Request URL: http://rtk.taikhoandodac.vn:8090/openapi/stream/storage/tasks?page=1&size=5
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Response HTTP Code: 200
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Response Content-Type: application/json
+[05-Jun-2026 10:30:18 Asia/Ho_Chi_Minh] [RTK_API] Response: {"code":"SUCCESS","traceId":null,"msg":null,"data":{"total":"4","page":"1","size":"5","records":[{"id":"9","code":"20260202JXSPQX5R","taskName":"test2","stationIds":["63"],"obsType":[1,2,3,4],"satelliteSystem":[1,2,3,4,6],"fileFormat":"Rinex v304","sampleRate":30,"dailyQuantity":24,"compressMode":2,"uploadAddresses":[],"fileDeletePeriod":2,"status":1,"highAngle":15,"createBy":"Nguyen0908","createTime":1770022041000,"updateBy":"Nguyen0908","updateTime":1770022041000,"storeEph":1,"qcEnabled":1},{"id":"8","code":"20260202ASL6JA3R","taskName":"test","stationIds":["60"],"obsType":[1,2,3,4],"satelliteSystem":[1,2,3,4,6],"fileFormat":"Rinex v304","sampleRate":30,"dailyQuantity":1,"compressMode":2,"uploadAddresses":[],"fileDeletePeriod":2,"status":1,"highAngle":15,"createBy":"Nguyen0908","createTime":1770019497000,"updateBy":"Nguyen0908","updateTime":1770019497000,"storeEph":0,"qcEnabled":0},{"id":"7","code":"20260131NUCJOQN2","taskName":"tpBk","stationIds":["59"],"obsType":[1,2,3,4],"satellit
